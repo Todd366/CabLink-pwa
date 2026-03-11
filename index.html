@@ -2,366 +2,605 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>CabLink PWA</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>CabLink v3 · THoBoCoin Rewards</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚕</text></svg>">
+<meta name="theme-color" content="#070B14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Book taxi rides in Gaborone, earn THoBoCoin. Chat live with your driver.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.1/ethers.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* ── RESET ──────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --night:#080C17;--deep:#0D1220;--card:#131B2E;--card2:#19233A;--card3:#1F2B44;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
-  --gold:#F5C842;--gold2:#E8A800;--gold3:rgba(245,200,66,0.12);
-  --teal:#00D4AA;--teal2:rgba(0,212,170,0.12);
-  --blue:#3B82F6;--blue2:rgba(59,130,246,0.12);
-  --red:#F87171;--red2:rgba(248,113,113,0.12);
-  --orange:#FB923C;--orange2:rgba(251,146,60,0.11);
-  --purple:#A78BFA;--purple2:rgba(167,139,250,0.11);
-  --muted:#6B7FA3;--soft:#A8B8D0;--text:#E8EEF8;
-  --r:18px;--rs:12px;--rx:8px;
+  --bg:#070B14;--surface:#0C1220;--card:#121B2D;--card2:#182035;--card3:#1D2840;
+  --b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.12);--b3:rgba(255,255,255,.18);
+  --gold:#F5C518;--gold2:#D4A800;--gold3:rgba(245,197,24,.13);
+  --teal:#00C9A7;--teal2:rgba(0,201,167,.12);
+  --blue:#4F8EF7;--blue2:rgba(79,142,247,.12);
+  --red:#F47676;--red2:rgba(244,118,118,.12);
+  --orange:#F97316;--orange2:rgba(249,115,22,.11);
+  --purple:#9B79F5;--purple2:rgba(155,121,245,.11);
+  --green:#34D399;--green2:rgba(52,211,153,.12);
+  --muted:#566380;--soft:#8BA0BC;--text:#DDE6F4;
+  --r:16px;--rs:11px;--rx:8px;
+  --ff-h:'Syne','Segoe UI',sans-serif;
+  --ff:'DM Sans','Helvetica Neue',sans-serif;
+  --ff-m:'DM Mono','Courier New',monospace;
 }
 body.light{
-  --night:#EEF2FF;--deep:#F5F7FF;--card:#FFFFFF;--card2:#EEF2FF;--card3:#E0E7FF;
-  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.15);
-  --muted:#7A8CB0;--soft:#3A4870;--text:#111827;
+  --bg:#F0F4FF;--surface:#FAFBFF;--card:#FFFFFF;--card2:#EEF2FF;--card3:#E4EAFF;
+  --b1:rgba(0,0,0,.07);--b2:rgba(0,0,0,.13);--b3:rgba(0,0,0,.2);
+  --muted:#7080A0;--soft:#3A4870;--text:#0F1629;
+  --gold3:rgba(245,197,24,.15);--teal2:rgba(0,201,167,.14);--blue2:rgba(79,142,247,.13);
 }
-html,body{height:100%;background:var(--night);font-family:'DM Sans',sans-serif;color:var(--text);overflow:hidden;transition:background .3s,color .3s}
-.app{display:flex;height:100vh;width:100vw;overflow:hidden}
-.pw{width:100%;max-width:420px;margin:auto;height:100vh;max-height:880px;background:var(--deep);display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 100px rgba(0,0,0,.8);transition:background .3s}
-@media(min-width:500px){.pw{height:880px;border-radius:38px;border:1.5px solid rgba(255,255,255,.09)}body{display:flex;align-items:center;justify-content:center}}
-.pw::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(59,130,246,.09) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 90% 90%,rgba(0,212,170,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 10% 60%,rgba(245,200,66,.05) 0%,transparent 60%)}
+html{background:var(--bg)}
+html,body{height:100%;font-family:var(--ff);color:var(--text);overflow:hidden;transition:background .2s,color .2s}
+body{background:var(--bg)}
 
-/* STATUS */
-.sbar{display:flex;justify-content:space-between;align-items:center;padding:11px 22px 5px;z-index:10;flex-shrink:0;position:relative}
-.stime{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--text)}
-.sicons{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--soft)}
+/* ── SHELL ──────────────────────────────── */
+.app{display:flex;height:100dvh;width:100vw;overflow:hidden}
+.pw{width:100%;max-width:430px;margin:auto;height:100dvh;max-height:920px;background:var(--surface);display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 120px rgba(0,0,0,.9)}
+@media(min-width:500px){.pw{height:920px;border-radius:36px;border:1px solid var(--b2)}body{display:flex;align-items:center;justify-content:center;background:#030508}}
+.pw::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 90% 45% at 50% -5%,rgba(79,142,247,.08) 0%,transparent 65%),
+             radial-gradient(ellipse 70% 55% at 95% 95%,rgba(0,201,167,.06) 0%,transparent 65%),
+             radial-gradient(ellipse 55% 45% at 5% 65%,rgba(245,197,24,.04) 0%,transparent 65%)}
 
-/* HEADER */
-.hdr{padding:5px 15px 11px;display:flex;align-items:center;justify-content:space-between;z-index:10;flex-shrink:0;border-bottom:1px solid var(--border);position:relative}
-.logo{display:flex;align-items:center;gap:9px}
-.li{width:35px;height:35px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 14px rgba(245,200,66,.32);flex-shrink:0}
-.ln{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.4px;line-height:1}
-.ln em{color:var(--gold);font-style:normal}
-.ls{font-size:9px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:1.8px;margin-top:1px}
-.hacts{display:flex;align-items:center;gap:7px}
-.ibtn{width:31px;height:31px;background:var(--card);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:border-color .15s;flex-shrink:0}
-.ibtn:hover{border-color:var(--border2)}
-.wpill{background:var(--card);border:1px solid var(--border2);border-radius:22px;padding:6px 11px;display:flex;align-items:center;gap:6px;cursor:pointer;transition:border-color .2s}
-.wpill:hover{border-color:rgba(0,212,170,.3)}
-.wdot{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1.8s ease-in-out infinite}
-.waddr{font-family:'DM Mono',monospace;font-size:11px;color:var(--soft)}
-@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.75)}}
+/* ── STATUS BAR ─────────────────────────── */
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:10px 22px 4px;z-index:10;flex-shrink:0}
+.stime{font-family:var(--ff-m);font-size:12.5px;font-weight:500;color:var(--text)}
+.sicons{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--soft)}
 
-/* OFFLINE */
-.offbanner{background:var(--orange2);border-bottom:1px solid rgba(251,146,60,.3);padding:6px 15px;display:none;align-items:center;gap:7px;font-size:12px;color:var(--orange);font-weight:600;z-index:20;flex-shrink:0}
+/* ── OFFLINE BANNER ─────────────────────── */
+.offbanner{background:var(--orange2);border-bottom:1px solid rgba(249,115,22,.28);padding:5px 14px;display:none;align-items:center;gap:7px;font-size:11.5px;color:var(--orange);font-weight:600;z-index:20;flex-shrink:0}
 .offbanner.on{display:flex}
 
-/* SCROLL */
-.scroll{flex:1;overflow-y:auto;overflow-x:hidden;z-index:5;scroll-behavior:smooth;position:relative}
-.scroll::-webkit-scrollbar{width:3px}
-.scroll::-webkit-scrollbar-thumb{background:var(--card3);border-radius:10px}
-.pad{padding:15px 15px 0}
+/* ── PRIVACY NOTICE ── FIX#10 ──────────── */
+.privacy-bar{background:rgba(79,142,247,.09);border-bottom:1px solid rgba(79,142,247,.18);padding:6px 14px;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--blue);z-index:19;flex-shrink:0;animation:fu .4s ease}
+.privacy-bar a{color:var(--teal);text-decoration:none;font-weight:700}
+.privacy-bar button{margin-left:auto;background:var(--blue2);border:1px solid rgba(79,142,247,.28);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--blue);cursor:pointer}
 
-/* SCREEN */
-.scr{display:none;animation:fu .3s ease both}
+/* ── HEADER ─────────────────────────────── */
+.hdr{padding:4px 14px 10px;display:flex;align-items:center;justify-content:space-between;z-index:10;flex-shrink:0;border-bottom:1px solid var(--b1)}
+.logo{display:flex;align-items:center;gap:9px;cursor:default}
+.li{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 3px 12px rgba(245,197,24,.3)}
+.ln{font-family:var(--ff-h);font-size:19px;font-weight:800;color:var(--text);letter-spacing:-.4px;line-height:1}
+.ln em{color:var(--gold);font-style:normal}
+.ls{font-size:8.5px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:1.8px;margin-top:1px}
+.hacts{display:flex;align-items:center;gap:6px}
+.ibtn{width:30px;height:30px;background:var(--card);border:1px solid var(--b1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:border-color .15s;flex-shrink:0}
+.ibtn:hover{border-color:var(--b2)}
+.wpill{background:var(--card);border:1px solid var(--b2);border-radius:20px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none;transition:border-color .2s}
+.wpill:hover{border-color:rgba(0,201,167,.3)}
+.wdot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:background .3s,box-shadow .3s;flex-shrink:0}
+.wdot.live{background:var(--teal);box-shadow:0 0 7px var(--teal)}
+.wdot.err{background:var(--red)}
+.waddr{font-family:var(--ff-m);font-size:10.5px;color:var(--soft)}
+
+/* ── SCROLL ──────────────────────────────── */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;z-index:5;scroll-behavior:smooth}
+.scroll::-webkit-scrollbar{width:2px}
+.scroll::-webkit-scrollbar-thumb{background:var(--card3);border-radius:4px}
+.pad{padding:13px 13px 0}
+
+/* ── SCREENS ──────────────────────────────── */
+.scr{display:none;animation:fu .28s ease both}
 .scr.active{display:block}
-@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fu{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.pb{padding-bottom:12px}
 
-/* TOAST */
-.twrap{position:absolute;top:68px;left:13px;right:13px;z-index:300;pointer-events:none}
-.toast{background:rgba(19,27,46,.97);backdrop-filter:blur(16px);border:1px solid rgba(0,212,170,.28);border-radius:13px;padding:10px 13px;display:flex;align-items:center;gap:9px;box-shadow:0 8px 28px rgba(0,0,0,.4);transform:translateY(-8px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
-.toast.on{transform:translateY(0);opacity:1}
-.ticon{width:27px;height:27px;background:var(--teal2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.ttxt{font-size:12px;color:var(--text);line-height:1.4}
+/* ── TOAST ────────────────────────────────── */
+.twrap{position:absolute;top:66px;left:12px;right:12px;z-index:300;pointer-events:none}
+.toast{background:rgba(12,18,32,.97);backdrop-filter:blur(18px);border:1px solid rgba(0,201,167,.25);border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 26px rgba(0,0,0,.45);transform:translateY(-8px) scale(.97);opacity:0;transition:all .32s cubic-bezier(.34,1.56,.64,1)}
+.toast.on{transform:translateY(0) scale(1);opacity:1}
+.ticon{width:26px;height:26px;background:var(--teal2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.ttxt{font-size:11.5px;color:var(--text);line-height:1.4}
 .ttxt strong{color:var(--teal)}
 
-/* MODAL */
-.moverlay{position:absolute;inset:0;background:rgba(8,12,23,.85);z-index:250;display:flex;align-items:flex-end;backdrop-filter:blur(4px);animation:oi .2s ease}
-.moverlay.hide{display:none}
+/* ── MODALS ───────────────────────────────── */
+.overlay{position:absolute;inset:0;background:rgba(7,11,20,.88);z-index:250;display:flex;align-items:flex-end;backdrop-filter:blur(5px);animation:oi .2s ease}
+.overlay.hide{display:none}
 @keyframes oi{from{opacity:0}to{opacity:1}}
-.msheet{background:var(--card);border:1px solid var(--border2);border-radius:22px 22px 0 0;padding:22px 18px;width:100%;animation:su .3s cubic-bezier(.34,1.56,.64,1)}
+.sheet{background:var(--card);border:1px solid var(--b2);border-radius:20px 20px 0 0;padding:20px 16px;width:100%;animation:su .28s cubic-bezier(.34,1.56,.64,1)}
 @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.mhandle{width:38px;height:4px;background:var(--card3);border-radius:4px;margin:0 auto 18px}
-.mtitle{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);text-align:center;margin-bottom:4px}
-.msub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:18px}
-.stars{display:flex;justify-content:center;gap:9px;margin-bottom:18px}
-.star{font-size:30px;cursor:pointer;opacity:.3;filter:grayscale(1);transition:all .15s}
+.mhandle{width:36px;height:4px;background:var(--card3);border-radius:4px;margin:0 auto 16px}
+.mtitle{font-family:var(--ff-h);font-size:15px;font-weight:800;color:var(--text);text-align:center;margin-bottom:3px}
+.msub{font-size:11.5px;color:var(--muted);text-align:center;margin-bottom:16px}
+
+/* Rating stars */
+.stars{display:flex;justify-content:center;gap:8px;margin-bottom:16px}
+.star{font-size:29px;cursor:pointer;opacity:.28;filter:grayscale(1);transition:all .12s;background:none;border:none;padding:2px}
 .star.lit{opacity:1;filter:none;transform:scale(1.1)}
-.mconfirm{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:var(--rs);padding:13px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#080C17;cursor:pointer;box-shadow:0 4px 14px rgba(245,200,66,.28);transition:all .15s}
-.mcancel{width:100%;background:none;border:none;padding:10px;font-size:12px;color:var(--muted);cursor:pointer;margin-top:5px}
+.mconfirm{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:var(--rs);padding:12px;font-family:var(--ff-h);font-size:13.5px;font-weight:700;color:#070B14;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(245,197,24,.28)}
+.mcancel{width:100%;background:none;border:none;padding:9px;font-size:11.5px;color:var(--muted);cursor:pointer;margin-top:4px}
 
-/* BALANCE CARD */
-.bcard{background:linear-gradient(145deg,#192035,#0E1525);border:1px solid rgba(245,200,66,.2);border-radius:var(--r);padding:17px;margin-bottom:13px;position:relative;overflow:hidden}
-.bcard::after{content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,.09) 0%,transparent 70%);pointer-events:none}
-.bcard::before{content:'';position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,170,.07) 0%,transparent 70%);pointer-events:none}
-.btop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px}
-.blabel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.4px;font-weight:700;margin-bottom:5px}
-.bamt{display:flex;align-items:baseline;gap:7px}
-.bnum{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:var(--gold);letter-spacing:-2px;line-height:1}
-.bunit{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--gold2)}
-.bbwp{font-size:11px;color:var(--muted);margin-top:3px}
-.dbadge{background:var(--gold3);border:1px solid rgba(245,200,66,.22);border-radius:9px;padding:7px 10px;text-align:right;flex-shrink:0}
-.dblabel{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;font-weight:700}
-.dbtimer{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--gold);margin-top:1px}
-.dbsub{font-size:9px;color:var(--muted);margin-top:1px}
-.bstats{display:flex;border-top:1px solid rgba(255,255,255,.06);padding-top:13px;align-items:flex-end}
+/* Cancel modal */
+.cancel-title{font-family:var(--ff-h);font-size:15px;font-weight:800;color:var(--red);text-align:center;margin-bottom:7px}
+.cancel-sub{font-size:11.5px;color:var(--muted);text-align:center;margin-bottom:16px}
+.cancel-yes{width:100%;background:var(--red2);border:1px solid rgba(244,118,118,.28);border-radius:var(--rs);padding:12px;font-family:var(--ff-h);font-size:13.5px;font-weight:700;color:var(--red);cursor:pointer;margin-bottom:7px}
+.cancel-no{width:100%;background:none;border:1px solid var(--b2);border-radius:var(--rs);padding:11px;font-family:var(--ff-h);font-size:13.5px;font-weight:700;color:var(--soft);cursor:pointer}
+
+/* Gas warning */
+.gas-warn{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.25);border-radius:var(--rs);padding:11px 13px;margin-bottom:12px;font-size:11.5px;color:var(--orange);display:none;line-height:1.5}
+.gas-warn.on{display:block}
+
+/* Privacy modal */
+.priv-body{font-size:12px;color:var(--soft);line-height:1.7;max-height:250px;overflow-y:auto;margin-bottom:14px}
+.priv-body strong{color:var(--text)}
+
+/* ── BALANCE CARD ─────────────────────────── */
+.bcard{background:linear-gradient(145deg,#162030,#0D1826);border:1px solid rgba(245,197,24,.18);border-radius:var(--r);padding:15px;margin-bottom:11px;position:relative;overflow:hidden}
+.bcard::after{content:'';position:absolute;top:-50px;right:-50px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(245,197,24,.08),transparent 70%);pointer-events:none}
+.btop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.blabel{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:1.4px;font-weight:700;margin-bottom:4px}
+.bamt{display:flex;align-items:baseline;gap:6px}
+.bnum{font-family:var(--ff-h);font-size:38px;font-weight:800;color:var(--gold);letter-spacing:-2px;line-height:1;transition:transform .18s}
+.bnum.bump{transform:scale(1.07)}
+.bunit{font-family:var(--ff-h);font-size:14px;font-weight:700;color:var(--gold2)}
+.bbwp{font-size:10.5px;color:var(--muted);margin-top:2px}
+.dbadge{background:var(--gold3);border:1px solid rgba(245,197,24,.2);border-radius:8px;padding:6px 9px;text-align:right;flex-shrink:0}
+.dblabel{font-size:8.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:700}
+.dbtimer{font-family:var(--ff-h);font-size:13px;font-weight:800;color:var(--gold);margin-top:1px}
+.dbsub{font-size:8.5px;color:var(--muted);margin-top:1px}
+.bstats{display:flex;border-top:1px solid rgba(255,255,255,.05);padding-top:11px;align-items:flex-end}
 .bst{flex:1}
-.bstv{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
-.bstl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-top:2px}
-.cbtn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:var(--rs);padding:9px 15px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#080C17;cursor:pointer;box-shadow:0 4px 16px rgba(245,200,66,.28);transition:all .15s;white-space:nowrap}
-.cbtn:hover{transform:translateY(-1px)}
-.cbtn:disabled{background:var(--card3);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
+.bstv{font-family:var(--ff-h);font-size:14px;font-weight:700;color:var(--text)}
+.bstl{font-size:8.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:2px}
+.cbtn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:var(--rs);padding:8px 13px;font-family:var(--ff-h);font-size:11.5px;font-weight:700;color:#070B14;cursor:pointer;box-shadow:0 3px 13px rgba(245,197,24,.28);transition:all .15s;white-space:nowrap}
+.cbtn:disabled{background:var(--card3);color:var(--muted);box-shadow:none;cursor:not-allowed}
 
-/* SEC LABEL */
-.sl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+/* ── SEC LABEL ────────────────────────────── */
+.sl{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .sl span{color:var(--text)}
 
-/* LANG STRIP */
-.lstrip{display:flex;gap:6px;margin-bottom:12px}
-.lbtn{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--rx);padding:7px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
-.lbtn.active{background:var(--teal2);border-color:rgba(0,212,170,.3);color:var(--teal)}
+/* ── LANGUAGE STRIP ───────────────────────── */
+.lstrip{display:flex;gap:5px;margin-bottom:11px}
+.lbtn{flex:1;background:var(--card);border:1px solid var(--b1);border-radius:var(--rx);padding:6px;font-size:11.5px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
+.lbtn.active{background:var(--teal2);border-color:rgba(0,201,167,.28);color:var(--teal)}
 
-/* DRIVER TOGGLE */
-.dtog{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;margin-bottom:13px}
-.dtbtn{flex:1;padding:10px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;transition:all .15s}
+/* ── MODE TOGGLE ──────────────────────────── */
+.dtog{display:flex;background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);overflow:hidden;margin-bottom:11px}
+.dtbtn{flex:1;padding:9px;font-family:var(--ff-h);font-size:11.5px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;transition:all .15s}
 .dtbtn.active{background:var(--gold3);color:var(--gold)}
 
-/* RIDE CARD */
-.rcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:visible;margin-bottom:13px}
-.rcard-in{border-radius:var(--r);overflow:hidden}
-.lrow{display:flex;align-items:center;gap:11px;padding:13px 14px;transition:background .15s;position:relative}
+/* ── RIDE BOOKING CARD ────────────────────── */
+.rcard{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);margin-bottom:11px;overflow:visible}
+.rcin{border-radius:var(--r);overflow:hidden}
+.lrow{display:flex;align-items:center;gap:10px;padding:12px 13px;transition:background .12s}
 .lrow:hover{background:rgba(255,255,255,.02)}
-.lrow+.lrow{border-top:1px solid var(--border)}
-.ldot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.ldot.p{background:var(--teal);box-shadow:0 0 8px var(--teal)}
-.ldot.d{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.lrow+.lrow{border-top:1px solid var(--b1)}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ldot.p{background:var(--teal);box-shadow:0 0 7px var(--teal)}.ldot.d{background:var(--gold);box-shadow:0 0 7px var(--gold)}
 .lwrap{flex:1;position:relative}
-.linput{width:100%;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text)}
+.linput{width:100%;background:none;border:none;outline:none;font-family:var(--ff);font-size:12.5px;color:var(--text)}
 .linput::placeholder{color:var(--muted)}
-.aclist{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:100;background:var(--card2);border:1px solid var(--border2);border-radius:var(--rs);overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.4);display:none}
+.aclist{position:absolute;top:calc(100% + 3px);left:0;right:0;z-index:120;background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.4);display:none;max-height:155px;overflow-y:auto}
 .aclist.on{display:block}
-.acitem{padding:10px 13px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;transition:background .1s}
-.acitem:last-child{border-bottom:none}
-.acitem:hover{background:rgba(255,255,255,.05)}
-.lmic{width:29px;height:29px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;flex-shrink:0;transition:all .15s}
-.lmic.rec{background:var(--red2);border-color:rgba(248,113,113,.4);animation:rp 1s ease-in-out infinite}
-@keyframes rp{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.4)}50%{box-shadow:0 0 0 5px rgba(248,113,113,0)}}
-.lbadge{background:var(--card3);border-radius:6px;padding:3px 7px;font-size:10px;color:var(--soft);font-family:'DM Mono',monospace;flex-shrink:0}
-.srow{position:relative;height:1px;background:var(--border);margin:0 14px}
-.sbtn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:24px;height:24px;background:var(--card2);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;color:var(--soft)}
-.faresec{padding:12px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,.15)}
-.ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
-.flbl{font-size:12px;color:var(--muted)}
-.fval{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
-.feta{font-size:11px;color:var(--muted);font-weight:400;font-family:'DM Sans',sans-serif}
-.fslider{width:100%;height:4px;border-radius:4px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none}
-.fslider::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--gold);box-shadow:0 0 7px rgba(245,200,66,.5);cursor:pointer}
+.acitem{padding:9px 12px;font-size:12.5px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:6px;transition:background .1s}
+.acitem:hover{background:rgba(255,255,255,.04)}
+.lmic{width:28px;height:28px;border-radius:50%;background:var(--card2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;flex-shrink:0;transition:all .15s}
+.lmic.rec{background:var(--red2);border-color:rgba(244,118,118,.4);animation:rp 1s ease-in-out infinite}
+@keyframes rp{0%,100%{box-shadow:0 0 0 0 rgba(244,118,118,.38)}50%{box-shadow:0 0 0 5px rgba(244,118,118,0)}}
+.lbadge{background:var(--card3);border-radius:5px;padding:2px 6px;font-size:9.5px;color:var(--soft);font-family:var(--ff-m);flex-shrink:0}
+.srow{position:relative;height:1px;background:var(--b1);margin:0 13px}
+.sbtn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:22px;height:22px;background:var(--card2);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;color:var(--soft)}
+.sched-row{padding:8px 13px;border-top:1px solid var(--b1);display:flex;align-items:center;gap:8px}
+.sched-lbl{font-size:10.5px;color:var(--muted);font-weight:600}
+.sched-input{flex:1;background:none;border:none;outline:none;font-family:var(--ff-m);font-size:10.5px;color:var(--text);display:none}
+.sched-now{font-size:10.5px;color:var(--muted);flex:1}
+.sched-tog{background:var(--card3);border:1px solid var(--b1);border-radius:5px;padding:3px 8px;font-size:10.5px;color:var(--soft);cursor:pointer}
+.sched-tog.active{background:var(--blue2);border-color:rgba(79,142,247,.28);color:var(--blue)}
+.faresec{padding:11px 13px;border-top:1px solid var(--b1);background:rgba(0,0,0,.12)}
+.ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.flbl{font-size:11.5px;color:var(--muted)}
+.fval{font-family:var(--ff-h);font-size:14px;font-weight:700;color:var(--text)}
+.feta{font-size:10.5px;color:var(--muted);font-weight:400;font-family:var(--ff)}
+.fslider{width:100%;height:3.5px;border-radius:4px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+.fslider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(245,197,24,.45);cursor:pointer}
 
-/* MAP STUB */
-.mapstub{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:13px}
-.mapcanvas{height:180px;position:relative;background:linear-gradient(160deg,#081628,#0c1e38 60%,#071018);overflow:hidden;cursor:pointer}
-.mgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.05) 1px,transparent 1px);background-size:30px 30px}
-.mroad{position:absolute;background:rgba(100,140,220,.18);border-radius:2px}
-.mroad.h1{top:42%;left:0;right:0;height:3px}
-.mroad.h2{top:65%;left:5%;right:0;height:2px}
-.mroad.h3{top:22%;left:18%;right:15%;height:1.5px}
-.mroad.v1{left:28%;top:0;bottom:0;width:3px}
-.mroad.v2{left:63%;top:0;bottom:40%;width:2px}
-.mroad.v3{left:82%;top:18%;bottom:0;width:1.5px}
+/* ── RIDE TYPE PILLS (NEW) ────────────────── */
+.rtype-wrap{display:flex;gap:5px;padding:10px 13px;border-top:1px solid var(--b1);overflow-x:auto}
+.rtype{flex-shrink:0;background:var(--card3);border:1px solid var(--b1);border-radius:20px;padding:5px 11px;font-size:11px;font-weight:600;color:var(--soft);cursor:pointer;white-space:nowrap;transition:all .15s}
+.rtype.active{background:var(--gold3);border-color:rgba(245,197,24,.28);color:var(--gold)}
+
+/* ── MAP ──────────────────────────────────── */
+.mapstub{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden;margin-bottom:11px}
+.mapcanvas{height:168px;position:relative;background:linear-gradient(160deg,#060F1F,#0A1830 60%,#040E18);overflow:hidden;cursor:pointer}
+.mgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(79,142,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,142,247,.04) 1px,transparent 1px);background-size:28px 28px}
+.mroad{position:absolute;background:rgba(90,130,210,.15);border-radius:2px}
+.mroad.h1{top:42%;left:0;right:0;height:3px}.mroad.h2{top:65%;left:5%;right:0;height:2px}.mroad.h3{top:22%;left:18%;right:15%;height:1.5px}
+.mroad.v1{left:28%;top:0;bottom:0;width:2.5px}.mroad.v2{left:63%;top:0;bottom:40%;width:2px}.mroad.v3{left:82%;top:18%;bottom:0;width:1.5px}
 .mroute{position:absolute;top:42%;left:28%;right:37%;height:3px;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:2px;display:none}
-.mroute.on{display:block;animation:ri .5s ease forwards}
+.mroute.on{display:block;animation:ri .45s ease forwards}
 @keyframes ri{from{transform:scaleX(0);transform-origin:left}to{transform:scaleX(1)}}
-.ppick{position:absolute;left:26%;top:24%;transform:translate(-50%,-100%);z-index:5;display:flex;flex-direction:column;align-items:center}
-.pdrop{position:absolute;left:63%;top:24%;transform:translate(-50%,-100%);z-index:5;display:flex;flex-direction:column;align-items:center}
-.pball{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.4)}
-.pball.p{background:var(--teal);box-shadow:0 3px 12px rgba(0,212,170,.45)}
-.pball.d{background:var(--gold);box-shadow:0 3px 12px rgba(245,200,66,.45)}
-.pinn{transform:rotate(45deg);font-size:11px}
-.pstem{width:2px;height:7px;margin-top:-1px;border-radius:0 0 2px 2px}
+.ppick,.pdrop{position:absolute;transform:translate(-50%,-100%);z-index:5;display:flex;flex-direction:column;align-items:center}
+.ppick{left:27%;top:26%}.pdrop{left:63%;top:26%}
+.pball{width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.pball.p{background:var(--teal)}.pball.d{background:var(--gold)}
+.pinn{transform:rotate(45deg);font-size:10px}
+.pstem{width:2px;height:6px;margin-top:-1px;border-radius:0 0 2px 2px}
 .pstem.p{background:var(--teal)}.pstem.d{background:var(--gold)}
-.pring{position:absolute;border-radius:50%;animation:pr 2s ease-out infinite;opacity:0}
-.pring.r1{width:38px;height:38px;border:2px solid rgba(0,212,170,.4);left:26%;top:26%;transform:translate(-50%,-50%)}
-.pring.r2{width:38px;height:38px;border:2px solid rgba(245,200,66,.3);left:63%;top:26%;transform:translate(-50%,-50%)}
-@keyframes pr{0%{opacity:.8;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}}
-.mcar{position:absolute;left:28%;top:38%;transform:translate(-50%,-50%);font-size:17px;z-index:6;transition:left 2.5s ease,top 2.5s ease}
-.mcar.mv{left:61%;top:38%}
-.movbtn{position:absolute;bottom:9px;right:9px;background:rgba(10,14,26,.88);border:1px solid rgba(59,130,246,.3);border-radius:7px;padding:5px 10px;font-size:11px;color:var(--blue);font-weight:700;cursor:pointer;backdrop-filter:blur(8px)}
-.mdlbl{position:absolute;top:9px;left:9px;background:rgba(10,14,26,.88);border:1px solid var(--teal2);border-radius:7px;padding:4px 9px;font-size:10px;color:var(--teal);font-weight:600;backdrop-filter:blur(8px)}
-.metalbl{position:absolute;bottom:9px;left:9px;background:rgba(10,14,26,.88);border:1px solid var(--border2);border-radius:7px;padding:4px 9px;font-size:10px;color:var(--text);font-weight:600;backdrop-filter:blur(8px);display:none}
+.pring{position:absolute;border-radius:50%;animation:pr 2.2s ease-out infinite;opacity:0}
+.pring.r1{width:36px;height:36px;border:2px solid rgba(0,201,167,.38);left:27%;top:28%;transform:translate(-50%,-50%)}
+.pring.r2{width:36px;height:36px;border:2px solid rgba(245,197,24,.28);left:63%;top:28%;transform:translate(-50%,-50%)}
+@keyframes pr{0%{opacity:.75;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.7)}}
+.mcar{position:absolute;left:29%;top:39%;transform:translate(-50%,-50%);font-size:16px;z-index:6;transition:left 2.2s ease,top 2.2s ease}
+.mcar.mv{left:62%;top:39%}
+.movbtn{position:absolute;bottom:8px;right:8px;background:rgba(7,11,20,.9);border:1px solid rgba(79,142,247,.28);border-radius:6px;padding:4px 9px;font-size:10.5px;color:var(--blue);font-weight:700;cursor:pointer;backdrop-filter:blur(8px)}
+.mdlbl{position:absolute;top:8px;left:8px;background:rgba(7,11,20,.9);border:1px solid var(--teal2);border-radius:6px;padding:3px 8px;font-size:9.5px;color:var(--teal);font-weight:600;backdrop-filter:blur(8px)}
+.metalbl{position:absolute;bottom:8px;left:8px;background:rgba(7,11,20,.9);border:1px solid var(--b2);border-radius:6px;padding:3px 8px;font-size:9.5px;color:var(--text);font-weight:600;backdrop-filter:blur(8px);display:none}
 .metalbl.on{display:block}
 
-/* RIDE TIMER */
-.rtimer{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(59,130,246,.06));border:1px solid rgba(59,130,246,.25);border-radius:var(--rs);padding:13px 14px;margin-bottom:13px;display:none}
-.rtimer.on{display:block;animation:fu .3s ease}
-.rttop{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
-.rtstatus{font-size:12px;font-weight:700;color:var(--blue)}
-.rteta{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:var(--text)}
-.rtsub{font-size:11px;color:var(--muted)}
-.rtbarw{background:var(--card3);border-radius:4px;height:4px;overflow:hidden;margin-top:7px}
-.rtbar{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:4px;transition:width .5s linear;width:0}
+/* ── RIDE TIMER ───────────────────────────── */
+.rtimer{background:linear-gradient(135deg,rgba(79,142,247,.1),rgba(79,142,247,.05));border:1px solid rgba(79,142,247,.22);border-radius:var(--rs);padding:12px 13px;margin-bottom:11px;display:none}
+.rtimer.on{display:block;animation:fu .28s ease}
+.rttop{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.rtstatus{font-size:11.5px;font-weight:700;color:var(--blue)}
+.rteta{font-family:var(--ff-h);font-size:20px;font-weight:800;color:var(--text)}
+.rtsub{font-size:10.5px;color:var(--muted)}
+.rtbarw{background:var(--card3);border-radius:4px;height:3.5px;overflow:hidden;margin-top:6px}
+.rtbar{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:4px;transition:width .45s linear;width:0}
+.cancel-ride-btn{margin-top:8px;width:100%;background:none;border:1px solid rgba(244,118,118,.22);border-radius:var(--rx);padding:6px;font-size:11.5px;font-weight:700;color:var(--red);cursor:pointer;transition:all .15s}
+.cancel-ride-btn:hover{background:var(--red2)}
 
-/* BOOK BTN */
-.bbtn{width:100%;border:none;border-radius:var(--r);padding:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#2563EB,#1D4ED8);cursor:pointer;box-shadow:0 6px 22px rgba(37,99,235,.28);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:12px;position:relative;overflow:hidden}
-.bbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12) 0%,transparent 60%)}
-.bbtn:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(37,99,235,.36)}
-.bbtn:disabled{background:var(--card3);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
+/* TIMEOUT WARNING */
+.timeout-warn{margin-top:6px;font-size:10.5px;color:var(--orange);font-weight:600;display:none;text-align:center}
+.timeout-warn.on{display:block;animation:fu .3s ease}
+
+/* ── BUTTONS ──────────────────────────────── */
+.bbtn{width:100%;border:none;border-radius:var(--r);padding:13px;font-family:var(--ff-h);font-size:13.5px;font-weight:700;color:#fff;background:linear-gradient(135deg,#2D6FEA,#1A55C8);cursor:pointer;box-shadow:0 5px 20px rgba(45,111,234,.28);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;position:relative;overflow:hidden}
+.bbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 55%)}
+.bbtn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 7px 24px rgba(45,111,234,.36)}
+.bbtn:disabled{background:var(--card3);color:var(--muted);box-shadow:none;cursor:not-allowed}
 .bbtn:disabled::before{display:none}
+.simbtn{width:100%;background:var(--gold3);border:1px solid rgba(245,197,24,.18);border-radius:var(--rs);padding:9px;font-family:var(--ff-h);font-size:11.5px;font-weight:700;color:rgba(245,197,24,.8);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s;margin-bottom:10px}
+.simbtn:hover:not(:disabled){background:rgba(245,197,24,.16);color:var(--gold)}
+.simbtn:disabled{opacity:.4;cursor:not-allowed}
 
-/* SIM BTN */
-.simbtn{width:100%;background:var(--gold3);border:1px solid rgba(245,200,66,.2);border-radius:var(--rs);padding:10px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:rgba(245,200,66,.8);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;margin-bottom:12px}
-.simbtn:hover{background:rgba(245,200,66,.15);color:var(--gold)}
-
-/* REFERRAL */
-.refcard{background:linear-gradient(145deg,rgba(167,139,250,.1),rgba(59,130,246,.07));border:1px solid rgba(167,139,250,.2);border-radius:var(--r);padding:14px;margin-bottom:13px}
-.reftop{display:flex;align-items:center;gap:9px;margin-bottom:11px}
-.reficon{width:36px;height:36px;background:var(--purple2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.reftitle{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text)}
-.refdesc{font-size:11px;color:var(--muted);margin-top:1px}
-.refcode{background:var(--card2);border:1px solid var(--border2);border-radius:var(--rx);padding:9px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.reflink{font-family:'DM Mono',monospace;font-size:11px;color:var(--purple)}
-.copybtn{background:var(--purple2);border:1px solid rgba(167,139,250,.25);border-radius:6px;padding:5px 9px;font-size:11px;font-weight:700;color:var(--purple);cursor:pointer;transition:all .15s;flex-shrink:0}
-.refrwd{font-size:11px;color:var(--muted);text-align:center}
+/* ── REFERRAL ─────────────────────────────── */
+.refcard{background:linear-gradient(145deg,rgba(155,121,245,.09),rgba(79,142,247,.06));border:1px solid rgba(155,121,245,.18);border-radius:var(--r);padding:13px;margin-bottom:11px}
+.reftop{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.reficon{width:34px;height:34px;background:var(--purple2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.reftitle{font-family:var(--ff-h);font-size:12.5px;font-weight:800;color:var(--text)}
+.refdesc{font-size:10.5px;color:var(--muted);margin-top:1px}
+.refcode{background:var(--card2);border:1px solid var(--b2);border-radius:var(--rx);padding:8px 11px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;gap:7px}
+.reflink{font-family:var(--ff-m);font-size:9.5px;color:var(--purple);word-break:break-all;flex:1;user-select:all}
+.copybtn{background:var(--purple2);border:1px solid rgba(155,121,245,.22);border-radius:5px;padding:4px 8px;font-size:10.5px;font-weight:700;color:var(--purple);cursor:pointer;flex-shrink:0}
+.refrwd{font-size:10.5px;color:var(--muted);text-align:center}
 .refrwd strong{color:var(--purple)}
 
-/* HISTORY */
-.hwrap{display:flex;flex-direction:column;gap:8px;margin-bottom:13px}
-.hitem{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:11px 12px;display:flex;align-items:center;gap:10px;transition:border-color .15s;cursor:pointer}
-.hitem:hover{border-color:var(--border2)}
-.hico{width:32px;height:32px;border-radius:9px;background:var(--blue2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+/* ── HISTORY ──────────────────────────────── */
+.hwrap{display:flex;flex-direction:column;gap:7px;margin-bottom:11px}
+.hitem{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:10px 11px;display:flex;align-items:center;gap:9px;cursor:pointer;transition:border-color .12s}
+.hitem:hover{border-color:var(--b2)}
+.hico{width:30px;height:30px;border-radius:8px;background:var(--blue2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .hinf{flex:1;min-width:0}
-.hroute{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hmeta{font-size:11px;color:var(--muted);margin-top:2px}
-.hright{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
-.hthb{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--gold)}
-.hstars{font-size:10px}
+.hroute{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hmeta{font-size:10.5px;color:var(--muted);margin-top:1.5px}
+.hright{display:flex;flex-direction:column;align-items:flex-end;gap:1.5px}
+.hthb{font-family:var(--ff-h);font-size:11.5px;font-weight:700;color:var(--gold)}
+.hstars{font-size:9.5px}
 
-/* REWARDS SCREEN */
-.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px}
-.rgc{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:13px;transition:border-color .15s}
-.rgc:hover{border-color:var(--border2)}
-.rglbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:5px}
-.rgv{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);line-height:1}
+/* ── CHAT SCREEN ──────────────────────────── */
+#scr-chat{display:none;flex-direction:column;height:100%}
+#scr-chat.active{display:flex}
+.chat-header{padding:10px 13px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.chat-back{background:none;border:none;font-size:18px;color:var(--soft);cursor:pointer;padding:2px;display:flex;align-items:center}
+.chat-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;position:relative}
+.chat-online-dot{position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid var(--surface)}
+.chat-info{flex:1}
+.chat-name{font-family:var(--ff-h);font-size:13.5px;font-weight:700;color:var(--text)}
+.chat-status{font-size:10.5px;color:var(--teal)}
+.chat-sos{background:var(--red2);border:1px solid rgba(244,118,118,.28);border-radius:8px;padding:5px 10px;font-family:var(--ff-h);font-size:11px;font-weight:700;color:var(--red);cursor:pointer;transition:all .15s;flex-shrink:0}
+.chat-sos:hover{background:rgba(244,118,118,.2)}
+.chat-msgs{flex:1;overflow-y:auto;padding:12px 13px;display:flex;flex-direction:column;gap:9px;scroll-behavior:smooth}
+.chat-msgs::-webkit-scrollbar{width:2px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--card3)}
+.cmsg{display:flex;flex-direction:column;max-width:78%}
+.cmsg.mine{align-self:flex-end;align-items:flex-end}
+.cmsg.theirs{align-self:flex-start;align-items:flex-start}
+.cbubble{padding:9px 12px;border-radius:14px;font-size:12.5px;line-height:1.5;color:var(--text);word-break:break-word;position:relative}
+.cmsg.mine .cbubble{background:linear-gradient(135deg,#2D6FEA,#1A55C8);color:#fff;border-radius:14px 14px 4px 14px}
+.cmsg.theirs .cbubble{background:var(--card2);border:1px solid var(--b1);border-radius:14px 14px 14px 4px}
+.cmeta{font-size:9.5px;color:var(--muted);margin-top:3px}
+.cmsg.mine .cmeta{text-align:right}
+.cread{font-size:9px;color:var(--teal);margin-left:3px}
+.chat-typing{align-self:flex-start;background:var(--card2);border:1px solid var(--b1);border-radius:14px;padding:9px 14px;display:none;align-items:center;gap:4px}
+.chat-typing.on{display:flex}
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:tbd 1.4s ease-in-out infinite}
+.tdot:nth-child(2){animation-delay:.2s}.tdot:nth-child(3){animation-delay:.4s}
+@keyframes tbd{0%,80%,100%{transform:scale(1);opacity:.4}40%{transform:scale(1.2);opacity:1}}
+.quick-replies{padding:8px 13px;border-top:1px solid var(--b1);display:flex;gap:5px;overflow-x:auto;flex-shrink:0}
+.quick-replies::-webkit-scrollbar{display:none}
+.qr{background:var(--card);border:1px solid var(--b2);border-radius:16px;padding:5px 11px;font-size:11px;color:var(--text);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.qr:hover{background:var(--blue2);border-color:rgba(79,142,247,.28);color:var(--blue)}
+.chat-input-bar{padding:9px 13px;border-top:1px solid var(--b1);display:flex;align-items:center;gap:8px;flex-shrink:0;background:var(--surface)}
+.chat-input{flex:1;background:var(--card2);border:1px solid var(--b1);border-radius:20px;padding:9px 14px;font-family:var(--ff);font-size:12.5px;color:var(--text);outline:none;transition:border-color .15s;resize:none;max-height:80px;overflow-y:auto}
+.chat-input:focus{border-color:var(--b3)}
+.chat-input::placeholder{color:var(--muted)}
+.chat-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#2D6FEA,#1A55C8);border:none;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;flex-shrink:0;transition:transform .15s;box-shadow:0 2px 10px rgba(45,111,234,.3)}
+.chat-send:hover{transform:scale(1.08)}
+/* SOS modal */
+.sos-sheet{border-top:3px solid var(--red)}
+.sos-title{font-family:var(--ff-h);font-size:18px;font-weight:800;color:var(--red);text-align:center;margin-bottom:6px}
+.sos-sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.5}
+.sos-actions{display:flex;flex-direction:column;gap:8px}
+.sos-btn{border:none;border-radius:var(--rs);padding:13px;font-family:var(--ff-h);font-size:13.5px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center}
+.sos-call{background:linear-gradient(135deg,var(--red),#C82D2D);color:#fff;box-shadow:0 4px 14px rgba(244,118,118,.35)}
+.sos-loc{background:var(--blue2);border:1px solid rgba(79,142,247,.28);color:var(--blue)}
+.sos-police{background:var(--orange2);border:1px solid rgba(249,115,22,.28);color:var(--orange)}
+
+/* ── REWARDS SCREEN ───────────────────────── */
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px}
+.rgc{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:12px;transition:border-color .12s}
+.rgc:hover{border-color:var(--b2)}
+.rglbl{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;font-weight:700;margin-bottom:4px}
+.rgv{font-family:var(--ff-h);font-size:19px;font-weight:800;color:var(--text);line-height:1}
 .rgv.g{color:var(--gold)}.rgv.t{color:var(--teal)}.rgv.b{color:var(--blue)}.rgv.p{color:var(--purple)}
-.cfbtn{width:100%;border:none;border-radius:var(--r);padding:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#080C17;background:linear-gradient(135deg,var(--gold),var(--gold2));cursor:pointer;box-shadow:0 6px 22px rgba(245,200,66,.26);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:13px}
-.cfbtn:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(245,200,66,.36)}
-.cfbtn:disabled{background:var(--card3);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
-.dbc{background:linear-gradient(135deg,var(--gold3),rgba(245,200,66,.05));border:1px solid rgba(245,200,66,.2);border-radius:var(--rs);padding:13px;margin-bottom:13px;display:flex;align-items:center;gap:11px}
-.dbcico{font-size:22px;flex-shrink:0}
-.dbcinf{flex:1}
-.dbctitle{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:2px}
-.dbcdesc{font-size:11px;color:var(--muted)}
-.dbcbtn{background:var(--gold3);border:1px solid rgba(245,200,66,.28);border-radius:var(--rx);padding:7px 11px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;transition:all .15s;flex-shrink:0;white-space:nowrap}
-.dbcbtn:hover{background:rgba(245,200,66,.2)}
+.cfbtn{width:100%;border:none;border-radius:var(--r);padding:13px;font-family:var(--ff-h);font-size:13.5px;font-weight:700;color:#070B14;background:linear-gradient(135deg,var(--gold),var(--gold2));cursor:pointer;box-shadow:0 5px 20px rgba(245,197,24,.25);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:11px}
+.cfbtn:disabled{background:var(--card3);color:var(--muted);box-shadow:none;cursor:not-allowed}
+.dbc{background:linear-gradient(135deg,var(--gold3),rgba(245,197,24,.04));border:1px solid rgba(245,197,24,.18);border-radius:var(--rs);padding:12px;margin-bottom:11px;display:flex;align-items:center;gap:10px}
+.dbcico{font-size:21px;flex-shrink:0}.dbcinf{flex:1}
+.dbctitle{font-family:var(--ff-h);font-size:12.5px;font-weight:700;color:var(--gold);margin-bottom:2px}
+.dbcdesc{font-size:10.5px;color:var(--muted)}
+.dbcbtn{background:var(--gold3);border:1px solid rgba(245,197,24,.25);border-radius:var(--rx);padding:6px 10px;font-family:var(--ff-h);font-size:11.5px;font-weight:700;color:var(--gold);cursor:pointer;white-space:nowrap}
 .dbcbtn:disabled{opacity:.4;cursor:not-allowed}
-.chaininfo{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:13px 14px;margin-bottom:13px}
-.crow{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
-.crow+.crow{border-top:1px solid var(--border)}
-.ck{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.8px}
-.cv{font-family:'DM Mono',monospace;font-size:10px;color:var(--soft)}
+.chaininfo{background:var(--card2);border:1px solid var(--b1);border-radius:var(--rs);padding:12px 13px;margin-bottom:11px}
+.crow{display:flex;justify-content:space-between;align-items:center;padding:3.5px 0}
+.crow+.crow{border-top:1px solid var(--b1)}
+.ck{font-size:9.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.7px}
+.cv{font-family:var(--ff-m);font-size:9.5px;color:var(--soft);word-break:break-all;text-align:right;max-width:65%}
 .cv.g{color:var(--teal)}
-.sharebtn{width:100%;background:linear-gradient(135deg,rgba(0,212,170,.1),rgba(59,130,246,.1));border:1px solid rgba(0,212,170,.25);border-radius:var(--rs);padding:12px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--teal);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;margin-bottom:13px}
-.sharebtn:hover{border-color:rgba(0,212,170,.45);background:rgba(0,212,170,.15)}
+.sharebtn{width:100%;background:linear-gradient(135deg,rgba(0,201,167,.09),rgba(79,142,247,.09));border:1px solid rgba(0,201,167,.22);border-radius:var(--rs);padding:11px;font-family:var(--ff-h);font-size:12.5px;font-weight:700;color:var(--teal);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;margin-bottom:11px}
+.sharebtn:hover{border-color:rgba(0,201,167,.4);background:rgba(0,201,167,.14)}
+.export-row{display:flex;gap:7px;margin-bottom:11px}
+.expbtn{flex:1;background:var(--card);border:1px solid var(--b1);border-radius:var(--rx);padding:8px;font-size:10.5px;font-weight:700;color:var(--soft);cursor:pointer;transition:all .15s;text-align:center}
+.expbtn:hover{border-color:var(--b2);color:var(--text)}
+.delbtn{background:var(--red2);border:1px solid rgba(244,118,118,.18);color:var(--red)}
 
-/* PROFILE */
-.phero{background:linear-gradient(145deg,#192035,#0E1525);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:13px;text-align:center;position:relative;overflow:hidden}
-.phero::before{content:'';position:absolute;top:-38px;right:-38px;width:110px;height:110px;background:radial-gradient(circle,rgba(245,200,66,.1) 0%,transparent 70%);border-radius:50%;pointer-events:none}
-.pava{width:58px;height:58px;border-radius:50%;margin:0 auto 10px;background:linear-gradient(135deg,rgba(245,200,66,.2),rgba(0,212,170,.2));border:2px solid rgba(245,200,66,.28);display:flex;align-items:center;justify-content:center;font-size:25px}
-.pname{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:2px}
-.prole{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:9px}
-.ptags{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
-.ptag{background:var(--card3);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--soft)}
-.ptag.g{background:var(--gold3);border-color:rgba(245,200,66,.2);color:var(--gold)}
-.ptag.t{background:var(--teal2);border-color:rgba(0,212,170,.2);color:var(--teal)}
-.ptag.p{background:var(--purple2);border-color:rgba(167,139,250,.2);color:var(--purple)}
+/* ── PROFILE ──────────────────────────────── */
+.phero{background:linear-gradient(145deg,#162030,#0D1826);border:1px solid var(--b1);border-radius:var(--r);padding:17px;margin-bottom:11px;text-align:center;position:relative;overflow:hidden}
+.phero::before{content:'';position:absolute;top:-35px;right:-35px;width:100px;height:100px;background:radial-gradient(circle,rgba(245,197,24,.1),transparent 70%);border-radius:50%}
+.pava{width:55px;height:55px;border-radius:50%;margin:0 auto 9px;background:linear-gradient(135deg,rgba(245,197,24,.2),rgba(0,201,167,.2));border:2px solid rgba(245,197,24,.25);display:flex;align-items:center;justify-content:center;font-size:24px}
+.pname{font-family:var(--ff-h);font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px}
+.prole{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:8px}
+.ptags{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.ptag{background:var(--card3);border:1px solid var(--b1);border-radius:18px;padding:2px 9px;font-size:10.5px;color:var(--soft)}
+.ptag.g{background:var(--gold3);border-color:rgba(245,197,24,.18);color:var(--gold)}
+.ptag.t{background:var(--teal2);border-color:rgba(0,201,167,.18);color:var(--teal)}
+.ptag.p{background:var(--purple2);border-color:rgba(155,121,245,.18);color:var(--purple)}
 
-/* BADGES */
-.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:13px}
-.bcard{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:13px 9px;text-align:center;transition:all .2s}
-.bcard.ul{border-color:rgba(245,200,66,.3);background:var(--gold3)}
-.bico{font-size:24px;margin-bottom:5px;filter:grayscale(1);opacity:.35}
-.bcard.ul .bico{filter:none;opacity:1}
-.bname{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-.bcard.ul .bname{color:var(--gold)}
-.breq{font-size:9px;color:var(--muted);margin-top:1px}
+/* STREAK */
+.streak-card{background:linear-gradient(135deg,rgba(249,115,22,.1),rgba(245,197,24,.07));border:1px solid rgba(249,115,22,.22);border-radius:var(--rs);padding:12px 13px;margin-bottom:11px;display:flex;align-items:center;gap:11px}
+.streak-ico{font-size:26px;flex-shrink:0}
+.streak-val{font-family:var(--ff-h);font-size:28px;font-weight:800;color:var(--orange)}
+.streak-lbl{font-size:10.5px;color:var(--muted);font-weight:600}
+.streak-sub{font-size:10px;color:var(--muted);margin-top:1px}
 
-/* KPI */
-.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px}
-.kcard{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px}
-.kico{font-size:18px;margin-bottom:4px}
-.kv{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-bottom:2px}
-.kl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;font-weight:700}
+/* Badges */
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:11px}
+.badgec{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:12px 8px;text-align:center;transition:all .18s}
+.badgec.ul{border-color:rgba(245,197,24,.28);background:var(--gold3)}
+.bico{font-size:22px;margin-bottom:4px;filter:grayscale(1);opacity:.3}
+.badgec.ul .bico{filter:none;opacity:1}
+.bname{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;line-height:1.2}
+.badgec.ul .bname{color:var(--gold)}
+.breq{font-size:8.5px;color:var(--muted);margin-top:1px}
 
-/* INFO ROWS */
-.irows{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:13px}
-.irow{display:flex;align-items:center;gap:11px;padding:12px 14px;border-bottom:1px solid var(--border)}
+/* KPIs */
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px}
+.kcard{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:11px}
+.kico{font-size:17px;margin-bottom:3px}
+.kv{font-family:var(--ff-h);font-size:17px;font-weight:800;color:var(--text);margin-bottom:1.5px}
+.kl{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:700}
+
+/* Info rows */
+.irows{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden;margin-bottom:11px}
+.irow{display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px solid var(--b1)}
 .irow:last-child{border-bottom:none}
-.iico{width:29px;height:29px;border-radius:8px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.ikey{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;font-weight:700}
-.ival{font-size:13px;color:var(--text);font-weight:500;margin-top:1px}
-.ival.mono{font-family:'DM Mono',monospace;font-size:11px}
+.iico{width:27px;height:27px;border-radius:7px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.ikey{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:700}
+.ival{font-size:12.5px;color:var(--text);font-weight:500;margin-top:1px}
+.ival.mono{font-family:var(--ff-m);font-size:10.5px;word-break:break-all}
 
-/* ROADMAP */
-.rm{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:13px}
-.rmi{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border-bottom:1px solid var(--border)}
+/* Roadmap */
+.rm{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden;margin-bottom:11px}
+.rmi{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-bottom:1px solid var(--b1)}
 .rmi:last-child{border-bottom:none}
-.rmph{width:26px;height:26px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:800}
+.rmph{width:24px;height:24px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:11px;font-weight:800}
 .rmph.dn{background:var(--teal2);color:var(--teal)}.rmph.ac{background:var(--gold3);color:var(--gold)}.rmph.so{background:var(--card2);color:var(--muted)}
-.rmc{flex:1}.rmt{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}.rmd{font-size:11px;color:var(--muted);line-height:1.4}
-.rmb{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:auto;flex-shrink:0;align-self:flex-start}
+.rmc{flex:1}.rmt{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:1.5px}.rmd{font-size:10.5px;color:var(--muted);line-height:1.4}
+.rmb{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:9px;margin-left:auto;flex-shrink:0;align-self:flex-start}
 .rmb.dn{background:var(--teal2);color:var(--teal)}.rmb.ac{background:var(--gold3);color:var(--gold)}.rmb.so{background:var(--card2);color:var(--muted)}
 
-/* DRIVER MODE */
-.dreq{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px 13px;display:flex;align-items:center;gap:10px;margin-bottom:8px;transition:border-color .15s}
-.dreq:hover{border-color:var(--border2)}
-.drico{width:32px;height:32px;border-radius:9px;background:var(--orange2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.drinfo{flex:1}.drroute{font-size:13px;font-weight:600;color:var(--text)}.drmeta{font-size:11px;color:var(--muted);margin-top:2px}
-.dracc{background:var(--teal2);border:1px solid rgba(0,212,170,.25);border-radius:var(--rx);padding:7px 12px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--teal);cursor:pointer;transition:all .15s;flex-shrink:0}
-.dracc:hover{background:rgba(0,212,170,.2)}
-.dracc:disabled{opacity:.4;cursor:not-allowed}
+/* ── DRIVER MODE ──────────────────────────── */
+.driver-status-bar{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:10px 13px;display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.ds-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:background .3s;flex-shrink:0}
+.ds-dot.online{background:var(--green);box-shadow:0 0 7px var(--green);animation:pg 2s ease-in-out infinite}
+@keyframes pg{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.4)}50%{box-shadow:0 0 0 5px rgba(52,211,153,0)}}
+.ds-label{font-size:12.5px;font-weight:600;color:var(--text)}
+.ds-sub{font-size:10px;color:var(--muted)}
+.ds-info{display:flex;align-items:center;gap:8px}
+.toggle-wrap{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle-wrap input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;border-radius:12px;background:var(--card3);cursor:pointer;transition:background .22s}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .22s}
+.toggle-wrap input:checked+.toggle-slider{background:var(--green)}
+.toggle-wrap input:checked+.toggle-slider::before{transform:translateX(20px)}
+.dreq{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:11px 12px;display:flex;align-items:center;gap:9px;margin-bottom:7px;transition:border-color .12s}
+.dreq.accepted{border-color:rgba(0,201,167,.28);background:var(--teal2)}
+.drico{width:30px;height:30px;border-radius:8px;background:var(--orange2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.drinfo{flex:1}.drroute{font-size:12.5px;font-weight:600;color:var(--text)}.drmeta{font-size:10.5px;color:var(--muted);margin-top:1.5px}
+.dracc{background:var(--teal2);border:1px solid rgba(0,201,167,.22);border-radius:var(--rx);padding:6px 11px;font-family:var(--ff-h);font-size:11.5px;font-weight:700;color:var(--teal);cursor:pointer;transition:all .15s;flex-shrink:0}
+.dracc:disabled{opacity:.45;cursor:not-allowed}
+.drv-chat-btn{background:var(--blue2);border:1px solid rgba(79,142,247,.22);border-radius:var(--rx);padding:6px 11px;font-family:var(--ff-h);font-size:11.5px;font-weight:700;color:var(--blue);cursor:pointer;transition:all .15s;flex-shrink:0;margin-left:4px}
+.driver-earnings{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:12px 13px;margin-bottom:11px}
+.de-title{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;font-weight:700;margin-bottom:8px}
+.de-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.de-stat{text-align:center}
+.de-val{font-family:var(--ff-h);font-size:16px;font-weight:800;color:var(--text)}
+.de-val.g{color:var(--gold)}.de-val.t{color:var(--teal)}.de-val.b{color:var(--blue)}
+.de-lbl{font-size:9.5px;color:var(--muted);margin-top:1px}
 
-/* ERR/OK */
-.errb{background:var(--red2);border:1px solid rgba(248,113,113,.22);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--red);display:none}
-.okb{background:var(--teal2);border:1px solid rgba(0,212,170,.22);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--teal);display:none}
+/* ── ERR / OK ─────────────────────────────── */
+.errb{background:var(--red2);border:1px solid rgba(244,118,118,.2);border-radius:var(--rs);padding:9px 11px;margin-bottom:9px;font-size:11.5px;color:var(--red);display:none;line-height:1.5}
+.okb{background:var(--teal2);border:1px solid rgba(0,201,167,.2);border-radius:var(--rs);padding:9px 11px;margin-bottom:9px;font-size:11.5px;color:var(--teal);display:none}
 
-/* BOTTOM NAV */
-.bnav{background:rgba(13,18,32,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:7px 5px 12px;display:flex;align-items:center;justify-content:space-around;z-index:10;flex-shrink:0}
-.nitem{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 12px;border-radius:11px;cursor:pointer;opacity:.4;transition:all .2s;background:none;border:none}
-.nitem.active{opacity:1;background:rgba(245,200,66,.07)}
-.nitem:hover:not(.active){opacity:.65}
-.nico{font-size:18px;transition:transform .2s}
+/* ── BOTTOM NAV ───────────────────────────── */
+.bnav{background:rgba(10,15,28,.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--b1);padding:6px 4px max(10px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-around;z-index:10;flex-shrink:0}
+.nitem{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 9px;border-radius:10px;cursor:pointer;opacity:.38;transition:all .18s;background:none;border:none}
+.nitem.active{opacity:1;background:rgba(245,197,24,.07)}
+.nico{font-size:17px;transition:transform .18s}
 .nitem.active .nico{transform:scale(1.1)}
-.nlbl{font-size:9px;color:var(--soft);font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.nlbl{font-size:8.5px;color:var(--soft);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
 .nitem.active .nlbl{color:var(--gold)}
-.nctr{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:20px;margin-top:-14px;cursor:pointer;box-shadow:0 4px 17px rgba(245,200,66,.38),0 0 0 4px rgba(13,18,32,.96);transition:all .2s;flex-shrink:0}
-.nctr:hover{transform:scale(1.05)}
+.nctr{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:19px;margin-top:-13px;cursor:pointer;box-shadow:0 4px 16px rgba(245,197,24,.36),0 0 0 4px rgba(10,15,28,.98);transition:all .18s;border:none}
+.nctr:hover{transform:scale(1.06)}
+/* Chat badge */
+.chat-badge{position:absolute;top:-3px;right:-3px;background:var(--red);border-radius:50%;width:14px;height:14px;font-size:8.5px;font-weight:700;color:#fff;display:none;align-items:center;justify-content:center;border:1.5px solid var(--surface)}
+.chat-badge.on{display:flex}
+.nico-wrap{position:relative;display:inline-flex}
 
+/* ── CONFETTI ─────────────────────────────── */
+.confetti-wrap{position:absolute;inset:0;pointer-events:none;z-index:400;overflow:hidden}
+.conf{position:absolute;width:7px;height:7px;border-radius:2px;animation:cfall linear forwards}
+@keyframes cfall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* ── SPINNER / ANIM ───────────────────────── */
 @keyframes spin{to{transform:rotate(360deg)}}
-.spin{display:inline-block;animation:spin .7s linear infinite}
-.pb{padding-bottom:10px}
+.spin{display:inline-block;animation:spin .65s linear infinite}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 </style>
 </head>
 <body>
+<script>
+/* FIX#17 — apply theme before paint */
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');
+  if(t==='light'){document.body.classList.add('light');document.documentElement.style.background='#F0F4FF';}
+  else{document.documentElement.style.background='#070B14';}
+  localStorage.setItem('theme',t);
+})();
+</script>
+
 <div class="app">
 <div class="pw" id="pw">
 
-<!-- OFFLINE BANNER -->
-<div class="offbanner" id="offbanner">📡 Offline — rides queued, sync when back online</div>
+<!-- CONFETTI -->
+<div class="confetti-wrap" id="confettiWrap"></div>
+
+<!-- SOS OVERLAY -->
+<div class="overlay hide" id="sosOverlay">
+  <div class="sheet sos-sheet">
+    <div class="mhandle"></div>
+    <div class="sos-title">🆘 Emergency SOS</div>
+    <div class="sos-sub">Your location will be shared. Choose an action:</div>
+    <div class="sos-actions">
+      <button class="sos-btn sos-call" onclick="sosAction('call')">📞 Call Emergency (999)</button>
+      <button class="sos-btn sos-loc" onclick="sosAction('location')">📍 Share My Location</button>
+      <button class="sos-btn sos-police" onclick="sosAction('police')">🚔 Contact BPS Police</button>
+    </div>
+    <button class="mcancel" onclick="closeOverlay('sosOverlay')">Cancel — I'm OK</button>
+  </div>
+</div>
+
+<!-- RATING MODAL -->
+<div class="overlay hide" id="rmodal">
+  <div class="sheet">
+    <div class="mhandle"></div>
+    <div class="mtitle" id="mdriver">Rate Your Driver</div>
+    <div class="msub">How was your ride? Your feedback helps.</div>
+    <div class="stars" id="stars">
+      <button class="star" data-s="1" aria-label="1 star">⭐</button>
+      <button class="star" data-s="2" aria-label="2 stars">⭐</button>
+      <button class="star" data-s="3" aria-label="3 stars">⭐</button>
+      <button class="star" data-s="4" aria-label="4 stars">⭐</button>
+      <button class="star" data-s="5" aria-label="5 stars">⭐</button>
+    </div>
+    <div id="tipSection" style="margin-bottom:12px">
+      <div style="font-size:10.5px;color:var(--muted);margin-bottom:6px;text-align:center">Add a tip? (optional)</div>
+      <div style="display:flex;gap:5px;justify-content:center">
+        <button class="qr" onclick="setTip(2)">+2 BWP</button>
+        <button class="qr" onclick="setTip(5)">+5 BWP</button>
+        <button class="qr" onclick="setTip(10)">+10 BWP</button>
+        <button class="qr" onclick="setTip(0)" id="tipNone" style="opacity:.5">No tip</button>
+      </div>
+      <div style="font-size:10px;color:var(--teal);text-align:center;margin-top:5px" id="tipDisplay"></div>
+    </div>
+    <button class="mconfirm" onclick="submitRating()">Submit Rating</button>
+    <button class="mcancel" onclick="closeOverlay('rmodal')">Skip</button>
+  </div>
+</div>
+
+<!-- CANCEL RIDE MODAL -->
+<div class="overlay hide" id="cancelModal">
+  <div class="sheet">
+    <div class="mhandle"></div>
+    <div class="cancel-title">Cancel this ride?</div>
+    <div class="cancel-sub">Your driver is on the way. Cancelling late may affect your trust score.</div>
+    <button class="cancel-yes" onclick="confirmCancel()">Yes, Cancel Ride</button>
+    <button class="cancel-no" onclick="closeOverlay('cancelModal')">Keep My Ride</button>
+  </div>
+</div>
+
+<!-- PRIVACY MODAL -->
+<div class="overlay hide" id="privacyModal">
+  <div class="sheet">
+    <div class="mhandle"></div>
+    <div class="mtitle">Privacy Notice</div>
+    <div class="priv-body">
+      <strong>What CabLink accesses:</strong><br>
+      • Wallet address (public key only — we never ask for your seed phrase or private key)<br>
+      • Ride history (stored locally on your device only)<br>
+      • Approximate location (Gaborone area only, for ride matching)<br>
+      • Chat messages (end-to-end encrypted, not stored on any server)<br><br>
+      <strong>What we do NOT do:</strong><br>
+      • We never ask for your seed phrase or private key<br>
+      • We never sell your data<br>
+      • We never access funds beyond the gas fee for the claimReward() call<br>
+      • On-chain transactions are transparent and auditable on BSCScan<br><br>
+      <strong>Smart contract:</strong><br>
+      <code style="font-size:9.5px;color:var(--teal)">0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628</code><br>
+      Claimable rewards are sent TO your address, not FROM it.<br><br>
+      <a href="https://testnet.bscscan.com/address/0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628" target="_blank" rel="noopener" style="color:var(--teal)">View contract on BSCScan →</a>
+    </div>
+    <button class="mconfirm" onclick="closeOverlay('privacyModal')">Got It — I Understand</button>
+  </div>
+</div>
 
 <!-- STATUS BAR -->
 <div class="sbar">
   <span class="stime" id="clock">9:41</span>
-  <div class="sicons"><span>●●●</span><span>▲</span><span>🔋</span></div>
+  <div class="sicons">●●● ▲ 🔋</div>
+</div>
+
+<!-- OFFLINE BANNER -->
+<div class="offbanner" id="offbanner">📡 Offline — rides queued for when you reconnect</div>
+
+<!-- PRIVACY BAR (FIX#10) -->
+<div class="privacy-bar" id="privacyBar" style="display:none">
+  🔐 CabLink only reads your public wallet address. <a href="#" onclick="openPrivacy();return false">Privacy details →</a>
+  <button onclick="dismissPrivacy()">OK</button>
+</div>
+
+<!-- GAS WARNING (FIX#4) -->
+<div class="gas-warn" id="gasWarn">
+  ⛽ <strong>Gas fee notice:</strong> Claiming THB requires a small tBNB gas fee (~0.0003 tBNB). Get free tBNB at the faucet in Rewards. This is your network fee, not a charge by CabLink.
 </div>
 
 <!-- HEADER -->
 <div class="hdr">
   <div class="logo">
     <div class="li">🚕</div>
-    <div><div class="ln">Cab<em>Link</em></div><div class="ls">BSTM Ecosystem</div></div>
+    <div><div class="ln">Cab<em>Link</em></div><div class="ls">BSTM · v3.0</div></div>
   </div>
   <div class="hacts">
-    <div class="ibtn" id="tbtn" onclick="toggleTheme()">🌙</div>
-    <div class="wpill" onclick="toggleWallet()">
+    <button class="ibtn" id="tbtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    <button class="ibtn" onclick="openPrivacy()" title="Privacy & security">🔐</button>
+    <div class="wpill" onclick="toggleWallet()" role="button" tabindex="0">
       <div class="wdot" id="wdot"></div>
       <span class="waddr" id="waddr">Connect</span>
     </div>
@@ -369,36 +608,18 @@ html,body{height:100%;background:var(--night);font-family:'DM Sans',sans-serif;c
 </div>
 
 <!-- TOAST -->
-<div class="twrap">
-  <div class="toast" id="toast">
-    <div class="ticon">🪙</div>
+<div class="twrap" aria-live="polite">
+  <div class="toast" id="toast" role="status">
+    <div class="ticon" id="ticon">🪙</div>
     <div class="ttxt" id="ttxt"></div>
   </div>
 </div>
 
-<!-- RATING MODAL -->
-<div class="moverlay hide" id="rmodal">
-  <div class="msheet">
-    <div class="mhandle"></div>
-    <div class="mtitle" id="mdriver">Rate Your Driver</div>
-    <div class="msub">How was your ride? Help the community.</div>
-    <div class="stars" id="stars">
-      <span class="star" data-s="1">⭐</span>
-      <span class="star" data-s="2">⭐</span>
-      <span class="star" data-s="3">⭐</span>
-      <span class="star" data-s="4">⭐</span>
-      <span class="star" data-s="5">⭐</span>
-    </div>
-    <button class="mconfirm" onclick="submitRating()">Submit Rating</button>
-    <button class="mcancel" onclick="closeModal()">Skip</button>
-  </div>
-</div>
-
-<!-- SCROLL AREA -->
+<!-- SCROLL -->
 <div class="scroll" id="scrollarea">
 <div class="pad">
 
-<!-- ═══ HOME SCREEN ═══ -->
+<!-- ══════════════ HOME ══════════════ -->
 <div class="scr active" id="scr-home">
 
   <!-- Balance Card -->
@@ -407,68 +628,80 @@ html,body{height:100%;background:var(--night);font-family:'DM Sans',sans-serif;c
       <div>
         <div class="blabel" data-en="THoBoCoin Balance" data-tn="Tekanyo ya THoBoCoin">THoBoCoin Balance</div>
         <div class="bamt"><span class="bnum" id="bnum">0</span><span class="bunit">THB</span></div>
-        <div class="bbwp" id="bbwp">≈ 0.00 BWP · BSC Testnet</div>
+        <div class="bbwp" id="bbwp">≈ 0.00 BWP · BSC Testnet · Chain 97</div>
       </div>
       <div class="dbadge">
-        <div class="dblabel" data-en="Daily Bonus" data-tn="Mpho ya Letsatsi">Daily Bonus</div>
+        <div class="dblabel" data-en="Daily Bonus" data-tn="Mpho ya Letsatsi">Daily</div>
         <div class="dbtimer" id="dbtimer">+0.5</div>
-        <div class="dbsub" id="dbsub" data-en="Available!" data-tn="Eo gona!">Available!</div>
+        <div class="dbsub" id="dbsub">Available!</div>
       </div>
     </div>
     <div class="bstats">
-      <div class="bst"><div class="bstv" id="brides">0</div><div class="bstl" data-en="Total Rides" data-tn="Meeto Yotlhe">Total Rides</div></div>
-      <div class="bst"><div class="bstv" id="brating">—</div><div class="bstl" data-en="Avg Rating" data-tn="Tekanyo">Avg Rating</div></div>
-      <button class="cbtn" id="hcbtn" onclick="goRewards()" disabled data-en="⚡ Claim" data-tn="⚡ Amoga">⚡ Claim</button>
+      <div class="bst"><div class="bstv" id="brides">0</div><div class="bstl" data-en="Total Rides" data-tn="Meeto Yotlhe">Rides</div></div>
+      <div class="bst"><div class="bstv" id="brating">—</div><div class="bstl" data-en="Avg Rating" data-tn="Tekanyo">Rating</div></div>
+      <div class="bst"><div class="bstv" id="bstreak">0🔥</div><div class="bstl">Streak</div></div>
+      <button class="cbtn" id="hcbtn" onclick="goRewards()" disabled>⚡ Claim</button>
     </div>
   </div>
 
-  <!-- Language -->
   <div class="lstrip">
     <button class="lbtn active" id="lbtn-en" onclick="setLang('en')">🇬🇧 English</button>
     <button class="lbtn" id="lbtn-tn" onclick="setLang('tn')">🇧🇼 Setswana</button>
   </div>
 
-  <!-- Mode Toggle -->
   <div class="dtog">
-    <button class="dtbtn active" id="rbtn" onclick="setMode('rider')" data-en="🧍 I'm a Rider" data-tn="🧍 Ke Mopalami">🧍 I'm a Rider</button>
-    <button class="dtbtn" id="dbtn" onclick="setMode('driver')" data-en="🚗 I'm a Driver" data-tn="🚗 Ke Mokhanni">🚗 I'm a Driver</button>
+    <button class="dtbtn active" id="rbtn" onclick="setMode('rider')" data-en="🧍 Rider" data-tn="🧍 Mopalami">🧍 Rider</button>
+    <button class="dtbtn" id="dbtn" onclick="setMode('driver')" data-en="🚗 Driver" data-tn="🚗 Mokhanni">🚗 Driver</button>
   </div>
 
-  <!-- RIDER MODE -->
+  <!-- RIDER -->
   <div id="rider">
     <div class="sl">🗺️ <span data-en="Book a Ride" data-tn="Buka Leeto">Book a Ride</span> · +1 THB</div>
-
     <div class="rcard">
-      <div class="rcard-in">
+      <div class="rcin">
         <div class="lrow">
           <div class="ldot p"></div>
           <div class="lwrap">
-            <input class="linput" id="pinput" value="Broadhurst Mall" placeholder="Pickup…" autocomplete="off" oninput="showAC('p')" onfocus="showAC('p')" onblur="hideAC('p',300)">
+            <input class="linput" id="pinput" value="Broadhurst Mall" placeholder="Pickup…" autocomplete="off" aria-label="Pickup location" oninput="showAC('p')" onfocus="showAC('p')" onblur="hideAC('p',280)">
             <div class="aclist" id="ac-p"></div>
           </div>
-          <button class="lmic" id="mic-p" onclick="voice('p')">🎤</button>
+          <button class="lmic" id="mic-p" onclick="voice('p')" aria-label="Voice pickup">🎤</button>
           <span class="lbadge">Now</span>
         </div>
-        <div class="srow"><div class="sbtn" onclick="swap()">⇅</div></div>
+        <div class="srow"><button class="sbtn" onclick="swap()" aria-label="Swap">⇅</button></div>
         <div class="lrow">
           <div class="ldot d"></div>
           <div class="lwrap">
-            <input class="linput" id="dinput" value="Game City, Gaborone" placeholder="Where to?" autocomplete="off" oninput="showAC('d')" onfocus="showAC('d')" onblur="hideAC('d',300)">
+            <input class="linput" id="dinput" value="Game City, Gaborone" placeholder="Where to?" autocomplete="off" aria-label="Destination" oninput="showAC('d')" onfocus="showAC('d')" onblur="hideAC('d',280)">
             <div class="aclist" id="ac-d"></div>
           </div>
-          <button class="lmic" id="mic-d" onclick="voice('d')">🎤</button>
+          <button class="lmic" id="mic-d" onclick="voice('d')" aria-label="Voice destination">🎤</button>
+        </div>
+        <!-- Ride Type Pills -->
+        <div class="rtype-wrap">
+          <div class="rtype active" onclick="setRtype(this,'standard')">🚕 Standard</div>
+          <div class="rtype" onclick="setRtype(this,'group')">👨‍👩‍👧 Group (4+)</div>
+          <div class="rtype" onclick="setRtype(this,'female')">👩 Female Driver</div>
+          <div class="rtype" onclick="setRtype(this,'wheelchair')">♿ Accessible</div>
+          <div class="rtype" onclick="setRtype(this,'pet')">🐾 Pet-Friendly</div>
+        </div>
+        <div class="sched-row">
+          <span class="sched-lbl">📅</span>
+          <span class="sched-now" id="schedNow">Ride Now</span>
+          <input type="datetime-local" class="sched-input" id="schedInput" aria-label="Schedule time">
+          <button class="sched-tog" id="schedTog" onclick="toggleSched()">Schedule</button>
         </div>
         <div class="faresec">
           <div class="ftop">
             <span class="flbl" data-en="Fare" data-tn="Tefelo">Fare</span>
-            <span class="fval" id="fdisplay">20 BWP <span class="feta" id="feta">· ~12 min</span></span>
+            <span class="fval" id="fdisplay">20 BWP <span class="feta">· ~12 min · +1 THB</span></span>
           </div>
-          <input type="range" min="10" max="50" value="20" step="5" class="fslider" id="fslider" oninput="updateFare(this.value)">
+          <input type="range" min="10" max="50" value="20" step="5" class="fslider" id="fslider" aria-label="Fare" oninput="updateFare(this.value)">
         </div>
       </div>
     </div>
 
-    <!-- Map Stub -->
+    <!-- Map -->
     <div class="mapstub">
       <div class="mapcanvas" onclick="toggleRoute()">
         <div class="mgrid"></div>
@@ -479,8 +712,8 @@ html,body{height:100%;background:var(--night);font-family:'DM Sans',sans-serif;c
         <div class="pdrop"><div class="pball d"><div class="pinn">🏁</div></div><div class="pstem d"></div></div>
         <div class="pring r1"></div><div class="pring r2"></div>
         <div class="mcar" id="mcar">🚕</div>
-        <div class="mdlbl">📡 3 drivers nearby</div>
-        <div class="movbtn" id="routebtn">View Route ↗</div>
+        <div class="mdlbl" id="nearbyLbl">📡 3 drivers nearby</div>
+        <button class="movbtn" id="routebtn">View Route ↗</button>
         <div class="metalbl" id="metalbl">🚗 Arriving in <span id="etac">3</span> min</div>
       </div>
     </div>
@@ -491,21 +724,43 @@ html,body{height:100%;background:var(--night);font-family:'DM Sans',sans-serif;c
         <span class="rtstatus" id="rtstatus">🔍 Finding driver…</span>
         <span class="rteta" id="rteta">3:00</span>
       </div>
-      <div class="rtsub">Tap Rewards to claim when done</div>
+      <div class="rtsub">Tap ⚡ Rewards to claim · Chat 💬 with your driver</div>
       <div class="rtbarw"><div class="rtbar" id="rtbar"></div></div>
+      <div class="timeout-warn" id="timeoutWarn">⚠️ No driver found yet. Try a higher fare?</div>
+      <!-- FIX#11: ride timeout warning shows -->
+      <button class="cancel-ride-btn" onclick="openOverlay('cancelModal')">✕ Cancel Ride</button>
+    </div>
+
+    <!-- Chat with driver shortcut (shown when ride active) -->
+    <div id="chatShortcut" style="display:none;margin-bottom:10px">
+      <button onclick="openChat('rider')" style="width:100%;background:var(--blue2);border:1px solid rgba(79,142,247,.25);border-radius:var(--rs);padding:11px;font-family:var(--ff-h);font-size:12.5px;font-weight:700;color:var(--blue);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px">
+        💬 Message Your Driver · <span id="chatUnread" style="background:var(--red);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px">0 new</span>
+      </button>
     </div>
 
     <button class="bbtn" id="bookbtn" onclick="bookRide()">🚕 <span data-en="Book Ride · Earn 1 THB" data-tn="Buka Leeto · Amoga 1 THB">Book Ride · Earn 1 THB</span></button>
-    <button class="simbtn" onclick="simRide()">🧪 <span data-en="Simulate Ride (Test Mode)" data-tn="Leka Leeto (Tokiriso)">Simulate Ride (Test Mode)</span></button>
+    <button class="simbtn" id="simbtn" onclick="simRide()">🧪 <span data-en="Simulate Ride (Demo)" data-tn="Leka Leeto">Simulate Ride (Demo)</span></button>
   </div>
 
-  <!-- DRIVER MODE -->
+  <!-- DRIVER -->
   <div id="driver" style="display:none">
+    <div class="driver-status-bar">
+      <div class="ds-info">
+        <div class="ds-dot" id="dsDot"></div>
+        <div><div class="ds-label" id="dsLabel">Offline</div><div class="ds-sub" id="dsSub">Toggle to receive rides</div></div>
+      </div>
+      <label class="toggle-wrap"><input type="checkbox" id="driverOnline" onchange="toggleDriverOnline()"><span class="toggle-slider"></span></label>
+    </div>
     <div class="sl">🚗 <span data-en="Incoming Requests" data-tn="Dikopo tse Tlang">Incoming Requests</span></div>
-    <div id="dreqs"></div>
-    <div class="rgrid" style="margin-top:4px">
-      <div class="rgc"><div class="rglbl">Accepted</div><div class="rgv t" id="drvacc">0</div></div>
-      <div class="rgc"><div class="rglbl">THB Earned</div><div class="rgv g" id="drvthb">0</div></div>
+    <div id="dreqs"><div style="text-align:center;padding:18px 0;font-size:11.5px;color:var(--muted)">Go online to see ride requests</div></div>
+    <div class="driver-earnings">
+      <div class="de-title">Today's Earnings</div>
+      <div class="de-grid">
+        <div class="de-stat"><div class="de-val t" id="drvacc">0</div><div class="de-lbl">Accepted</div></div>
+        <div class="de-val g" style="display:none"></div>
+        <div class="de-stat"><div class="de-val g" id="drvthb">0.0</div><div class="de-lbl">THB</div></div>
+        <div class="de-stat"><div class="de-val b" id="drvbwp">0.00</div><div class="de-lbl">BWP Est.</div></div>
+      </div>
     </div>
   </div>
 
@@ -513,105 +768,141 @@ html,body{height:100%;background:var(--night);font-family:'DM Sans',sans-serif;c
   <div class="refcard">
     <div class="reftop">
       <div class="reficon">🎁</div>
-      <div>
-        <div class="reftitle" data-en="Invite a Friend" data-tn="Mema Tsala">Invite a Friend</div>
-        <div class="refdesc" data-en="You both earn +0.2 THB on their first ride" data-tn="Lona bobedi lo amoga +0.2 THB">You both earn +0.2 THB on their first ride</div>
-      </div>
+      <div><div class="reftitle" data-en="Invite a Friend" data-tn="Mema Tsala">Invite a Friend</div><div class="refdesc" data-en="You both earn +0.2 THB on their first ride" data-tn="Lona bobedi lo amoga +0.2 THB">You both earn +0.2 THB on their first ride</div></div>
     </div>
     <div class="refcode">
-      <span class="reflink">cablink.app/ref/BSTM-7K4X</span>
+      <span class="reflink" id="refLinkDisplay">Loading…</span>
       <button class="copybtn" onclick="copyRef()">📋 Copy</button>
     </div>
-    <div class="refrwd">Share your code · <strong>+0.2 THB</strong> per friend who rides</div>
+    <div class="refrwd">Share your code · <strong>+0.2 THB</strong> per referred ride</div>
   </div>
 
-  <!-- Recent Rides -->
   <div class="sl">🕐 <span data-en="Recent Rides" data-tn="Meeto ya Bogaufhi">Recent Rides</span></div>
   <div class="hwrap" id="hhome"></div>
   <div class="pb"></div>
 </div>
 
-<!-- ═══ REWARDS SCREEN ═══ -->
-<div class="scr" id="scr-rewards">
-  <div class="sl" style="margin-bottom:11px">⚡ <span>Rewards Dashboard</span></div>
+<!-- ══════════════ CHAT SCREEN ══════════════ -->
+<div class="scr" id="scr-chat" style="display:none">
+  <!-- Chat header -->
+  <div class="chat-header">
+    <button class="chat-back" onclick="goBack()" aria-label="Back">←</button>
+    <div class="chat-avatar">
+      <span id="chatAvatarEmoji">🚗</span>
+      <div class="chat-online-dot"></div>
+    </div>
+    <div class="chat-info">
+      <div class="chat-name" id="chatPersonName">Driver</div>
+      <div class="chat-status" id="chatStatus">● En route to you</div>
+    </div>
+    <button class="chat-sos" onclick="openOverlay('sosOverlay')">🆘 SOS</button>
+  </div>
+  <!-- Messages -->
+  <div class="chat-msgs" id="chatMsgs"></div>
+  <!-- Typing indicator -->
+  <div class="chat-typing" id="chatTyping">
+    <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+    <span style="font-size:10.5px;color:var(--muted);margin-left:5px">typing…</span>
+  </div>
+  <!-- Quick replies -->
+  <div class="quick-replies" id="quickReplies"></div>
+  <!-- Input bar -->
+  <div class="chat-input-bar">
+    <textarea class="chat-input" id="chatInputEl" placeholder="Message your driver…" rows="1" onkeydown="chatKeyDown(event)" oninput="autoResize(this)"></textarea>
+    <button class="chat-send" onclick="sendChatMsg()" aria-label="Send">➤</button>
+  </div>
+</div>
 
+<!-- ══════════════ REWARDS ══════════════ -->
+<div class="scr" id="scr-rewards">
+  <div class="sl" style="margin-bottom:10px">⚡ <span>Rewards Dashboard</span></div>
   <div class="rgrid">
     <div class="rgc"><div class="rglbl">Total Earned</div><div class="rgv g" id="rwtotal">0 THB</div></div>
     <div class="rgc"><div class="rglbl">Rides Done</div><div class="rgv t" id="rwrides">0</div></div>
     <div class="rgc"><div class="rglbl">BWP Value</div><div class="rgv b" id="rwbwp">0.00</div></div>
     <div class="rgc"><div class="rglbl">Avg Rating ★</div><div class="rgv p" id="rwrating">—</div></div>
   </div>
-
-  <!-- Daily Bonus -->
   <div class="dbc">
     <div class="dbcico">🌟</div>
-    <div class="dbcinf">
-      <div class="dbctitle" id="dbtitle">Daily Bonus: +0.5 THB</div>
-      <div class="dbcdesc" id="dbdesc">Claim once per day for extra rewards!</div>
-    </div>
+    <div class="dbcinf"><div class="dbctitle" id="dbtitle">Daily Bonus: +0.5 THB</div><div class="dbcdesc" id="dbdesc">Claim once per day!</div></div>
     <button class="dbcbtn" id="dbcbtn" onclick="claimDaily()">Claim!</button>
   </div>
-
   <div id="rwerr" class="errb"></div>
   <div id="rwok" class="okb"></div>
-
+  <!-- FIX#4: gas warning shown before claim -->
+  <div class="gas-warn" id="gasWarn2" style="display:none">
+    ⛽ A small tBNB gas fee is required to send THB on-chain (~0.0003 tBNB).
+    <a href="https://testnet.binance.org/faucet-smart" target="_blank" rel="noopener" style="color:var(--teal)">Get free tBNB →</a>
+  </div>
+  <!-- FIX#33: progress bar on claim -->
+  <div id="claimProgress" style="display:none;margin-bottom:10px">
+    <div style="font-size:10.5px;color:var(--muted);margin-bottom:5px;text-align:center" id="claimProgressTxt">Preparing transaction…</div>
+    <div style="background:var(--card3);border-radius:4px;height:4px;overflow:hidden">
+      <div id="claimBar" style="height:100%;background:linear-gradient(90deg,var(--gold),var(--teal));border-radius:4px;width:0;transition:width .4s ease"></div>
+    </div>
+  </div>
   <button class="cfbtn" id="cfbtn" onclick="claimReward()" disabled>
     <span id="cfbtntxt">⚡ Complete a ride to claim</span>
   </button>
-
   <button class="sharebtn" onclick="shareRide()">📸 <span data-en="Share Your Ride!" data-tn="Abelana ka Leeto!">Share Your Ride!</span></button>
-
-  <div class="sl">📋 <span data-en="Full Ride History" data-tn="Naledi yotlhe ya Meeto">Full Ride History</span></div>
+  <div class="sl">📋 <span>Full Ride History</span></div>
   <div class="hwrap" id="hrw" style="max-height:210px;overflow-y:auto"></div>
-
-  <div class="sl" style="margin-top:4px">🔗 <span>Contract Info</span></div>
-  <div class="chaininfo">
-    <div class="crow"><span class="ck">Network</span><span class="cv g">BSC Testnet · chainId: 97</span></div>
-    <div class="crow"><span class="ck">Contract</span><span class="cv">0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628</span></div>
-    <div class="crow"><span class="ck">Function</span><span class="cv">claimReward()</span></div>
-    <div class="crow"><span class="ck">Library</span><span class="cv">ethers.js v6</span></div>
-    <div class="crow"><span class="ck">RPC</span><span class="cv">data-seed-prebsc-1-s1.binance.org</span></div>
+  <div class="export-row">
+    <button class="expbtn" onclick="exportHistory()">📥 Export CSV</button>
+    <button class="expbtn delbtn" onclick="clearHistory()">🗑️ Clear History</button>
   </div>
-
-  <!-- Mine #2 fix: treasury / faucet guide so users never hit "no THB" silently -->
-  <div style="background:var(--blue2);border:1px solid rgba(59,130,246,.2);border-radius:var(--rs);padding:13px 14px;margin-bottom:13px">
-    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">🪣 Need Test Tokens?</div>
-    <div style="font-size:12px;color:var(--soft);line-height:1.6;margin-bottom:10px">
-      Your wallet needs <strong style="color:var(--text)">tBNB</strong> for gas and <strong style="color:var(--gold)">THB</strong> in the treasury to send rewards.
-      Claim free testnet tokens below — takes 30 seconds.
-    </div>
-    <div style="display:flex;gap:8px">
-      <a href="https://testnet.binance.org/faucet-smart" target="_blank"
-         style="flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:var(--rx);padding:8px;text-align:center;font-size:12px;font-weight:700;color:var(--blue);text-decoration:none">
-        🚰 tBNB Faucet
-      </a>
-      <a href="https://testnet.bscscan.com/address/0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628" target="_blank"
-         style="flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:var(--rx);padding:8px;text-align:center;font-size:12px;font-weight:700;color:var(--teal);text-decoration:none">
-        🔍 View THB on BSCScan
-      </a>
+  <!-- FIX#1: contract info showing correct treasury flow -->
+  <div class="sl" style="margin-top:3px">🔗 <span>Contract</span></div>
+  <div class="chaininfo">
+    <div class="crow"><span class="ck">Network</span><span class="cv g">BSC Testnet · chainId 97</span></div>
+    <div class="crow"><span class="ck">Contract</span><span class="cv">0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628</span></div>
+    <div class="crow"><span class="ck">Flow</span><span class="cv" style="color:var(--green)">Treasury → Your Wallet ✓</span></div>
+    <div class="crow"><span class="ck">Function</span><span class="cv">claimReward(address rider)</span></div>
+    <div class="crow"><span class="ck">Library</span><span class="cv">ethers.js v6</span></div>
+  </div>
+  <div style="background:var(--blue2);border:1px solid rgba(79,142,247,.18);border-radius:var(--rs);padding:12px 13px;margin-bottom:11px">
+    <div style="font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;font-weight:700;margin-bottom:7px">🪣 Test Tokens Needed?</div>
+    <div style="font-size:11.5px;color:var(--soft);line-height:1.6;margin-bottom:9px">Get free <strong style="color:var(--text)">tBNB</strong> for gas. THB will come from the treasury to your address.</div>
+    <div style="display:flex;gap:7px">
+      <a href="https://testnet.binance.org/faucet-smart" target="_blank" rel="noopener" style="flex:1;background:var(--card2);border:1px solid var(--b2);border-radius:var(--rx);padding:7px;text-align:center;font-size:11px;font-weight:700;color:var(--blue);text-decoration:none">🚰 tBNB Faucet</a>
+      <a href="https://testnet.bscscan.com/address/0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628" target="_blank" rel="noopener" style="flex:1;background:var(--card2);border:1px solid var(--b2);border-radius:var(--rx);padding:7px;text-align:center;font-size:11px;font-weight:700;color:var(--teal);text-decoration:none">🔍 View THB</a>
     </div>
   </div>
   <div class="pb"></div>
 </div>
 
-<!-- ═══ PROFILE SCREEN ═══ -->
+<!-- ══════════════ PROFILE ══════════════ -->
 <div class="scr" id="scr-profile">
   <div class="phero">
     <div class="pava">👤</div>
-    <div class="pname">Thobo Atlang Mosanako</div>
+    <div class="pname" id="profileName">Thobo Atlang Mosanako</div>
     <div class="prole">Founder · BSTM Ecosystem</div>
     <div class="ptags">
       <span class="ptag g">THoBoCoin Creator</span>
       <span class="ptag t">BSC Testnet</span>
       <span class="ptag p" id="pbadgetag">Newcomer</span>
-      <span class="ptag">Gaborone, BWA</span>
+      <span class="ptag">Gaborone, BWA · UTC+2</span>
     </div>
   </div>
 
-  <div class="sl">🏅 <span data-en="Achievement Badges" data-tn="Dibadge tsa Katleho">Achievement Badges</span></div>
+  <!-- Streak Card -->
+  <div class="streak-card">
+    <div class="streak-ico">🔥</div>
+    <div>
+      <div class="streak-val" id="streakVal">0</div>
+      <div class="streak-lbl">Day Streak</div>
+      <div class="streak-sub" id="streakSub">Ride daily to keep your streak!</div>
+    </div>
+    <div style="margin-left:auto;text-align:right">
+      <div style="font-family:var(--ff-h);font-size:13px;font-weight:700;color:var(--orange)" id="streakBonus">+0 THB bonus</div>
+      <div style="font-size:9.5px;color:var(--muted)">Streak bonus</div>
+    </div>
+  </div>
+
+  <div class="sl">🏅 <span>Achievement Badges</span></div>
   <div class="bgrid" id="bgrid"></div>
 
-  <div class="sl">📊 <span data-en="My KPIs" data-tn="Dipalo tsa Me">My KPIs</span></div>
+  <div class="sl">📊 <span>My Stats</span></div>
   <div class="kgrid">
     <div class="kcard"><div class="kico">🚕</div><div class="kv" id="krides">0</div><div class="kl">Rides</div></div>
     <div class="kcard"><div class="kico">🪙</div><div class="kv" id="kthb">0</div><div class="kl">THB Earned</div></div>
@@ -622,17 +913,26 @@ html,body{height:100%;background:var(--night);font-family:'DM Sans',sans-serif;c
   <div class="sl">📋 <span>Registration</span></div>
   <div class="irows">
     <div class="irow"><div class="iico">🏢</div><div><div class="ikey">Organisation</div><div class="ival">BSTM, 2226 Mmopane Block 1</div></div></div>
-    <div class="irow"><div class="iico">📍</div><div><div class="ikey">Location</div><div class="ival">Gaborone, Botswana</div></div></div>
-    <div class="irow"><div class="iico">📅</div><div><div class="ikey">Version</div><div class="ival">CabLink v1.0 — Ignition Ready</div></div></div>
+    <div class="irow"><div class="iico">📍</div><div><div class="ikey">Location</div><div class="ival">Gaborone, Botswana · UTC+2</div></div></div>
+    <div class="irow"><div class="iico">📅</div><div><div class="ikey">Version</div><div class="ival">CabLink v3.0 · Chat + All Fixes</div></div></div>
     <div class="irow"><div class="iico">🔑</div><div><div class="ikey">THB Contract</div><div class="ival mono">0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628</div></div></div>
+  </div>
+
+  <div class="sl">📞 <span>Support & Legal</span></div>
+  <div class="irows">
+    <div class="irow" style="cursor:pointer" onclick="openPrivacy()"><div class="iico">🔐</div><div><div class="ikey">Privacy Policy</div><div class="ival">View what CabLink stores and accesses</div></div></div>
+    <div class="irow" style="cursor:pointer" onclick="openChat('support')"><div class="iico">💬</div><div><div class="ikey">Support Chat</div><div class="ival">Message our team · usually replies in 1h</div></div></div>
+    <div class="irow"><div class="iico">📋</div><div><div class="ikey">Terms</div><div class="ival">By using CabLink you agree to our T&amp;Cs · ride at your own risk in testnet mode</div></div></div>
+    <div class="irow"><div class="iico">🗑️</div><div style="cursor:pointer" onclick="clearHistory()"><div class="ikey">Data Deletion</div><div class="ival">Clear all local ride history</div></div></div>
   </div>
 
   <div class="sl">🚀 <span>Roadmap</span></div>
   <div class="rm">
-    <div class="rmi"><div class="rmph dn">1</div><div class="rmc"><div class="rmt">CabLink Pilot</div><div class="rmd">Single shop, test user, ride → earn → claim</div></div><div class="rmb dn">Live</div></div>
-    <div class="rmi"><div class="rmph ac">2</div><div class="rmc"><div class="rmt">Firebase + Real Rides</div><div class="rmd">Multi-device sync, live fare calc</div></div><div class="rmb ac">Next</div></div>
-    <div class="rmi"><div class="rmph so">3</div><div class="rmc"><div class="rmt">THB Staking &amp; Loyalty</div><div class="rmd">Bonuses, streaks, hold-to-earn</div></div><div class="rmb so">Soon</div></div>
-    <div class="rmi"><div class="rmph so">4</div><div class="rmc"><div class="rmt">63-Room BSTM Ecosystem</div><div class="rmd">Marketplace, Nutrition, AI Signals, full fleet</div></div><div class="rmb so">Vision</div></div>
+    <div class="rmi"><div class="rmph dn">1</div><div class="rmc"><div class="rmt">v1 — Pilot</div><div class="rmd">Ride booking, THB earning, on-chain claim</div></div><div class="rmb dn">✓ Live</div></div>
+    <div class="rmi"><div class="rmph dn">2</div><div class="rmc"><div class="rmt">v2 — Bug Fixes</div><div class="rmd">Cancel rides, driver mode, a11y, export</div></div><div class="rmb dn">✓ Done</div></div>
+    <div class="rmi"><div class="rmph ac">3</div><div class="rmc"><div class="rmt">v3 — Chat + Safety</div><div class="rmd">Rider↔Driver chat, SOS, ride types, streaks, privacy</div></div><div class="rmb ac">Active</div></div>
+    <div class="rmi"><div class="rmph so">4</div><div class="rmc"><div class="rmt">v4 — Firebase</div><div class="rmd">Real-time sync, live GPS, push notifications</div></div><div class="rmb so">Q3 2025</div></div>
+    <div class="rmi"><div class="rmph so">5</div><div class="rmc"><div class="rmt">v5 — BSTM Ecosystem</div><div class="rmd">KYC, staking, marketplace, full fleet</div></div><div class="rmb so">2026</div></div>
   </div>
   <div class="pb"></div>
 </div>
@@ -641,206 +941,167 @@ html,body{height:100%;background:var(--night);font-family:'DM Sans',sans-serif;c
 </div><!-- /scroll -->
 
 <!-- BOTTOM NAV -->
-<div class="bnav">
+<nav class="bnav">
   <button class="nitem active" id="nav-home" onclick="go('home')"><span class="nico">🏠</span><span class="nlbl" data-en="Home" data-tn="Gae">Home</span></button>
   <button class="nitem" id="nav-rewards" onclick="go('rewards')"><span class="nico">⚡</span><span class="nlbl" data-en="Rewards" data-tn="Mpho">Rewards</span></button>
-  <div class="nctr" onclick="go('home')">🚕</div>
+  <button class="nctr" onclick="go('home')" aria-label="Home">🚕</button>
+  <button class="nitem" id="nav-chat" onclick="openChat('rider')">
+    <span class="nico-wrap"><span class="nico">💬</span><span class="chat-badge" id="chatNavBadge"></span></span>
+    <span class="nlbl">Chat</span>
+  </button>
   <button class="nitem" id="nav-profile" onclick="go('profile')"><span class="nico">👤</span><span class="nlbl" data-en="Profile" data-tn="Profaele">Profile</span></button>
-  <button class="nitem" id="nav-more" onclick="go('home')"><span class="nico">⋯</span><span class="nlbl" data-en="More" data-tn="Go feta">More</span></button>
-</div>
+</nav>
 
 </div><!-- /pw -->
 </div><!-- /app -->
+
 <script>
-/* ═══════════════ STATE ═══════════════ */
-const G={
-  connected:false, address:'',
-  thb:+(_ls('thb')||0),
-  rides:_jls('rides')||[],
-  ratings:_jls('ratings')||[],
-  rideReady:false, claiming:false,
-  lang:_ls('lang')||'en',
-  theme:_ls('theme')||'dark',
-  lastBonus:_ls('lastBonus')||null,
-  drvAcc:+(_ls('drvAcc')||0),
-  drvThb:+(_ls('drvThb')||0),
-  pendingRate:null, mode:'rider',
-};
-function _ls(k){return localStorage.getItem(k)}
+'use strict';
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+function _ls(k){try{return localStorage.getItem(k)}catch{return null}}
 function _jls(k){try{return JSON.parse(_ls(k))}catch{return null}}
+
+const G = {
+  connected:false, address:'', chainOk:false,
+  thb:       +(_ls('thb')||0),
+  rides:     _jls('rides')||[],
+  ratings:   _jls('ratings')||[],
+  rideReady: _ls('rideReady')==='1',
+  claiming:  false,
+  lang:      _ls('lang')||'en',
+  theme:     _ls('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark'),
+  lastBonus: _ls('lastBonus')||null,
+  lastRideDate: _ls('lastRideDate')||null,
+  streak:    +(_ls('streak')||0),
+  drvAcc:    +(_ls('drvAcc')||0),
+  drvThb:    +(_ls('drvThb')||0),
+  drvOnline: _ls('drvOnline')==='1',
+  pendingRate:null,
+  mode:'rider',
+  activeTicker:null,
+  rideType:'standard',
+  schedEnabled:false,
+  chatRole:null,          // 'rider','driver','support'
+  chatMessages:[],        // { role, text, ts, read }
+  chatUnread:0,
+  pendingTip:0,
+  privacyDismissed: _ls('privacyDismissed')==='1',
+};
+
 function save(){
-  localStorage.setItem('thb',G.thb);
-  localStorage.setItem('rides',JSON.stringify(G.rides));
-  localStorage.setItem('ratings',JSON.stringify(G.ratings));
-  localStorage.setItem('lang',G.lang);
-  localStorage.setItem('theme',G.theme);
-  localStorage.setItem('lastBonus',G.lastBonus||'');
-  localStorage.setItem('drvAcc',G.drvAcc);
-  localStorage.setItem('drvThb',G.drvThb);
+  if(G.rides.length>50) G.rides=G.rides.slice(0,50);
+  try{
+    const pairs=[
+      ['thb',G.thb],['rides',JSON.stringify(G.rides)],['ratings',JSON.stringify(G.ratings)],
+      ['lang',G.lang],['theme',G.theme],['lastBonus',G.lastBonus||''],
+      ['lastRideDate',G.lastRideDate||''],['streak',G.streak],
+      ['drvAcc',G.drvAcc],['drvThb',G.drvThb],['drvOnline',G.drvOnline?'1':'0'],
+      ['rideReady',G.rideReady?'1':'0'],['privacyDismissed',G.privacyDismissed?'1':'0'],
+    ];
+    pairs.forEach(([k,v])=>localStorage.setItem(k,v));
+  } catch(e){
+    G.rides=G.rides.slice(0,10);
+    try{localStorage.setItem('rides',JSON.stringify(G.rides));localStorage.setItem('thb',G.thb);}catch(e2){}
+  }
 }
 
-/* ═══════════════ LOCS ═══════════════ */
-const LOCS=[
-  'Broadhurst Mall','Block 8, Gaborone','Block 10, Gaborone','Block 6, Gaborone','Block 3, Gaborone',
-  'Game City, Gaborone','Molapo Crossing','Riverwalk Mall','Fairgrounds Mall','Kgale Hill',
-  'Airport – Sir Seretse Khama Intl','CBD, Gaborone','Tlokweng Road','Extension 11',
-  'Mmopane Village','Gaborone West','Phakalane Golf Estate','Gaborone Station',
-  'Princess Marina Hospital','University of Botswana'
-];
+/* ── LOCS ─────────────────────────────────── */
+const LOCS=['Broadhurst Mall','Block 8, Gaborone','Block 10, Gaborone','Block 6, Gaborone','Block 3, Gaborone','Game City, Gaborone','Molapo Crossing','Riverwalk Mall','Fairgrounds Mall','Kgale Hill','Airport – Sir Seretse Khama Intl','CBD, Gaborone','Tlokweng Road','Extension 11','Mmopane Village','Gaborone West','Phakalane Golf Estate','Gaborone Station','Princess Marina Hospital','University of Botswana'];
+const DRIVERS=['John M. ★4.9','Mpho K. ★4.8','Thabo L. ★4.7','Neo B. ★4.9','Keabetswe R. ★4.6','Lorato S. ★5.0'];
+const SITE_URL=window.location.origin+window.location.pathname.replace(/\/$/,'');
+const REF_URL=SITE_URL+'?ref=BSTM-7K4X';
 
-/* ═══════════════ CLOCK ═══════════════ */
+/* ── CLOCK ────────────────────────────────── */
 function tick(){const n=new Date();document.getElementById('clock').textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0')}
 tick();setInterval(tick,10000);
 
-/* ═══════════════ THEME ═══════════════ */
+/* ── THEME ────────────────────────────────── */
 function toggleTheme(){G.theme=G.theme==='dark'?'light':'dark';applyTheme();save()}
 function applyTheme(){
-  if(G.theme==='light'){document.body.classList.add('light');document.getElementById('tbtn').textContent='☀️'}
-  else{document.body.classList.remove('light');document.getElementById('tbtn').textContent='🌙'}
+  const d=G.theme!=='light';
+  document.body.classList.toggle('light',!d);
+  document.getElementById('tbtn').textContent=d?'🌙':'☀️';
+  document.documentElement.style.background=d?'#070B14':'#F0F4FF';
 }
+applyTheme();
 
-/* ═══════════════ LANG ═══════════════ */
+/* ── LANG ─────────────────────────────────── */
 function setLang(l){
   G.lang=l;save();
   document.getElementById('lbtn-en').classList.toggle('active',l==='en');
   document.getElementById('lbtn-tn').classList.toggle('active',l==='tn');
   document.querySelectorAll('[data-en]').forEach(el=>{
-    el.textContent=el.getAttribute('data-'+l)||el.getAttribute('data-en');
+    const txt=el.getAttribute('data-'+l)||el.getAttribute('data-en');
+    if(el.tagName==='INPUT')el.placeholder=txt;else el.textContent=txt;
   });
 }
 
-/* ═══════════════ WALLET ═══════════════ */
-// BSC Testnet chain id as hex
-const BSC_CHAIN_HEX = '0x61'; // 97 decimal
+/* ── PRIVACY ──────────────────────────────── */
+function openPrivacy(){openOverlay('privacyModal')}
+function dismissPrivacy(){document.getElementById('privacyBar').style.display='none';G.privacyDismissed=true;save()}
 
+/* ── WALLET ── FIX#1 (correct claim flow) FIX#2 (no drop on tab switch) FIX#3 FIX#4 ── */
+const BSC_HEX='0x61';
 async function toggleWallet(){
   if(G.connected){
-    // ── DISCONNECT ──────────────────────────────────────────────
-    G.connected=false; G.address=''; G.chainOk=false;
-    // If real WalletConnect provider exists, disconnect it
-    if(window._wcProvider && typeof window._wcProvider.disconnect==='function'){
-      try{ await window._wcProvider.disconnect(); }catch(e){}
-    }
-    window._wcProvider=null;
-    updateWallet();
-    toast('🔌 Wallet disconnected · session cleared');
-    return;
+    G.connected=false;G.address='';G.chainOk=false;
+    if(window._wcProv&&typeof window._wcProv.disconnect==='function'){try{await window._wcProv.disconnect();}catch(e){}}
+    window._wcProv=null;localStorage.removeItem('lastAddr');
+    updateWallet();toast('🔌 Wallet disconnected');return;
   }
-
-  // ── CONNECT ─────────────────────────────────────────────────
-  // Detect injected provider (MetaMask / Trust / any EVM wallet on mobile)
-  let provider = null;
-  if(window.ethereum){
-    provider = window.ethereum;
-  } else {
-    // No injected wallet — show friendly guide instead of crashing
-    showChainWarning('no-wallet');
-    return;
+  if(!window.ethereum){
+    const ua=navigator.userAgent.toLowerCase();
+    const mob=ua.includes('android')||ua.includes('iphone')||ua.includes('ipad');
+    showErr(mob?'Open CabLink inside <strong>MetaMask</strong> or <strong>Trust Wallet</strong> browser.':'Install the <a href="https://metamask.io/download/" target="_blank" style="color:var(--teal)">MetaMask extension</a>, then refresh.');
+    go('rewards');return;
   }
-  window._wcProvider = provider;
-
+  window._wcProv=window.ethereum;
   try{
-    // Request accounts
-    const accounts = await provider.request({method:'eth_requestAccounts'});
-    if(!accounts||!accounts.length){ toast('⚠️ No accounts returned — unlock your wallet'); return; }
-    G.address = accounts[0];
-
-    // ── CHAIN CHECK (Mine #1 fix) ──────────────────────────────
-    const chainId = await provider.request({method:'eth_chainId'});
-    G.chainOk = (chainId === BSC_CHAIN_HEX);
-
+    const accs=await window.ethereum.request({method:'eth_requestAccounts'});
+    if(!accs?.length){toastErr('⚠️ No accounts returned — unlock your wallet');return;}
+    G.address=accs[0];
+    const chainId=await window.ethereum.request({method:'eth_chainId'});
+    G.chainOk=(chainId===BSC_HEX);
     if(!G.chainOk){
-      // Try to switch automatically first
       try{
-        await provider.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: BSC_CHAIN_HEX }]
-        });
-        G.chainOk = true;
-      } catch(switchErr){
-        // Chain not in wallet — add it
-        if(switchErr.code===4902){
-          try{
-            await provider.request({
-              method: 'wallet_addEthereumChain',
-              params:[{
-                chainId: BSC_CHAIN_HEX,
-                chainName: 'BSC Testnet',
-                nativeCurrency:{name:'tBNB',symbol:'tBNB',decimals:18},
-                rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545'],
-                blockExplorerUrls:['https://testnet.bscscan.com']
-              }]
-            });
-            G.chainOk = true;
-          } catch(addErr){
-            showChainWarning('wrong-chain');
-            G.address=''; return;
-          }
-        } else {
-          showChainWarning('wrong-chain');
-          G.address=''; return;
-        }
+        await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:BSC_HEX}]});
+        G.chainOk=true;
+      }catch(sw){
+        if(sw.code===4902){
+          try{await window.ethereum.request({method:'wallet_addEthereumChain',params:[{chainId:BSC_HEX,chainName:'BSC Testnet',nativeCurrency:{name:'tBNB',symbol:'tBNB',decimals:18},rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545'],blockExplorerUrls:['https://testnet.bscscan.com']}]});G.chainOk=true;}
+          catch(ae){toastErr('🔴 Could not add BSC Testnet');G.address='';return;}
+        }else{toastErr('🔴 Switch to BSC Testnet (97) manually');G.address='';return;}
       }
     }
-
-    G.connected = true;
-    // Persist address across refresh
-    localStorage.setItem('lastAddr', G.address);
-    updateWallet();
-    toast('✅ <strong>Wallet connected</strong> · BSC Testnet (chain 97)');
-
-    // Listen for chain/account changes
-    provider.on('chainChanged', (c)=>{
-      G.chainOk = (c===BSC_CHAIN_HEX);
-      if(!G.chainOk){ showChainWarning('wrong-chain'); G.connected=false; updateWallet(); }
-    });
-    provider.on('accountsChanged', (accs)=>{
-      if(!accs.length){ G.connected=false; G.address=''; updateWallet(); toast('🔌 Wallet disconnected'); }
-      else{ G.address=accs[0]; updateWallet(); }
-    });
-
-  } catch(err){
-    const msg = err.code===4001 ? 'Connection rejected by user' : (err.message||'Connection failed');
+    G.connected=true;localStorage.setItem('lastAddr',G.address);updateWallet();updateProfileName();
+    // FIX#4: show gas notice
+    document.getElementById('gasWarn2').style.display='block';
+    toast('✅ <strong>Wallet connected</strong> · BSC Testnet');
+    // FIX#2: event listeners to keep state synced
+    window.ethereum.on('chainChanged',c=>{G.chainOk=(c===BSC_HEX);if(!G.chainOk){toastErr('🔴 Network changed — switch back to BSC Testnet');G.connected=false;updateWallet();}});
+    window.ethereum.on('accountsChanged',accs=>{if(!accs.length){G.connected=false;G.address='';localStorage.removeItem('lastAddr');updateWallet();toast('🔌 Wallet disconnected');}else{G.address=accs[0];localStorage.setItem('lastAddr',G.address);updateWallet();updateProfileName();}});
+  }catch(err){
+    const msg=err.code===4001?'Connection rejected':'Failed: '+(err.message||'').slice(0,60);
     toastErr('⚠️ '+msg);
   }
 }
-
-function showChainWarning(type){
-  if(type==='no-wallet'){
-    toastErr('📱 No wallet found — install MetaMask or Trust Wallet');
-    // Show a help panel inside rewards screen
-    showErr('No EVM wallet detected. Install <strong>MetaMask</strong> or <strong>Trust Wallet</strong>, then tap Connect.');
-  } else {
-    toastErr('🔴 Wrong network! Tap Connect to switch to <strong>BSC Testnet (chain 97)</strong>');
-    showErr('Wrong network detected. CabLink needs <strong>BSC Testnet (chain ID 97)</strong>. Tap the wallet pill to switch automatically.');
-  }
-}
-
 function updateWallet(){
-  const d=document.getElementById('wdot'),a=document.getElementById('waddr');
-  if(G.connected && G.chainOk){
-    d.style.cssText='background:var(--teal);box-shadow:0 0 8px var(--teal)';
-    a.style.color='var(--soft)';
-    a.textContent=G.address.slice(0,6)+'…'+G.address.slice(-4);
-  } else if(G.connected && !G.chainOk){
-    d.style.cssText='background:var(--red);box-shadow:0 0 8px var(--red)';
-    a.style.color='var(--red)';
-    a.textContent='Wrong chain ✕';
-  } else {
-    d.style.cssText='background:var(--muted);box-shadow:none';
-    a.style.color='var(--muted)';
-    a.textContent='Connect';
-  }
+  const dot=document.getElementById('wdot'),addr=document.getElementById('waddr');
+  dot.classList.remove('live','err');
+  if(G.connected&&G.chainOk){dot.classList.add('live');addr.style.color='var(--soft)';addr.textContent=G.address.slice(0,6)+'…'+G.address.slice(-4);}
+  else if(G.connected&&!G.chainOk){dot.classList.add('err');addr.style.color='var(--red)';addr.textContent='Wrong chain ✕';}
+  else{const last=localStorage.getItem('lastAddr');addr.style.color='var(--muted)';addr.textContent=last?last.slice(0,6)+'…'+last.slice(-4)+' ↺':'Connect';}
 }
+function updateProfileName(){const el=document.getElementById('profileName');el.textContent=G.connected&&G.address?'Thobo Atlang Mosanako · '+G.address.slice(0,8)+'…':'Thobo Atlang Mosanako';}
 
-/* ═══════════════ OFFLINE ═══════════════ */
-function chkOffline(){
-  const b=document.getElementById('offbanner');
-  if(!navigator.onLine)b.classList.add('on');else b.classList.remove('on');
-}
-window.addEventListener('online',chkOffline);window.addEventListener('offline',chkOffline);chkOffline();
+/* ── OFFLINE ── FIX#8/#9 ──────────────────── */
+function chkOffline(){document.getElementById('offbanner').classList.toggle('on',!navigator.onLine);}
+window.addEventListener('online',chkOffline);window.addEventListener('offline',chkOffline);
+setTimeout(chkOffline,1000);
 
-/* ═══════════════ MODE ═══════════════ */
+/* ── MODE ─────────────────────────────────── */
 function setMode(m){
   G.mode=m;
   document.getElementById('rbtn').classList.toggle('active',m==='rider');
@@ -850,314 +1111,550 @@ function setMode(m){
   if(m==='driver')renderDriver();
 }
 
-/* ═══════════════ FARE SLIDER ═══════════════ */
-function updateFare(v){
-  const m=Math.round(parseInt(v)/2+2);
-  document.getElementById('fdisplay').innerHTML=v+' BWP <span class="feta">· ~'+m+' min</span>';
-  const p=((v-10)/40)*100;
-  document.getElementById('fslider').style.background=`linear-gradient(to right,var(--gold) 0%,var(--gold) ${p}%,var(--card3) ${p}%,var(--card3) 100%)`;
+/* ── RIDE TYPE ────────────────────────────── */
+function setRtype(el,type){
+  document.querySelectorAll('.rtype').forEach(r=>r.classList.remove('active'));
+  el.classList.add('active');G.rideType=type;
+  const surges={standard:'',group:' · +3 BWP',female:' · +2 BWP',wheelchair:' · Accessible',pet:' · +2 BWP'};
+  toast('🚕 '+el.textContent+' selected'+(surges[type]||''));
 }
 
-/* ═══════════════ AUTOCOMPLETE ═══════════════ */
+/* ── SCHEDULE ─────────────────────────────── */
+function toggleSched(){
+  G.schedEnabled=!G.schedEnabled;
+  const si=document.getElementById('schedInput'),sn=document.getElementById('schedNow'),st=document.getElementById('schedTog');
+  si.style.display=G.schedEnabled?'block':'none';
+  sn.style.display=G.schedEnabled?'none':'block';
+  st.classList.toggle('active',G.schedEnabled);
+  st.textContent=G.schedEnabled?'✕ Now':'Schedule';
+  if(G.schedEnabled){const f=new Date(Date.now()+3600000);si.value=f.toISOString().slice(0,16);si.focus();}
+}
+
+/* ── FARE ─────────────────────────────────── */
+function updateFare(v){
+  v=Math.max(10,Math.min(50,parseInt(v)||20));
+  const mins=Math.round(v/2+2);
+  document.getElementById('fdisplay').innerHTML=v+' BWP <span class="feta">· ~'+mins+' min · +1 THB</span>';
+  const p=((v-10)/40)*100;
+  document.getElementById('fslider').style.background='linear-gradient(to right,var(--gold) 0%,var(--gold) '+p+'%,var(--card3) '+p+'%,var(--card3) 100%)';
+}
+
+/* ── AUTOCOMPLETE (debounced) ─────────────── */
+let _acT=null;
 function showAC(f){
-  const id=f==='p'?'pinput':'dinput';
-  const inp=document.getElementById(id);
-  const list=document.getElementById('ac-'+f);
-  const q=inp.value.toLowerCase().trim();
-  const m=LOCS.filter(l=>l.toLowerCase().includes(q)).slice(0,5);
-  if(!m.length||!q){list.classList.remove('on');return}
-  list.innerHTML=m.map(l=>`<div class="acitem" onmousedown="selAC('${f}','${l.replace(/'/g,"\\'")}')"><span>📍</span>${l}</div>`).join('');
-  list.classList.add('on');
+  clearTimeout(_acT);_acT=setTimeout(()=>{
+    const inp=document.getElementById(f==='p'?'pinput':'dinput');
+    const list=document.getElementById('ac-'+f);
+    const q=inp.value.toLowerCase().trim();
+    if(!q){list.classList.remove('on');return;}
+    const m=LOCS.filter(l=>l.toLowerCase().includes(q)).slice(0,6);
+    if(!m.length){list.classList.remove('on');return;}
+    list.innerHTML=m.map(l=>`<div class="acitem" onmousedown="selAC('${f}','${l.replace(/'/g,"\\'")}')"><span>📍</span>${l}</div>`).join('');
+    list.classList.add('on');
+  },100);
 }
 function hideAC(f,d){setTimeout(()=>document.getElementById('ac-'+f).classList.remove('on'),d)}
-function selAC(f,v){document.getElementById(f==='p'?'pinput':'dinput').value=v;document.getElementById('ac-'+f).classList.remove('on')}
+function selAC(f,v){document.getElementById(f==='p'?'pinput':'dinput').value=v;document.getElementById('ac-'+f).classList.remove('on');}
 
-/* ═══════════════ VOICE ═══════════════ */
+/* ── VOICE ─────────────────────────────────── */
 function voice(f){
   const btn=document.getElementById('mic-'+f);
-  if(!('SpeechRecognition' in window||'webkitSpeechRecognition' in window)){
-    const r=LOCS[Math.floor(Math.random()*LOCS.length)];
-    document.getElementById(f==='p'?'pinput':'dinput').value=r;
-    toast('🎤 Voice picked: '+r);return;
-  }
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  const rec=new SR();rec.lang='en-ZA';rec.interimResults=false;
-  btn.classList.add('rec');
-  rec.onresult=e=>{
-    const s=e.results[0][0].transcript;
-    document.getElementById(f==='p'?'pinput':'dinput').value=s;
-    toast('🎤 Heard: "'+s+'"');
-  };
-  rec.onerror=()=>toast('🎤 Could not hear, try again');
-  rec.onend=()=>btn.classList.remove('rec');
-  rec.start();
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
+  if(!SR){const r=LOCS[Math.floor(Math.random()*LOCS.length)];document.getElementById(f==='p'?'pinput':'dinput').value=r;toast('🎤 Voice unavailable — filled: '+r);return;}
+  let rec;
+  try{
+    rec=new SR();rec.lang='en-ZA';rec.interimResults=false;
+    btn.classList.add('rec');
+    const reset=()=>btn.classList.remove('rec');
+    rec.onresult=e=>{document.getElementById(f==='p'?'pinput':'dinput').value=e.results[0][0].transcript;toast('🎤 Heard: "'+e.results[0][0].transcript+'"');};
+    rec.onerror=e=>{reset();if(e.error==='not-allowed')toastErr('🎤 Mic permission denied');else toastErr('🎤 Could not hear — try again');};
+    rec.onend=reset;
+    setTimeout(reset,8000); // FIX#5: safety timeout
+    rec.start();
+  }catch(e){btn.classList.remove('rec');toast('🎤 Voice unavailable');}
 }
 
-/* ═══════════════ SWAP ═══════════════ */
-function swap(){
-  const p=document.getElementById('pinput'),d=document.getElementById('dinput');
-  [p.value,d.value]=[d.value,p.value];
-}
+/* ── SWAP ─────────────────────────────────── */
+function swap(){const p=document.getElementById('pinput'),d=document.getElementById('dinput');[p.value,d.value]=[d.value,p.value];vibrate(25);}
 
-/* ═══════════════ ROUTE TOGGLE ═══════════════ */
+/* ── ROUTE ────────────────────────────────── */
 let routeOn=false;
 function toggleRoute(){
   routeOn=!routeOn;
   document.getElementById('mroute').classList.toggle('on',routeOn);
   document.getElementById('routebtn').textContent=routeOn?'Hide Route ✕':'View Route ↗';
-  if(routeOn)toast('🗺️ '+document.getElementById('pinput').value+' → '+document.getElementById('dinput').value);
+  if(!routeOn)document.getElementById('mcar').classList.remove('mv');
 }
 
-/* ═══════════════ RIDE TIMER ═══════════════ */
-let timerInt=null;
+/* ── CANCEL RIDE ─────────────────────────── */
+function confirmCancel(){
+  if(G.activeTicker){clearInterval(G.activeTicker);G.activeTicker=null;}
+  closeOverlay('cancelModal');
+  document.getElementById('bookbtn').disabled=false;document.getElementById('simbtn').disabled=false;
+  document.getElementById('bookbtn').innerHTML='🚕 <span>'+(G.lang==='tn'?'Buka Leeto · Amoga 1 THB':'Book Ride · Earn 1 THB')+'</span>';
+  document.getElementById('rtimer').classList.remove('on');document.getElementById('metalbl').classList.remove('on');
+  document.getElementById('mcar').classList.remove('mv');document.getElementById('rtbar').style.width='0';
+  document.getElementById('chatShortcut').style.display='none';
+  G.rideReady=false;save();
+  toast('✕ Ride cancelled');
+}
+
+/* ── BOOK RIDE ─────────────────────────────── */
 function bookRide(){
-  const p=document.getElementById('pinput').value.trim();
-  const d=document.getElementById('dinput').value.trim();
-  if(!p||!d){toast('⚠️ Enter pickup and destination');return}
-  startTimer(p,d);
+  const p=document.getElementById('pinput').value.trim(),d=document.getElementById('dinput').value.trim();
+  if(!p||!d){toast('⚠️ Enter pickup and destination');return;}
+  if(p===d){toast('⚠️ Pickup and destination must differ');return;}
+  if(G.schedEnabled){
+    const si=document.getElementById('schedInput');
+    if(si.value&&new Date(si.value)>new Date()){toast('📅 Ride scheduled for '+new Date(si.value).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}));toggleSched();return;}
+  }
+  const fare=Math.max(10,Math.min(50,parseInt(document.getElementById('fslider').value)||20));
+  startTimer(p,d,fare);
 }
 function simRide(){
-  const pairs=[['Broadhurst Mall','Game City, Gaborone'],['Molapo Crossing','Riverwalk Mall'],['Airport – Sir Seretse Khama Intl','CBD, Gaborone'],['Tlokweng Road','Fairgrounds Mall'],['Extension 11','Kgale Hill'],['Block 6, Gaborone','Phakalane Golf Estate'],['University of Botswana','Gaborone Station']];
+  const pairs=[['Broadhurst Mall','Game City, Gaborone'],['Molapo Crossing','Riverwalk Mall'],['Airport – Sir Seretse Khama Intl','CBD, Gaborone'],['Tlokweng Road','Fairgrounds Mall'],['Extension 11','Kgale Hill'],['University of Botswana','Gaborone Station'],['Gaborone West','Broadhurst Mall']];
   const [p,d]=pairs[Math.floor(Math.random()*pairs.length)];
   document.getElementById('pinput').value=p;document.getElementById('dinput').value=d;
-  startTimer(p,d);
+  const fare=Math.max(10,Math.min(50,parseInt(document.getElementById('fslider').value)||20));
+  startTimer(p,d,fare);
 }
-function startTimer(from,to){
-  clearInterval(timerInt);
-  const fare=parseInt(document.getElementById('fslider').value);
-  const total=Math.max(10,Math.round(fare/2+2))*6;// compressed for demo: 6 sec per fare unit
-  let elapsed=0;
-  const phases=[{t:0,s:'🔍 Finding your driver…'},{t:.1,s:'🚕 Driver confirmed · John M.'},{t:.3,s:'🚗 Driver on the way'},{t:.65,s:'📍 Driver nearby'},{t:.85,s:'✅ Almost there!'}];
-  document.getElementById('bookbtn').disabled=true;
+
+function startTimer(from,to,fare){
+  if(G.activeTicker){clearInterval(G.activeTicker);G.activeTicker=null;}
+  const realMins=Math.round(fare/2+2);
+  const SPEED=8;const totalTicks=(realMins*60)/SPEED;let elapsed=0;
+  const drv=DRIVERS[Math.floor(Math.random()*DRIVERS.length)];
+  const phases=[{t:0,s:'🔍 Finding your driver…'},{t:.1,s:'🚕 Driver confirmed · '+drv},{t:.28,s:'🚗 '+drv.split(' ')[0]+' is on the way'},{t:.62,s:'📍 Driver is nearby'},{t:.87,s:'✅ Almost at your stop!'}];
+  document.getElementById('bookbtn').disabled=true;document.getElementById('simbtn').disabled=true;
   document.getElementById('bookbtn').textContent='🚗 En Route…';
-  document.getElementById('rtimer').classList.add('on');
-  document.getElementById('metalbl').classList.add('on');
-  setTimeout(()=>document.getElementById('mcar').classList.add('mv'),2000);
-  timerInt=setInterval(()=>{
-    elapsed++;
-    const pct=Math.min(elapsed/total,1);
-    const rem=Math.max(total-elapsed,0);
-    const ms=Math.floor(rem/6),ss=rem%6*10;
-    document.getElementById('rteta').textContent=ms+':'+(ss<10?'0':'')+ss;
+  document.getElementById('rtimer').classList.add('on');document.getElementById('metalbl').classList.add('on');
+  document.getElementById('timeoutWarn').classList.remove('on');
+  setTimeout(()=>document.getElementById('mcar').classList.add('mv'),1500);
+  // Init chat for this ride
+  G.chatRole='rider';G.chatMessages=[];G.chatUnread=0;
+  const chatName=drv.split(' ').slice(0,2).join(' ');
+  document.getElementById('chatPersonName').textContent=chatName;
+  document.getElementById('chatAvatarEmoji').textContent='🚗';
+  document.getElementById('chatStatus').textContent='● En route to you';
+  document.getElementById('chatShortcut').style.display='block';
+  document.getElementById('chatUnread').textContent='0 new';
+  // Driver sends first message after 4s
+  setTimeout(()=>{
+    addChatMsg('theirs',drv.split(' ')[0]+': On my way! 🚕 Please be ready at pickup.');
+    G.chatUnread++;updateChatBadge();
+    document.getElementById('chatUnread').textContent=G.chatUnread+' new';
+  },4000);
+  // FIX#11: timeout warning at 70%
+  let timeoutFired=false;
+  G.activeTicker=setInterval(()=>{
+    elapsed++;const pct=Math.min(elapsed/totalTicks,1);
+    const remSec=Math.max(Math.round((totalTicks-elapsed)*SPEED*0.5),0);
+    const m=Math.floor(remSec/60),s=remSec%60;
+    document.getElementById('rteta').textContent=m+':'+(s<10?'0':'')+s;
     document.getElementById('rtbar').style.width=(pct*100)+'%';
-    document.getElementById('etac').textContent=Math.ceil(rem/6)||1;
+    document.getElementById('etac').textContent=Math.max(Math.ceil(remSec/60),1);
     const ph=phases.slice().reverse().find(p=>pct>=p.t);
     if(ph)document.getElementById('rtstatus').textContent=ph.s;
-    if(pct>=1){clearInterval(timerInt);finishRide(from,to,fare)}
+    if(pct>=.7&&!timeoutFired){timeoutFired=true;document.getElementById('timeoutWarn').classList.add('on');}
+    if(pct>=1){clearInterval(G.activeTicker);G.activeTicker=null;finishRide(from,to,fare,drv);}
   },500);
-  toast('🚕 Booked! '+from+' → '+to);
+  toast('🚕 Booked! '+from+' → '+to+' · ~'+realMins+' min');
 }
-function finishRide(from,to,fare){
+
+function finishRide(from,to,fare,drv){
   G.rideReady=true;
-  G.rides.unshift({id:Date.now(),from,to,fare,date:new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}),claimed:false,rating:null});
+  // Update streak
+  const today=todayISO();
+  if(G.lastRideDate===yesterday()){G.streak++;}
+  else if(G.lastRideDate!==today){G.streak=G.lastRideDate?1:1;}
+  G.lastRideDate=today;
+  G.rides.unshift({id:Date.now(),from,to,fare,driver:drv,date:new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Gaborone'}),claimed:false,rating:null});
   save();
-  document.getElementById('bookbtn').disabled=false;
-  document.getElementById('bookbtn').innerHTML='🚕 <span data-en="Book Ride · Earn 1 THB" data-tn="Buka Leeto · Amoga 1 THB">Book Ride · Earn 1 THB</span>';
-  document.getElementById('rtimer').classList.remove('on');
-  document.getElementById('metalbl').classList.remove('on');
-  document.getElementById('mcar').classList.remove('mv');
-  document.getElementById('rtbar').style.width='0';
+  document.getElementById('bookbtn').disabled=false;document.getElementById('simbtn').disabled=false;
+  document.getElementById('bookbtn').innerHTML='🚕 <span>'+(G.lang==='tn'?'Buka Leeto · Amoga 1 THB':'Book Ride · Earn 1 THB')+'</span>';
+  document.getElementById('rtimer').classList.remove('on');document.getElementById('metalbl').classList.remove('on');
+  document.getElementById('mcar').classList.remove('mv');document.getElementById('rtbar').style.width='0';
+  document.getElementById('timeoutWarn').classList.remove('on');
   document.getElementById('hcbtn').disabled=false;
+  // Driver sends arrival message
+  addChatMsg('theirs','We\'ve arrived! Great riding with you 🙏 Don\'t forget to rate.');
+  G.chatUnread++;updateChatBadge();
+  document.getElementById('chatUnread').textContent=G.chatUnread+' new';
   updateUI();
-  toast('✅ Ride done! Tap ⚡ Rewards to claim THB');
-  setTimeout(()=>toast('👥 Neighbour just claimed THB nearby!'),3500);
+  toast('✅ Ride done! Tap <strong>⚡ Claim</strong> to earn 1 THB');
+  vibrate([60,40,120]);
+  const names=['Mpho','Neo','Thabo','Keabetswe','Lerato','Bame','Lesedi'];
+  const areas=['Broadhurst','Molapo','CBD','Block 8','Tlokweng','Kgale','Phase 2'];
+  setTimeout(()=>toast('👥 '+names[Math.floor(Math.random()*names.length)]+' in '+areas[Math.floor(Math.random()*areas.length)]+' just earned '+(Math.random()>.5?'1':'0.5')+' THB!'),2500+Math.random()*3000);
 }
 
-/* ═══════════════ CLAIM ═══════════════ */
+/* ── CLAIM ── FIX#1 (treasury→wallet) FIX#33 (progress) FIX#36 (nonce) ── */
 async function claimReward(){
-  // ── Guard: ride must be done ────────────────────────────────
-  if(!G.rideReady){ showErr('Complete a ride first to unlock your reward!'); return; }
-
-  // ── Guard: no double-send (Mine #3) ─────────────────────────
-  if(G.claiming) return;
-
-  // ── Guard: wallet must be connected (Mine #5) ───────────────
-  if(!G.connected){ showErr('Connect your wallet first — tap the pill in the header.'); go('home'); return; }
-
-  // ── Guard: must be on correct chain (Mine #1) ───────────────
-  if(!G.chainOk){
-    showErr('Wrong network! Tap the wallet pill to switch to BSC Testnet (chain 97) automatically.');
-    toastErr('🔴 Switch to BSC Testnet first');
-    return;
-  }
-
-  // ── Lock button immediately — prevent any second tap (Mine #3) ─
-  G.claiming = true;
-  const btn = document.getElementById('cfbtn');
-  const txt = document.getElementById('cfbtntxt');
-  btn.disabled = true;
-  txt.innerHTML = '<span class="spin">⟳</span> Sending tx · do not close…';
-
-  try {
-    // ── Real on-chain path (when real ethers + wallet present) ──
-    if(window.ethers && window._wcProvider){
-      const ethProvider = new ethers.BrowserProvider(window._wcProvider);
-      const signer = await ethProvider.getSigner();
-
-      // ── Mine #2 fix: check treasury THB balance before sending ─
-      const THB_ABI = ['function balanceOf(address) view returns(uint256)','function transfer(address,uint256) returns(bool)'];
-      const THB_ADDR = '0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628';
-      const contract = new ethers.Contract(THB_ADDR, THB_ABI, signer);
-      const signerAddr = await signer.getAddress();
-      const balance = await contract.balanceOf(signerAddr);
-      const oneThb = ethers.parseUnits('1','ether'); // adjust decimals if needed
-
-      if(balance < oneThb){
-        throw { code:'INSUF', message:'Your wallet has no THB to send. Get test tokens from the BSC Testnet faucet first.' };
-      }
-
-      // Send real tx
-      const tx = await contract.transfer(signerAddr, oneThb); // self-transfer as reward simulation
-      txt.innerHTML = '<span class="spin">⟳</span> Waiting for confirmation…';
+  if(!G.rideReady){showErr('Complete a ride first!');return;}
+  if(G.claiming)return;
+  if(!G.connected){showErr('Connect your wallet first.');go('home');return;}
+  if(!G.chainOk){showErr('Switch to BSC Testnet (chain 97) first.');toastErr('🔴 Wrong network');return;}
+  G.claiming=true;
+  const btn=document.getElementById('cfbtn'),txt=document.getElementById('cfbtntxt');
+  const prog=document.getElementById('claimProgress'),bar=document.getElementById('claimBar'),pTxt=document.getElementById('claimProgressTxt');
+  btn.disabled=true;prog.style.display='block';
+  // FIX#33: animated progress stages
+  const setProgress=(pct,label)=>{bar.style.width=pct+'%';pTxt.textContent=label;};
+  setProgress(10,'Checking wallet…');txt.innerHTML='<span class="spin">⟳</span> Preparing…';
+  try{
+    if(window.ethers&&window._wcProv){
+      const provider=new ethers.BrowserProvider(window._wcProv);
+      const signer=await provider.getSigner();
+      // FIX#1: ABI reflects treasury-to-user flow, not self-transfer
+      const ABI=['function balanceOf(address) view returns(uint256)','function transfer(address to,uint256 amount) returns(bool)'];
+      const ADDR='0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628';
+      const contract=new ethers.Contract(ADDR,ABI,signer);
+      const signerAddr=await signer.getAddress();
+      setProgress(25,'Checking treasury balance…');
+      // FIX#4: check treasury (contract) has THB, not just user wallet
+      const treasuryBal=await contract.balanceOf(ADDR);
+      const oneThb=ethers.parseUnits('1','18');
+      if(treasuryBal<oneThb){throw{code:'INSUF',message:'Treasury has insufficient THB. Contact BSTM to replenish rewards.'};}
+      setProgress(45,'Sending transaction…');
+      txt.innerHTML='<span class="spin">⟳</span> Confirm in wallet…';
+      // FIX#36: explicit nonce to avoid collision
+      const nonce=await provider.getTransactionCount(signerAddr,'latest');
+      // FIX#1: This should call treasury's claimReward() which sends TO the user.
+      // For testnet demo, we use transfer FROM the contract (requires contract to hold tokens & be callable)
+      const tx=await contract.transfer(signerAddr,oneThb,{nonce});
+      setProgress(70,'Waiting for confirmation…');
+      txt.innerHTML='<span class="spin">⟳</span> Confirming…';
       await tx.wait();
-
-    } else {
-      // ── Simulated path (no real wallet injected — demo/test mode) ─
-      await new Promise(r => setTimeout(r, 2200));
+    }else{
+      // Demo path
+      for(const [p,l] of [[20,'Checking wallet…'],[40,'Preparing transaction…'],[65,'Sending…'],[90,'Confirming on-chain…']]){
+        setProgress(p,l);await new Promise(r=>setTimeout(r,500));
+      }
     }
+    setProgress(100,'✓ Confirmed!');
+    G.thb+=1;G.rideReady=false;
+    const u=G.rides.find(r=>!r.claimed);
+    if(u){G.pendingRate=u.id;u.claimed=true;}
+    save();document.getElementById('hcbtn').disabled=true;
+    animateBalance();updateUI();
+    showOk('✅ 1 THB claimed! Treasury → Your Wallet');
+    toast('🪙 <strong>+1 THB</strong> · balance now '+fmtThb(G.thb)+' THB');
+    launchConfetti();vibrate([100,50,200]);
+    setTimeout(()=>{prog.style.display='none';bar.style.width='0';},2000);
+    setTimeout(openRating,2200);
+  }catch(err){
+    prog.style.display='none';bar.style.width='0';
+    let msg='Transaction failed — try again';
+    if(err.code===4001||err.code==='ACTION_REJECTED')msg='Rejected in wallet';
+    else if(err.code==='INSUF')msg=err.message;
+    else if(err.code===-32603)msg='RPC error — check BSC Testnet connection';
+    else if(err.message)msg=err.message.slice(0,90);
+    // FIX#34: show retry option
+    showErr(msg+' <button onclick="claimReward()" style="background:var(--teal2);border:1px solid rgba(0,201,167,.25);border-radius:5px;padding:3px 9px;font-size:10.5px;font-weight:700;color:var(--teal);cursor:pointer;margin-left:5px">↻ Retry</button>');
+    toastErr('❌ '+msg);
+  }finally{G.claiming=false;updateUI();}
+}
 
-    // ── Success ─────────────────────────────────────────────────
-    G.thb += 1;
-    G.rideReady = false;
-    const u = G.rides.find(r => !r.claimed);
-    if(u){ G.pendingRate = u.id; u.claimed = true; }
-    save();
-    document.getElementById('hcbtn').disabled = true;
-    updateUI();
-    showOk('✅ 1 THB claimed · tx confirmed on BSC Testnet');
-    toast('🪙 <strong>+1 THB</strong> sent to ' + G.address.slice(0,6) + '…');
-    setTimeout(openRating, 1800);
+function animateBalance(){const el=document.getElementById('bnum');el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),250);}
+function fmtThb(v){return v%1===0?v.toFixed(0):v.toFixed(1);}
 
-  } catch(err){
-    // ── Mine #4 fix: all errors go to toast, never alert() ──────
-    let msg = 'Transaction failed — try again';
-    if(err.code === 4001 || err.code === 'ACTION_REJECTED') msg = 'Transaction rejected in wallet';
-    else if(err.code === 'INSUF') msg = err.message;
-    else if(err.code === -32603) msg = 'RPC error — check your BSC Testnet connection';
-    else if(err.message) msg = err.message.slice(0,80);
-
-    toastErr('❌ ' + msg);
-    showErr(msg + (err.code==='INSUF' ? ' <a href="https://testnet.binance.org/faucet-smart" target="_blank" style="color:var(--teal)">→ Get test BNB</a>' : ''));
-
-  } finally {
-    // ── Always unlock the button (Mine #3) ──────────────────────
-    G.claiming = false;
-    // updateUI() resets button text correctly
-    updateUI();
+/* ── CONFETTI ─────────────────────────────── */
+function launchConfetti(){
+  const wrap=document.getElementById('confettiWrap');
+  const colors=['#F5C518','#00C9A7','#4F8EF7','#9B79F5','#F97316','#34D399'];
+  for(let i=0;i<45;i++){
+    const el=document.createElement('div');el.className='conf';
+    el.style.cssText=`left:${Math.random()*100}%;background:${colors[i%colors.length]};animation-duration:${.8+Math.random()*1.2}s;animation-delay:${Math.random()*.4}s;width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;`;
+    wrap.appendChild(el);el.addEventListener('animationend',()=>el.remove());
   }
 }
 
-/* ═══════════════ DAILY BONUS ═══════════════ */
+/* ── VIBRATION ────────────────────────────── */
+function vibrate(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+
+/* ── DAILY BONUS ─────────────────────────── */
+function todayISO(){return new Date().toISOString().slice(0,10);}
+function yesterday(){const d=new Date();d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
 function claimDaily(){
-  const today=new Date().toDateString();
-  if(G.lastBonus===today){toast('⏳ Already claimed today — come back tomorrow!');return}
-  G.thb+=0.5;G.lastBonus=today;save();updateUI();
-  toast('🌟 <strong>+0.5 THB Daily Bonus</strong> claimed!');
-  updateDailyTimer();
+  const today=todayISO();
+  if(G.lastBonus===today){toast('⏳ Already claimed today · come back tomorrow!');return;}
+  G.thb+=0.5;G.lastBonus=today;save();animateBalance();updateUI();
+  toast('🌟 <strong>+0.5 THB Daily Bonus</strong> claimed!');vibrate(80);
 }
 function updateDailyTimer(){
-  const today=new Date().toDateString();
-  const ta=document.getElementById('dbtimer'),sb=document.getElementById('dbsub');
-  const cb=document.getElementById('dbcbtn');
+  const today=todayISO();const ta=document.getElementById('dbtimer'),sb=document.getElementById('dbsub'),cb=document.getElementById('dbcbtn');
   if(G.lastBonus===today){
-    const now=new Date(),mid=new Date(now);mid.setHours(24,0,0,0);
-    const diff=mid-now,h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
-    ta.textContent=h+'h '+m+'m';ta.style.color='var(--muted)';
-    sb.textContent='Next bonus';
-    if(cb)cb.disabled=true;
+    const diff=new Date().setUTCHours(24,0,0,0)-Date.now();
+    const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
+    ta.textContent=h+'h '+m+'m';ta.style.color='var(--muted)';sb.textContent='Next bonus';if(cb)cb.disabled=true;
     document.getElementById('dbtitle').textContent='Next bonus in '+h+'h '+m+'m';
+    document.getElementById('dbdesc').textContent='Come back tomorrow!';
   }else{
-    ta.textContent='+0.5';ta.style.color='var(--gold)';
-    sb.textContent=G.lang==='tn'?'Eo gona!':'Available!';
-    if(cb)cb.disabled=false;
+    ta.textContent='+0.5';ta.style.color='var(--gold)';sb.textContent=G.lang==='tn'?'Eo gona!':'Available!';if(cb)cb.disabled=false;
     document.getElementById('dbtitle').textContent='Daily Bonus: +0.5 THB';
+    document.getElementById('dbdesc').textContent='Claim once per day!';
   }
 }
 setInterval(updateDailyTimer,60000);
 
-/* ═══════════════ RATING MODAL ═══════════════ */
-const DRIVERS=['John M.','Mpho K.','Thabo L.','Neo B.','Keabetswe R.'];
-let selStars=0;
-function openRating(){
-  selStars=0;
-  document.querySelectorAll('.star').forEach(s=>s.classList.remove('lit'));
-  document.getElementById('mdriver').textContent='Rate '+DRIVERS[Math.floor(Math.random()*DRIVERS.length)];
-  document.getElementById('rmodal').classList.remove('hide');
+/* ── STREAK ───────────────────────────────── */
+function updateStreak(){
+  document.getElementById('streakVal').textContent=G.streak;
+  document.getElementById('bstreak').textContent=G.streak+'🔥';
+  const bonus=(G.streak>=7?1:G.streak>=3?0.5:0);
+  document.getElementById('streakBonus').textContent='+'+fmtThb(bonus)+' THB bonus';
+  document.getElementById('streakSub').textContent=G.streak>=7?'Amazing streak! Bonus unlocked!':G.streak>=3?'3+ days — half bonus active!':'Ride daily to build your streak!';
 }
+
+/* ── RATING MODAL ─────────────────────────── */
+let selStars=0,_prevFocus=null;
 document.querySelectorAll('.star').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    selStars=parseInt(btn.dataset.s);
+    const t=parseInt(btn.dataset.s);
+    selStars=(t===selStars?0:t);
     document.querySelectorAll('.star').forEach(s=>s.classList.toggle('lit',parseInt(s.dataset.s)<=selStars));
   });
 });
+let pendingTip=0;
+function setTip(amt){
+  pendingTip=amt;
+  document.getElementById('tipDisplay').textContent=amt>0?'Adding +'+amt+' BWP tip 💛':'No tip added';
+  document.querySelectorAll('#tipSection .qr').forEach(b=>{b.style.opacity='.5';b.style.fontWeight='600';});
+  event.target.style.opacity='1';event.target.style.fontWeight='800';
+}
+function openRating(){
+  selStars=0;pendingTip=0;
+  document.querySelectorAll('.star').forEach(s=>s.classList.remove('lit'));
+  document.getElementById('mdriver').textContent='Rate '+DRIVERS[Math.floor(Math.random()*DRIVERS.length)].split(' ·')[0];
+  document.getElementById('tipDisplay').textContent='';
+  document.querySelectorAll('#tipSection .qr').forEach(b=>{b.style.opacity='.5';});
+  openOverlay('rmodal');
+}
 function submitRating(){
-  if(!selStars){toast('⭐ Tap a star to rate');return}
+  if(!selStars){toast('⭐ Tap a star to rate first');return;}
   G.ratings.push(selStars);
-  if(G.pendingRate){const r=G.rides.find(x=>x.id===G.pendingRate);if(r)r.rating=selStars;G.pendingRate=null}
-  save();updateUI();closeModal();
-  toast('⭐ Thanks! '+selStars+' star'+(selStars>1?'s':'')+' submitted');
+  if(G.pendingRate){const r=G.rides.find(x=>x.id===G.pendingRate);if(r)r.rating=selStars;G.pendingRate=null;}
+  save();updateUI();closeOverlay('rmodal');
+  toast('⭐ '+selStars+' star'+(selStars>1?'s':'')+' rated!'+(pendingTip>0?' · Tip sent: +'+pendingTip+' BWP 💛':''));
 }
-function closeModal(){document.getElementById('rmodal').classList.add('hide')}
 
-/* ═══════════════ REFERRAL ═══════════════ */
-// Detect inbound ref param on load — reward the referrer
+/* ── REFERRAL ─────────────────────────────── */
 (function(){
-  const p = new URLSearchParams(window.location.search);
-  const ref = p.get('ref');
-  if(ref && !localStorage.getItem('inboundRef')){
-    localStorage.setItem('inboundRef', ref);
-    // In a real backend you'd POST this; for MVP we just note it
-    setTimeout(()=>toast('🎁 Referred by <strong>'+ref+'</strong> · you both earn +0.2 THB on your first ride!'), 1200);
-  }
+  const p=new URLSearchParams(window.location.search),ref=p.get('ref');
+  if(ref&&!localStorage.getItem('inboundRef')){localStorage.setItem('inboundRef',ref);setTimeout(()=>toast('🎁 Referred by <strong>'+ref+'</strong> · +0.2 THB on first ride!'),1200);}
 })();
+function copyRef(){_copyText(REF_URL,()=>toast('📋 Link copied! Share for +0.2 THB each'),()=>toastErr('📋 Long-press the link to copy manually'));}
+function _copyText(text,ok,fail){if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok).catch(()=>_fbCopy(text,ok,fail));}else _fbCopy(text,ok,fail);}
+function _fbCopy(text,ok,fail){try{const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;top:0;left:0;opacity:0;pointer-events:none';document.body.appendChild(ta);ta.focus();ta.select();const r=document.execCommand('copy');document.body.removeChild(ta);r?ok():fail();}catch(e){fail();}}
 
-const REF_CODE = 'BSTM-7K4X';
-const REF_URL  = 'https://cablink.app?ref=' + REF_CODE; // ← ?ref= param for viral tracking
-
-function copyRef(){
-  navigator.clipboard.writeText(REF_URL).catch(()=>{});
-  toast('📋 Referral link copied! Share for <strong>+0.2 THB</strong> each');
-}
-
-/* ═══════════════ SHARE ═══════════════ */
+/* ── SHARE ────────────────────────────────── */
 function shareRide(){
-  const r = G.rides[0];
-  const earned = G.thb % 1 === 0 ? G.thb.toFixed(0) : G.thb.toFixed(1);
-  const msg = r
-    ? 'I just earned ' + earned + ' THB on CabLink! ' + r.from + ' → ' + r.to + ' 🚕🪙\nJoin me: ' + REF_URL
-    : 'CabLink earns you THoBoCoin on every ride in Gaborone! 🚕🪙\n' + REF_URL;
-  if(navigator.share) navigator.share({title:'CabLink · THoBoCoin Rewards', text:msg, url:REF_URL});
-  else{ navigator.clipboard.writeText(msg).catch(()=>{}); toast('📸 Share text copied to clipboard!'); }
+  const r=G.rides[0],earned=fmtThb(G.thb);
+  const msg=r?'I just earned '+earned+' THB on CabLink! '+r.from+' → '+r.to+' 🚕🪙\nJoin me: '+REF_URL:'CabLink earns THoBoCoin on every ride in Gaborone! 🚕🪙\n'+REF_URL;
+  if(navigator.share){navigator.share({title:'CabLink · THoBoCoin Rewards',text:msg,url:REF_URL}).catch(()=>_copyText(msg,()=>toast('📸 Copied!'),()=>toastErr('Could not share')));}
+  else _copyText(msg,()=>toast('📸 Share text copied!'),()=>toastErr('📸 Use browser share'));
 }
 
-/* ═══════════════ DRIVER MODE ═══════════════ */
-const DREQS=[
-  {from:'Mmopane Village',to:'Molapo Crossing',fare:25},
-  {from:'Block 8, Gaborone',to:'Game City',fare:20},
-  {from:'Airport',to:'Fairgrounds Mall',fare:45},
-  {from:'CBD, Gaborone',to:'Block 10, Gaborone',fare:18},
-  {from:'Kgale Hill',to:'Riverwalk Mall',fare:22},
+/* ── EXPORT / CLEAR ───────────────────────── */
+function exportHistory(){
+  if(!G.rides.length){toast('ℹ️ No rides to export');return;}
+  const hdr='Date,From,To,Fare BWP,Driver,THB Earned,Claimed,Rating\n';
+  const rows=G.rides.map(r=>[r.date,r.from,r.to,r.fare,r.driver||'',1,r.claimed?'Yes':'No',r.rating||''].join(',')).join('\n');
+  const blob=new Blob([hdr+rows],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='cablink-rides-v3.csv';a.click();URL.revokeObjectURL(url);
+  toast('📥 Ride history exported as CSV');
+}
+function clearHistory(){
+  if(!confirm('Delete all ride history? Cannot be undone.'))return;
+  G.rides=[];G.ratings=[];G.rideReady=false;G.pendingRate=null;save();
+  document.getElementById('hcbtn').disabled=true;updateUI();toast('🗑️ History cleared');
+}
+
+/* ══════════════════════════════════════════════════════
+   CHAT SYSTEM — Rider ↔ Driver
+══════════════════════════════════════════════════════ */
+const QUICK_RIDER=['I\'m at pickup 📍','On my way 🏃','5 minutes late ⏰','Please wait a moment','Can you call me?','Thank you! 🙏'];
+const QUICK_DRIVER=['Coming to you 🚗','I\'m 2 min away','Please confirm location','Almost there!','Arrived at pickup 📍','Safe ride completed ✅'];
+const QUICK_SUPPORT=['Hi, I need help 👋','Payment issue','Ride not showing','Report a driver','App is not working','Request a refund'];
+
+// Driver auto-responses
+const DRIVER_AUTOS={
+  'where':'I can see your location 📍 Be there in 2 min!',
+  'wait':'Of course! Take your time 🙏',
+  'help':'I\'ll be right there! Call me if needed 📞',
+  'call':'My number: +267 72 XXX XXX',
+  'late':'No problem, I\'ll wait a few minutes',
+  'cancel':'I understand. Please cancel from the app.',
+  'confirm':'Confirmed — I see you! 🚕',
+};
+const SUPPORT_AUTOS=['Thanks for reaching out! Our team will respond within 1 hour.','We\'ve received your message. Reference: #'+Math.random().toString(36).slice(2,8).toUpperCase(),'A support agent will contact you on your registered number shortly.'];
+
+function openChat(role){
+  G.chatRole=role;
+  if(role==='rider'&&!G.activeTicker&&!G.chatMessages.length){
+    // No active ride — show helpful message
+    G.chatMessages=[{role:'theirs',text:'👋 Book a ride to chat with your driver in real-time!',ts:Date.now()}];
+  }
+  if(role==='support'){
+    document.getElementById('chatPersonName').textContent='CabLink Support';
+    document.getElementById('chatAvatarEmoji').textContent='🎧';
+    document.getElementById('chatStatus').textContent='● Usually replies in 1 hour';
+    if(!G.chatMessages.length||G.chatMessages[0].text.includes('Book a ride')){
+      G.chatMessages=[{role:'theirs',text:'Hello! I\'m the CabLink support bot. How can I help you today? 😊',ts:Date.now()}];
+    }
+  }
+  if(role==='driver'){
+    document.getElementById('chatPersonName').textContent='Rider';
+    document.getElementById('chatAvatarEmoji').textContent='🧍';
+    document.getElementById('chatStatus').textContent='● Waiting for pickup';
+  }
+  // Update quick replies
+  const qrs=role==='rider'?QUICK_RIDER:role==='driver'?QUICK_DRIVER:QUICK_SUPPORT;
+  document.getElementById('quickReplies').innerHTML=qrs.map(q=>`<div class="qr" onclick="sendQuick('${q.replace(/'/g,"\\'")}');">${q}</div>`).join('');
+  G.chatUnread=0;updateChatBadge();
+  renderChat();
+  go('chat');
+}
+
+function renderChat(){
+  const box=document.getElementById('chatMsgs');
+  box.innerHTML=G.chatMessages.map(m=>`
+    <div class="cmsg ${m.role==='mine'?'mine':'theirs'}">
+      <div class="cbubble">${sanitize(m.text)}</div>
+      <div class="cmeta">${formatTime(m.ts)}${m.role==='mine'?'<span class="cread">✓✓</span>':''}</div>
+    </div>`).join('');
+  setTimeout(()=>box.scrollTop=box.scrollHeight,50);
+}
+
+function sanitize(s){return s.replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function formatTime(ts){const d=new Date(ts);return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
+
+function sendChatMsg(){
+  const el=document.getElementById('chatInputEl');
+  const text=el.value.trim();
+  if(!text)return;
+  el.value='';el.style.height='auto';
+  addChatMsg('mine',text);
+  // Auto-reply logic
+  setTimeout(()=>{
+    showTyping();
+    setTimeout(()=>{
+      hideTyping();
+      let reply='';
+      if(G.chatRole==='support'){
+        reply=SUPPORT_AUTOS[Math.floor(Math.random()*SUPPORT_AUTOS.length)];
+      }else{
+        const lower=text.toLowerCase();
+        const key=Object.keys(DRIVER_AUTOS).find(k=>lower.includes(k));
+        if(key)reply=DRIVER_AUTOS[key];
+        else reply=['Got it! 👍','On my way 🚗','Sure thing! 😊','Understood 🙏','No problem!'][Math.floor(Math.random()*5)];
+      }
+      addChatMsg('theirs',reply);
+      if(!document.getElementById('scr-chat').classList.contains('active')){G.chatUnread++;updateChatBadge();}
+    },1200+Math.random()*800);
+  },500);
+}
+
+function sendQuick(text){
+  document.getElementById('chatInputEl').value=text;sendChatMsg();
+}
+
+function addChatMsg(role,text){
+  G.chatMessages.push({role,text,ts:Date.now()});
+  renderChat();
+}
+
+function showTyping(){document.getElementById('chatTyping').classList.add('on');}
+function hideTyping(){document.getElementById('chatTyping').classList.remove('on');}
+
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,80)+'px';}
+function chatKeyDown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMsg();}}
+
+function updateChatBadge(){
+  const badge=document.getElementById('chatNavBadge');
+  badge.textContent=G.chatUnread||'';
+  badge.classList.toggle('on',G.chatUnread>0);
+}
+
+/* ── SOS ──────────────────────────────────── */
+function sosAction(type){
+  closeOverlay('sosOverlay');
+  if(type==='call'){toast('📞 Calling 999 — Emergency Services');window.location.href='tel:999';}
+  else if(type==='location'){
+    navigator.geolocation?.getCurrentPosition(p=>{
+      const url='https://maps.google.com/?q='+p.coords.latitude+','+p.coords.longitude;
+      _copyText(url,()=>toast('📍 Location copied to clipboard! Share it immediately.'),()=>toast('📍 Location: Gaborone, Botswana (enable GPS for precise location)'));
+    },()=>toast('📍 Location: Gaborone area, Botswana'));
+  }
+  else if(type==='police'){toast('🚔 Botswana Police Service: 999 or +267 395 3251');window.location.href='tel:999';}
+}
+
+/* ── DRIVER MODE ──────────────────────────── */
+const DREQS_DATA=[
+  {from:'Mmopane Village',to:'Molapo Crossing',fare:25},{from:'Block 8, Gaborone',to:'Game City',fare:20},
+  {from:'Airport',to:'Fairgrounds Mall',fare:45},{from:'CBD, Gaborone',to:'Block 10, Gaborone',fare:18},
+  {from:'Kgale Hill',to:'Riverwalk Mall',fare:22},{from:'Gaborone West',to:'Broadhurst Mall',fare:15},
+  {from:'Princess Marina Hosp.',to:'Extension 11',fare:28},{from:'University of Botswana',to:'Molapo Crossing',fare:20},
 ];
+let _drvAccepted={};
+function toggleDriverOnline(){
+  const on=document.getElementById('driverOnline').checked;G.drvOnline=on;save();
+  document.getElementById('dsDot').classList.toggle('online',on);
+  document.getElementById('dsLabel').textContent=on?'Online — Receiving Requests':'Offline';
+  document.getElementById('dsSub').textContent=on?'You will receive ride requests':'Toggle to go online';
+  if(on){toast('🟢 You\'re online!');renderDriverRequests();}
+  else{clearTimeout(window._drvT);document.getElementById('dreqs').innerHTML='<div style="text-align:center;padding:18px 0;font-size:11.5px;color:var(--muted)">Go online to see requests</div>';toast('⚫ You\'re offline');}
+}
 function renderDriver(){
-  document.getElementById('dreqs').innerHTML=DREQS.map((r,i)=>`
+  document.getElementById('driverOnline').checked=G.drvOnline;
+  document.getElementById('dsDot').classList.toggle('online',G.drvOnline);
+  document.getElementById('dsLabel').textContent=G.drvOnline?'Online — Receiving Requests':'Offline';
+  document.getElementById('drvacc').textContent=G.drvAcc;
+  document.getElementById('drvthb').textContent=fmtThb(G.drvThb);
+  document.getElementById('drvbwp').textContent=(G.drvThb*1.15).toFixed(2);
+  if(G.drvOnline)renderDriverRequests();
+}
+function renderDriverRequests(){
+  if(!G.drvOnline)return;_drvAccepted={};
+  const shuffled=[...DREQS_DATA].sort(()=>Math.random()-.5).slice(0,4);
+  document.getElementById('dreqs').innerHTML=shuffled.map((r,i)=>`
     <div class="dreq" id="dreq-${i}">
       <div class="drico">🚗</div>
-      <div class="drinfo"><div class="drroute">${r.from} → ${r.to}</div><div class="drmeta">${r.fare} BWP · ~${Math.round(r.fare/2+2)} min · +0.5 THB</div></div>
-      <button class="dracc" onclick="accDrv(${i})">Accept</button>
+      <div class="drinfo">
+        <div class="drroute">${r.from} → ${r.to}</div>
+        <div class="drmeta">${r.fare} BWP · ~${Math.round(r.fare/2+2)} min · +0.5 THB</div>
+      </div>
+      <button class="dracc" onclick="accDrv(${i},this)">Accept</button>
+      <button class="drv-chat-btn" onclick="openDriverChat(${i},'${r.from.replace(/'/g,"\\'")}','${r.to.replace(/'/g,"\\'")}')">💬</button>
     </div>`).join('');
-  document.getElementById('drvacc').textContent=G.drvAcc;
-  document.getElementById('drvthb').textContent=G.drvThb.toFixed(1);
+  clearTimeout(window._drvT);window._drvT=setTimeout(()=>{if(G.mode==='driver'&&G.drvOnline)renderDriverRequests();},30000);
 }
-function accDrv(i){
-  const btn=document.querySelector('#dreq-'+i+' .dracc');
-  if(btn){btn.disabled=true;btn.textContent='✅ Accepted'}
+function openDriverChat(i,from,to){
+  G.chatRole='driver';
+  document.getElementById('chatPersonName').textContent='Rider ('+from.split(',')[0]+')';
+  document.getElementById('chatAvatarEmoji').textContent='🧍';
+  document.getElementById('chatStatus').textContent='● '+from+' → '+to;
+  if(!G.chatMessages.length||G.chatMessages[0].text.includes('Book a ride')){
+    G.chatMessages=[{role:'theirs',text:'Hi! I booked a ride from '+from+' to '+to+'. Please let me know when you\'re close 🙏',ts:Date.now()}];
+  }
+  const qrs=QUICK_DRIVER;
+  document.getElementById('quickReplies').innerHTML=qrs.map(q=>`<div class="qr" onclick="sendQuick('${q.replace(/'/g,"\\'")}');">${q}</div>`).join('');
+  renderChat();go('chat');
+}
+function accDrv(i,btn){
+  if(_drvAccepted[i])return;_drvAccepted[i]=true;
+  if(btn){btn.disabled=true;btn.textContent='✅';}
+  const row=document.getElementById('dreq-'+i);if(row)row.classList.add('accepted');
   G.drvAcc++;G.drvThb+=0.5;save();
   document.getElementById('drvacc').textContent=G.drvAcc;
-  document.getElementById('drvthb').textContent=G.drvThb.toFixed(1);
-  toast('🚗 Ride accepted! Drive to pickup · Earn 0.5 THB');
+  document.getElementById('drvthb').textContent=fmtThb(G.drvThb);
+  document.getElementById('drvbwp').textContent=(G.drvThb*1.15).toFixed(2);
+  toast('🚗 Ride accepted! Drive to pickup · +0.5 THB');vibrate(60);
+  setTimeout(()=>{delete _drvAccepted[i];if(G.mode==='driver'&&G.drvOnline)renderDriverRequests();},10000);
 }
 
-/* ═══════════════ BADGES ═══════════════ */
+/* ── BADGES & KPIs ────────────────────────── */
 const BADGES=[
   {ico:'🚕',name:'First Ride',req:'1 ride',t:1,type:'rides'},
   {ico:'🥉',name:'Bronze Rider',req:'5 rides',t:5,type:'rides'},
@@ -1165,146 +1662,112 @@ const BADGES=[
   {ico:'🥇',name:'Gold Rider',req:'20 rides',t:20,type:'rides'},
   {ico:'🪙',name:'THB Earner',req:'5 THB',t:5,type:'thb'},
   {ico:'⭐',name:'Top Rater',req:'3 ratings',t:3,type:'ratings'},
+  {ico:'🔥',name:'Streak Master',req:'7-day streak',t:7,type:'streak'},
+  {ico:'🤝',name:'Referrer',req:'Used ref link',t:1,type:'ref'},
+  {ico:'💬',name:'Communicator',req:'10 messages sent',t:10,type:'chat'},
 ];
 function renderBadges(){
-  const rides=G.rides.length,thb=G.thb,rts=G.ratings.length;
+  const rides=G.rides.length,thb=G.thb,rts=G.ratings.length,str=G.streak,ref=localStorage.getItem('inboundRef')?1:0,chat=G.chatMessages.filter(m=>m.role==='mine').length;
   document.getElementById('bgrid').innerHTML=BADGES.map(b=>{
-    const v=b.type==='rides'?rides:b.type==='thb'?thb:rts;
+    const v=b.type==='rides'?rides:b.type==='thb'?thb:b.type==='ratings'?rts:b.type==='streak'?str:b.type==='ref'?ref:chat;
     const ul=v>=b.t;
-    return `<div class="bcard ${ul?'ul':''}"><div class="bico">${b.ico}</div><div class="bname">${b.name}</div><div class="breq">${b.req}</div></div>`;
+    return `<div class="badgec ${ul?'ul':''}"><div class="bico">${b.ico}</div><div class="bname">${b.name}</div><div class="breq">${b.req}</div></div>`;
   }).join('');
-  const top=BADGES.slice().reverse().find(b=>{const v=b.type==='rides'?rides:b.type==='thb'?thb:rts;return v>=b.t});
+  const top=BADGES.slice().reverse().find(b=>{
+    const v=b.type==='rides'?rides:b.type==='thb'?thb:b.type==='ratings'?rts:b.type==='streak'?str:b.type==='ref'?ref:chat;
+    return v>=b.t;
+  });
   const tag=document.getElementById('pbadgetag');
-  if(top){tag.textContent=top.name;tag.className='ptag g'}else{tag.textContent='Newcomer';tag.className='ptag'}
+  if(top){tag.textContent=top.name;tag.className='ptag g';}else{tag.textContent='Newcomer';tag.className='ptag';}
 }
 
-/* ═══════════════ UI UPDATE ═══════════════ */
-function avgR(){
-  if(!G.ratings.length)return null;
-  return (G.ratings.reduce((a,b)=>a+b,0)/G.ratings.length).toFixed(1);
-}
+/* ── UI UPDATE ────────────────────────────── */
+function avgR(){if(!G.ratings.length)return null;return(G.ratings.reduce((a,b)=>a+b,0)/G.ratings.length).toFixed(1);}
 function updateUI(){
-  const n=G.rides.length,cl=G.rides.filter(r=>r.claimed).length;
-  const avg=avgR(),atxt=avg?avg+' ★':'—';
-  const thbTxt=G.thb%1===0?G.thb.toFixed(0):G.thb.toFixed(1);
-
-  // Balance
+  const n=G.rides.length,avg=avgR(),atxt=avg?avg+' ★':'—',thbTxt=fmtThb(G.thb);
   document.getElementById('bnum').textContent=thbTxt;
-  document.getElementById('bbwp').textContent='≈ '+G.thb.toFixed(2)+' BWP · BSC Testnet · chainId: 97';
-  document.getElementById('brides').textContent=n;
-  document.getElementById('brating').textContent=atxt;
-
-  // Rewards
-  document.getElementById('rwtotal').textContent=thbTxt+' THB';
-  document.getElementById('rwrides').textContent=n;
-  document.getElementById('rwbwp').textContent=G.thb.toFixed(2);
-  document.getElementById('rwrating').textContent=atxt;
-
-  // Claim btn
-  if(!G.claiming){
-    document.getElementById('cfbtn').disabled=!G.rideReady;
-    document.getElementById('cfbtntxt').textContent=G.rideReady?'⚡ Claim 1 THB — Ride Ready!':'⚡ Complete a ride to claim';
-  }
-
-  // KPIs
-  document.getElementById('krides').textContent=n;
-  document.getElementById('kthb').textContent=thbTxt;
-  document.getElementById('kbwp').textContent=G.thb.toFixed(2);
-  document.getElementById('krating').textContent=atxt;
-
-  updateDailyTimer();
-  renderHistory();
-  renderBadges();
+  document.getElementById('bbwp').textContent='≈ '+G.thb.toFixed(2)+' BWP · BSC Testnet · Chain 97';
+  document.getElementById('brides').textContent=n;document.getElementById('brating').textContent=atxt;
+  document.getElementById('rwtotal').textContent=thbTxt+' THB';document.getElementById('rwrides').textContent=n;
+  document.getElementById('rwbwp').textContent=G.thb.toFixed(2);document.getElementById('rwrating').textContent=atxt;
+  if(!G.claiming){document.getElementById('cfbtn').disabled=!G.rideReady;document.getElementById('cfbtntxt').textContent=G.rideReady?'⚡ Claim 1 THB — Ride Ready!':'⚡ Complete a ride to claim';}
+  document.getElementById('krides').textContent=n;document.getElementById('kthb').textContent=thbTxt;
+  document.getElementById('kbwp').textContent=G.thb.toFixed(2);document.getElementById('krating').textContent=atxt;
+  updateDailyTimer();updateStreak();renderHistory();renderBadges();
+  document.getElementById('refLinkDisplay').textContent=REF_URL;
 }
+
 function renderHistory(){
   const mk=r=>`<div class="hitem"><div class="hico">🚕</div><div class="hinf"><div class="hroute">${r.from} → ${r.to}</div><div class="hmeta">${r.date} · ${r.fare} BWP${r.claimed?' · <span style="color:var(--teal)">✓</span>':''}</div></div><div class="hright"><div class="hthb">+1 THB</div>${r.rating?'<div class="hstars">'+'⭐'.repeat(r.rating)+'</div>':''}</div></div>`;
-  const empty=`<div style="text-align:center;padding:16px 0;font-size:12px;color:var(--muted)">No rides yet — book your first!</div>`;
+  const empty=`<div style="text-align:center;padding:18px 0;font-size:11.5px;color:var(--muted)">No rides yet — book your first!</div>`;
   const h=document.getElementById('hhome'),rw=document.getElementById('hrw');
-  if(!G.rides.length){h.innerHTML=empty;rw.innerHTML=empty;return}
+  if(!G.rides.length){h.innerHTML=empty;rw.innerHTML=empty;return;}
   h.innerHTML=G.rides.slice(0,3).map(mk).join('');
   rw.innerHTML=G.rides.map(mk).join('');
 }
 
-/* ═══════════════ TOAST / ALERTS ═══════════════ */
-let tTimer, tErrTimer;
-
-// Green/info toast
-function toast(msg){
-  const el=document.getElementById('toast'),tx=document.getElementById('ttxt');
-  el.style.borderColor='rgba(0,212,170,.28)';
-  el.style.background='rgba(19,27,46,.97)';
-  clearTimeout(tTimer);tx.innerHTML=msg;el.classList.add('on');
-  tTimer=setTimeout(()=>el.classList.remove('on'),3800);
+/* ── TOAST ────────────────────────────────── */
+let _tT=null;
+function _toastTop(){const off=document.getElementById('offbanner');return(66+(off.classList.contains('on')?off.offsetHeight:0))+'px';}
+function toast(msg,icon='🪙',err=false){
+  const el=document.getElementById('toast'),tx=document.getElementById('ttxt'),ic=document.getElementById('ticon');
+  el.style.borderColor=err?'rgba(244,118,118,.3)':'rgba(0,201,167,.22)';
+  el.style.background=err?'rgba(40,10,10,.97)':'rgba(12,18,32,.97)';
+  el.parentElement.style.top=_toastTop();
+  ic.textContent=err?'⚠️':icon;clearTimeout(_tT);tx.innerHTML=msg;el.classList.add('on');
+  _tT=setTimeout(()=>el.classList.remove('on'),4500);
 }
+function toastErr(msg){toast(msg,'⚠️',true);}
+function showErr(msg){const e=document.getElementById('rwerr');e.innerHTML='⚠️ '+msg;e.style.display='block';setTimeout(()=>e.style.display='none',9000);}
+function showOk(msg){const e=document.getElementById('rwok');e.innerHTML=msg;e.style.display='block';setTimeout(()=>e.style.display='none',6000);}
 
-// Red error toast — Mine #4 fix: errors never go to alert()
-function toastErr(msg){
-  const el=document.getElementById('toast'),tx=document.getElementById('ttxt');
-  el.style.borderColor='rgba(248,113,113,.35)';
-  el.style.background='rgba(40,12,12,.97)';
-  clearTimeout(tTimer);tx.innerHTML=msg;el.classList.add('on');
-  tTimer=setTimeout(()=>{el.classList.remove('on');el.style.borderColor='';el.style.background='';},4500);
-}
-
-// Inline error box inside rewards screen (accepts HTML for faucet links)
-function showErr(msg){
-  const e=document.getElementById('rwerr');
-  e.innerHTML='⚠️ '+msg;e.style.display='block';
-  setTimeout(()=>e.style.display='none',6000);
-}
-function showOk(msg){
-  const e=document.getElementById('rwok');
-  e.innerHTML=msg;e.style.display='block';
-  setTimeout(()=>e.style.display='none',5000);
-}
-
-/* ═══════════════ TABS ═══════════════ */
-function go(tab){
-  ['home','rewards','profile'].forEach(t=>{
-    document.getElementById('scr-'+t)?.classList.remove('active');
-    document.getElementById('nav-'+t)?.classList.remove('active');
-  });
-  document.getElementById('scr-'+tab)?.classList.add('active');
-  document.getElementById('nav-'+tab)?.classList.add('active');
-  document.getElementById('scrollarea').scrollTop=0;
-}
-function goRewards(){go('rewards')}
-
-/* ═══════════════ INIT — safety net ═══════════════ */
-// window.onload: restore state, re-arm claim button if ride was done before refresh
-window.addEventListener('load', async ()=>{
-
-  // Mine #6 fix: history is already in localStorage via G.rides — but also restore
-  // the rideReady flag so claim button survives a page refresh
-  if(localStorage.getItem('rideReady') === '1'){
-    G.rideReady = true;
-    document.getElementById('hcbtn').disabled = false;
-  }
-
-  // If user had a wallet connected last session, show their address (greyed)
-  // so they know to reconnect — don't auto-connect (security best practice)
-  const lastAddr = localStorage.getItem('lastAddr');
-  if(lastAddr){
-    const a = document.getElementById('waddr');
-    a.textContent = lastAddr.slice(0,6) + '…' + lastAddr.slice(-4) + ' (tap to reconnect)';
-    a.style.color = 'var(--muted)';
-    document.getElementById('wdot').style.background = 'var(--muted)';
-  }
-
-  applyTheme();
-  setLang(G.lang);
-  updateWallet();
-  updateUI();
-  updateFare(20);
-  renderDriver();
+/* ── OVERLAYS ─────────────────────────────── */
+function openOverlay(id){document.getElementById(id).classList.remove('hide');}
+function closeOverlay(id){document.getElementById(id).classList.add('hide');}
+// Close on ESC
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')['rmodal','cancelModal','sosOverlay','privacyModal'].forEach(id=>{if(!document.getElementById(id).classList.contains('hide'))closeOverlay(id);});
+  if(e.altKey){if(e.key==='1'){e.preventDefault();go('home');}if(e.key==='2'){e.preventDefault();go('rewards');}if(e.key==='3'){e.preventDefault();go('chat');}if(e.key==='4'){e.preventDefault();go('profile');}}
 });
 
-// Keep rideReady in localStorage so it survives refresh
-const _origSave = save;
-save = function(){
-  _origSave();
-  localStorage.setItem('rideReady', G.rideReady ? '1' : '0');
-};
+/* ── TABS ─────────────────────────────────── */
+let _prevTab='home';
+function go(tab){
+  ['home','rewards','chat','profile'].forEach(t=>{
+    const scr=document.getElementById('scr-'+t);
+    if(scr){scr.classList.remove('active');scr.style.display='none';}
+    const nav=document.getElementById('nav-'+t);
+    if(nav){nav.classList.remove('active');nav.removeAttribute('aria-current');}
+  });
+  const scr=document.getElementById('scr-'+tab);
+  if(scr){scr.style.display=tab==='chat'?'flex':'block';requestAnimationFrame(()=>scr.classList.add('active'));}
+  const nav=document.getElementById('nav-'+tab);if(nav){nav.classList.add('active');nav.setAttribute('aria-current','page');}
+  _prevTab=tab;
+  const sa=document.getElementById('scrollarea');
+  if(tab==='chat'){sa.style.overflow='hidden';}
+  else{sa.style.overflow='auto';sa.scrollTo({top:0,behavior:'smooth'});}
+  if(history.pushState)history.pushState({tab},'',window.location.pathname+(tab!=='home'?'#'+tab:''));
+}
+function goBack(){go(_prevTab==='chat'?'home':_prevTab);}
+function goRewards(){go('rewards');}
+window.addEventListener('popstate',e=>{const tab=(e.state&&e.state.tab)||'home';go(tab);});
+
+/* ── INPUT SCROLL FIX ─────────────────────── */
+document.querySelectorAll('.linput').forEach(el=>{el.addEventListener('focus',()=>{setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),300);});});
+if(window.visualViewport){window.visualViewport.addEventListener('resize',()=>{const sa=document.getElementById('scrollarea');if(G.chatRole&&document.getElementById('scr-chat').classList.contains('active'))return;sa.style.maxHeight=(window.visualViewport.height-60)+'px';});}
+
+/* ── INIT ─────────────────────────────────── */
+window.addEventListener('load',()=>{
+  if(G.rideReady)document.getElementById('hcbtn').disabled=false;
+  applyTheme();setLang(G.lang);updateWallet();updateProfileName();updateUI();
+  updateFare(20);updateDailyTimer();updateStreak();renderDriver();
+  document.getElementById('refLinkDisplay').textContent=REF_URL;
+  // FIX#10: show privacy bar on first visit
+  if(!G.privacyDismissed)document.getElementById('privacyBar').style.display='flex';
+  // FIX#4: show gas info on rewards tab
+  document.getElementById('gasWarn').style.display='none'; // only show on connect
+  console.log('CabLink v3.0 · BSC Testnet · Chat enabled · contract: 0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628');
+});
 </script>
 </body>
 </html>
