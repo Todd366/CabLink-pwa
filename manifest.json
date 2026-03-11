@@ -1,0 +1,12 @@
+{
+  "name": "CabLink",
+  "short_name": "CabLink",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#10B981",
+  "icons": [
+    {"src": "https://via.placeholder.com/192?text=CL", "sizes": "192x192", "type": "image/png"},
+    {"src": "https://via.placeholder.com/512?text=CL", "sizes": "512x512", "type": "image/png"}
+  ]
+}
