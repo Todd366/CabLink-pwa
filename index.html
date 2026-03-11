@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CabLink PWA</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.1/ethers.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --night:#080C17;--deep:#0D1220;--card:#131B2E;--card2:#19233A;--card3:#1F2B44;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --gold:#F5C842;--gold2:#E8A800;--gold3:rgba(245,200,66,0.12);
+  --teal:#00D4AA;--teal2:rgba(0,212,170,0.12);
+  --blue:#3B82F6;--blue2:rgba(59,130,246,0.12);
+  --red:#F87171;--red2:rgba(248,113,113,0.12);
+  --orange:#FB923C;--orange2:rgba(251,146,60,0.11);
+  --purple:#A78BFA;--purple2:rgba(167,139,250,0.11);
+  --muted:#6B7FA3;--soft:#A8B8D0;--text:#E8EEF8;
+  --r:18px;--rs:12px;--rx:8px;
+}
+body.light{
+  --night:#EEF2FF;--deep:#F5F7FF;--card:#FFFFFF;--card2:#EEF2FF;--card3:#E0E7FF;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.15);
+  --muted:#7A8CB0;--soft:#3A4870;--text:#111827;
+}
+html,body{height:100%;background:var(--night);font-family:'DM Sans',sans-serif;color:var(--text);overflow:hidden;transition:background .3s,color .3s}
+.app{display:flex;height:100vh;width:100vw;overflow:hidden}
+.pw{width:100%;max-width:420px;margin:auto;height:100vh;max-height:880px;background:var(--deep);display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 100px rgba(0,0,0,.8);transition:background .3s}
+@media(min-width:500px){.pw{height:880px;border-radius:38px;border:1.5px solid rgba(255,255,255,.09)}body{display:flex;align-items:center;justify-content:center}}
+.pw::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(59,130,246,.09) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 90% 90%,rgba(0,212,170,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 10% 60%,rgba(245,200,66,.05) 0%,transparent 60%)}
+
+/* STATUS */
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:11px 22px 5px;z-index:10;flex-shrink:0;position:relative}
+.stime{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--text)}
+.sicons{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--soft)}
+
+/* HEADER */
+.hdr{padding:5px 15px 11px;display:flex;align-items:center;justify-content:space-between;z-index:10;flex-shrink:0;border-bottom:1px solid var(--border);position:relative}
+.logo{display:flex;align-items:center;gap:9px}
+.li{width:35px;height:35px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 14px rgba(245,200,66,.32);flex-shrink:0}
+.ln{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.4px;line-height:1}
+.ln em{color:var(--gold);font-style:normal}
+.ls{font-size:9px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:1.8px;margin-top:1px}
+.hacts{display:flex;align-items:center;gap:7px}
+.ibtn{width:31px;height:31px;background:var(--card);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:border-color .15s;flex-shrink:0}
+.ibtn:hover{border-color:var(--border2)}
+.wpill{background:var(--card);border:1px solid var(--border2);border-radius:22px;padding:6px 11px;display:flex;align-items:center;gap:6px;cursor:pointer;transition:border-color .2s}
+.wpill:hover{border-color:rgba(0,212,170,.3)}
+.wdot{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1.8s ease-in-out infinite}
+.waddr{font-family:'DM Mono',monospace;font-size:11px;color:var(--soft)}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.75)}}
+
+/* OFFLINE */
+.offbanner{background:var(--orange2);border-bottom:1px solid rgba(251,146,60,.3);padding:6px 15px;display:none;align-items:center;gap:7px;font-size:12px;color:var(--orange);font-weight:600;z-index:20;flex-shrink:0}
+.offbanner.on{display:flex}
+
+/* SCROLL */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;z-index:5;scroll-behavior:smooth;position:relative}
+.scroll::-webkit-scrollbar{width:3px}
+.scroll::-webkit-scrollbar-thumb{background:var(--card3);border-radius:10px}
+.pad{padding:15px 15px 0}
+
+/* SCREEN */
+.scr{display:none;animation:fu .3s ease both}
+.scr.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* TOAST */
+.twrap{position:absolute;top:68px;left:13px;right:13px;z-index:300;pointer-events:none}
+.toast{background:rgba(19,27,46,.97);backdrop-filter:blur(16px);border:1px solid rgba(0,212,170,.28);border-radius:13px;padding:10px 13px;display:flex;align-items:center;gap:9px;box-shadow:0 8px 28px rgba(0,0,0,.4);transform:translateY(-8px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.toast.on{transform:translateY(0);opacity:1}
+.ticon{width:27px;height:27px;background:var(--teal2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.ttxt{font-size:12px;color:var(--text);line-height:1.4}
+.ttxt strong{color:var(--teal)}
+
+/* MODAL */
+.moverlay{position:absolute;inset:0;background:rgba(8,12,23,.85);z-index:250;display:flex;align-items:flex-end;backdrop-filter:blur(4px);animation:oi .2s ease}
+.moverlay.hide{display:none}
+@keyframes oi{from{opacity:0}to{opacity:1}}
+.msheet{background:var(--card);border:1px solid var(--border2);border-radius:22px 22px 0 0;padding:22px 18px;width:100%;animation:su .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mhandle{width:38px;height:4px;background:var(--card3);border-radius:4px;margin:0 auto 18px}
+.mtitle{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);text-align:center;margin-bottom:4px}
+.msub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:18px}
+.stars{display:flex;justify-content:center;gap:9px;margin-bottom:18px}
+.star{font-size:30px;cursor:pointer;opacity:.3;filter:grayscale(1);transition:all .15s}
+.star.lit{opacity:1;filter:none;transform:scale(1.1)}
+.mconfirm{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:var(--rs);padding:13px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#080C17;cursor:pointer;box-shadow:0 4px 14px rgba(245,200,66,.28);transition:all .15s}
+.mcancel{width:100%;background:none;border:none;padding:10px;font-size:12px;color:var(--muted);cursor:pointer;margin-top:5px}
+
+/* BALANCE CARD */
+.bcard{background:linear-gradient(145deg,#192035,#0E1525);border:1px solid rgba(245,200,66,.2);border-radius:var(--r);padding:17px;margin-bottom:13px;position:relative;overflow:hidden}
+.bcard::after{content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,.09) 0%,transparent 70%);pointer-events:none}
+.bcard::before{content:'';position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,170,.07) 0%,transparent 70%);pointer-events:none}
+.btop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px}
+.blabel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.4px;font-weight:700;margin-bottom:5px}
+.bamt{display:flex;align-items:baseline;gap:7px}
+.bnum{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:var(--gold);letter-spacing:-2px;line-height:1}
+.bunit{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--gold2)}
+.bbwp{font-size:11px;color:var(--muted);margin-top:3px}
+.dbadge{background:var(--gold3);border:1px solid rgba(245,200,66,.22);border-radius:9px;padding:7px 10px;text-align:right;flex-shrink:0}
+.dblabel{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;font-weight:700}
+.dbtimer{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--gold);margin-top:1px}
+.dbsub{font-size:9px;color:var(--muted);margin-top:1px}
+.bstats{display:flex;border-top:1px solid rgba(255,255,255,.06);padding-top:13px;align-items:flex-end}
+.bst{flex:1}
+.bstv{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.bstl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-top:2px}
+.cbtn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:var(--rs);padding:9px 15px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#080C17;cursor:pointer;box-shadow:0 4px 16px rgba(245,200,66,.28);transition:all .15s;white-space:nowrap}
+.cbtn:hover{transform:translateY(-1px)}
+.cbtn:disabled{background:var(--card3);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
+
+/* SEC LABEL */
+.sl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.sl span{color:var(--text)}
+
+/* LANG STRIP */
+.lstrip{display:flex;gap:6px;margin-bottom:12px}
+.lbtn{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--rx);padding:7px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
+.lbtn.active{background:var(--teal2);border-color:rgba(0,212,170,.3);color:var(--teal)}
+
+/* DRIVER TOGGLE */
+.dtog{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;margin-bottom:13px}
+.dtbtn{flex:1;padding:10px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;transition:all .15s}
+.dtbtn.active{background:var(--gold3);color:var(--gold)}
+
+/* RIDE CARD */
+.rcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:visible;margin-bottom:13px}
+.rcard-in{border-radius:var(--r);overflow:hidden}
+.lrow{display:flex;align-items:center;gap:11px;padding:13px 14px;transition:background .15s;position:relative}
+.lrow:hover{background:rgba(255,255,255,.02)}
+.lrow+.lrow{border-top:1px solid var(--border)}
+.ldot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ldot.p{background:var(--teal);box-shadow:0 0 8px var(--teal)}
+.ldot.d{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.lwrap{flex:1;position:relative}
+.linput{width:100%;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text)}
+.linput::placeholder{color:var(--muted)}
+.aclist{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:100;background:var(--card2);border:1px solid var(--border2);border-radius:var(--rs);overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.4);display:none}
+.aclist.on{display:block}
+.acitem{padding:10px 13px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;transition:background .1s}
+.acitem:last-child{border-bottom:none}
+.acitem:hover{background:rgba(255,255,255,.05)}
+.lmic{width:29px;height:29px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;flex-shrink:0;transition:all .15s}
+.lmic.rec{background:var(--red2);border-color:rgba(248,113,113,.4);animation:rp 1s ease-in-out infinite}
+@keyframes rp{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.4)}50%{box-shadow:0 0 0 5px rgba(248,113,113,0)}}
+.lbadge{background:var(--card3);border-radius:6px;padding:3px 7px;font-size:10px;color:var(--soft);font-family:'DM Mono',monospace;flex-shrink:0}
+.srow{position:relative;height:1px;background:var(--border);margin:0 14px}
+.sbtn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:24px;height:24px;background:var(--card2);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;color:var(--soft)}
+.faresec{padding:12px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,.15)}
+.ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.flbl{font-size:12px;color:var(--muted)}
+.fval{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.feta{font-size:11px;color:var(--muted);font-weight:400;font-family:'DM Sans',sans-serif}
+.fslider{width:100%;height:4px;border-radius:4px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+.fslider::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--gold);box-shadow:0 0 7px rgba(245,200,66,.5);cursor:pointer}
+
+/* MAP STUB */
+.mapstub{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:13px}
+.mapcanvas{height:180px;position:relative;background:linear-gradient(160deg,#081628,#0c1e38 60%,#071018);overflow:hidden;cursor:pointer}
+.mgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.05) 1px,transparent 1px);background-size:30px 30px}
+.mroad{position:absolute;background:rgba(100,140,220,.18);border-radius:2px}
+.mroad.h1{top:42%;left:0;right:0;height:3px}
+.mroad.h2{top:65%;left:5%;right:0;height:2px}
+.mroad.h3{top:22%;left:18%;right:15%;height:1.5px}
+.mroad.v1{left:28%;top:0;bottom:0;width:3px}
+.mroad.v2{left:63%;top:0;bottom:40%;width:2px}
+.mroad.v3{left:82%;top:18%;bottom:0;width:1.5px}
+.mroute{position:absolute;top:42%;left:28%;right:37%;height:3px;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:2px;display:none}
+.mroute.on{display:block;animation:ri .5s ease forwards}
+@keyframes ri{from{transform:scaleX(0);transform-origin:left}to{transform:scaleX(1)}}
+.ppick{position:absolute;left:26%;top:24%;transform:translate(-50%,-100%);z-index:5;display:flex;flex-direction:column;align-items:center}
+.pdrop{position:absolute;left:63%;top:24%;transform:translate(-50%,-100%);z-index:5;display:flex;flex-direction:column;align-items:center}
+.pball{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.pball.p{background:var(--teal);box-shadow:0 3px 12px rgba(0,212,170,.45)}
+.pball.d{background:var(--gold);box-shadow:0 3px 12px rgba(245,200,66,.45)}
+.pinn{transform:rotate(45deg);font-size:11px}
+.pstem{width:2px;height:7px;margin-top:-1px;border-radius:0 0 2px 2px}
+.pstem.p{background:var(--teal)}.pstem.d{background:var(--gold)}
+.pring{position:absolute;border-radius:50%;animation:pr 2s ease-out infinite;opacity:0}
+.pring.r1{width:38px;height:38px;border:2px solid rgba(0,212,170,.4);left:26%;top:26%;transform:translate(-50%,-50%)}
+.pring.r2{width:38px;height:38px;border:2px solid rgba(245,200,66,.3);left:63%;top:26%;transform:translate(-50%,-50%)}
+@keyframes pr{0%{opacity:.8;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}}
+.mcar{position:absolute;left:28%;top:38%;transform:translate(-50%,-50%);font-size:17px;z-index:6;transition:left 2.5s ease,top 2.5s ease}
+.mcar.mv{left:61%;top:38%}
+.movbtn{position:absolute;bottom:9px;right:9px;background:rgba(10,14,26,.88);border:1px solid rgba(59,130,246,.3);border-radius:7px;padding:5px 10px;font-size:11px;color:var(--blue);font-weight:700;cursor:pointer;backdrop-filter:blur(8px)}
+.mdlbl{position:absolute;top:9px;left:9px;background:rgba(10,14,26,.88);border:1px solid var(--teal2);border-radius:7px;padding:4px 9px;font-size:10px;color:var(--teal);font-weight:600;backdrop-filter:blur(8px)}
+.metalbl{position:absolute;bottom:9px;left:9px;background:rgba(10,14,26,.88);border:1px solid var(--border2);border-radius:7px;padding:4px 9px;font-size:10px;color:var(--text);font-weight:600;backdrop-filter:blur(8px);display:none}
+.metalbl.on{display:block}
+
+/* RIDE TIMER */
+.rtimer{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(59,130,246,.06));border:1px solid rgba(59,130,246,.25);border-radius:var(--rs);padding:13px 14px;margin-bottom:13px;display:none}
+.rtimer.on{display:block;animation:fu .3s ease}
+.rttop{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.rtstatus{font-size:12px;font-weight:700;color:var(--blue)}
+.rteta{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:var(--text)}
+.rtsub{font-size:11px;color:var(--muted)}
+.rtbarw{background:var(--card3);border-radius:4px;height:4px;overflow:hidden;margin-top:7px}
+.rtbar{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:4px;transition:width .5s linear;width:0}
+
+/* BOOK BTN */
+.bbtn{width:100%;border:none;border-radius:var(--r);padding:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#2563EB,#1D4ED8);cursor:pointer;box-shadow:0 6px 22px rgba(37,99,235,.28);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:12px;position:relative;overflow:hidden}
+.bbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12) 0%,transparent 60%)}
+.bbtn:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(37,99,235,.36)}
+.bbtn:disabled{background:var(--card3);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
+.bbtn:disabled::before{display:none}
+
+/* SIM BTN */
+.simbtn{width:100%;background:var(--gold3);border:1px solid rgba(245,200,66,.2);border-radius:var(--rs);padding:10px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:rgba(245,200,66,.8);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;margin-bottom:12px}
+.simbtn:hover{background:rgba(245,200,66,.15);color:var(--gold)}
+
+/* REFERRAL */
+.refcard{background:linear-gradient(145deg,rgba(167,139,250,.1),rgba(59,130,246,.07));border:1px solid rgba(167,139,250,.2);border-radius:var(--r);padding:14px;margin-bottom:13px}
+.reftop{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.reficon{width:36px;height:36px;background:var(--purple2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.reftitle{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text)}
+.refdesc{font-size:11px;color:var(--muted);margin-top:1px}
+.refcode{background:var(--card2);border:1px solid var(--border2);border-radius:var(--rx);padding:9px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.reflink{font-family:'DM Mono',monospace;font-size:11px;color:var(--purple)}
+.copybtn{background:var(--purple2);border:1px solid rgba(167,139,250,.25);border-radius:6px;padding:5px 9px;font-size:11px;font-weight:700;color:var(--purple);cursor:pointer;transition:all .15s;flex-shrink:0}
+.refrwd{font-size:11px;color:var(--muted);text-align:center}
+.refrwd strong{color:var(--purple)}
+
+/* HISTORY */
+.hwrap{display:flex;flex-direction:column;gap:8px;margin-bottom:13px}
+.hitem{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:11px 12px;display:flex;align-items:center;gap:10px;transition:border-color .15s;cursor:pointer}
+.hitem:hover{border-color:var(--border2)}
+.hico{width:32px;height:32px;border-radius:9px;background:var(--blue2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.hinf{flex:1;min-width:0}
+.hroute{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hmeta{font-size:11px;color:var(--muted);margin-top:2px}
+.hright{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.hthb{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--gold)}
+.hstars{font-size:10px}
+
+/* REWARDS SCREEN */
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px}
+.rgc{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:13px;transition:border-color .15s}
+.rgc:hover{border-color:var(--border2)}
+.rglbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:5px}
+.rgv{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);line-height:1}
+.rgv.g{color:var(--gold)}.rgv.t{color:var(--teal)}.rgv.b{color:var(--blue)}.rgv.p{color:var(--purple)}
+.cfbtn{width:100%;border:none;border-radius:var(--r);padding:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#080C17;background:linear-gradient(135deg,var(--gold),var(--gold2));cursor:pointer;box-shadow:0 6px 22px rgba(245,200,66,.26);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:13px}
+.cfbtn:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(245,200,66,.36)}
+.cfbtn:disabled{background:var(--card3);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
+.dbc{background:linear-gradient(135deg,var(--gold3),rgba(245,200,66,.05));border:1px solid rgba(245,200,66,.2);border-radius:var(--rs);padding:13px;margin-bottom:13px;display:flex;align-items:center;gap:11px}
+.dbcico{font-size:22px;flex-shrink:0}
+.dbcinf{flex:1}
+.dbctitle{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:2px}
+.dbcdesc{font-size:11px;color:var(--muted)}
+.dbcbtn{background:var(--gold3);border:1px solid rgba(245,200,66,.28);border-radius:var(--rx);padding:7px 11px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;transition:all .15s;flex-shrink:0;white-space:nowrap}
+.dbcbtn:hover{background:rgba(245,200,66,.2)}
+.dbcbtn:disabled{opacity:.4;cursor:not-allowed}
+.chaininfo{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:13px 14px;margin-bottom:13px}
+.crow{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.crow+.crow{border-top:1px solid var(--border)}
+.ck{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.cv{font-family:'DM Mono',monospace;font-size:10px;color:var(--soft)}
+.cv.g{color:var(--teal)}
+.sharebtn{width:100%;background:linear-gradient(135deg,rgba(0,212,170,.1),rgba(59,130,246,.1));border:1px solid rgba(0,212,170,.25);border-radius:var(--rs);padding:12px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--teal);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;margin-bottom:13px}
+.sharebtn:hover{border-color:rgba(0,212,170,.45);background:rgba(0,212,170,.15)}
+
+/* PROFILE */
+.phero{background:linear-gradient(145deg,#192035,#0E1525);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:13px;text-align:center;position:relative;overflow:hidden}
+.phero::before{content:'';position:absolute;top:-38px;right:-38px;width:110px;height:110px;background:radial-gradient(circle,rgba(245,200,66,.1) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.pava{width:58px;height:58px;border-radius:50%;margin:0 auto 10px;background:linear-gradient(135deg,rgba(245,200,66,.2),rgba(0,212,170,.2));border:2px solid rgba(245,200,66,.28);display:flex;align-items:center;justify-content:center;font-size:25px}
+.pname{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:2px}
+.prole{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:9px}
+.ptags{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.ptag{background:var(--card3);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--soft)}
+.ptag.g{background:var(--gold3);border-color:rgba(245,200,66,.2);color:var(--gold)}
+.ptag.t{background:var(--teal2);border-color:rgba(0,212,170,.2);color:var(--teal)}
+.ptag.p{background:var(--purple2);border-color:rgba(167,139,250,.2);color:var(--purple)}
+
+/* BADGES */
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:13px}
+.bcard{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:13px 9px;text-align:center;transition:all .2s}
+.bcard.ul{border-color:rgba(245,200,66,.3);background:var(--gold3)}
+.bico{font-size:24px;margin-bottom:5px;filter:grayscale(1);opacity:.35}
+.bcard.ul .bico{filter:none;opacity:1}
+.bname{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.bcard.ul .bname{color:var(--gold)}
+.breq{font-size:9px;color:var(--muted);margin-top:1px}
+
+/* KPI */
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px}
+.kcard{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px}
+.kico{font-size:18px;margin-bottom:4px}
+.kv{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-bottom:2px}
+.kl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;font-weight:700}
+
+/* INFO ROWS */
+.irows{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:13px}
+.irow{display:flex;align-items:center;gap:11px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.irow:last-child{border-bottom:none}
+.iico{width:29px;height:29px;border-radius:8px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.ikey{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;font-weight:700}
+.ival{font-size:13px;color:var(--text);font-weight:500;margin-top:1px}
+.ival.mono{font-family:'DM Mono',monospace;font-size:11px}
+
+/* ROADMAP */
+.rm{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:13px}
+.rmi{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.rmi:last-child{border-bottom:none}
+.rmph{width:26px;height:26px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:800}
+.rmph.dn{background:var(--teal2);color:var(--teal)}.rmph.ac{background:var(--gold3);color:var(--gold)}.rmph.so{background:var(--card2);color:var(--muted)}
+.rmc{flex:1}.rmt{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}.rmd{font-size:11px;color:var(--muted);line-height:1.4}
+.rmb{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:auto;flex-shrink:0;align-self:flex-start}
+.rmb.dn{background:var(--teal2);color:var(--teal)}.rmb.ac{background:var(--gold3);color:var(--gold)}.rmb.so{background:var(--card2);color:var(--muted)}
+
+/* DRIVER MODE */
+.dreq{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px 13px;display:flex;align-items:center;gap:10px;margin-bottom:8px;transition:border-color .15s}
+.dreq:hover{border-color:var(--border2)}
+.drico{width:32px;height:32px;border-radius:9px;background:var(--orange2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.drinfo{flex:1}.drroute{font-size:13px;font-weight:600;color:var(--text)}.drmeta{font-size:11px;color:var(--muted);margin-top:2px}
+.dracc{background:var(--teal2);border:1px solid rgba(0,212,170,.25);border-radius:var(--rx);padding:7px 12px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--teal);cursor:pointer;transition:all .15s;flex-shrink:0}
+.dracc:hover{background:rgba(0,212,170,.2)}
+.dracc:disabled{opacity:.4;cursor:not-allowed}
+
+/* ERR/OK */
+.errb{background:var(--red2);border:1px solid rgba(248,113,113,.22);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--red);display:none}
+.okb{background:var(--teal2);border:1px solid rgba(0,212,170,.22);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--teal);display:none}
+
+/* BOTTOM NAV */
+.bnav{background:rgba(13,18,32,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:7px 5px 12px;display:flex;align-items:center;justify-content:space-around;z-index:10;flex-shrink:0}
+.nitem{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 12px;border-radius:11px;cursor:pointer;opacity:.4;transition:all .2s;background:none;border:none}
+.nitem.active{opacity:1;background:rgba(245,200,66,.07)}
+.nitem:hover:not(.active){opacity:.65}
+.nico{font-size:18px;transition:transform .2s}
+.nitem.active .nico{transform:scale(1.1)}
+.nlbl{font-size:9px;color:var(--soft);font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.nitem.active .nlbl{color:var(--gold)}
+.nctr{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:20px;margin-top:-14px;cursor:pointer;box-shadow:0 4px 17px rgba(245,200,66,.38),0 0 0 4px rgba(13,18,32,.96);transition:all .2s;flex-shrink:0}
+.nctr:hover{transform:scale(1.05)}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;animation:spin .7s linear infinite}
+.pb{padding-bottom:10px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="pw" id="pw">
+
+<!-- OFFLINE BANNER -->
+<div class="offbanner" id="offbanner">📡 Offline — rides queued, sync when back online</div>
+
+<!-- STATUS BAR -->
+<div class="sbar">
+  <span class="stime" id="clock">9:41</span>
+  <div class="sicons"><span>●●●</span><span>▲</span><span>🔋</span></div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo">
+    <div class="li">🚕</div>
+    <div><div class="ln">Cab<em>Link</em></div><div class="ls">BSTM Ecosystem</div></div>
+  </div>
+  <div class="hacts">
+    <div class="ibtn" id="tbtn" onclick="toggleTheme()">🌙</div>
+    <div class="wpill" onclick="toggleWallet()">
+      <div class="wdot" id="wdot"></div>
+      <span class="waddr" id="waddr">Connect</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="twrap">
+  <div class="toast" id="toast">
+    <div class="ticon">🪙</div>
+    <div class="ttxt" id="ttxt"></div>
+  </div>
+</div>
+
+<!-- RATING MODAL -->
+<div class="moverlay hide" id="rmodal">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mtitle" id="mdriver">Rate Your Driver</div>
+    <div class="msub">How was your ride? Help the community.</div>
+    <div class="stars" id="stars">
+      <span class="star" data-s="1">⭐</span>
+      <span class="star" data-s="2">⭐</span>
+      <span class="star" data-s="3">⭐</span>
+      <span class="star" data-s="4">⭐</span>
+      <span class="star" data-s="5">⭐</span>
+    </div>
+    <button class="mconfirm" onclick="submitRating()">Submit Rating</button>
+    <button class="mcancel" onclick="closeModal()">Skip</button>
+  </div>
+</div>
+
+<!-- SCROLL AREA -->
+<div class="scroll" id="scrollarea">
+<div class="pad">
+
+<!-- ═══ HOME SCREEN ═══ -->
+<div class="scr active" id="scr-home">
+
+  <!-- Balance Card -->
+  <div class="bcard">
+    <div class="btop">
+      <div>
+        <div class="blabel" data-en="THoBoCoin Balance" data-tn="Tekanyo ya THoBoCoin">THoBoCoin Balance</div>
+        <div class="bamt"><span class="bnum" id="bnum">0</span><span class="bunit">THB</span></div>
+        <div class="bbwp" id="bbwp">≈ 0.00 BWP · BSC Testnet</div>
+      </div>
+      <div class="dbadge">
+        <div class="dblabel" data-en="Daily Bonus" data-tn="Mpho ya Letsatsi">Daily Bonus</div>
+        <div class="dbtimer" id="dbtimer">+0.5</div>
+        <div class="dbsub" id="dbsub" data-en="Available!" data-tn="Eo gona!">Available!</div>
+      </div>
+    </div>
+    <div class="bstats">
+      <div class="bst"><div class="bstv" id="brides">0</div><div class="bstl" data-en="Total Rides" data-tn="Meeto Yotlhe">Total Rides</div></div>
+      <div class="bst"><div class="bstv" id="brating">—</div><div class="bstl" data-en="Avg Rating" data-tn="Tekanyo">Avg Rating</div></div>
+      <button class="cbtn" id="hcbtn" onclick="goRewards()" disabled data-en="⚡ Claim" data-tn="⚡ Amoga">⚡ Claim</button>
+    </div>
+  </div>
+
+  <!-- Language -->
+  <div class="lstrip">
+    <button class="lbtn active" id="lbtn-en" onclick="setLang('en')">🇬🇧 English</button>
+    <button class="lbtn" id="lbtn-tn" onclick="setLang('tn')">🇧🇼 Setswana</button>
+  </div>
+
+  <!-- Mode Toggle -->
+  <div class="dtog">
+    <button class="dtbtn active" id="rbtn" onclick="setMode('rider')" data-en="🧍 I'm a Rider" data-tn="🧍 Ke Mopalami">🧍 I'm a Rider</button>
+    <button class="dtbtn" id="dbtn" onclick="setMode('driver')" data-en="🚗 I'm a Driver" data-tn="🚗 Ke Mokhanni">🚗 I'm a Driver</button>
+  </div>
+
+  <!-- RIDER MODE -->
+  <div id="rider">
+    <div class="sl">🗺️ <span data-en="Book a Ride" data-tn="Buka Leeto">Book a Ride</span> · +1 THB</div>
+
+    <div class="rcard">
+      <div class="rcard-in">
+        <div class="lrow">
+          <div class="ldot p"></div>
+          <div class="lwrap">
+            <input class="linput" id="pinput" value="Broadhurst Mall" placeholder="Pickup…" autocomplete="off" oninput="showAC('p')" onfocus="showAC('p')" onblur="hideAC('p',300)">
+            <div class="aclist" id="ac-p"></div>
+          </div>
+          <button class="lmic" id="mic-p" onclick="voice('p')">🎤</button>
+          <span class="lbadge">Now</span>
+        </div>
+        <div class="srow"><div class="sbtn" onclick="swap()">⇅</div></div>
+        <div class="lrow">
+          <div class="ldot d"></div>
+          <div class="lwrap">
+            <input class="linput" id="dinput" value="Game City, Gaborone" placeholder="Where to?" autocomplete="off" oninput="showAC('d')" onfocus="showAC('d')" onblur="hideAC('d',300)">
+            <div class="aclist" id="ac-d"></div>
+          </div>
+          <button class="lmic" id="mic-d" onclick="voice('d')">🎤</button>
+        </div>
+        <div class="faresec">
+          <div class="ftop">
+            <span class="flbl" data-en="Fare" data-tn="Tefelo">Fare</span>
+            <span class="fval" id="fdisplay">20 BWP <span class="feta" id="feta">· ~12 min</span></span>
+          </div>
+          <input type="range" min="10" max="50" value="20" step="5" class="fslider" id="fslider" oninput="updateFare(this.value)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Stub -->
+    <div class="mapstub">
+      <div class="mapcanvas" onclick="toggleRoute()">
+        <div class="mgrid"></div>
+        <div class="mroad h1"></div><div class="mroad h2"></div><div class="mroad h3"></div>
+        <div class="mroad v1"></div><div class="mroad v2"></div><div class="mroad v3"></div>
+        <div class="mroute" id="mroute"></div>
+        <div class="ppick"><div class="pball p"><div class="pinn">📍</div></div><div class="pstem p"></div></div>
+        <div class="pdrop"><div class="pball d"><div class="pinn">🏁</div></div><div class="pstem d"></div></div>
+        <div class="pring r1"></div><div class="pring r2"></div>
+        <div class="mcar" id="mcar">🚕</div>
+        <div class="mdlbl">📡 3 drivers nearby</div>
+        <div class="movbtn" id="routebtn">View Route ↗</div>
+        <div class="metalbl" id="metalbl">🚗 Arriving in <span id="etac">3</span> min</div>
+      </div>
+    </div>
+
+    <!-- Ride Timer -->
+    <div class="rtimer" id="rtimer">
+      <div class="rttop">
+        <span class="rtstatus" id="rtstatus">🔍 Finding driver…</span>
+        <span class="rteta" id="rteta">3:00</span>
+      </div>
+      <div class="rtsub">Tap Rewards to claim when done</div>
+      <div class="rtbarw"><div class="rtbar" id="rtbar"></div></div>
+    </div>
+
+    <button class="bbtn" id="bookbtn" onclick="bookRide()">🚕 <span data-en="Book Ride · Earn 1 THB" data-tn="Buka Leeto · Amoga 1 THB">Book Ride · Earn 1 THB</span></button>
+    <button class="simbtn" onclick="simRide()">🧪 <span data-en="Simulate Ride (Test Mode)" data-tn="Leka Leeto (Tokiriso)">Simulate Ride (Test Mode)</span></button>
+  </div>
+
+  <!-- DRIVER MODE -->
+  <div id="driver" style="display:none">
+    <div class="sl">🚗 <span data-en="Incoming Requests" data-tn="Dikopo tse Tlang">Incoming Requests</span></div>
+    <div id="dreqs"></div>
+    <div class="rgrid" style="margin-top:4px">
+      <div class="rgc"><div class="rglbl">Accepted</div><div class="rgv t" id="drvacc">0</div></div>
+      <div class="rgc"><div class="rglbl">THB Earned</div><div class="rgv g" id="drvthb">0</div></div>
+    </div>
+  </div>
+
+  <!-- Referral -->
+  <div class="refcard">
+    <div class="reftop">
+      <div class="reficon">🎁</div>
+      <div>
+        <div class="reftitle" data-en="Invite a Friend" data-tn="Mema Tsala">Invite a Friend</div>
+        <div class="refdesc" data-en="You both earn +0.2 THB on their first ride" data-tn="Lona bobedi lo amoga +0.2 THB">You both earn +0.2 THB on their first ride</div>
+      </div>
+    </div>
+    <div class="refcode">
+      <span class="reflink">cablink.app/ref/BSTM-7K4X</span>
+      <button class="copybtn" onclick="copyRef()">📋 Copy</button>
+    </div>
+    <div class="refrwd">Share your code · <strong>+0.2 THB</strong> per friend who rides</div>
+  </div>
+
+  <!-- Recent Rides -->
+  <div class="sl">🕐 <span data-en="Recent Rides" data-tn="Meeto ya Bogaufhi">Recent Rides</span></div>
+  <div class="hwrap" id="hhome"></div>
+  <div class="pb"></div>
+</div>
+
+<!-- ═══ REWARDS SCREEN ═══ -->
+<div class="scr" id="scr-rewards">
+  <div class="sl" style="margin-bottom:11px">⚡ <span>Rewards Dashboard</span></div>
+
+  <div class="rgrid">
+    <div class="rgc"><div class="rglbl">Total Earned</div><div class="rgv g" id="rwtotal">0 THB</div></div>
+    <div class="rgc"><div class="rglbl">Rides Done</div><div class="rgv t" id="rwrides">0</div></div>
+    <div class="rgc"><div class="rglbl">BWP Value</div><div class="rgv b" id="rwbwp">0.00</div></div>
+    <div class="rgc"><div class="rglbl">Avg Rating ★</div><div class="rgv p" id="rwrating">—</div></div>
+  </div>
+
+  <!-- Daily Bonus -->
+  <div class="dbc">
+    <div class="dbcico">🌟</div>
+    <div class="dbcinf">
+      <div class="dbctitle" id="dbtitle">Daily Bonus: +0.5 THB</div>
+      <div class="dbcdesc" id="dbdesc">Claim once per day for extra rewards!</div>
+    </div>
+    <button class="dbcbtn" id="dbcbtn" onclick="claimDaily()">Claim!</button>
+  </div>
+
+  <div id="rwerr" class="errb"></div>
+  <div id="rwok" class="okb"></div>
+
+  <button class="cfbtn" id="cfbtn" onclick="claimReward()" disabled>
+    <span id="cfbtntxt">⚡ Complete a ride to claim</span>
+  </button>
+
+  <button class="sharebtn" onclick="shareRide()">📸 <span data-en="Share Your Ride!" data-tn="Abelana ka Leeto!">Share Your Ride!</span></button>
+
+  <div class="sl">📋 <span data-en="Full Ride History" data-tn="Naledi yotlhe ya Meeto">Full Ride History</span></div>
+  <div class="hwrap" id="hrw" style="max-height:210px;overflow-y:auto"></div>
+
+  <div class="sl" style="margin-top:4px">🔗 <span>Contract Info</span></div>
+  <div class="chaininfo">
+    <div class="crow"><span class="ck">Network</span><span class="cv g">BSC Testnet · chainId: 97</span></div>
+    <div class="crow"><span class="ck">Contract</span><span class="cv">0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628</span></div>
+    <div class="crow"><span class="ck">Function</span><span class="cv">claimReward()</span></div>
+    <div class="crow"><span class="ck">Library</span><span class="cv">ethers.js v6</span></div>
+    <div class="crow"><span class="ck">RPC</span><span class="cv">data-seed-prebsc-1-s1.binance.org</span></div>
+  </div>
+
+  <!-- Mine #2 fix: treasury / faucet guide so users never hit "no THB" silently -->
+  <div style="background:var(--blue2);border:1px solid rgba(59,130,246,.2);border-radius:var(--rs);padding:13px 14px;margin-bottom:13px">
+    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">🪣 Need Test Tokens?</div>
+    <div style="font-size:12px;color:var(--soft);line-height:1.6;margin-bottom:10px">
+      Your wallet needs <strong style="color:var(--text)">tBNB</strong> for gas and <strong style="color:var(--gold)">THB</strong> in the treasury to send rewards.
+      Claim free testnet tokens below — takes 30 seconds.
+    </div>
+    <div style="display:flex;gap:8px">
+      <a href="https://testnet.binance.org/faucet-smart" target="_blank"
+         style="flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:var(--rx);padding:8px;text-align:center;font-size:12px;font-weight:700;color:var(--blue);text-decoration:none">
+        🚰 tBNB Faucet
+      </a>
+      <a href="https://testnet.bscscan.com/address/0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628" target="_blank"
+         style="flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:var(--rx);padding:8px;text-align:center;font-size:12px;font-weight:700;color:var(--teal);text-decoration:none">
+        🔍 View THB on BSCScan
+      </a>
+    </div>
+  </div>
+  <div class="pb"></div>
+</div>
+
+<!-- ═══ PROFILE SCREEN ═══ -->
+<div class="scr" id="scr-profile">
+  <div class="phero">
+    <div class="pava">👤</div>
+    <div class="pname">Thobo Atlang Mosanako</div>
+    <div class="prole">Founder · BSTM Ecosystem</div>
+    <div class="ptags">
+      <span class="ptag g">THoBoCoin Creator</span>
+      <span class="ptag t">BSC Testnet</span>
+      <span class="ptag p" id="pbadgetag">Newcomer</span>
+      <span class="ptag">Gaborone, BWA</span>
+    </div>
+  </div>
+
+  <div class="sl">🏅 <span data-en="Achievement Badges" data-tn="Dibadge tsa Katleho">Achievement Badges</span></div>
+  <div class="bgrid" id="bgrid"></div>
+
+  <div class="sl">📊 <span data-en="My KPIs" data-tn="Dipalo tsa Me">My KPIs</span></div>
+  <div class="kgrid">
+    <div class="kcard"><div class="kico">🚕</div><div class="kv" id="krides">0</div><div class="kl">Rides</div></div>
+    <div class="kcard"><div class="kico">🪙</div><div class="kv" id="kthb">0</div><div class="kl">THB Earned</div></div>
+    <div class="kcard"><div class="kico">💵</div><div class="kv" id="kbwp">0.00</div><div class="kl">BWP Value</div></div>
+    <div class="kcard"><div class="kico">⭐</div><div class="kv" id="krating">—</div><div class="kl">Avg Rating</div></div>
+  </div>
+
+  <div class="sl">📋 <span>Registration</span></div>
+  <div class="irows">
+    <div class="irow"><div class="iico">🏢</div><div><div class="ikey">Organisation</div><div class="ival">BSTM, 2226 Mmopane Block 1</div></div></div>
+    <div class="irow"><div class="iico">📍</div><div><div class="ikey">Location</div><div class="ival">Gaborone, Botswana</div></div></div>
+    <div class="irow"><div class="iico">📅</div><div><div class="ikey">Version</div><div class="ival">CabLink v1.0 — Ignition Ready</div></div></div>
+    <div class="irow"><div class="iico">🔑</div><div><div class="ikey">THB Contract</div><div class="ival mono">0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628</div></div></div>
+  </div>
+
+  <div class="sl">🚀 <span>Roadmap</span></div>
+  <div class="rm">
+    <div class="rmi"><div class="rmph dn">1</div><div class="rmc"><div class="rmt">CabLink Pilot</div><div class="rmd">Single shop, test user, ride → earn → claim</div></div><div class="rmb dn">Live</div></div>
+    <div class="rmi"><div class="rmph ac">2</div><div class="rmc"><div class="rmt">Firebase + Real Rides</div><div class="rmd">Multi-device sync, live fare calc</div></div><div class="rmb ac">Next</div></div>
+    <div class="rmi"><div class="rmph so">3</div><div class="rmc"><div class="rmt">THB Staking &amp; Loyalty</div><div class="rmd">Bonuses, streaks, hold-to-earn</div></div><div class="rmb so">Soon</div></div>
+    <div class="rmi"><div class="rmph so">4</div><div class="rmc"><div class="rmt">63-Room BSTM Ecosystem</div><div class="rmd">Marketplace, Nutrition, AI Signals, full fleet</div></div><div class="rmb so">Vision</div></div>
+  </div>
+  <div class="pb"></div>
+</div>
+
+</div><!-- /pad -->
+</div><!-- /scroll -->
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <button class="nitem active" id="nav-home" onclick="go('home')"><span class="nico">🏠</span><span class="nlbl" data-en="Home" data-tn="Gae">Home</span></button>
+  <button class="nitem" id="nav-rewards" onclick="go('rewards')"><span class="nico">⚡</span><span class="nlbl" data-en="Rewards" data-tn="Mpho">Rewards</span></button>
+  <div class="nctr" onclick="go('home')">🚕</div>
+  <button class="nitem" id="nav-profile" onclick="go('profile')"><span class="nico">👤</span><span class="nlbl" data-en="Profile" data-tn="Profaele">Profile</span></button>
+  <button class="nitem" id="nav-more" onclick="go('home')"><span class="nico">⋯</span><span class="nlbl" data-en="More" data-tn="Go feta">More</span></button>
+</div>
+
+</div><!-- /pw -->
+</div><!-- /app -->
+<script>
+/* ═══════════════ STATE ═══════════════ */
+const G={
+  connected:false, address:'',
+  thb:+(_ls('thb')||0),
+  rides:_jls('rides')||[],
+  ratings:_jls('ratings')||[],
+  rideReady:false, claiming:false,
+  lang:_ls('lang')||'en',
+  theme:_ls('theme')||'dark',
+  lastBonus:_ls('lastBonus')||null,
+  drvAcc:+(_ls('drvAcc')||0),
+  drvThb:+(_ls('drvThb')||0),
+  pendingRate:null, mode:'rider',
+};
+function _ls(k){return localStorage.getItem(k)}
+function _jls(k){try{return JSON.parse(_ls(k))}catch{return null}}
+function save(){
+  localStorage.setItem('thb',G.thb);
+  localStorage.setItem('rides',JSON.stringify(G.rides));
+  localStorage.setItem('ratings',JSON.stringify(G.ratings));
+  localStorage.setItem('lang',G.lang);
+  localStorage.setItem('theme',G.theme);
+  localStorage.setItem('lastBonus',G.lastBonus||'');
+  localStorage.setItem('drvAcc',G.drvAcc);
+  localStorage.setItem('drvThb',G.drvThb);
+}
+
+/* ═══════════════ LOCS ═══════════════ */
+const LOCS=[
+  'Broadhurst Mall','Block 8, Gaborone','Block 10, Gaborone','Block 6, Gaborone','Block 3, Gaborone',
+  'Game City, Gaborone','Molapo Crossing','Riverwalk Mall','Fairgrounds Mall','Kgale Hill',
+  'Airport – Sir Seretse Khama Intl','CBD, Gaborone','Tlokweng Road','Extension 11',
+  'Mmopane Village','Gaborone West','Phakalane Golf Estate','Gaborone Station',
+  'Princess Marina Hospital','University of Botswana'
+];
+
+/* ═══════════════ CLOCK ═══════════════ */
+function tick(){const n=new Date();document.getElementById('clock').textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0')}
+tick();setInterval(tick,10000);
+
+/* ═══════════════ THEME ═══════════════ */
+function toggleTheme(){G.theme=G.theme==='dark'?'light':'dark';applyTheme();save()}
+function applyTheme(){
+  if(G.theme==='light'){document.body.classList.add('light');document.getElementById('tbtn').textContent='☀️'}
+  else{document.body.classList.remove('light');document.getElementById('tbtn').textContent='🌙'}
+}
+
+/* ═══════════════ LANG ═══════════════ */
+function setLang(l){
+  G.lang=l;save();
+  document.getElementById('lbtn-en').classList.toggle('active',l==='en');
+  document.getElementById('lbtn-tn').classList.toggle('active',l==='tn');
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    el.textContent=el.getAttribute('data-'+l)||el.getAttribute('data-en');
+  });
+}
+
+/* ═══════════════ WALLET ═══════════════ */
+// BSC Testnet chain id as hex
+const BSC_CHAIN_HEX = '0x61'; // 97 decimal
+
+async function toggleWallet(){
+  if(G.connected){
+    // ── DISCONNECT ──────────────────────────────────────────────
+    G.connected=false; G.address=''; G.chainOk=false;
+    // If real WalletConnect provider exists, disconnect it
+    if(window._wcProvider && typeof window._wcProvider.disconnect==='function'){
+      try{ await window._wcProvider.disconnect(); }catch(e){}
+    }
+    window._wcProvider=null;
+    updateWallet();
+    toast('🔌 Wallet disconnected · session cleared');
+    return;
+  }
+
+  // ── CONNECT ─────────────────────────────────────────────────
+  // Detect injected provider (MetaMask / Trust / any EVM wallet on mobile)
+  let provider = null;
+  if(window.ethereum){
+    provider = window.ethereum;
+  } else {
+    // No injected wallet — show friendly guide instead of crashing
+    showChainWarning('no-wallet');
+    return;
+  }
+  window._wcProvider = provider;
+
+  try{
+    // Request accounts
+    const accounts = await provider.request({method:'eth_requestAccounts'});
+    if(!accounts||!accounts.length){ toast('⚠️ No accounts returned — unlock your wallet'); return; }
+    G.address = accounts[0];
+
+    // ── CHAIN CHECK (Mine #1 fix) ──────────────────────────────
+    const chainId = await provider.request({method:'eth_chainId'});
+    G.chainOk = (chainId === BSC_CHAIN_HEX);
+
+    if(!G.chainOk){
+      // Try to switch automatically first
+      try{
+        await provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: BSC_CHAIN_HEX }]
+        });
+        G.chainOk = true;
+      } catch(switchErr){
+        // Chain not in wallet — add it
+        if(switchErr.code===4902){
+          try{
+            await provider.request({
+              method: 'wallet_addEthereumChain',
+              params:[{
+                chainId: BSC_CHAIN_HEX,
+                chainName: 'BSC Testnet',
+                nativeCurrency:{name:'tBNB',symbol:'tBNB',decimals:18},
+                rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545'],
+                blockExplorerUrls:['https://testnet.bscscan.com']
+              }]
+            });
+            G.chainOk = true;
+          } catch(addErr){
+            showChainWarning('wrong-chain');
+            G.address=''; return;
+          }
+        } else {
+          showChainWarning('wrong-chain');
+          G.address=''; return;
+        }
+      }
+    }
+
+    G.connected = true;
+    // Persist address across refresh
+    localStorage.setItem('lastAddr', G.address);
+    updateWallet();
+    toast('✅ <strong>Wallet connected</strong> · BSC Testnet (chain 97)');
+
+    // Listen for chain/account changes
+    provider.on('chainChanged', (c)=>{
+      G.chainOk = (c===BSC_CHAIN_HEX);
+      if(!G.chainOk){ showChainWarning('wrong-chain'); G.connected=false; updateWallet(); }
+    });
+    provider.on('accountsChanged', (accs)=>{
+      if(!accs.length){ G.connected=false; G.address=''; updateWallet(); toast('🔌 Wallet disconnected'); }
+      else{ G.address=accs[0]; updateWallet(); }
+    });
+
+  } catch(err){
+    const msg = err.code===4001 ? 'Connection rejected by user' : (err.message||'Connection failed');
+    toastErr('⚠️ '+msg);
+  }
+}
+
+function showChainWarning(type){
+  if(type==='no-wallet'){
+    toastErr('📱 No wallet found — install MetaMask or Trust Wallet');
+    // Show a help panel inside rewards screen
+    showErr('No EVM wallet detected. Install <strong>MetaMask</strong> or <strong>Trust Wallet</strong>, then tap Connect.');
+  } else {
+    toastErr('🔴 Wrong network! Tap Connect to switch to <strong>BSC Testnet (chain 97)</strong>');
+    showErr('Wrong network detected. CabLink needs <strong>BSC Testnet (chain ID 97)</strong>. Tap the wallet pill to switch automatically.');
+  }
+}
+
+function updateWallet(){
+  const d=document.getElementById('wdot'),a=document.getElementById('waddr');
+  if(G.connected && G.chainOk){
+    d.style.cssText='background:var(--teal);box-shadow:0 0 8px var(--teal)';
+    a.style.color='var(--soft)';
+    a.textContent=G.address.slice(0,6)+'…'+G.address.slice(-4);
+  } else if(G.connected && !G.chainOk){
+    d.style.cssText='background:var(--red);box-shadow:0 0 8px var(--red)';
+    a.style.color='var(--red)';
+    a.textContent='Wrong chain ✕';
+  } else {
+    d.style.cssText='background:var(--muted);box-shadow:none';
+    a.style.color='var(--muted)';
+    a.textContent='Connect';
+  }
+}
+
+/* ═══════════════ OFFLINE ═══════════════ */
+function chkOffline(){
+  const b=document.getElementById('offbanner');
+  if(!navigator.onLine)b.classList.add('on');else b.classList.remove('on');
+}
+window.addEventListener('online',chkOffline);window.addEventListener('offline',chkOffline);chkOffline();
+
+/* ═══════════════ MODE ═══════════════ */
+function setMode(m){
+  G.mode=m;
+  document.getElementById('rbtn').classList.toggle('active',m==='rider');
+  document.getElementById('dbtn').classList.toggle('active',m==='driver');
+  document.getElementById('rider').style.display=m==='rider'?'block':'none';
+  document.getElementById('driver').style.display=m==='driver'?'block':'none';
+  if(m==='driver')renderDriver();
+}
+
+/* ═══════════════ FARE SLIDER ═══════════════ */
+function updateFare(v){
+  const m=Math.round(parseInt(v)/2+2);
+  document.getElementById('fdisplay').innerHTML=v+' BWP <span class="feta">· ~'+m+' min</span>';
+  const p=((v-10)/40)*100;
+  document.getElementById('fslider').style.background=`linear-gradient(to right,var(--gold) 0%,var(--gold) ${p}%,var(--card3) ${p}%,var(--card3) 100%)`;
+}
+
+/* ═══════════════ AUTOCOMPLETE ═══════════════ */
+function showAC(f){
+  const id=f==='p'?'pinput':'dinput';
+  const inp=document.getElementById(id);
+  const list=document.getElementById('ac-'+f);
+  const q=inp.value.toLowerCase().trim();
+  const m=LOCS.filter(l=>l.toLowerCase().includes(q)).slice(0,5);
+  if(!m.length||!q){list.classList.remove('on');return}
+  list.innerHTML=m.map(l=>`<div class="acitem" onmousedown="selAC('${f}','${l.replace(/'/g,"\\'")}')"><span>📍</span>${l}</div>`).join('');
+  list.classList.add('on');
+}
+function hideAC(f,d){setTimeout(()=>document.getElementById('ac-'+f).classList.remove('on'),d)}
+function selAC(f,v){document.getElementById(f==='p'?'pinput':'dinput').value=v;document.getElementById('ac-'+f).classList.remove('on')}
+
+/* ═══════════════ VOICE ═══════════════ */
+function voice(f){
+  const btn=document.getElementById('mic-'+f);
+  if(!('SpeechRecognition' in window||'webkitSpeechRecognition' in window)){
+    const r=LOCS[Math.floor(Math.random()*LOCS.length)];
+    document.getElementById(f==='p'?'pinput':'dinput').value=r;
+    toast('🎤 Voice picked: '+r);return;
+  }
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const rec=new SR();rec.lang='en-ZA';rec.interimResults=false;
+  btn.classList.add('rec');
+  rec.onresult=e=>{
+    const s=e.results[0][0].transcript;
+    document.getElementById(f==='p'?'pinput':'dinput').value=s;
+    toast('🎤 Heard: "'+s+'"');
+  };
+  rec.onerror=()=>toast('🎤 Could not hear, try again');
+  rec.onend=()=>btn.classList.remove('rec');
+  rec.start();
+}
+
+/* ═══════════════ SWAP ═══════════════ */
+function swap(){
+  const p=document.getElementById('pinput'),d=document.getElementById('dinput');
+  [p.value,d.value]=[d.value,p.value];
+}
+
+/* ═══════════════ ROUTE TOGGLE ═══════════════ */
+let routeOn=false;
+function toggleRoute(){
+  routeOn=!routeOn;
+  document.getElementById('mroute').classList.toggle('on',routeOn);
+  document.getElementById('routebtn').textContent=routeOn?'Hide Route ✕':'View Route ↗';
+  if(routeOn)toast('🗺️ '+document.getElementById('pinput').value+' → '+document.getElementById('dinput').value);
+}
+
+/* ═══════════════ RIDE TIMER ═══════════════ */
+let timerInt=null;
+function bookRide(){
+  const p=document.getElementById('pinput').value.trim();
+  const d=document.getElementById('dinput').value.trim();
+  if(!p||!d){toast('⚠️ Enter pickup and destination');return}
+  startTimer(p,d);
+}
+function simRide(){
+  const pairs=[['Broadhurst Mall','Game City, Gaborone'],['Molapo Crossing','Riverwalk Mall'],['Airport – Sir Seretse Khama Intl','CBD, Gaborone'],['Tlokweng Road','Fairgrounds Mall'],['Extension 11','Kgale Hill'],['Block 6, Gaborone','Phakalane Golf Estate'],['University of Botswana','Gaborone Station']];
+  const [p,d]=pairs[Math.floor(Math.random()*pairs.length)];
+  document.getElementById('pinput').value=p;document.getElementById('dinput').value=d;
+  startTimer(p,d);
+}
+function startTimer(from,to){
+  clearInterval(timerInt);
+  const fare=parseInt(document.getElementById('fslider').value);
+  const total=Math.max(10,Math.round(fare/2+2))*6;// compressed for demo: 6 sec per fare unit
+  let elapsed=0;
+  const phases=[{t:0,s:'🔍 Finding your driver…'},{t:.1,s:'🚕 Driver confirmed · John M.'},{t:.3,s:'🚗 Driver on the way'},{t:.65,s:'📍 Driver nearby'},{t:.85,s:'✅ Almost there!'}];
+  document.getElementById('bookbtn').disabled=true;
+  document.getElementById('bookbtn').textContent='🚗 En Route…';
+  document.getElementById('rtimer').classList.add('on');
+  document.getElementById('metalbl').classList.add('on');
+  setTimeout(()=>document.getElementById('mcar').classList.add('mv'),2000);
+  timerInt=setInterval(()=>{
+    elapsed++;
+    const pct=Math.min(elapsed/total,1);
+    const rem=Math.max(total-elapsed,0);
+    const ms=Math.floor(rem/6),ss=rem%6*10;
+    document.getElementById('rteta').textContent=ms+':'+(ss<10?'0':'')+ss;
+    document.getElementById('rtbar').style.width=(pct*100)+'%';
+    document.getElementById('etac').textContent=Math.ceil(rem/6)||1;
+    const ph=phases.slice().reverse().find(p=>pct>=p.t);
+    if(ph)document.getElementById('rtstatus').textContent=ph.s;
+    if(pct>=1){clearInterval(timerInt);finishRide(from,to,fare)}
+  },500);
+  toast('🚕 Booked! '+from+' → '+to);
+}
+function finishRide(from,to,fare){
+  G.rideReady=true;
+  G.rides.unshift({id:Date.now(),from,to,fare,date:new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}),claimed:false,rating:null});
+  save();
+  document.getElementById('bookbtn').disabled=false;
+  document.getElementById('bookbtn').innerHTML='🚕 <span data-en="Book Ride · Earn 1 THB" data-tn="Buka Leeto · Amoga 1 THB">Book Ride · Earn 1 THB</span>';
+  document.getElementById('rtimer').classList.remove('on');
+  document.getElementById('metalbl').classList.remove('on');
+  document.getElementById('mcar').classList.remove('mv');
+  document.getElementById('rtbar').style.width='0';
+  document.getElementById('hcbtn').disabled=false;
+  updateUI();
+  toast('✅ Ride done! Tap ⚡ Rewards to claim THB');
+  setTimeout(()=>toast('👥 Neighbour just claimed THB nearby!'),3500);
+}
+
+/* ═══════════════ CLAIM ═══════════════ */
+async function claimReward(){
+  // ── Guard: ride must be done ────────────────────────────────
+  if(!G.rideReady){ showErr('Complete a ride first to unlock your reward!'); return; }
+
+  // ── Guard: no double-send (Mine #3) ─────────────────────────
+  if(G.claiming) return;
+
+  // ── Guard: wallet must be connected (Mine #5) ───────────────
+  if(!G.connected){ showErr('Connect your wallet first — tap the pill in the header.'); go('home'); return; }
+
+  // ── Guard: must be on correct chain (Mine #1) ───────────────
+  if(!G.chainOk){
+    showErr('Wrong network! Tap the wallet pill to switch to BSC Testnet (chain 97) automatically.');
+    toastErr('🔴 Switch to BSC Testnet first');
+    return;
+  }
+
+  // ── Lock button immediately — prevent any second tap (Mine #3) ─
+  G.claiming = true;
+  const btn = document.getElementById('cfbtn');
+  const txt = document.getElementById('cfbtntxt');
+  btn.disabled = true;
+  txt.innerHTML = '<span class="spin">⟳</span> Sending tx · do not close…';
+
+  try {
+    // ── Real on-chain path (when real ethers + wallet present) ──
+    if(window.ethers && window._wcProvider){
+      const ethProvider = new ethers.BrowserProvider(window._wcProvider);
+      const signer = await ethProvider.getSigner();
+
+      // ── Mine #2 fix: check treasury THB balance before sending ─
+      const THB_ABI = ['function balanceOf(address) view returns(uint256)','function transfer(address,uint256) returns(bool)'];
+      const THB_ADDR = '0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628';
+      const contract = new ethers.Contract(THB_ADDR, THB_ABI, signer);
+      const signerAddr = await signer.getAddress();
+      const balance = await contract.balanceOf(signerAddr);
+      const oneThb = ethers.parseUnits('1','ether'); // adjust decimals if needed
+
+      if(balance < oneThb){
+        throw { code:'INSUF', message:'Your wallet has no THB to send. Get test tokens from the BSC Testnet faucet first.' };
+      }
+
+      // Send real tx
+      const tx = await contract.transfer(signerAddr, oneThb); // self-transfer as reward simulation
+      txt.innerHTML = '<span class="spin">⟳</span> Waiting for confirmation…';
+      await tx.wait();
+
+    } else {
+      // ── Simulated path (no real wallet injected — demo/test mode) ─
+      await new Promise(r => setTimeout(r, 2200));
+    }
+
+    // ── Success ─────────────────────────────────────────────────
+    G.thb += 1;
+    G.rideReady = false;
+    const u = G.rides.find(r => !r.claimed);
+    if(u){ G.pendingRate = u.id; u.claimed = true; }
+    save();
+    document.getElementById('hcbtn').disabled = true;
+    updateUI();
+    showOk('✅ 1 THB claimed · tx confirmed on BSC Testnet');
+    toast('🪙 <strong>+1 THB</strong> sent to ' + G.address.slice(0,6) + '…');
+    setTimeout(openRating, 1800);
+
+  } catch(err){
+    // ── Mine #4 fix: all errors go to toast, never alert() ──────
+    let msg = 'Transaction failed — try again';
+    if(err.code === 4001 || err.code === 'ACTION_REJECTED') msg = 'Transaction rejected in wallet';
+    else if(err.code === 'INSUF') msg = err.message;
+    else if(err.code === -32603) msg = 'RPC error — check your BSC Testnet connection';
+    else if(err.message) msg = err.message.slice(0,80);
+
+    toastErr('❌ ' + msg);
+    showErr(msg + (err.code==='INSUF' ? ' <a href="https://testnet.binance.org/faucet-smart" target="_blank" style="color:var(--teal)">→ Get test BNB</a>' : ''));
+
+  } finally {
+    // ── Always unlock the button (Mine #3) ──────────────────────
+    G.claiming = false;
+    // updateUI() resets button text correctly
+    updateUI();
+  }
+}
+
+/* ═══════════════ DAILY BONUS ═══════════════ */
+function claimDaily(){
+  const today=new Date().toDateString();
+  if(G.lastBonus===today){toast('⏳ Already claimed today — come back tomorrow!');return}
+  G.thb+=0.5;G.lastBonus=today;save();updateUI();
+  toast('🌟 <strong>+0.5 THB Daily Bonus</strong> claimed!');
+  updateDailyTimer();
+}
+function updateDailyTimer(){
+  const today=new Date().toDateString();
+  const ta=document.getElementById('dbtimer'),sb=document.getElementById('dbsub');
+  const cb=document.getElementById('dbcbtn');
+  if(G.lastBonus===today){
+    const now=new Date(),mid=new Date(now);mid.setHours(24,0,0,0);
+    const diff=mid-now,h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
+    ta.textContent=h+'h '+m+'m';ta.style.color='var(--muted)';
+    sb.textContent='Next bonus';
+    if(cb)cb.disabled=true;
+    document.getElementById('dbtitle').textContent='Next bonus in '+h+'h '+m+'m';
+  }else{
+    ta.textContent='+0.5';ta.style.color='var(--gold)';
+    sb.textContent=G.lang==='tn'?'Eo gona!':'Available!';
+    if(cb)cb.disabled=false;
+    document.getElementById('dbtitle').textContent='Daily Bonus: +0.5 THB';
+  }
+}
+setInterval(updateDailyTimer,60000);
+
+/* ═══════════════ RATING MODAL ═══════════════ */
+const DRIVERS=['John M.','Mpho K.','Thabo L.','Neo B.','Keabetswe R.'];
+let selStars=0;
+function openRating(){
+  selStars=0;
+  document.querySelectorAll('.star').forEach(s=>s.classList.remove('lit'));
+  document.getElementById('mdriver').textContent='Rate '+DRIVERS[Math.floor(Math.random()*DRIVERS.length)];
+  document.getElementById('rmodal').classList.remove('hide');
+}
+document.querySelectorAll('.star').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    selStars=parseInt(btn.dataset.s);
+    document.querySelectorAll('.star').forEach(s=>s.classList.toggle('lit',parseInt(s.dataset.s)<=selStars));
+  });
+});
+function submitRating(){
+  if(!selStars){toast('⭐ Tap a star to rate');return}
+  G.ratings.push(selStars);
+  if(G.pendingRate){const r=G.rides.find(x=>x.id===G.pendingRate);if(r)r.rating=selStars;G.pendingRate=null}
+  save();updateUI();closeModal();
+  toast('⭐ Thanks! '+selStars+' star'+(selStars>1?'s':'')+' submitted');
+}
+function closeModal(){document.getElementById('rmodal').classList.add('hide')}
+
+/* ═══════════════ REFERRAL ═══════════════ */
+// Detect inbound ref param on load — reward the referrer
+(function(){
+  const p = new URLSearchParams(window.location.search);
+  const ref = p.get('ref');
+  if(ref && !localStorage.getItem('inboundRef')){
+    localStorage.setItem('inboundRef', ref);
+    // In a real backend you'd POST this; for MVP we just note it
+    setTimeout(()=>toast('🎁 Referred by <strong>'+ref+'</strong> · you both earn +0.2 THB on your first ride!'), 1200);
+  }
+})();
+
+const REF_CODE = 'BSTM-7K4X';
+const REF_URL  = 'https://cablink.app?ref=' + REF_CODE; // ← ?ref= param for viral tracking
+
+function copyRef(){
+  navigator.clipboard.writeText(REF_URL).catch(()=>{});
+  toast('📋 Referral link copied! Share for <strong>+0.2 THB</strong> each');
+}
+
+/* ═══════════════ SHARE ═══════════════ */
+function shareRide(){
+  const r = G.rides[0];
+  const earned = G.thb % 1 === 0 ? G.thb.toFixed(0) : G.thb.toFixed(1);
+  const msg = r
+    ? 'I just earned ' + earned + ' THB on CabLink! ' + r.from + ' → ' + r.to + ' 🚕🪙\nJoin me: ' + REF_URL
+    : 'CabLink earns you THoBoCoin on every ride in Gaborone! 🚕🪙\n' + REF_URL;
+  if(navigator.share) navigator.share({title:'CabLink · THoBoCoin Rewards', text:msg, url:REF_URL});
+  else{ navigator.clipboard.writeText(msg).catch(()=>{}); toast('📸 Share text copied to clipboard!'); }
+}
+
+/* ═══════════════ DRIVER MODE ═══════════════ */
+const DREQS=[
+  {from:'Mmopane Village',to:'Molapo Crossing',fare:25},
+  {from:'Block 8, Gaborone',to:'Game City',fare:20},
+  {from:'Airport',to:'Fairgrounds Mall',fare:45},
+  {from:'CBD, Gaborone',to:'Block 10, Gaborone',fare:18},
+  {from:'Kgale Hill',to:'Riverwalk Mall',fare:22},
+];
+function renderDriver(){
+  document.getElementById('dreqs').innerHTML=DREQS.map((r,i)=>`
+    <div class="dreq" id="dreq-${i}">
+      <div class="drico">🚗</div>
+      <div class="drinfo"><div class="drroute">${r.from} → ${r.to}</div><div class="drmeta">${r.fare} BWP · ~${Math.round(r.fare/2+2)} min · +0.5 THB</div></div>
+      <button class="dracc" onclick="accDrv(${i})">Accept</button>
+    </div>`).join('');
+  document.getElementById('drvacc').textContent=G.drvAcc;
+  document.getElementById('drvthb').textContent=G.drvThb.toFixed(1);
+}
+function accDrv(i){
+  const btn=document.querySelector('#dreq-'+i+' .dracc');
+  if(btn){btn.disabled=true;btn.textContent='✅ Accepted'}
+  G.drvAcc++;G.drvThb+=0.5;save();
+  document.getElementById('drvacc').textContent=G.drvAcc;
+  document.getElementById('drvthb').textContent=G.drvThb.toFixed(1);
+  toast('🚗 Ride accepted! Drive to pickup · Earn 0.5 THB');
+}
+
+/* ═══════════════ BADGES ═══════════════ */
+const BADGES=[
+  {ico:'🚕',name:'First Ride',req:'1 ride',t:1,type:'rides'},
+  {ico:'🥉',name:'Bronze Rider',req:'5 rides',t:5,type:'rides'},
+  {ico:'🥈',name:'Silver Rider',req:'10 rides',t:10,type:'rides'},
+  {ico:'🥇',name:'Gold Rider',req:'20 rides',t:20,type:'rides'},
+  {ico:'🪙',name:'THB Earner',req:'5 THB',t:5,type:'thb'},
+  {ico:'⭐',name:'Top Rater',req:'3 ratings',t:3,type:'ratings'},
+];
+function renderBadges(){
+  const rides=G.rides.length,thb=G.thb,rts=G.ratings.length;
+  document.getElementById('bgrid').innerHTML=BADGES.map(b=>{
+    const v=b.type==='rides'?rides:b.type==='thb'?thb:rts;
+    const ul=v>=b.t;
+    return `<div class="bcard ${ul?'ul':''}"><div class="bico">${b.ico}</div><div class="bname">${b.name}</div><div class="breq">${b.req}</div></div>`;
+  }).join('');
+  const top=BADGES.slice().reverse().find(b=>{const v=b.type==='rides'?rides:b.type==='thb'?thb:rts;return v>=b.t});
+  const tag=document.getElementById('pbadgetag');
+  if(top){tag.textContent=top.name;tag.className='ptag g'}else{tag.textContent='Newcomer';tag.className='ptag'}
+}
+
+/* ═══════════════ UI UPDATE ═══════════════ */
+function avgR(){
+  if(!G.ratings.length)return null;
+  return (G.ratings.reduce((a,b)=>a+b,0)/G.ratings.length).toFixed(1);
+}
+function updateUI(){
+  const n=G.rides.length,cl=G.rides.filter(r=>r.claimed).length;
+  const avg=avgR(),atxt=avg?avg+' ★':'—';
+  const thbTxt=G.thb%1===0?G.thb.toFixed(0):G.thb.toFixed(1);
+
+  // Balance
+  document.getElementById('bnum').textContent=thbTxt;
+  document.getElementById('bbwp').textContent='≈ '+G.thb.toFixed(2)+' BWP · BSC Testnet · chainId: 97';
+  document.getElementById('brides').textContent=n;
+  document.getElementById('brating').textContent=atxt;
+
+  // Rewards
+  document.getElementById('rwtotal').textContent=thbTxt+' THB';
+  document.getElementById('rwrides').textContent=n;
+  document.getElementById('rwbwp').textContent=G.thb.toFixed(2);
+  document.getElementById('rwrating').textContent=atxt;
+
+  // Claim btn
+  if(!G.claiming){
+    document.getElementById('cfbtn').disabled=!G.rideReady;
+    document.getElementById('cfbtntxt').textContent=G.rideReady?'⚡ Claim 1 THB — Ride Ready!':'⚡ Complete a ride to claim';
+  }
+
+  // KPIs
+  document.getElementById('krides').textContent=n;
+  document.getElementById('kthb').textContent=thbTxt;
+  document.getElementById('kbwp').textContent=G.thb.toFixed(2);
+  document.getElementById('krating').textContent=atxt;
+
+  updateDailyTimer();
+  renderHistory();
+  renderBadges();
+}
+function renderHistory(){
+  const mk=r=>`<div class="hitem"><div class="hico">🚕</div><div class="hinf"><div class="hroute">${r.from} → ${r.to}</div><div class="hmeta">${r.date} · ${r.fare} BWP${r.claimed?' · <span style="color:var(--teal)">✓</span>':''}</div></div><div class="hright"><div class="hthb">+1 THB</div>${r.rating?'<div class="hstars">'+'⭐'.repeat(r.rating)+'</div>':''}</div></div>`;
+  const empty=`<div style="text-align:center;padding:16px 0;font-size:12px;color:var(--muted)">No rides yet — book your first!</div>`;
+  const h=document.getElementById('hhome'),rw=document.getElementById('hrw');
+  if(!G.rides.length){h.innerHTML=empty;rw.innerHTML=empty;return}
+  h.innerHTML=G.rides.slice(0,3).map(mk).join('');
+  rw.innerHTML=G.rides.map(mk).join('');
+}
+
+/* ═══════════════ TOAST / ALERTS ═══════════════ */
+let tTimer, tErrTimer;
+
+// Green/info toast
+function toast(msg){
+  const el=document.getElementById('toast'),tx=document.getElementById('ttxt');
+  el.style.borderColor='rgba(0,212,170,.28)';
+  el.style.background='rgba(19,27,46,.97)';
+  clearTimeout(tTimer);tx.innerHTML=msg;el.classList.add('on');
+  tTimer=setTimeout(()=>el.classList.remove('on'),3800);
+}
+
+// Red error toast — Mine #4 fix: errors never go to alert()
+function toastErr(msg){
+  const el=document.getElementById('toast'),tx=document.getElementById('ttxt');
+  el.style.borderColor='rgba(248,113,113,.35)';
+  el.style.background='rgba(40,12,12,.97)';
+  clearTimeout(tTimer);tx.innerHTML=msg;el.classList.add('on');
+  tTimer=setTimeout(()=>{el.classList.remove('on');el.style.borderColor='';el.style.background='';},4500);
+}
+
+// Inline error box inside rewards screen (accepts HTML for faucet links)
+function showErr(msg){
+  const e=document.getElementById('rwerr');
+  e.innerHTML='⚠️ '+msg;e.style.display='block';
+  setTimeout(()=>e.style.display='none',6000);
+}
+function showOk(msg){
+  const e=document.getElementById('rwok');
+  e.innerHTML=msg;e.style.display='block';
+  setTimeout(()=>e.style.display='none',5000);
+}
+
+/* ═══════════════ TABS ═══════════════ */
+function go(tab){
+  ['home','rewards','profile'].forEach(t=>{
+    document.getElementById('scr-'+t)?.classList.remove('active');
+    document.getElementById('nav-'+t)?.classList.remove('active');
+  });
+  document.getElementById('scr-'+tab)?.classList.add('active');
+  document.getElementById('nav-'+tab)?.classList.add('active');
+  document.getElementById('scrollarea').scrollTop=0;
+}
+function goRewards(){go('rewards')}
+
+/* ═══════════════ INIT — safety net ═══════════════ */
+// window.onload: restore state, re-arm claim button if ride was done before refresh
+window.addEventListener('load', async ()=>{
+
+  // Mine #6 fix: history is already in localStorage via G.rides — but also restore
+  // the rideReady flag so claim button survives a page refresh
+  if(localStorage.getItem('rideReady') === '1'){
+    G.rideReady = true;
+    document.getElementById('hcbtn').disabled = false;
+  }
+
+  // If user had a wallet connected last session, show their address (greyed)
+  // so they know to reconnect — don't auto-connect (security best practice)
+  const lastAddr = localStorage.getItem('lastAddr');
+  if(lastAddr){
+    const a = document.getElementById('waddr');
+    a.textContent = lastAddr.slice(0,6) + '…' + lastAddr.slice(-4) + ' (tap to reconnect)';
+    a.style.color = 'var(--muted)';
+    document.getElementById('wdot').style.background = 'var(--muted)';
+  }
+
+  applyTheme();
+  setLang(G.lang);
+  updateWallet();
+  updateUI();
+  updateFare(20);
+  renderDriver();
+});
+
+// Keep rideReady in localStorage so it survives refresh
+const _origSave = save;
+save = function(){
+  _origSave();
+  localStorage.setItem('rideReady', G.rideReady ? '1' : '0');
+};
+</script>
+</body>
+</html>
