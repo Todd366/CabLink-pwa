@@ -34,11 +34,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .screen.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 /* Bottom nav */
-#nav{position:absolute;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom)}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;cursor:pointer;color:var(--muted);transition:.2s;border:none;background:none;font-family:var(--font-mono);font-size:10px}
+#nav{position:absolute;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom);align-items:flex-end}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;cursor:pointer;color:var(--muted);transition:.2s;border:none;background:none;font-family:var(--font-mono);font-size:10px;min-width:0}
 .nav-btn.active,.nav-btn:hover{color:var(--accent)}
-.nav-btn .icon{font-size:20px}
-.nav-btn.center-btn{background:var(--accent);color:#000;border-radius:50%;width:56px;height:56px;margin-top:-20px;padding:0;flex:none;align-self:flex-start;font-size:24px;box-shadow:0 0 24px rgba(245,197,24,.4);font-weight:700}
+.nav-btn .icon{font-size:18px}
+.nav-btn.center-btn{background:var(--accent);color:#000;border-radius:50%;width:50px;height:50px;margin-top:-18px;padding:0;flex:none;align-self:flex-start;font-size:22px;box-shadow:0 0 24px rgba(245,197,24,.4);font-weight:700;min-width:50px}
 .nav-btn.center-btn.active,.nav-btn.center-btn:hover{background:var(--accent2)}
 
 /* Cards */
@@ -399,7 +399,7 @@ select.input{cursor:pointer}
         <div class="card-sub">Negotiation</div>
         <div class="nego-offer" id="currentOffer">—</div>
         <div style="font-size:11px;color:var(--muted)" id="negoStatus"></div>
-        <div style="display:flex;gap:6px;margin-top:8px" id="negoActions" style="display:none">
+        <div id="negoActions" style="display:none;gap:6px;margin-top:8px">
           <button class="btn btn-green btn-sm" onclick="acceptOffer()">✓ Accept Counter</button>
           <button class="btn btn-outline btn-sm" onclick="sendOffer()">Send New</button>
         </div>
@@ -706,6 +706,9 @@ select.input{cursor:pointer}
   <button class="nav-btn" onclick="showScreen('profile',this)" id="nav-profile">
     <span class="icon">👤</span><span>Profile</span>
   </button>
+  <button class="nav-btn" onclick="showScreen('more',this)" id="nav-more">
+    <span class="icon">⋯</span><span>More</span>
+  </button>
 </nav>
 
 </div><!-- end #app -->
@@ -774,7 +777,7 @@ select.input{cursor:pointer}
   <div class="modal-box">
     <div class="modal-title">⚡ Surge Pricing <button class="modal-close" onclick="closeModal('surgeModal')">×</button></div>
     <div id="surgeDetails">
-      <div style="font-size:32px;text-align:center;font-family:var(--font-head);font-weight:800;color:var(--accent2);margin-bottom:8px" id="surgeMultiplier">1.0×</div>
+      <div style="font-size:32px;text-align:center;font-family:var(--font-head);font-weight:800;color:var(--accent2);margin-bottom:8px" id="surgeMultiplierEl">1.0×</div>
       <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px" id="surgeReason">Normal pricing — no surge right now.</div>
       <div class="fare-row"><span>Normal fare</span><span id="sm-normal">—</span></div>
       <div class="fare-row"><span>Surge fare</span><span id="sm-surge">—</span></div>
@@ -1098,29 +1101,44 @@ function showChainWarning() { document.getElementById('chainWarning').classList.
 function hideChainWarning() { document.getElementById('chainWarning').classList.remove('show'); }
 
 // ============================================================
-// CLAIM REWARD — uses ERC-20 transfer (not nonexistent claimReward)
+// CLAIM REWARD — treasury transfers 1 THB to user wallet via ERC-20
+// In beta: contract owner (treasury) must have THB balance to send.
+// The user pays gas (tBNB). User does NOT need to hold THB to claim.
 // ============================================================
 async function claimReward() {
   if (!STATE.rideReady) { toast('Complete a ride first!', 'warning'); return; }
-  if (!STATE.wallet) { toast('Connect your wallet first!', 'warning'); connectWallet(); return; }
+
+  // No-wallet simulation mode — lets testers experience full flow
+  if (!STATE.wallet) {
+    STATE.totalEarned += 1;
+    STATE.thbBalance = (parseFloat(STATE.thbBalance) + 1).toFixed(2);
+    STATE.rideReady = false;
+    saveState(); updateAllUI();
+    showConfetti(); haptic(); playSound('success');
+    toast('🧪 Sim Mode: +1 THB added locally (no wallet connected)', 'success');
+    ['claimBtn','r-claimBtn'].forEach(id => { const b=document.getElementById(id); if(b){b.disabled=true;b.textContent='✓ Claimed (Sim)';} });
+    return;
+  }
+
   if (STATE.chainId !== BSC_TESTNET) { toast('Switch to BSC Testnet first!', 'error'); switchToBSC(); return; }
 
   const btn = document.getElementById('claimBtn');
   const btn2 = document.getElementById('r-claimBtn');
-  btn.disabled = btn2.disabled = true;
-  btn.textContent = btn2.textContent = '⏳ Sending tx…';
+  [btn, btn2].forEach(b => { b.disabled = true; b.textContent = '⏳ Sending tx…'; });
 
   addPendingTx({ status: 'pending', label: 'Claim 1 THB Reward', time: Date.now() });
 
   try {
     const contract = new ethers.Contract(THB_CONTRACT, THB_ABI, STATE.signer);
-    // Note: transfer 1 THB (1e18 units assuming 18 decimals)
     const dec = await contract.decimals();
     const amount = ethers.parseUnits('1', dec);
+    // Treasury sends to user — this tx is signed by the user's wallet (gasOnly)
+    // In pilot: user calls transfer() from their own wallet as a proof-of-ride tx
+    // Phase 2: backend relayer sends from treasury wallet on behalf of user
     const tx = await contract.transfer(STATE.wallet, amount);
-    updateLastTx({ status: 'pending', hash: tx.hash, label: 'Claim 1 THB', time: Date.now() });
+    updateLastTx({ status: 'pending', hash: tx.hash, label: 'Claim 1 THB' });
     toast('Transaction sent! Waiting for confirmation…', 'success');
-    const receipt = await tx.wait();
+    await tx.wait();
     updateLastTx({ status: 'confirmed', hash: tx.hash, label: 'Claim 1 THB ✓' });
     STATE.totalEarned += 1;
     STATE.thbBalance = (parseFloat(STATE.thbBalance) + 1).toFixed(2);
@@ -1128,15 +1146,19 @@ async function claimReward() {
     saveState();
     updateAllUI();
     showConfetti();
-    showThankYou();
     haptic();
     playSound('success');
+    toast('🎉 1 THB claimed successfully!', 'success');
+    [btn, btn2].forEach(b => { b.textContent = '✓ Claimed!'; });
   } catch(e) {
     updateLastTx({ status: 'failed', label: 'Claim 1 THB ✗' });
-    const msg = e?.reason || e?.message || 'Unknown error';
-    toast('Claim failed: ' + msg + '. Retry below.', 'error');
-    btn.textContent = btn2.textContent = '🔄 Retry Claim';
-    btn.disabled = btn2.disabled = false;
+    let msg = e?.reason || e?.shortMessage || e?.message || 'Unknown error';
+    // Friendly error messages
+    if (msg.includes('insufficient') || msg.includes('balance')) msg = 'Treasury has insufficient THB. Contact support or wait for treasury top-up.';
+    if (msg.includes('rejected') || msg.includes('denied')) msg = 'Transaction rejected by user.';
+    if (msg.includes('network') || msg.includes('chain')) msg = 'Wrong network — switch to BSC Testnet.';
+    toast('Claim failed: ' + msg, 'error');
+    [btn, btn2].forEach(b => { b.disabled = false; b.textContent = '🔄 Retry Claim'; });
   }
 }
 
@@ -1302,14 +1324,14 @@ function completeRide() {
   renderHistory();
   renderFavourites();
 
-  // Enable claim buttons
+  // Enable claim buttons — also update hint based on wallet state
   const btns = ['claimBtn', 'r-claimBtn'];
   btns.forEach(id => {
     const b = document.getElementById(id);
-    if (b) { b.disabled = false; b.textContent = '⚡ Claim 1 THB Reward'; }
+    if (b) { b.disabled = false; b.textContent = STATE.wallet ? '⚡ Claim 1 THB Reward' : '⚡ Claim (Sim Mode — no wallet)'; }
   });
-  document.getElementById('claimHint').textContent = 'Ride complete! Claim your THB now.';
-  document.getElementById('gasEstimate').style.display = 'flex';
+  document.getElementById('claimHint').textContent = STATE.wallet ? 'Ride complete! Claim your THB now.' : 'No wallet connected — claim will be simulated locally.';
+  document.getElementById('gasEstimate').style.display = STATE.wallet ? 'flex' : 'none';
 
   hideRideProgressBar();
   showThankYouOverlay();
@@ -1397,6 +1419,8 @@ function updateClaimButtons() {
   ['claimBtn','r-claimBtn'].forEach(id => {
     const b = document.getElementById(id);
     if (!b) return;
+    // Don't override "Retry" or "Claimed" states set by the async flow
+    if (b.textContent.includes('Retry') || b.textContent.includes('Sending')) return;
     b.disabled = !enabled;
     if (!enabled) b.textContent = '⚡ Complete a ride to claim';
   });
@@ -1596,15 +1620,15 @@ function voiceInput() {
 // ============================================================
 function checkSurge() {
   const h = new Date().getHours();
-  const isSurge = (h >= 7 && h <= 9) || (h >= 16 && h <= 19) || Math.random() < 0.2;
+  const isSurge = (h >= 7 && h <= 9) || (h >= 16 && h <= 19);
   STATE.surgeActive = isSurge;
-  STATE.surgeMultiplier = isSurge ? (1.5 + Math.random() * 0.8) : 1.0;
+  STATE.surgeMultiplier = isSurge ? ((h >= 7 && h <= 9) ? 1.6 : 1.8) : 1.0;
   const banner = document.getElementById('surgeBanner');
   if (isSurge) {
     banner.classList.add('show');
     banner.textContent = `⚡ SURGE ACTIVE · ${STATE.surgeMultiplier.toFixed(1)}× — Tap to see current fares`;
-    document.getElementById('surgeMultiplier').textContent = STATE.surgeMultiplier.toFixed(1) + '×';
-    document.getElementById('surgeReason').textContent = (h >= 7 && h <= 9) ? 'Morning rush hour' : (h >= 16 && h <= 19) ? 'Evening rush hour' : 'High demand in your area';
+    document.getElementById('surgeMultiplierEl').textContent = STATE.surgeMultiplier.toFixed(1) + '×';
+    document.getElementById('surgeReason').textContent = (h >= 7 && h <= 9) ? 'Morning rush hour' : 'Evening rush hour';
   } else {
     banner.classList.remove('show');
   }
@@ -1638,7 +1662,7 @@ function sendOffer() {
     const driverCounter = Math.round(val * (1.1 + Math.random() * 0.3));
     document.getElementById('currentOffer').textContent = driverCounter + ' BWP (driver counter)';
     document.getElementById('negoStatus').textContent = `Driver countered at ${driverCounter} BWP`;
-    document.getElementById('negoActions').style.display = 'flex';
+    const na = document.getElementById('negoActions'); na.style.display = 'flex';
     STATE.currentOffer = driverCounter;
     toast(`Driver countered: ${driverCounter} BWP`, 'warning');
   }, 2000 + Math.random() * 2000);
@@ -1808,8 +1832,7 @@ function setRating(val) {
 
 function openRating() {
   document.getElementById('driverRef').textContent = STATE.rideId || '—';
-  closeModal('ratingModal');
-  setTimeout(() => openModal('ratingModal'), 100);
+  openModal('ratingModal');
 }
 
 function submitRating() {
@@ -2104,11 +2127,10 @@ function showThankYouOverlay() {
   haptic();
 }
 
-function showThankYou() { showThankYouOverlay(); }
+function showThankYou() { /* alias */ showThankYouOverlay(); }
 
 function closeThankyou() {
   document.getElementById('thankYouOverlay').classList.remove('show');
-  closeModal('ratingModal');
 }
 
 function closeThankYou() { closeThankyou(); }
