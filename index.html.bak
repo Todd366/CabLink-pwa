@@ -2338,24 +2338,4 @@ function shortAddr(addr) {
 </script>
 </body>
 </html>
-
-<!-- FINAL FONT FIX -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const link = document.createElement("link");
-    link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap";
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
-
-    const style = document.createElement("style");
-    style.textContent = `
-        * { font-family: 'Inter', system-ui, sans-serif !important; }
-        .input, button, .btn, .toast, .card-title { font-family: 'Inter', system-ui, sans-serif !important; }
-        #statusLabel, .chat-box { font-size: 15px !important; line-height: 1.5 !important; }
-    `;
-    document.head.appendChild(style);
-    
-    console.log("✅ Google Fonts + Inter loaded successfully");
-});
-</script>
 <script src="fix.js"></script>
