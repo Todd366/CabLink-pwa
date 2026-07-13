@@ -1,8 +1,8 @@
-console.log("🔥 CabLink fix.js v160 - Ready for Botswana");
+console.log("🔥 CabLink fix.js v180 - 100% FINAL BUILD");
 
 document.addEventListener('DOMContentLoaded', function() {
 
-  // === FINAL THEME LOCK ===
+  // Strong Dark Theme
   const theme = document.createElement('style');
   theme.innerHTML = `
     body, html, #app, .screen, .card, .modal, input, select, button, .statusbar {
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
       color: #000 !important;
       font-weight: bold !important;
     }
+    .card, .modal { border: 1px solid #2a2a3e !important; }
   `;
   document.head.appendChild(theme);
 
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   cleanProfile();
 
-  // Honest & Professional Booking
+  // Honest Booking
   window.bookRide = function() {
     const pickup = (document.getElementById('pickup') || {}).value?.trim();
     const dropoff = (document.getElementById('dropoff') || {}).value?.trim();
@@ -34,24 +35,24 @@ document.addEventListener('DOMContentLoaded', function() {
       toast("Please enter pickup and drop-off locations", "warning");
       return;
     }
-    toast("🔍 Searching for drivers in Gaborone...", "info");
+    toast("🔍 Searching for available drivers in Gaborone...", "info");
 
     setTimeout(() => {
-      toast("😕 No drivers available right now.", "warning");
+      toast("😕 No drivers available right now", "warning");
       setTimeout(() => {
         toast("💡 Be the first driver and help build CabLink!", "info");
-      }, 1800);
-    }, 1400);
+      }, 2200);
+    }, 1600);
   };
 
-  // Aggressive Cleanup
+  // Final Cleanup
   setTimeout(() => {
     const fakes = ['chatSection','rideIdRow','countdownRow','cancelBtn','driverChat','rideStatusLabel','progressBar'];
     fakes.forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
     });
-  }, 800);
+  }, 1000);
 
-  console.log("✅ v160 - Clean, Honest & Ready for Tomorrow");
+  console.log("✅ v180 - 100% FINAL BUILD READY");
 });
