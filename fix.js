@@ -1,8 +1,8 @@
-console.log("🔥 CabLink fix.js v200 - 100% LOCKED FINAL");
+console.log("🔥 CabLink fix.js v200 - 100% FINAL LOCKED BUILD");
 
 document.addEventListener('DOMContentLoaded', function() {
 
-  // LOCKED DARK THEME
+  // === LOCKED DARK THEME ===
   const theme = document.createElement('style');
   theme.innerHTML = `
     body, html, #app, .screen, .card, .modal, input, select, button, .statusbar {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   cleanProfile();
 
-  // Honest Booking Flow
+  // Honest Booking
   window.bookRide = function() {
     const pickup = (document.getElementById('pickup') || {}).value?.trim();
     const dropoff = (document.getElementById('dropoff') || {}).value?.trim();
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
       toast("😕 No drivers available right now", "warning");
       setTimeout(() => {
         toast("💡 Be the first driver and help build CabLink Botswana!", "info");
-      }, 2000);
+      }, 2200);
     }, 1400);
   };
 
@@ -54,5 +54,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }, 800);
 
-  console.log("✅ v200 - 100% LOCKED & READY FOR LAUNCH");
+  console.log("✅ v200 - 100% FINAL LOCKED BUILD READY FOR BOTSWANA");
 });
