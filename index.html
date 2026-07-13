@@ -8,9 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <style>
 :root{
+  --bg:#0a0a0f;--bg2:#16213e;--bg3:#0f172a;--card:#12121d;
+  --accent:#f5c518;--accent2:#ff8c00;--green:#22d672;--red:#ff4757;
   --blue:#4fc3f7;--purple:#b388ff;
   --text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
   --radius:14px;--font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
@@ -265,7 +266,7 @@ select.input{cursor:pointer}
 </div>
 
 <!-- Driver arrived banner -->
-<div id="arrivedBanner" id="arrivedBanner">
+<div id="arrivedBanner">
   🚗 Your driver has arrived! · <span id="graceTimer">5:00</span> free wait
 </div>
 
@@ -2237,127 +2238,4 @@ function shareLocation() {
 // ============================================================
 function showScreen(name, btn) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('s-' + name).classList.add('active');
-  btn?.classList.add('active');
-  STATE.currentScreen = name;
-  if (name === 'rewards') { renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
-  if (name === 'profile') updateProfileKPI();
-}
-
-function updateDailyBtn() {
-  const today = new Date().toDateString();
-  const btn = document.getElementById('dailyBtn');
-  const status = document.getElementById('dailyStatus');
-  if (STATE.lastBonus === today) {
-    btn.disabled = true;
-    status.textContent = 'Come back tomorrow!';
-  } else {
-    btn.disabled = false;
-    status.textContent = '';
-  }
-}
-
-function updateProfileKPI() {
-  document.getElementById('kpi-rides').textContent = STATE.totalRides;
-  document.getElementById('kpi-thb').textContent = STATE.totalEarned.toFixed(1);
-  document.getElementById('kpi-rating').textContent = STATE.avgRating || '—';
-}
-
-// ============================================================
-// CHANGE LOG
-// ============================================================
-function showChangeLog() {
-  toast('v5.0: Wallet connect fix, ERC-20 transfer claim, surge, negotiation, driver mode, offline queue, real chat, haptics, confetti, FAQ, leaderboard, badges, stops, schedule, share trip, SOS real call, pending TX, export CSV, onboarding, ride ID, arrived banner, grace timer, progress bar. 50+ bugs fixed.', 'success');
-}
-
-// ============================================================
-// FEEDBACK
-// ============================================================
-function submitFeedback() {
-  const text = document.getElementById('feedbackText').value.trim();
-  if (!text) { toast('Please enter feedback', 'warning'); return; }
-  toast('Thank you for your feedback! 🙏 (In beta, feedback is stored locally)', 'success');
-  document.getElementById('feedbackText').value = '';
-  closeModal('feedbackModal');
-}
-
-// ============================================================
-// MISC UI UPDATES
-// ============================================================
-function updateAllUI() {
-  // Balances
-  document.getElementById('thbBal').textContent = STATE.thbBalance;
-  document.getElementById('bwpBal').textContent = (parseFloat(STATE.thbBalance) * 4.2).toFixed(2);
-  document.getElementById('bnbBal').textContent = STATE.bnbBalance;
-  document.getElementById('r-earned').textContent = STATE.totalEarned.toFixed(1);
-  document.getElementById('r-rides').textContent = STATE.totalRides;
-  document.getElementById('r-streak').textContent = STATE.streak;
-  // Streak bar
-  document.getElementById('streakFill').style.width = Math.min(STATE.streak / 7 * 100, 100) + '%';
-  document.getElementById('streakLabel').textContent = STATE.streak + ' / 7 days for bonus badge';
-  // Claim btns
-  updateClaimButtons();
-  // Ref
-  document.getElementById('refLink').textContent = 'cablink.io/ref/' + STATE.referralCode;
-  document.getElementById('ref-count').textContent = STATE.referrals;
-  document.getElementById('ref-thb').textContent = (STATE.referrals * 0.2).toFixed(1);
-  // Fare
-  updateFareBreakdown();
-  // Badges
-  renderBadges();
-}
-
-// ============================================================
-// CLOCK
-// ============================================================
-function startClock() {
-  function tick() {
-    const now = new Date();
-    document.getElementById('clockTime').textContent =
-      now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-  }
-  tick();
-  setInterval(tick, 30000);
-}
-
-// ============================================================
-// OFFLINE QUEUE RENDER
-// ============================================================
-function renderOfflineQueue() {
-  const el = document.getElementById('offlineQueueInfo');
-  if (el) el.textContent = STATE.offlineQueue.length ? STATE.offlineQueue.length + ' ride(s) queued offline — tap Sync Now when online' : 'No queued rides.';
-}
-
-// shortAddr helper
-function shortAddr(addr) {
-  if (!addr) return '—';
-  return addr.substr(0, 6) + '…' + addr.substr(-4);
-}
-</script>
-</body>
-</html>
-
-<!-- FINAL FONT FIX -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const link = document.createElement("link");
-    link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap";
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
-
-    const style = document.createElement("style");
-    style.textContent = `
-        * { font-family: 'Inter', system-ui, sans-serif !important; }
-        .input, button, .btn, .toast, .card-title { font-family: 'Inter', system-ui, sans-serif !important; }
-        #statusLabel, .chat-box { font-size: 15px !important; line-height: 1.5 !important; }
-    `;
-    document.head.appendChild(style);
-    
-    console.log("✅ Google Fonts + Inter loaded successfully");
-});
-</script>
-<script src="fix.js"></script>
-<script src="frontend/js/app.js"></script>
-<script src="frontend/js/core.js"></script>
-<script src="frontend/js/core.js"></script>
+  document.querySelectorAll('.nav-btn').forEach(b => b.c
