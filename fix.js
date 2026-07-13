@@ -1,26 +1,23 @@
-console.log("🔥 CabLink fix.js v100 - FINAL STABLE");
+console.log("🔥 CabLink fix.js v160 - Ready for Botswana");
 
 document.addEventListener('DOMContentLoaded', function() {
 
-  // FORCE DARK THEME + RESPONSIVE FIX
-  const style = document.createElement('style');
-  style.innerHTML = `
-    body, html, #app, .screen, .card, .modal, input, select, button {
+  // === FINAL THEME LOCK ===
+  const theme = document.createElement('style');
+  theme.innerHTML = `
+    body, html, #app, .screen, .card, .modal, input, select, button, .statusbar {
       background: #0a0a0f !important;
       color: #f0f0f5 !important;
     }
-    .btn-primary, button[class*="btn-primary"], #bookBtn, .yellow-btn {
+    .btn-primary, #bookBtn, button[class*="btn-primary"] {
       background: #f5c518 !important;
       color: #000 !important;
       font-weight: bold !important;
     }
-    .card, .modal { border: 1px solid #2a2a3e !important; }
-    .statusbar { background: #0a0a0f !important; }
-    @media (max-width: 480px) { .screen { padding: 12px; } }
   `;
-  document.head.appendChild(style);
+  document.head.appendChild(theme);
 
-  // CLEAN PROFILE
+  // Clean Profile
   function cleanProfile() {
     const nameEl = document.querySelector('#s-profile .card-title');
     const subEl = document.querySelector('#s-profile .card-sub');
@@ -29,7 +26,25 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   cleanProfile();
 
-  // HIDE FAKE RIDE ELEMENTS
+  // Honest & Professional Booking
+  window.bookRide = function() {
+    const pickup = (document.getElementById('pickup') || {}).value?.trim();
+    const dropoff = (document.getElementById('dropoff') || {}).value?.trim();
+    if (!pickup || !dropoff) {
+      toast("Please enter pickup and drop-off locations", "warning");
+      return;
+    }
+    toast("🔍 Searching for drivers in Gaborone...", "info");
+
+    setTimeout(() => {
+      toast("😕 No drivers available right now.", "warning");
+      setTimeout(() => {
+        toast("💡 Be the first driver and help build CabLink!", "info");
+      }, 1800);
+    }, 1400);
+  };
+
+  // Aggressive Cleanup
   setTimeout(() => {
     const fakes = ['chatSection','rideIdRow','countdownRow','cancelBtn','driverChat','rideStatusLabel','progressBar'];
     fakes.forEach(id => {
@@ -38,5 +53,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }, 800);
 
-  console.log("✅ v100 FINAL STABLE - Theme + Responsive + Clean");
+  console.log("✅ v160 - Clean, Honest & Ready for Tomorrow");
 });
