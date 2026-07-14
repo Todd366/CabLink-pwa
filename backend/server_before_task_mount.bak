@@ -205,7 +205,3 @@ app.listen(PORT, function () {
 });
 
 module.exports = app;
-
-// BSTM Marketplace Task Bridge
-const ecosystemTasks=require("./routes/ecosystem_tasks");
-app.use("/api/ecosystem", ecosystemTasks);
