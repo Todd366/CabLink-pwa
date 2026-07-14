@@ -2,6 +2,7 @@
 
 const wallet=require("../rewards/wallet_service");
 const history=require("../rewards/reward_history");
+const ledger=require("./economy_ledger_service");
 
 
 let rides=[];
@@ -19,7 +20,11 @@ created:new Date().toISOString()
 
 rides.push(record);
 
+
+ledger.recordRide(record);
+
 return record;
+
 
 }
 
@@ -55,7 +60,11 @@ ride.driver,
 
 // history update
 if(history.add){
+
 history.add(reward);
+
+ledger.recordReward(reward);
+
 }
 
 
