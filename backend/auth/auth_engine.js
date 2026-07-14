@@ -1,12 +1,14 @@
-
-
 const users=[];
 
 function register(data){
 
 let user={
 
-id:"USER-"+Date.now(),
+id:
+"USER-" +
+Date.now() +
+"-" +
+Math.floor(Math.random()*100000),
 
 role:data.role,
 
@@ -28,5 +30,7 @@ return users.find(x=>x.id===id)||null;
 }
 
 
-module.exports={register,login};
-
+module.exports={
+register,
+login
+};

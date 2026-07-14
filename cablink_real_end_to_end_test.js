@@ -1,62 +1,144 @@
+const auth=require("./backend/auth/auth_engine");
 const ride=require("./backend/rides/ride_engine");
 const fare=require("./backend/fare/fare_engine");
 const match=require("./backend/matching/matching_engine");
-const auth=require("./backend/auth/auth_engine");
 const settle=require("./backend/rides/settlement_engine");
+
+const fs=require("fs");
 
 console.log(`
 =========================================
-🚕 CABLINK REAL END TO END TEST
+🚕 CABLINK REAL END TO END TEST v4
 =========================================
 `);
 
-let user=auth.createUser({
-role:"driver",
-name:"Pilot Driver"
+
+// AUTH
+
+const passenger=auth.register({
+name:"Pilot Passenger",
+role:"passenger"
 });
 
-let driver=match.findDriver({
+
+const driver=auth.register({
+name:"Pilot Driver",
+role:"driver"
+});
+
+
+// DRIVER POOL
+
+const availableDrivers=[
+
+{
+id:driver.id,
+online:true,
+distance:1,
 location:"Gaborone"
-});
+}
 
-let rideData=ride.createRide({
-passenger:"PASSENGER-001",
+];
+
+
+// REQUEST RIDE
+
+const requestedRide=ride.requestRide({
+
+passenger:passenger.id,
+
 pickup:"Airport Junction",
+
 destination:"CBD"
-});
 
-let price=fare.calculateFare({
-distance:5
 });
 
 
-let settlement=settle.settle({
+// MATCH DRIVER
 
-ride:rideData.id,
+const matchedDriver=match.findDriver(
+availableDrivers,
+passenger
+);
 
-amount:price,
 
-wallet:"0xPILOTWALLET",
+// ASSIGN DRIVER USING RIDE ID
+
+const assignedRide=ride.assignDriver(
+requestedRide.id,
+matchedDriver
+);
+
+
+// CALCULATE FARE
+
+const fareAmount=fare.calculate(
+5,
+15
+);
+
+
+// COMPLETE USING RIDE ID
+
+const completedRide=ride.completeRide(
+assignedRide.id
+);
+
+
+// SETTLEMENT
+
+const settlement=settle.settle({
+
+ride:completedRide.id,
+
+amount:fareAmount,
+
+wallet:"PILOT-WALLET",
 
 reward:1
 
 });
 
 
-let result={
-user,
+// REPORT
+
+const report={
+
+passenger,
+
 driver,
-ride:rideData,
-fare:price,
+
+matchedDriver,
+
+requestedRide,
+
+assignedRide,
+
+fareAmount,
+
+completedRide,
+
 settlement,
-time:new Date().toISOString()
+
+timestamp:new Date().toISOString()
+
 };
 
 
-console.log(result);
-
-require("fs").writeFileSync(
+fs.writeFileSync(
 "REAL_END_TO_END_TEST_REPORT.json",
-JSON.stringify(result,null,2)
+JSON.stringify(report,null,2)
 );
+
+
+console.log(report);
+
+
+console.log(`
+=========================================
+
+✅ CABLINK REAL FLOW COMPLETED
+
+=========================================
+`);
 

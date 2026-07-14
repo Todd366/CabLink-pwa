@@ -1,0 +1,77 @@
+{
+  "passenger": {
+    "id": "USER-1784039142863-20686",
+    "role": "passenger",
+    "name": "Pilot Passenger"
+  },
+  "driver": {
+    "id": "USER-1784039142865-85109",
+    "role": "driver",
+    "name": "Pilot Driver"
+  },
+  "matchedDriver": {
+    "id": "USER-1784039142865-85109",
+    "online": true,
+    "distance": 1,
+    "location": "Gaborone"
+  },
+  "requestedRide": {
+    "id": "RIDE-1784039142865",
+    "passenger": "USER-1784039142863-20686",
+    "pickup": "Airport Junction",
+    "destination": "CBD",
+    "status": "COMPLETED",
+    "driver": {
+      "id": "USER-1784039142865-85109",
+      "online": true,
+      "distance": 1,
+      "location": "Gaborone"
+    }
+  },
+  "assignedRide": {
+    "id": "RIDE-1784039142865",
+    "passenger": "USER-1784039142863-20686",
+    "pickup": "Airport Junction",
+    "destination": "CBD",
+    "status": "COMPLETED",
+    "driver": {
+      "id": "USER-1784039142865-85109",
+      "online": true,
+      "distance": 1,
+      "location": "Gaborone"
+    }
+  },
+  "fareAmount": 37.5,
+  "completedRide": {
+    "id": "RIDE-1784039142865",
+    "passenger": "USER-1784039142863-20686",
+    "pickup": "Airport Junction",
+    "destination": "CBD",
+    "status": "COMPLETED",
+    "driver": {
+      "id": "USER-1784039142865-85109",
+      "online": true,
+      "distance": 1,
+      "location": "Gaborone"
+    }
+  },
+  "settlement": {
+    "payment": {
+      "id": "PAY-1784039142867",
+      "ride": "RIDE-1784039142865",
+      "amount": 37.5,
+      "status": "RECORDED",
+      "timestamp": "2026-07-14T14:25:42.867Z"
+    },
+    "reward": {
+      "ride": "RIDE-1784039142865",
+      "wallet": "PILOT-WALLET",
+      "amount": 1,
+      "token": "THB",
+      "status": "PENDING_CHAIN_CONFIRMATION",
+      "time": "2026-07-14T14:25:42.871Z"
+    },
+    "status": "SETTLEMENT_RECORDED"
+  },
+  "timestamp": "2026-07-14T14:25:42.875Z"
+}
