@@ -1,4 +1,4 @@
-import PassengerDashboard from "../components/passenger_dashboard";
+import PassengerDashboard from "./components/passenger_dashboard";
 
 
 import React,{useState} from "react";
