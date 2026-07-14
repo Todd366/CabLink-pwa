@@ -1,11 +1,9 @@
-
-
-const complete=require("../rewards/delivery_completion");
+const completion=require("../rewards/delivery_completion");
 
 
 console.log(
 
-complete({
+completion.complete({
 
 id:"TASK100",
 
@@ -14,4 +12,3 @@ driver:"DRIVER001"
 })
 
 );
-
