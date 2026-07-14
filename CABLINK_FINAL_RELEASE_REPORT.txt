@@ -1,0 +1,19 @@
+
+CABLINK FINAL RELEASE REPORT
+
+Score: 100%
+
+Components:
+
+{
+  "frontend": true,
+  "backend": true,
+  "ride": true,
+  "finance": true,
+  "rewards": true,
+  "fare": true,
+  "api": true
+}
+
+Date:
+2026-07-14T12:20:16.495Z
