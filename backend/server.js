@@ -266,6 +266,13 @@ const driverLocationAPI=require("./routes/driver_location_api");
 app.use("/api", driverLocationAPI);
 
 
+
+
+// Ride Completion Economy API
+const completionAPI=require("./routes/completion_api");
+app.use("/api", completionAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
