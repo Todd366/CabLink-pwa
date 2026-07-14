@@ -1,13 +1,13 @@
 CABLINK PILOT DECISION REPORT
 
-Score: 80%
+Score: 100%
 
-Decision: NO GO - FIX REQUIRED
+Decision: GO - CONTROLLED PILOT
 
 {
   "certification": true,
   "beta": true,
   "humanPilot": true,
   "dashboard": true,
-  "commandCenter": false
+  "commandCenter": true
 }
