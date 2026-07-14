@@ -39,7 +39,7 @@ reason:"Task not completed"
 }
 
 
-const reward=
+const reward =
 rewardEngine.calculate(task);
 
 
@@ -65,7 +65,7 @@ processCompletion
 );
 
 
-// COMPLETE DELIVERY SERVICE
+// DELIVERY REWARD SERVICE
 
 fs.writeFileSync(
 "backend/rewards/delivery_reward_service.js",
@@ -140,11 +140,6 @@ Added:
 RUN:
 
 node backend/testing/phase28_reward_flow_test.js
-
-NEXT:
-
-Phase 29:
-Connect driver dashboard with live wallet + earnings display
 
 =========================================
 `);

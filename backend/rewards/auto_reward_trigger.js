@@ -19,7 +19,7 @@ reason:"Task not completed"
 }
 
 
-const reward=
+const reward =
 rewardEngine.calculate(task);
 
 
