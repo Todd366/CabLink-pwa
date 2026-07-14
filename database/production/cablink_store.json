@@ -3,6 +3,22 @@
     {
       "id": "RIDE-PERSIST-001",
       "status": "COMPLETED"
+    },
+    {
+      "id": "RIDE-1784042436235",
+      "passenger": "PILOT-PASSENGER",
+      "pickup": "Gaborone CBD",
+      "destination": "Airport",
+      "status": "REQUESTED",
+      "created": "2026-07-14T15:20:36.235Z"
+    },
+    {
+      "id": "RIDE-1784042436235",
+      "passenger": "PILOT-PASSENGER",
+      "pickup": "Gaborone CBD",
+      "destination": "Airport",
+      "status": "COMPLETED",
+      "created": "2026-07-14T15:20:36.235Z"
     }
   ],
   "rewards": [

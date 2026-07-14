@@ -1,86 +1,48 @@
 
 const store=require("../../database/production/store_engine");
 
-const rides=[];
+const states=[
+"REQUESTED",
+"MATCHING",
+"DRIVER_ACCEPTED",
+"ARRIVED",
+"STARTED",
+"COMPLETED",
+"CANCELLED"
+];
 
 
-function requestRide(data){
+function createRide(data){
 
 let ride={
-
 id:"RIDE-"+Date.now(),
-
 passenger:data.passenger,
-
 pickup:data.pickup,
-
 destination:data.destination,
-
 status:"REQUESTED",
-
-driver:null
-
+created:new Date().toISOString()
 };
 
-
-rides.push(ride);
-
-store.save(
-"rides",
-ride
-);
-
+store.save("rides",ride);
 
 return ride;
 
 }
 
 
-function assignDriver(id,driver){
+function updateRide(id,status){
 
-let ride=rides.find(r=>r.id===id);
+let ride=store
+.get("rides")
+.find(r=>r.id===id);
 
+if(!ride) return null;
 
-if(ride){
-
-ride.driver=driver;
-
-ride.status="DRIVER_ASSIGNED";
-
-store.save(
-"ride_events",
-{
-ride:id,
-event:"DRIVER_ASSIGNED",
-time:new Date().toISOString()
-}
-);
-
+if(states.includes(status)){
+ride.status=status;
 }
 
-
-return ride;
-
-}
-
-
-function completeRide(id){
-
-let ride=rides.find(r=>r.id===id);
-
-
-if(ride){
-
-ride.status="COMPLETED";
-
-
-store.save(
-"rides",
-ride
-);
-
-}
-
+store.save("rides",ride);
 
 return ride;
 
@@ -88,7 +50,7 @@ return ride;
 
 
 module.exports={
-requestRide,
-assignDriver,
-completeRide
+createRide,
+updateRide,
+states
 };
