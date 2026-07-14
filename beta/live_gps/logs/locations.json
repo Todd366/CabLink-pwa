@@ -1,0 +1,16 @@
+[
+  {
+    "id": "PASSENGER-001",
+    "role": "PASSENGER",
+    "lat": -24.6282,
+    "lng": 25.9231,
+    "timestamp": "2026-07-14T13:14:09.771Z"
+  },
+  {
+    "id": "DRIVER-001",
+    "role": "DRIVER",
+    "lat": -24.62,
+    "lng": 25.91,
+    "timestamp": "2026-07-14T13:14:09.773Z"
+  }
+]
