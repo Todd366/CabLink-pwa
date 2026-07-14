@@ -1,3 +1,20 @@
 {
-  "requests": []
+  "requests": [
+    {
+      "id": "REQ-1784055399078",
+      "passenger": "USER001",
+      "pickup": "Gaborone CBD",
+      "destination": "Airport",
+      "status": "ACCEPTED",
+      "drivers": [
+        {
+          "id": "DRIVER001",
+          "distance": 0.5
+        }
+      ],
+      "created": "2026-07-14T18:56:39.078Z",
+      "driver": "DRIVER001",
+      "acceptedAt": "2026-07-14T18:56:39.141Z"
+    }
+  ]
 }
