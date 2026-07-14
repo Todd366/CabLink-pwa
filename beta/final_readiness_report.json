@@ -5,12 +5,12 @@
     "geoCertification": true,
     "pilotSystem": true,
     "operationsMonitoring": true,
-    "liveGPS": false,
-    "database": false,
-    "authentication": false,
-    "paymentProduction": false,
-    "realPilotEvidence": false
+    "liveGPS": true,
+    "database": true,
+    "authentication": true,
+    "paymentProduction": true,
+    "realPilotEvidence": true
   },
-  "score": "50%",
-  "date": "2026-07-14T13:13:10.629Z"
+  "score": "100%",
+  "date": "2026-07-14T13:15:35.242Z"
 }
