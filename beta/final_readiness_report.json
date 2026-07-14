@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "coreCertification": true,
+    "betaFoundation": true,
+    "geoCertification": true,
+    "pilotSystem": true,
+    "operationsMonitoring": true,
+    "liveGPS": false,
+    "database": false,
+    "authentication": false,
+    "paymentProduction": false,
+    "realPilotEvidence": false
+  },
+  "score": "50%",
+  "date": "2026-07-14T13:13:10.629Z"
+}
