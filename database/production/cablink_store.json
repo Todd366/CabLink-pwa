@@ -73,6 +73,13 @@
       "amount": 1,
       "status": "READY_FOR_TRANSFER",
       "created": "2026-07-14T14:43:24.096Z"
+    },
+    {
+      "id": "CLAIM-1784040517055",
+      "wallet": "PILOT-TEST-WALLET",
+      "amount": 1,
+      "status": "READY_FOR_TRANSFER",
+      "created": "2026-07-14T14:48:37.055Z"
     }
   ]
 }
