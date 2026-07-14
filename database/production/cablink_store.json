@@ -81,5 +81,23 @@
       "status": "READY_FOR_TRANSFER",
       "created": "2026-07-14T14:48:37.055Z"
     }
+  ],
+  "users": [
+    {
+      "id": "ACCOUNT-1784040633368",
+      "name": "Pilot Passenger",
+      "phone": "+26770000000",
+      "role": "passenger",
+      "verified": false,
+      "created": "2026-07-14T14:50:33.368Z"
+    },
+    {
+      "id": "ACCOUNT-1784040633373",
+      "name": "Pilot Driver",
+      "phone": "+26771111111",
+      "role": "driver",
+      "verified": false,
+      "created": "2026-07-14T14:50:33.373Z"
+    }
   ]
 }
