@@ -1,9 +1,17 @@
 
 
+const BASE_URL =
+typeof window === "undefined"
+?
+"http://localhost:3000"
+:
+"";
+
+
 async function getTasks(){
 
 const response=await fetch(
-"/api/ecosystem/tasks"
+BASE_URL + "/api/ecosystem/tasks"
 );
 
 return await response.json();
@@ -15,7 +23,7 @@ return await response.json();
 async function acceptTask(id,driver){
 
 const response=await fetch(
-"/api/ecosystem/tasks/"+id,
+BASE_URL + "/api/ecosystem/tasks/"+id,
 {
 
 method:"PATCH",
