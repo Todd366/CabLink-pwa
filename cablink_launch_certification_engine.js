@@ -178,6 +178,12 @@ vehicle:"Toyota"
 };
 
 
+
+// Ensure operations engine loaded
+
+require("./frontend/js/operations_core.js");
+
+
 const dispatch=
 window.CABLINK_OPS
 ?
