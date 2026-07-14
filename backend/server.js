@@ -238,6 +238,13 @@ const liveDemandAPI=require("./routes/live_demand_api");
 app.use("/api", liveDemandAPI);
 
 
+
+
+// Smart Driver Matching API
+const matchingAPI=require("./routes/matching_api");
+app.use("/api", matchingAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
