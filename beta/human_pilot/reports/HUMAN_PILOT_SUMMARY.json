@@ -1,7 +1,7 @@
 {
-  "status": "READY_FOR_REAL_DATA_COLLECTION",
+  "status": "WAITING_FOR_REAL_HUMAN_DATA",
   "participants": 0,
   "rides": 0,
   "feedback": 0,
-  "evidenceLevel": "PRE-PILOT"
+  "note": "Simulation complete. Real pilot evidence required."
 }

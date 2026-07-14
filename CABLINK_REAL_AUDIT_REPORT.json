@@ -36,7 +36,7 @@
       "detail": "looks like it calls real code"
     },
     {
-      "name": "FAKE CERT: cablink_real_world_hailing_certification_engine.js",
+      "name": "FAKE CERT: cablink_real_world_hailing_certification_engine.RETIRED.js",
       "ok": false,
       "detail": "10 hardcoded true flags, no real calls to app code"
     },
@@ -48,7 +48,7 @@
     {
       "name": "ride_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"RIDE-1784035999428\",\"passenger\":\"TEST\",\"pickup\":\"A\",\"destination\":\"B\",\"status\":\"REQUESTED\",\"driver\":null}"
+      "detail": "{\"id\":\"RIDE-1784036266390\",\"passenger\":\"TEST\",\"pickup\":\"A\",\"destination\":\"B\",\"status\":\"REQUESTED\",\"driver\":null}"
     },
     {
       "name": "fare_engine real call",
@@ -63,12 +63,12 @@
     {
       "name": "payment_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"PAY-1784035999441\",\"ride\":\"R1\",\"amount\":50,\"status\":\"COMPLETED\"}"
+      "detail": "{\"id\":\"PAY-1784036266398\",\"ride\":\"R1\",\"amount\":50,\"status\":\"COMPLETED\"}"
     },
     {
       "name": "auth_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"USER-1784035999445\",\"role\":\"passenger\",\"name\":\"Test\"}"
+      "detail": "{\"id\":\"USER-1784036266401\",\"role\":\"passenger\",\"name\":\"Test\"}"
     },
     {
       "name": "real payment rail",
@@ -87,14 +87,9 @@
     },
     {
       "name": ".env ignored by git",
-      "ok": false,
-      "detail": "check that private keys / API keys aren't committed"
-    },
-    {
-      "name": "repo cleanliness",
-      "ok": false,
-      "detail": "37 backup/bak files in root — risk of stale code being loaded by mistake"
+      "ok": true,
+      "detail": "safe"
     }
   ],
-  "score": 68
+  "score": 78
 }
