@@ -8,6 +8,39 @@
       "type": "DRIVER_ARRIVED",
       "message": "Your driver has arrived",
       "time": "2026-07-14T19:18:45.005Z"
+    },
+    {
+      "id": "EVENT-1784057193519",
+      "user": "USER001",
+      "driver": "DRIVER001",
+      "ride": "RIDE-1784057193464",
+      "type": "DRIVER_ASSIGNED",
+      "message": "Driver has been assigned",
+      "time": "2026-07-14T19:26:33.519Z"
+    },
+    {
+      "id": "EVENT-1784057193529",
+      "user": "USER001",
+      "ride": "RIDE-1784057193464",
+      "type": "DRIVER_ARRIVED",
+      "message": "Your driver has arrived",
+      "time": "2026-07-14T19:26:33.529Z"
+    },
+    {
+      "id": "EVENT-1784057193538",
+      "user": "USER001",
+      "ride": "RIDE-1784057193464",
+      "type": "TRIP_STARTED",
+      "message": "Trip started",
+      "time": "2026-07-14T19:26:33.538Z"
+    },
+    {
+      "id": "EVENT-1784057193549",
+      "user": "USER001",
+      "ride": "RIDE-1784057193464",
+      "type": "TRIP_COMPLETED",
+      "message": "Ride completed successfully",
+      "time": "2026-07-14T19:26:33.549Z"
     }
   ]
 }

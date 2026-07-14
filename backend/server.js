@@ -294,6 +294,13 @@ const orchestratorAPI=require("./routes/orchestrator_api");
 app.use("/api", orchestratorAPI);
 
 
+
+
+// Driver Intelligence API
+const driverIntelligenceAPI=require("./routes/driver_intelligence_api");
+app.use("/api", driverIntelligenceAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
