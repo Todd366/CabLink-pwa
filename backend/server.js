@@ -231,6 +231,13 @@ const updatesAPI=require("./routes/updates_api");
 app.use("/api", updatesAPI);
 
 
+
+
+// Live Demand Intelligence API
+const liveDemandAPI=require("./routes/live_demand_api");
+app.use("/api", liveDemandAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
