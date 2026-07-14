@@ -259,6 +259,13 @@ const liveRideAPI=require("./routes/live_ride_api");
 app.use("/api", liveRideAPI);
 
 
+
+
+// Driver Location Tracking API
+const driverLocationAPI=require("./routes/driver_location_api");
+app.use("/api", driverLocationAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
