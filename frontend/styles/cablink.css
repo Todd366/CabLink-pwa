@@ -48,3 +48,58 @@ nav{
   justify-content:space-around;
   box-shadow:0 -3px 10px rgba(0,0,0,.1);
 }
+
+
+.app-shell{
+min-height:100vh;
+padding-bottom:80px;
+}
+
+
+.cab-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#111827;
+color:white;
+padding:20px;
+}
+
+
+.cab-header p{
+margin:0;
+opacity:.8;
+}
+
+
+.content{
+padding:10px;
+}
+
+
+.cab-card{
+background:white;
+margin:15px 0;
+padding:20px;
+border-radius:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+display:flex;
+justify-content:space-around;
+background:white;
+padding:12px;
+}
+
+
+.bottom-nav button{
+font-size:13px;
+}
+
+

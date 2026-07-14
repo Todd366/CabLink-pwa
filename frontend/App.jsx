@@ -1,12 +1,21 @@
-import "./styles/cablink.css";
-import PassengerDashboard from "./components/passenger_dashboard";
-
-
 import React,{useState} from "react";
 
-import DriverDashboard from "./pages/DriverDashboard";
-import PassengerRide from "./pages/PassengerRide";
-import UpdatesCenter from "./pages/UpdatesCenter";
+import "./styles/cablink.css";
+
+import CabLinkHeader
+from "./components/CabLinkHeader.jsx";
+
+import BottomNavigation
+from "./components/BottomNavigation.jsx";
+
+import PassengerRide
+from "./pages/PassengerRide.jsx";
+
+import DriverDashboard
+from "./pages/DriverDashboard.jsx";
+
+import UpdatesCenter
+from "./pages/UpdatesCenter.jsx";
 
 
 export default function App(){
@@ -16,44 +25,32 @@ const [role,setRole]=useState("passenger");
 
 return (
 
-<div>
+<div className="app-shell">
 
 
-<header>
+<CabLinkHeader
 
-<h1>
-🚕 CabLink
-</h1>
+role={role}
 
-<button
-onClick={()=>
-setRole(
-role==="passenger"
-?"driver"
-:"passenger"
-)
-}
->
+setRole={setRole}
 
-Switch to {role==="passenger"?"Driver":"Passenger"}
+/>
 
-</button>
 
-</header>
 
+<main className="content">
 
 
 {
-
-role==="driver"
+role==="passenger"
 
 ?
 
-<DriverDashboard/>
+<PassengerRide/>
 
 :
 
-<PassengerRide/>
+<DriverDashboard/>
 
 }
 
@@ -62,38 +59,15 @@ role==="driver"
 <UpdatesCenter/>
 
 
-
-<nav>
-
-<button>
-Home
-</button>
-
-
-<button>
-Rides
-</button>
-
-
-<button>
-Wallet
-</button>
-
-
-<button>
-Profile
-</button>
-
-
-</nav>
+</main>
 
 
 
+<BottomNavigation/>
 
-<PassengerDashboard/>
+
 </div>
 
 );
 
 }
-
