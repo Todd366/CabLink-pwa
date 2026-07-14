@@ -9,6 +9,16 @@
       "status": "ACCEPTED",
       "created": "2026-07-14T19:08:59.633Z",
       "updated": "2026-07-14T19:08:59.704Z"
+    },
+    {
+      "id": "RIDE-1784057038950",
+      "passenger": "USER001",
+      "driver": null,
+      "pickup": "Gaborone CBD",
+      "destination": "Airport",
+      "status": "TRIP_STARTED",
+      "created": "2026-07-14T19:23:58.950Z",
+      "updated": "2026-07-14T19:23:59.028Z"
     }
   ]
 }

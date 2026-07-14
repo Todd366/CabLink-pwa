@@ -287,6 +287,13 @@ const rideStateAPI=require("./routes/ride_state_api");
 app.use("/api", rideStateAPI);
 
 
+
+
+// Ride Orchestrator API
+const orchestratorAPI=require("./routes/orchestrator_api");
+app.use("/api", orchestratorAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
