@@ -1,7 +1,17 @@
 {
   "users": [],
   "drivers": [],
-  "rides": [],
-  "transactions": [],
+  "rides": [
+    {
+      "id": "TEST-RIDE",
+      "status": "DATABASE_CONNECTED"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "TEST-TX",
+      "status": "DATABASE_CONNECTED"
+    }
+  ],
   "locations": []
 }

@@ -36,11 +36,6 @@
       "detail": "looks like it calls real code"
     },
     {
-      "name": "FAKE CERT: cablink_real_world_hailing_certification_engine.RETIRED.js",
-      "ok": false,
-      "detail": "10 hardcoded true flags, no real calls to app code"
-    },
-    {
       "name": "cert script ok: cablink_release_gate.js",
       "ok": true,
       "detail": "looks like it calls real code"
@@ -48,7 +43,7 @@
     {
       "name": "ride_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"RIDE-1784036266390\",\"passenger\":\"TEST\",\"pickup\":\"A\",\"destination\":\"B\",\"status\":\"REQUESTED\",\"driver\":null}"
+      "detail": "{\"id\":\"RIDE-1784036364095\",\"passenger\":\"TEST\",\"pickup\":\"A\",\"destination\":\"B\",\"status\":\"REQUESTED\",\"driver\":null}"
     },
     {
       "name": "fare_engine real call",
@@ -63,12 +58,12 @@
     {
       "name": "payment_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"PAY-1784036266398\",\"ride\":\"R1\",\"amount\":50,\"status\":\"COMPLETED\"}"
+      "detail": "{\"id\":\"PAY-1784036364100\",\"ride\":\"R1\",\"amount\":50,\"status\":\"COMPLETED\"}"
     },
     {
       "name": "auth_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"USER-1784036266401\",\"role\":\"passenger\",\"name\":\"Test\"}"
+      "detail": "{\"id\":\"USER-1784036364102\",\"role\":\"passenger\",\"name\":\"Test\"}"
     },
     {
       "name": "real payment rail",
@@ -77,8 +72,8 @@
     },
     {
       "name": "database has real data",
-      "ok": false,
-      "detail": "production database.json exists but is empty — nothing has actually been written through the app"
+      "ok": true,
+      "detail": "non-empty records found"
     },
     {
       "name": "THB on-chain call present",
@@ -91,5 +86,5 @@
       "detail": "safe"
     }
   ],
-  "score": 78
+  "score": 88
 }

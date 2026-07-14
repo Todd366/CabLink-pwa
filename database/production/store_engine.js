@@ -1,11 +1,22 @@
 
+
 const fs=require("fs");
 
 const file="database/production/database.json";
 
+
+function load(){
+
+return JSON.parse(
+fs.readFileSync(file)
+);
+
+}
+
+
 function save(type,data){
 
-let db=JSON.parse(fs.readFileSync(file));
+let db=load();
 
 if(!db[type]) db[type]=[];
 
@@ -20,5 +31,6 @@ return data;
 
 }
 
-module.exports={save};
+
+module.exports={save,load};
 
