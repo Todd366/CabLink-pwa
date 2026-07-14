@@ -43,7 +43,7 @@
     {
       "name": "ride_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"RIDE-1784037176472\",\"passenger\":\"TEST\",\"pickup\":\"A\",\"destination\":\"B\",\"status\":\"REQUESTED\",\"driver\":null}"
+      "detail": "{\"id\":\"RIDE-1784037513941\",\"passenger\":\"TEST\",\"pickup\":\"A\",\"destination\":\"B\",\"status\":\"REQUESTED\",\"driver\":null}"
     },
     {
       "name": "fare_engine real call",
@@ -58,12 +58,12 @@
     {
       "name": "payment_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"PAY-1784037176484\",\"ride\":\"R1\",\"amount\":50,\"status\":\"COMPLETED\"}"
+      "detail": "{\"id\":\"PAY-1784037513951\",\"ride\":\"R1\",\"amount\":50,\"status\":\"RECORDED\",\"timestamp\":\"2026-07-14T13:58:33.951Z\"}"
     },
     {
       "name": "auth_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"USER-1784037176488\",\"role\":\"passenger\",\"name\":\"Test\"}"
+      "detail": "{\"id\":\"USER-1784037513958\",\"role\":\"passenger\",\"name\":\"Test\"}"
     },
     {
       "name": "real payment rail",

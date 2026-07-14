@@ -5,12 +5,34 @@
     {
       "id": "TEST-RIDE",
       "status": "DATABASE_CONNECTED"
+    },
+    {
+      "id": "RIDE-1784037733685",
+      "passenger": "PASSENGER-001",
+      "pickup": "Gaborone",
+      "destination": "Airport",
+      "status": "COMPLETED",
+      "driver": "DRIVER-001",
+      "fare": 37.5
     }
   ],
   "transactions": [
     {
       "id": "TEST-TX",
       "status": "DATABASE_CONNECTED"
+    },
+    {
+      "id": "PAY-1784037513951",
+      "ride": "R1",
+      "amount": 50,
+      "status": "RECORDED",
+      "timestamp": "2026-07-14T13:58:33.951Z"
+    },
+    {
+      "id": "TX-1784037733691",
+      "provider": "PILOT_CASH",
+      "amount": 37.5,
+      "status": "RECORDED"
     }
   ],
   "locations": []

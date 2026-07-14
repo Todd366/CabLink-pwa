@@ -1,0 +1,25 @@
+{
+  "ride": {
+    "id": "RIDE-1784037733685",
+    "passenger": "PASSENGER-001",
+    "pickup": "Gaborone",
+    "destination": "Airport",
+    "status": "COMPLETED",
+    "driver": "DRIVER-001",
+    "fare": 37.5
+  },
+  "transaction": {
+    "id": "TX-1784037733691",
+    "provider": "PILOT_CASH",
+    "amount": 37.5,
+    "status": "RECORDED"
+  },
+  "reward": {
+    "token": "THB",
+    "wallet": null,
+    "amount": 1,
+    "contractMethod": "transfer",
+    "status": "WAITING_CONTRACT_ADDRESS"
+  },
+  "timestamp": "2026-07-14T14:02:13.692Z"
+}
