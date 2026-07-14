@@ -1,0 +1,9 @@
+{
+  "collection": "notifications",
+  "fields": [
+    "userId",
+    "type",
+    "message",
+    "createdAt"
+  ]
+}
