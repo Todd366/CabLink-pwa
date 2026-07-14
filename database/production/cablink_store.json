@@ -1,0 +1,15 @@
+{
+  "rides": [
+    {
+      "id": "RIDE-PERSIST-001",
+      "status": "COMPLETED"
+    }
+  ],
+  "rewards": [
+    {
+      "ride": "RIDE-PERSIST-001",
+      "amount": 1,
+      "token": "THB"
+    }
+  ]
+}
