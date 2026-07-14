@@ -1,0 +1,26 @@
+[
+  {
+    "type": "RIDE_REQUEST",
+    "session": "SESSION-1784033321498",
+    "id": "EVENT-1784033321504",
+    "time": "2026-07-14T12:48:41.504Z"
+  },
+  {
+    "type": "DRIVER_ASSIGNED",
+    "session": "SESSION-1784033321498",
+    "id": "EVENT-1784033321505",
+    "time": "2026-07-14T12:48:41.505Z"
+  },
+  {
+    "type": "GPS_TRACKING",
+    "session": "SESSION-1784033321498",
+    "id": "EVENT-1784033321505",
+    "time": "2026-07-14T12:48:41.505Z"
+  },
+  {
+    "type": "RIDE_COMPLETED",
+    "session": "SESSION-1784033321498",
+    "id": "EVENT-1784033321505",
+    "time": "2026-07-14T12:48:41.505Z"
+  }
+]
