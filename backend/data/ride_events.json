@@ -1,3 +1,13 @@
 {
-  "events": []
+  "events": [
+    {
+      "id": "EVENT-1784056725005",
+      "user": "USER001",
+      "driver": "DRIVER001",
+      "ride": "RIDE-001",
+      "type": "DRIVER_ARRIVED",
+      "message": "Your driver has arrived",
+      "time": "2026-07-14T19:18:45.005Z"
+    }
+  ]
 }

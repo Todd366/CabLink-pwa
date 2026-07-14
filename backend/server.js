@@ -280,6 +280,13 @@ const notificationAPI=require("./routes/notification_api");
 app.use("/api", notificationAPI);
 
 
+
+
+// Live Ride State API
+const rideStateAPI=require("./routes/ride_state_api");
+app.use("/api", rideStateAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
