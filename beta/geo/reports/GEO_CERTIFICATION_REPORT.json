@@ -1,0 +1,15 @@
+{
+  "results": {
+    "passengerGPS": true,
+    "driverGPS": true,
+    "distanceCalculation": true,
+    "nearbyDriverSearch": true,
+    "fareEngine": true,
+    "gpsFailureHandling": true,
+    "networkFailureHandling": true
+  },
+  "distanceTested": "1.61 km",
+  "sampleFare": "P23.94",
+  "score": "100%",
+  "status": "GEOSPATIAL READY FOR PILOT"
+}
