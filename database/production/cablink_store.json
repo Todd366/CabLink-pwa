@@ -11,5 +11,23 @@
       "amount": 1,
       "token": "THB"
     }
+  ],
+  "thb_queue": [
+    {
+      "id": "THB-1784039895752",
+      "ride": "RIDE-001",
+      "wallet": "0xPILOT",
+      "amount": 1,
+      "status": "QUEUED",
+      "created": "2026-07-14T14:38:15.752Z"
+    }
+  ],
+  "blockchain_transactions": [
+    {
+      "reward": "THB-1784039895752",
+      "status": "READY_FOR_TRANSFER",
+      "contract": "your_thb_contract_address_here",
+      "time": "2026-07-14T14:38:15.758Z"
+    }
   ]
 }
