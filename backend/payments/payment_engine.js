@@ -1,57 +1,8 @@
-const fs=require("fs");
-const path=require("path");
 
-const DB=path.join(
-__dirname,
-"../../database/production/database.json"
-);
-
-
-function load(){
-
-if(!fs.existsSync(DB)){
-
-fs.writeFileSync(
-DB,
-JSON.stringify({
-transactions:[]
-},null,2)
-);
-
-}
-
-return JSON.parse(
-fs.readFileSync(DB,"utf8")
-);
-
-}
-
-
-function save(db){
-
-fs.writeFileSync(
-DB,
-JSON.stringify(db,null,2)
-);
-
-}
-
+const store=require("../../database/production/store_engine");
 
 
 function createPayment(data){
-
-let db=load();
-
-
-let existing=db.transactions.find(
-x=>x.ride===data.ride
-);
-
-
-if(existing){
-return existing;
-}
-
 
 let payment={
 
@@ -68,9 +19,10 @@ timestamp:new Date().toISOString()
 };
 
 
-db.transactions.push(payment);
-
-save(db);
+store.save(
+"payments",
+payment
+);
 
 
 return payment;
@@ -78,8 +30,6 @@ return payment;
 }
 
 
-
 module.exports={
 createPayment
 };
-

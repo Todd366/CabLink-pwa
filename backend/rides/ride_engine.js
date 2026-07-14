@@ -1,6 +1,8 @@
 
+const store=require("../../database/production/store_engine");
 
 const rides=[];
+
 
 function requestRide(data){
 
@@ -20,7 +22,14 @@ driver:null
 
 };
 
+
 rides.push(ride);
+
+store.save(
+"rides",
+ride
+);
+
 
 return ride;
 
@@ -31,13 +40,24 @@ function assignDriver(id,driver){
 
 let ride=rides.find(r=>r.id===id);
 
+
 if(ride){
 
 ride.driver=driver;
 
 ride.status="DRIVER_ASSIGNED";
 
+store.save(
+"ride_events",
+{
+ride:id,
+event:"DRIVER_ASSIGNED",
+time:new Date().toISOString()
 }
+);
+
+}
+
 
 return ride;
 
@@ -48,11 +68,19 @@ function completeRide(id){
 
 let ride=rides.find(r=>r.id===id);
 
+
 if(ride){
 
 ride.status="COMPLETED";
 
+
+store.save(
+"rides",
+ride
+);
+
 }
+
 
 return ride;
 
@@ -64,4 +92,3 @@ requestRide,
 assignDriver,
 completeRide
 };
-

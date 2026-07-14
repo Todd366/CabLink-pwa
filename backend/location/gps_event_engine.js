@@ -1,5 +1,5 @@
 
-const events=[];
+const store=require("../../database/production/store_engine");
 
 
 function record(data){
@@ -18,7 +18,12 @@ time:new Date().toISOString()
 
 };
 
-events.push(event);
+
+store.save(
+"locations",
+event
+);
+
 
 return event;
 
@@ -27,9 +32,9 @@ return event;
 
 function history(driver){
 
-return events.filter(
-x=>x.driver===driver
-);
+return store
+.get("locations")
+.filter(x=>x.driver===driver);
 
 }
 
