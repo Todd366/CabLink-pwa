@@ -1,35 +1,20 @@
 
-const store=require("../../database/production/store_engine");
+function confirm(data){
 
-
-function createPayment(data){
-
-let payment={
-
-id:"PAY-"+Date.now(),
+return {
 
 ride:data.ride,
 
-amount:data.amount,
+fare:data.amount,
 
-status:"RECORDED",
+status:"PAYMENT_CONFIRMED",
 
-timestamp:new Date().toISOString()
+time:new Date().toISOString()
 
 };
 
-
-store.save(
-"payments",
-payment
-);
-
-
-return payment;
-
 }
 
-
 module.exports={
-createPayment
+confirm
 };
