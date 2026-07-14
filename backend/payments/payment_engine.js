@@ -1,9 +1,57 @@
+const fs=require("fs");
+const path=require("path");
+
+const DB=path.join(
+__dirname,
+"../../database/production/database.json"
+);
 
 
-const transactions=[];
+function load(){
+
+if(!fs.existsSync(DB)){
+
+fs.writeFileSync(
+DB,
+JSON.stringify({
+transactions:[]
+},null,2)
+);
+
+}
+
+return JSON.parse(
+fs.readFileSync(DB,"utf8")
+);
+
+}
+
+
+function save(db){
+
+fs.writeFileSync(
+DB,
+JSON.stringify(db,null,2)
+);
+
+}
+
 
 
 function createPayment(data){
+
+let db=load();
+
+
+let existing=db.transactions.find(
+x=>x.ride===data.ride
+);
+
+
+if(existing){
+return existing;
+}
+
 
 let payment={
 
@@ -13,24 +61,25 @@ ride:data.ride,
 
 amount:data.amount,
 
-status:"COMPLETED"
+status:"RECORDED",
+
+timestamp:new Date().toISOString()
 
 };
 
 
-transactions.push(payment);
+db.transactions.push(payment);
+
+save(db);
+
 
 return payment;
 
 }
 
 
-function all(){
 
-return transactions;
-
-}
-
-
-module.exports={createPayment,all};
+module.exports={
+createPayment
+};
 
