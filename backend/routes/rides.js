@@ -1,18 +1,29 @@
 
 const router=require("express").Router();
 
-const ride=require("../rides/ride_lifecycle");
+const rides=require("../database/ride_repository");
 
 
 router.post(
 "/request",
 (req,res)=>{
 
-let result=
-ride.create(req.body);
+let ride={
+
+id:"RIDE-"+Date.now(),
+
+...req.body,
+
+status:"REQUESTED",
+
+created:new Date().toISOString()
+
+};
 
 
-res.json(result);
+res.json(
+rides.create(ride)
+);
 
 }
 
@@ -24,7 +35,23 @@ router.get(
 (req,res)=>{
 
 res.json(
-ride.all()
+rides.all()
+);
+
+}
+
+);
+
+
+router.patch(
+"/:id",
+(req,res)=>{
+
+res.json(
+rides.update(
+req.params.id,
+req.body.status
+)
 );
 
 }

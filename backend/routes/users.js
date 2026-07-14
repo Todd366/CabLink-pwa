@@ -1,8 +1,7 @@
 
 const router=require("express").Router();
 
-
-const users=[];
+const users=require("../database/user_repository");
 
 
 router.post(
@@ -20,10 +19,9 @@ created:new Date().toISOString()
 };
 
 
-users.push(user);
-
-
-res.json(user);
+res.json(
+users.create(user)
+);
 
 }
 
@@ -34,7 +32,9 @@ router.get(
 "/",
 (req,res)=>{
 
-res.json(users);
+res.json(
+users.all()
+);
 
 }
 
