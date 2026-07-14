@@ -33,7 +33,31 @@
       "provider": "PILOT_CASH",
       "amount": 37.5,
       "status": "RECORDED"
+    },
+    {
+      "id": "PAY-1784038428822",
+      "ride": "TEST-RIDE-001",
+      "amount": 35,
+      "status": "RECORDED",
+      "timestamp": "2026-07-14T14:13:48.822Z"
     }
   ],
-  "locations": []
+  "locations": [],
+  "wallets": [
+    {
+      "userId": "DRIVER-001",
+      "wallet": "0xTESTWALLET",
+      "created": "2026-07-14T14:13:48.718Z"
+    }
+  ],
+  "rewards": [
+    {
+      "ride": "TEST-RIDE-001",
+      "wallet": "0xTESTWALLET",
+      "amount": 1,
+      "token": "THB",
+      "status": "PENDING_CHAIN_CONFIRMATION",
+      "time": "2026-07-14T14:13:48.822Z"
+    }
+  ]
 }
