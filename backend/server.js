@@ -245,6 +245,13 @@ const matchingAPI=require("./routes/matching_api");
 app.use("/api", matchingAPI);
 
 
+
+
+// Smart Dispatch API
+const dispatchAPI=require("./routes/dispatch_api");
+app.use("/api", dispatchAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
