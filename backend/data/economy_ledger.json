@@ -1,0 +1,21 @@
+{
+  "rides": [
+    {
+      "id": "RIDE-1784053328781",
+      "driver": "DRIVER001",
+      "fare": 30,
+      "status": "COMPLETED"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "TX-1784053328846",
+      "type": "THB_REWARD",
+      "driver": "DRIVER001",
+      "amount": 1,
+      "currency": "THB",
+      "ride": "RIDE-1784053328781",
+      "created": "2026-07-14T18:22:08.846Z"
+    }
+  ]
+}

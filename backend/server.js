@@ -207,6 +207,13 @@ app.use("/api/ecosystem", ecosystemTasks);
 const driverDashboardAPI=require("./routes/driver_dashboard_api");
 app.use("/api", driverDashboardAPI);
 
+
+
+// Ride Economy API
+const rideEconomyAPI=require("./routes/ride_economy_api");
+app.use("/api", rideEconomyAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
