@@ -1,0 +1,15 @@
+{
+  "pilot": "CabLink Pilot Test 001",
+  "participants": 2,
+  "ridesCompleted": 1,
+  "systemFlow": [
+    "Driver online",
+    "Passenger request",
+    "Driver assigned",
+    "Ride completed",
+    "Fare generated",
+    "Reward recorded"
+  ],
+  "status": "WAITING FOR HUMAN VALIDATION",
+  "nextStep": "Collect first real driver/passenger ride data"
+}
