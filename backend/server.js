@@ -308,6 +308,13 @@ const passengerIntelligenceAPI=require("./routes/passenger_intelligence_api");
 app.use("/api", passengerIntelligenceAPI);
 
 
+
+
+// Identity Engine API
+const identityAPI=require("./routes/identity_api");
+app.use("/api", identityAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
