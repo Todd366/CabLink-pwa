@@ -301,6 +301,13 @@ const driverIntelligenceAPI=require("./routes/driver_intelligence_api");
 app.use("/api", driverIntelligenceAPI);
 
 
+
+
+// Passenger Intelligence API
+const passengerIntelligenceAPI=require("./routes/passenger_intelligence_api");
+app.use("/api", passengerIntelligenceAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
