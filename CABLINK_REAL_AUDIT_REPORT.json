@@ -1,0 +1,100 @@
+{
+  "findings": [
+    {
+      "name": "cert script ok: cablink_certification_driver_test_fix.js",
+      "ok": true,
+      "detail": "looks like it calls real code"
+    },
+    {
+      "name": "cert script ok: cablink_final_production_gatekeeper_v2.js",
+      "ok": true,
+      "detail": "looks like it calls real code"
+    },
+    {
+      "name": "cert script ok: cablink_final_public_beta_gate.js",
+      "ok": true,
+      "detail": "looks like it calls real code"
+    },
+    {
+      "name": "cert script ok: cablink_final_readiness_gate.js",
+      "ok": true,
+      "detail": "looks like it calls real code"
+    },
+    {
+      "name": "cert script ok: cablink_geo_intelligence_certification_engine.js",
+      "ok": true,
+      "detail": "looks like it calls real code"
+    },
+    {
+      "name": "cert script ok: cablink_geo_release_gate.js",
+      "ok": true,
+      "detail": "looks like it calls real code"
+    },
+    {
+      "name": "cert script ok: cablink_launch_certification_engine.js",
+      "ok": true,
+      "detail": "looks like it calls real code"
+    },
+    {
+      "name": "FAKE CERT: cablink_real_world_hailing_certification_engine.js",
+      "ok": false,
+      "detail": "10 hardcoded true flags, no real calls to app code"
+    },
+    {
+      "name": "cert script ok: cablink_release_gate.js",
+      "ok": true,
+      "detail": "looks like it calls real code"
+    },
+    {
+      "name": "ride_engine real call",
+      "ok": true,
+      "detail": "{\"id\":\"RIDE-1784035999428\",\"passenger\":\"TEST\",\"pickup\":\"A\",\"destination\":\"B\",\"status\":\"REQUESTED\",\"driver\":null}"
+    },
+    {
+      "name": "fare_engine real call",
+      "ok": true,
+      "detail": "35"
+    },
+    {
+      "name": "matching_engine real call",
+      "ok": true,
+      "detail": "{\"id\":\"D1\",\"online\":true,\"distance\":1}"
+    },
+    {
+      "name": "payment_engine real call",
+      "ok": true,
+      "detail": "{\"id\":\"PAY-1784035999441\",\"ride\":\"R1\",\"amount\":50,\"status\":\"COMPLETED\"}"
+    },
+    {
+      "name": "auth_engine real call",
+      "ok": true,
+      "detail": "{\"id\":\"USER-1784035999445\",\"role\":\"passenger\",\"name\":\"Test\"}"
+    },
+    {
+      "name": "real payment rail",
+      "ok": false,
+      "detail": "payment_engine only pushes to an in-memory array — no real money moves, no persistence, resets on restart"
+    },
+    {
+      "name": "database has real data",
+      "ok": false,
+      "detail": "production database.json exists but is empty — nothing has actually been written through the app"
+    },
+    {
+      "name": "THB on-chain call present",
+      "ok": false,
+      "detail": "reward_engine.js just returns a fake object {token:'THB',amount:1,status:'ISSUED'} — no actual transfer() call to the BEP-20 contract"
+    },
+    {
+      "name": ".env ignored by git",
+      "ok": false,
+      "detail": "check that private keys / API keys aren't committed"
+    },
+    {
+      "name": "repo cleanliness",
+      "ok": false,
+      "detail": "37 backup/bak files in root — risk of stale code being loaded by mistake"
+    }
+  ],
+  "score": 68
+}

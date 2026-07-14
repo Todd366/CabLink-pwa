@@ -1,0 +1,7 @@
+{
+  "database": true,
+  "paymentAdapter": true,
+  "rewardAdapter": true,
+  "envProtection": true,
+  "date": "2026-07-14T13:34:42.537Z"
+}
