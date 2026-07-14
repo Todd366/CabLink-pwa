@@ -193,6 +193,12 @@ timestamp:new Date().toISOString()
 // ================================
 
 
+
+// BSTM Marketplace Task Bridge
+const ecosystemTasks=require("./routes/ecosystem_tasks");
+app.use("/api/ecosystem", ecosystemTasks);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
@@ -205,7 +211,3 @@ app.listen(PORT, function () {
 });
 
 module.exports = app;
-
-// BSTM Marketplace Task Bridge
-const ecosystemTasks=require("./routes/ecosystem_tasks");
-app.use("/api/ecosystem", ecosystemTasks);
