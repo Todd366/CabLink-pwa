@@ -143,13 +143,28 @@ score===100
 };
 
 
-require("fs").writeFileSync(
 
-"../reports/GEO_CERTIFICATION_REPORT.json",
+const path=require("path");
 
-JSON.stringify(report,null,2)
-
+const reportPath=
+path.join(
+__dirname,
+"../reports/GEO_CERTIFICATION_REPORT.json"
 );
+
+
+fs.mkdirSync(
+path.dirname(reportPath),
+{recursive:true}
+);
+
+
+fs.writeFileSync(
+reportPath,
+JSON.stringify(report,null,2)
+);
+
+
 
 
 console.log(report);
