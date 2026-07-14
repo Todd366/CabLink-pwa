@@ -115,5 +115,20 @@
       "verified": false,
       "created": "2026-07-14T14:51:45.290Z"
     }
+  ],
+  "pilot_trials": [
+    {
+      "id": "TRIAL-1784040977172",
+      "ride": "RIDE-LIVE-001",
+      "driver": "DRIVER-001",
+      "passenger": "PASSENGER-001",
+      "pickup": "Gaborone CBD",
+      "destination": "Airport",
+      "duration": "25 minutes",
+      "rating": 5,
+      "issues": [],
+      "lesson": "Pilot ride completed successfully",
+      "created": "2026-07-14T14:56:17.173Z"
+    }
   ]
 }
