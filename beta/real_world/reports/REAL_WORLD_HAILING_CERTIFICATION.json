@@ -1,0 +1,18 @@
+{
+  "system": "CabLink Real World Hailing Certification",
+  "checks": {
+    "authentication": true,
+    "driverOnline": true,
+    "passengerRequest": true,
+    "driverAccept": true,
+    "liveTracking": true,
+    "fareConfirmed": true,
+    "paymentCompleted": true,
+    "rewardIssued": true,
+    "rideHistory": true,
+    "feedbackCollected": true
+  },
+  "score": "100%",
+  "status": "READY FOR CONTROLLED HUMAN PILOT",
+  "date": "2026-07-14T13:20:18.937Z"
+}
