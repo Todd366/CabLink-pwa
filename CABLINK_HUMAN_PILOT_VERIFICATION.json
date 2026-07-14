@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "passenger": {
+    "id": "USER-1784039319483-44493",
+    "role": "passenger",
+    "name": "Human Pilot Passenger"
+  },
+  "driver": {
+    "id": "USER-1784039319483-97324",
+    "role": "driver",
+    "name": "Human Pilot Driver"
+  },
+  "wallet": {
+    "user": "USER-1784039319483-97324",
+    "wallet": "PILOT-TEST-WALLET"
+  },
+  "ride": {
+    "id": "RIDE-1784039319483",
+    "passenger": "USER-1784039319483-44493",
+    "pickup": "Gaborone",
+    "destination": "CBD",
+    "status": "COMPLETED",
+    "driver": {
+      "id": "USER-1784039319483-97324",
+      "online": true,
+      "distance": 2
+    }
+  },
+  "fare": 35,
+  "settlement": {
+    "payment": {
+      "id": "PAY-1784039319485",
+      "ride": "RIDE-1784039319483",
+      "amount": 35,
+      "status": "RECORDED",
+      "timestamp": "2026-07-14T14:28:39.485Z"
+    },
+    "reward": {
+      "ride": "RIDE-1784039319483",
+      "wallet": "PILOT-TEST-WALLET",
+      "amount": 1,
+      "token": "THB",
+      "status": "PENDING_CHAIN_CONFIRMATION",
+      "time": "2026-07-14T14:28:39.488Z"
+    },
+    "status": "SETTLEMENT_RECORDED"
+  },
+  "time": "2026-07-14T14:28:39.490Z"
+}

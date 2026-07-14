@@ -54,6 +54,13 @@
       "amount": 37.5,
       "status": "RECORDED",
       "timestamp": "2026-07-14T14:25:42.867Z"
+    },
+    {
+      "id": "PAY-1784039319485",
+      "ride": "RIDE-1784039319483",
+      "amount": 35,
+      "status": "RECORDED",
+      "timestamp": "2026-07-14T14:28:39.485Z"
     }
   ],
   "locations": [],
@@ -88,6 +95,14 @@
       "token": "THB",
       "status": "PENDING_CHAIN_CONFIRMATION",
       "time": "2026-07-14T14:25:42.871Z"
+    },
+    {
+      "ride": "RIDE-1784039319483",
+      "wallet": "PILOT-TEST-WALLET",
+      "amount": 1,
+      "token": "THB",
+      "status": "PENDING_CHAIN_CONFIRMATION",
+      "time": "2026-07-14T14:28:39.488Z"
     }
   ]
 }
