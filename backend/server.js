@@ -202,17 +202,17 @@ app.use("/api/ecosystem", ecosystemTasks);
 
 
 
+
+// Driver Dashboard Economy API
+const driverDashboardAPI=require("./routes/driver_dashboard_api");
+app.use("/api", driverDashboardAPI);
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 // ── START ─────────────────────────────────────────────────────
-
-// Driver Dashboard Economy API
-const driverDashboardAPI=require("./routes/driver_dashboard_api");
-app.use("/api", driverDashboardAPI);
-
 
 app.listen(PORT, function () {
   console.log('🚕 CabLink backend running on http://localhost:' + PORT);
