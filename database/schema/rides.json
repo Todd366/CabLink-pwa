@@ -1,0 +1,14 @@
+{
+  "collection": "rides",
+  "fields": [
+    "id",
+    "customerId",
+    "driverId",
+    "pickup",
+    "dropoff",
+    "fare",
+    "status",
+    "createdAt",
+    "completedAt"
+  ]
+}

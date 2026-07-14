@@ -1,0 +1,13 @@
+{
+  "collection": "drivers",
+  "fields": [
+    "id",
+    "name",
+    "phone",
+    "vehicle",
+    "license",
+    "status",
+    "location",
+    "wallet"
+  ]
+}

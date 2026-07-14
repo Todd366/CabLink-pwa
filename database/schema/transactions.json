@@ -1,0 +1,12 @@
+{
+  "collection": "transactions",
+  "fields": [
+    "id",
+    "rideId",
+    "amount",
+    "driverPayout",
+    "platformRevenue",
+    "status",
+    "createdAt"
+  ]
+}
