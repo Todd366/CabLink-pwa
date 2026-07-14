@@ -1,62 +1,71 @@
-const session=require("./beta/operations/session_engine");
-const events=require("./beta/operations/event_logger");
+
+const heartbeat=require("./backend/drivers/heartbeat_engine");
+const gps=require("./backend/location/gps_event_engine");
+const state=require("./backend/rides/ride_state_engine");
+const safety=require("./backend/safety/safety_engine");
+const admin=require("./backend/admin/admin_monitor");
 
 
-console.log(`
-=========================================
-🚕 PILOT OPERATIONS TEST
-=========================================
-`);
+let driver=heartbeat.heartbeat({
 
+id:"DRIVER-001",
 
-let s=session.start();
-
-
-events.log({
-
-type:"RIDE_REQUEST",
-
-session:s.id
+name:"Pilot Driver"
 
 });
 
 
-events.log({
+let location=gps.record({
 
-type:"DRIVER_ASSIGNED",
+driver:driver.id,
 
-session:s.id
+latitude:-24.6282,
 
-});
-
-
-events.log({
-
-type:"GPS_TRACKING",
-
-session:s.id
+longitude:25.9231
 
 });
 
 
-events.log({
+let ride=state.update({
 
-type:"RIDE_COMPLETED",
+id:"RIDE-001"
 
-session:s.id
+},"TRIP_STARTED");
+
+
+let incident=safety.create({
+
+ride:"RIDE-001",
+
+type:"NONE",
+
+description:"Normal pilot ride"
 
 });
 
 
-console.log("✅ Pilot events recorded");
+let dashboard=admin.dashboard({
+
+drivers:1,
+
+rides:1,
+
+rewards:1
+
+});
 
 
-require("./beta/operations/reports/daily_report");
+console.log({
 
+driver,
 
-console.log(`
-=========================================
-🚕 PILOT OPERATIONS READY
-=========================================
-`);
+location,
+
+ride,
+
+incident,
+
+dashboard
+
+});
 
