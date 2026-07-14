@@ -221,6 +221,16 @@ const driverEconomyAPI=require("./routes/driver_economy_api");
 app.use("/api", driverEconomyAPI);
 
 
+
+
+// Driver Visibility APIs
+const driverDemandAPI=require("./routes/driver_demand_api");
+app.use("/api", driverDemandAPI);
+
+const updatesAPI=require("./routes/updates_api");
+app.use("/api", updatesAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));

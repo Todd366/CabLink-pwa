@@ -1,0 +1,14 @@
+{
+  "requests": [
+    {
+      "id": "REQ001",
+      "location": "Gaborone CBD",
+      "demand": 8
+    },
+    {
+      "id": "REQ002",
+      "location": "Airport",
+      "demand": 5
+    }
+  ]
+}
