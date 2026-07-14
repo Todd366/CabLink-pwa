@@ -6,6 +6,11 @@
       "detail": "looks like it calls real code"
     },
     {
+      "name": "cert script ok: cablink_final_pilot_readiness_engine.js",
+      "ok": true,
+      "detail": "looks like it calls real code"
+    },
+    {
       "name": "cert script ok: cablink_final_production_gatekeeper_v2.js",
       "ok": true,
       "detail": "looks like it calls real code"
@@ -43,7 +48,7 @@
     {
       "name": "ride_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"RIDE-1784037513941\",\"passenger\":\"TEST\",\"pickup\":\"A\",\"destination\":\"B\",\"status\":\"REQUESTED\",\"driver\":null}"
+      "detail": "{\"id\":\"RIDE-1784038012522\",\"passenger\":\"TEST\",\"pickup\":\"A\",\"destination\":\"B\",\"status\":\"REQUESTED\",\"driver\":null}"
     },
     {
       "name": "fare_engine real call",
@@ -63,7 +68,7 @@
     {
       "name": "auth_engine real call",
       "ok": true,
-      "detail": "{\"id\":\"USER-1784037513958\",\"role\":\"passenger\",\"name\":\"Test\"}"
+      "detail": "{\"id\":\"USER-1784038012537\",\"role\":\"passenger\",\"name\":\"Test\"}"
     },
     {
       "name": "real payment rail",
@@ -86,5 +91,5 @@
       "detail": "safe"
     }
   ],
-  "score": 88
+  "score": 89
 }

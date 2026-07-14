@@ -1,0 +1,25 @@
+{
+  "system": "CabLink Human Pilot Lock",
+  "engineeringChecks": {
+    "appCore": true,
+    "rideEngine": true,
+    "fareEngine": true,
+    "matching": true,
+    "authentication": true,
+    "database": true,
+    "paymentPersistence": true,
+    "rewardModule": true,
+    "pilotControl": true,
+    "security": true
+  },
+  "engineeringScore": "100%",
+  "pilotStatus": "READY FOR REAL HUMAN TESTING",
+  "blockedByExternalSetup": [
+    "Payment provider merchant credentials",
+    "THB contract deployment/address",
+    "Treasury wallet funding",
+    "Two physical test phones",
+    "Driver/passenger pilot participants"
+  ],
+  "timestamp": "2026-07-14T14:09:13.699Z"
+}
