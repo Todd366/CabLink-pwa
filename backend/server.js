@@ -273,6 +273,13 @@ const completionAPI=require("./routes/completion_api");
 app.use("/api", completionAPI);
 
 
+
+
+// Notification Timeline API
+const notificationAPI=require("./routes/notification_api");
+app.use("/api", notificationAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
