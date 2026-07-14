@@ -214,6 +214,13 @@ const rideEconomyAPI=require("./routes/ride_economy_api");
 app.use("/api", rideEconomyAPI);
 
 
+
+
+// Driver Economy Dashboard API
+const driverEconomyAPI=require("./routes/driver_economy_api");
+app.use("/api", driverEconomyAPI);
+
+
 // ── CATCH-ALL → serve index.html (SPA routing) ───────────────
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));

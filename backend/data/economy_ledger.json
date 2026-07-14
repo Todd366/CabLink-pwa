@@ -5,6 +5,13 @@
       "driver": "DRIVER001",
       "fare": 30,
       "status": "COMPLETED"
+    },
+    {
+      "id": "RIDE-1784053510980",
+      "driver": "DRIVER001",
+      "status": "ACCEPTED",
+      "fare": 25,
+      "created": "2026-07-14T18:25:10.980Z"
     }
   ],
   "transactions": [
@@ -16,6 +23,16 @@
       "currency": "THB",
       "ride": "RIDE-1784053328781",
       "created": "2026-07-14T18:22:08.846Z"
+    },
+    {
+      "id": "TX-1784053511041",
+      "type": "THB_REWARD",
+      "driver": "DRIVER001",
+      "amount": 1,
+      "currency": "THB",
+      "ride": "RIDE-1784053510980",
+      "time": "2026-07-14T18:25:11.040Z",
+      "created": "2026-07-14T18:25:11.041Z"
     }
   ]
 }
