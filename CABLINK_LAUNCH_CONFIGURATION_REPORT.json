@@ -1,16 +1,16 @@
 {
   "system": "CabLink Launch Configuration Audit",
-  "passed": 1,
+  "passed": 2,
   "total": 6,
-  "score": "17%",
+  "score": "33%",
   "checks": {
     "RPC_URL": true,
-    "CONTRACT_ADDRESS": false,
+    "CONTRACT_ADDRESS": true,
     "TREASURY_WALLET": false,
     "PRIVATE_KEY": false,
     "PAYMENT_PROVIDER_KEY": false,
     "MAPS_API_KEY": false
   },
   "status": "WAITING FOR EXTERNAL SERVICES",
-  "time": "2026-07-14T14:40:23.960Z"
+  "time": "2026-07-14T14:41:50.259Z"
 }
