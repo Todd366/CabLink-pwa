@@ -1,0 +1,28 @@
+{
+  "react_ready": [
+    "frontend/components/passenger_dashboard.jsx",
+    "frontend/components/passenger_profile_card.jsx",
+    "frontend/components/ride_status_card.jsx",
+    "frontend/components/ride_timeline.jsx",
+    "frontend/components/status_card.jsx"
+  ],
+  "needs_conversion": [
+    "frontend/components/bstm_delivery_button.js",
+    "frontend/components/bstm_menu.js",
+    "frontend/components/delivery_earnings_panel.js",
+    "frontend/components/demand_panel.js",
+    "frontend/components/driver_dashboard.js",
+    "frontend/components/driver_demand_map.js",
+    "frontend/components/driver_economy_dashboard.js",
+    "frontend/components/driver_economy_screen.js",
+    "frontend/components/driver_task_panel.js",
+    "frontend/components/ecosystem_card.js",
+    "frontend/components/live_driver_dashboard.js",
+    "frontend/components/mobile_dashboard.js",
+    "frontend/components/passenger_trip_status.js",
+    "frontend/components/status_panel.js",
+    "frontend/components/thb_reward_panel.js",
+    "frontend/components/thb_wallet_panel.js",
+    "frontend/components/updates_center.js"
+  ]
+}

@@ -1,17 +1,25 @@
-
-
 import React,{useState} from "react";
+
+import PassengerTripStatus 
+from "../components/passenger_trip_status.jsx";
+
+import THBRewardPanel
+from "../components/thb_reward_panel.jsx";
 
 
 export default function PassengerRide(){
 
-const [status,setStatus]=useState(
-"Ready"
-);
+const [ride,setRide]=useState({
+
+id:null,
+status:"Ready",
+driver:null,
+reward:0
+
+});
 
 
 async function requestRide(){
-
 
 let r=
 await fetch(
@@ -41,19 +49,30 @@ destination:"Airport"
 let data=await r.json();
 
 
-setStatus(
-data.request.status
-);
+setRide({
+
+id:data.request.id,
+
+status:data.request.status,
+
+driver:data.request.driver,
+
+reward:1
+
+});
 
 
 }
+
 
 
 return (
 
 <div>
 
-<h1>🚖 Request Ride</h1>
+<h1>
+🚖 Request Ride
+</h1>
 
 
 <button
@@ -65,10 +84,26 @@ Book Ride
 </button>
 
 
-<h2>
-Status:
-{status}
-</h2>
+<PassengerTripStatus
+
+rideId={ride.id}
+
+status={ride.status}
+
+driver={ride.driver}
+
+/>
+
+
+<THBRewardPanel
+
+reward={ride.reward}
+
+currency="THB"
+
+status="Waiting"
+
+/>
 
 
 </div>
@@ -76,4 +111,3 @@ Status:
 );
 
 }
-

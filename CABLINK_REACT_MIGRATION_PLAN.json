@@ -1,0 +1,86 @@
+{
+  "pages": [
+    "DriverDashboard.jsx",
+    "PassengerRide.jsx",
+    "UpdatesCenter.jsx"
+  ],
+  "screens": [
+    "driver_control_screen.js",
+    "driver_dashboard.js",
+    "ecosystem_hub_screen.js",
+    "passenger_dashboard.js",
+    "passenger_ride_screen.js"
+  ],
+  "components": [
+    "bstm_delivery_button.js",
+    "bstm_menu.js",
+    "dashboard_registry.js",
+    "delivery_earnings_panel.js",
+    "demand_panel.js",
+    "driver_dashboard.js",
+    "driver_demand_map.js",
+    "driver_economy_dashboard.js",
+    "driver_economy_screen.js",
+    "driver_task_panel.js",
+    "ecosystem_card.js",
+    "live_driver_dashboard.js",
+    "mobile_dashboard.js",
+    "passenger_dashboard.jsx",
+    "passenger_profile_card.jsx",
+    "passenger_trip_status.js",
+    "ride_status_card.jsx",
+    "ride_timeline.jsx",
+    "status_card.jsx",
+    "status_panel.js",
+    "thb_reward_panel.js",
+    "thb_wallet_panel.js",
+    "updates_center.js"
+  ],
+  "services": [
+    "demand_api.js",
+    "driver_dashboard_api.js",
+    "driver_dashboard_live.js",
+    "driver_economy_screen_service.js",
+    "driver_economy_service.js",
+    "economy_dashboard_api.js",
+    "identity_api.js",
+    "live_driver_economy.js",
+    "live_ride_api.js",
+    "notification_api.js",
+    "passenger_dashboard_api.js",
+    "ride_service.js",
+    "role_service.js",
+    "task_service.js",
+    "updates_api.js",
+    "user_service.js"
+  ],
+  "state": [
+    "ride_ui_state.js",
+    "session_store.js",
+    "task_state.js"
+  ],
+  "maps": [
+    "live_map_component.js"
+  ],
+  "mobile": [
+    "device_permissions.js",
+    "mobile_entry.js"
+  ],
+  "api": [
+    "bridge_test.js",
+    "cablink_api.js",
+    "task_api.js"
+  ],
+  "js": [
+    "app.js",
+    "app_working_1345.bak",
+    "bstm_hub_ui.js",
+    "core.js",
+    "core_working_1345.bak",
+    "financial_intelligence.js",
+    "firebase.js",
+    "operations_core.js",
+    "ride_engine.js",
+    "simulation_engine.js"
+  ]
+}

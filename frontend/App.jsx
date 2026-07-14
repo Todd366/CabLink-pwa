@@ -1,3 +1,4 @@
+import "./styles/cablink.css";
 import PassengerDashboard from "./components/passenger_dashboard";
 
 
