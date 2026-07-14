@@ -11,8 +11,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <style>
 :root{
-  --bg:#0a0a0f;--bg2:#16213e;--bg3:#0f172a;--card:#12121d;
-  --accent:#f5c518;--accent2:#ff8c00;--green:#22d672;--red:#ff4757;
   --blue:#4fc3f7;--purple:#b388ff;
   --text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
   --radius:14px;--font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
@@ -31,11 +29,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 /* Screens */
 #screens{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 #screens::-webkit-scrollbar{display:none}
-.screen{display:none;padding:16px 16px 100px;animation:fadeUp .3s ease}
+.screen{display:none;padding:16px 16px 120px;animation:fadeUp .3s ease}
 .screen.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 /* Bottom nav */
-
+#nav{position:absolute;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom);align-items:flex-end}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;cursor:pointer;color:var(--muted);transition:.2s;border:none;background:none;font-family:var(--font-mono);font-size:10px;min-width:0}
 .nav-btn.active,.nav-btn:hover{color:var(--accent)}
 .nav-btn .icon{font-size:18px}
@@ -132,19 +130,7 @@ select.input{cursor:pointer}
 .modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px}
 
 /* Onboarding */
-#onboarding{
-display:none;
-position:fixed;
-inset:0;
-background:#0a0a0f!important;
-opacity:1!important;
-z-index:99999!important;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-padding:32px 24px;
-text-align:center;
-}
+#onboarding{display:none;position:fixed;inset:0;background:var(--bg);z-index:900;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center}
 #onboarding.show{display:flex}
 .ob-slide{display:none}.ob-slide.active{display:block}
 .ob-emoji{font-size:72px;margin-bottom:24px}
@@ -247,42 +233,9 @@ text-align:center;
 /* Gas estimate */
 .gas-pill{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--muted)}
 
-
-#nav{position:fixed!important;bottom:0;left:0;right:0;z-index:9999;background:#16213e;border-top:1px solid #2a2a3e;display:flex;padding-bottom:env(safe-area-inset-bottom);align-items:flex-end;}
 /* Responsive tweaks */
 @media(max-height:700px){.screen{padding-bottom:100px}}
 </style>
-
-<style id="cablink-navbar-fix">
-
-
-.screen{
-padding-bottom:82px!important;
-}
-</style>
-
-
-
-<style id="cablink-v304-navbar-fix">
-
-#nav{
-background:var(--bg2)!important;
-position:fixed!important;
-bottom:0!important;
-left:0!important;
-right:0!important;
-z-index:9999!important;
-opacity:1!important;
-visibility:visible!important;
-}
-
-.nav-btn{
-opacity:1!important;
-visibility:visible!important;
-}
-
-</style>
-
 </head>
 <body>
 <div id="app">
@@ -488,7 +441,7 @@ visibility:visible!important;
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
       <span class="pip" id="statusPip"></span>
       <span id="statusLabel" style="font-size:12px;color:var(--muted)">🔍 Enter locations to book</span>
-      <span id="ridersNearby" style="margin-left:auto;font-size:11px;color:var(--blue)">📡 <span id="driverCount" style="display:none!important">3</span> drivers nearby</span>
+      <span id="ridersNearby" style="margin-left:auto;font-size:11px;color:var(--blue)">📡 <span id="driverCount">3</span> drivers nearby</span>
     </div>
 
     <!-- Countdown -->
@@ -507,7 +460,7 @@ visibility:visible!important;
     <!-- Action buttons -->
     <div style="display:flex;flex-direction:column;gap:8px">
       <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">🚕 Book Ride · Earn 1 THB</button>
-      <button class="btn btn-outline" id="simBtn" style="display:none!important" onclick="simulateRide()">🧪 Simulate Ride (Test Mode)</button>
+      <button class="btn btn-outline" id="simBtn" onclick="simulateRide()">🧪 Simulate Ride (Test Mode)</button>
       <button class="btn btn-danger btn-sm" id="cancelBtn" style="display:none" onclick="cancelRide()">✕ Cancel Ride</button>
     </div>
 
@@ -667,8 +620,8 @@ visibility:visible!important;
 <div class="screen" id="s-profile">
   <div class="card" style="text-align:center">
     <div style="font-size:48px;margin-bottom:8px">🧍</div>
-    <div class="card-title" id="profile-name">Not connected</div>
-    <div class="card-sub" id="profile-sub">Connect wallet to see your profile</div>
+    <div class="card-title">Thobo Atlang Mosanako</div>
+    <div class="card-sub">Founder · BSTM Ecosystem</div>
     <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap">
       <span class="chip active">THoBoCoin Creator</span>
       <span class="chip active">BSC Testnet</span>
@@ -2382,22 +2335,29 @@ function shortAddr(addr) {
   return addr.substr(0, 6) + '…' + addr.substr(-4);
 }
 </script>
-
-
-<script src="fix.js"></script>
-<script src="fare_engine.js"></script>
 </body>
 </html>
 
 <!-- FINAL FONT FIX -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
 
-
-<script src="frontend/js/app.js?v=1784017559907"></script>
-
-<script src="frontend/js/core.js?v=1784017559911"></script>
-
-
-
-
-
-<script src="role.js?v=1784018514838"></script>
+    const style = document.createElement("style");
+    style.textContent = `
+        * { font-family: 'Inter', system-ui, sans-serif !important; }
+        .input, button, .btn, .toast, .card-title { font-family: 'Inter', system-ui, sans-serif !important; }
+        #statusLabel, .chat-box { font-size: 15px !important; line-height: 1.5 !important; }
+    `;
+    document.head.appendChild(style);
+    
+    console.log("✅ Google Fonts + Inter loaded successfully");
+});
+</script>
+<script src="fix.js"></script>
+<script src="frontend/js/app.js"></script>
+<script src="frontend/js/core.js"></script>
+<script src="frontend/js/core.js"></script>

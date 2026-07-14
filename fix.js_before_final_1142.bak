@@ -1,0 +1,37 @@
+console.log("🔥 CabLink fix.js v95 - Ultimate Stable Restore");
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // === STRONG DARK THEME ===
+  const theme = document.createElement('style');
+  theme.innerHTML = `
+    body,html,#app,.screen,.card,.modal,input,select,button, .statusbar {
+      background:#0a0a0f !important; color:#f0f0f5 !important;
+    }
+    .btn-primary, button[class*="btn-primary"], .yellow-btn, #bookBtn {
+      background:#f5c518 !important; color:#000 !important; font-weight:bold !important;
+    }
+    .card, .modal { border:1px solid #2a2a3e !important; }
+  `;
+  document.head.appendChild(theme);
+
+  // === CLEAN PROFILE ===
+  function cleanProfile() {
+    const name = document.querySelector('#s-profile .card-title');
+    const sub = document.querySelector('#s-profile .card-sub');
+    if (name) name.textContent = "Connected User";
+    if (sub) sub.textContent = "BSTM Member • Gaborone";
+  }
+  cleanProfile();
+
+  // === HIDE ALL FAKE RIDE UI ===
+  setTimeout(() => {
+    const fakes = ['chatSection','rideIdRow','countdownRow','cancelBtn','driverChat','rideStatusLabel','progressBar'];
+    fakes.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+  }, 600);
+
+  console.log("✅ v95 Ultimate Restore Applied - App is now stable");
+});

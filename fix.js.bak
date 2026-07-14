@@ -1,0 +1,76 @@
+console.log("🔥 FINAL STRONG RESTORE v90 - No More Mess");
+
+window.STATE = window.STATE || {};
+
+// STRONGEST THEME RESTORE
+const strongTheme = document.createElement('style');
+strongTheme.innerHTML = `
+    body, html, #app, .screen, .card, .modal, .statusbar { background:#0a0a0f !important; color:#f0f0f5 !important; }
+    input, select, .input { background:#1e1e2e !important; color:white !important; border:1px solid #444 !important; }
+    button, .btn, .btn-primary { background:#f5c518 !important; color:black !important; font-weight:bold !important; }
+    .nav-btn { color:#f0f0f5 !important; }
+`;
+document.head.appendChild(strongTheme);
+
+// Book Ride
+window.bookRide = function() {
+    const pickup = document.getElementById('pickup')?.value?.trim();
+    const dropoff = document.getElementById('dropoff')?.value?.trim();
+    if (!pickup || !dropoff) return toast("Enter pickup and drop-off", "warning");
+    toast("🔍 Searching for drivers...", "info");
+    setTimeout(() => toast("😕 No drivers available in your area right now", "warning"), 1600);
+};
+
+// Driver Form
+window.toggleDriverMode = function() {
+    showDriverRegistrationForm();
+};
+
+window.showDriverRegistrationForm = function() {
+    document.querySelectorAll('.driver-modal').forEach(m => m.remove());
+    const modal = document.createElement('div');
+    modal.className = 'driver-modal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:99999;';
+    modal.innerHTML = `
+        <div style="background:#16213e;width:92%;max-width:420px;border-radius:16px;padding:24px;color:white;">
+            <h3 style="text-align:center;margin:0 0 20px 0;">🚖 Become a CabLink Driver</h3>
+            <input id="d-name" placeholder="Full Name *" style="width:100%;padding:14px;margin:8px 0;border-radius:10px;background:#0f172a;color:white;">
+            <input id="d-phone" placeholder="Phone Number *" style="width:100%;padding:14px;margin:8px 0;border-radius:10px;background:#0f172a;color:white;">
+            <input id="d-license" placeholder="License Number *" style="width:100%;padding:14px;margin:8px 0;border-radius:10px;background:#0f172a;color:white;">
+            <select id="d-vehicle" style="width:100%;padding:14px;margin:8px 0;border-radius:10px;background:#0f172a;color:white;">
+                <option value="">Vehicle Type *</option>
+                <option value="sedan">Sedan</option>
+                <option value="suv">SUV</option>
+                <option value="bike">Motorcycle</option>
+            </select>
+            <div style="margin-top:24px;display:flex;gap:12px;">
+                <button onclick="submitDriverForm()" style="flex:1;padding:15px;background:#22c55e;color:white;border:none;border-radius:10px;font-weight:600;">Submit</button>
+                <button onclick="this.closest('.driver-modal').remove()" style="flex:1;padding:15px;background:transparent;border:1px solid #555;color:#aaa;border-radius:10px;">Cancel</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+};
+
+window.submitDriverForm = function() {
+    const name = document.getElementById('d-name').value.trim();
+    const phone = document.getElementById('d-phone').value.trim();
+    if (!name || !phone) return toast("Name and phone required", "warning");
+    document.querySelector('.driver-modal').remove();
+    localStorage.setItem('isDriver', 'true');
+    toast("✅ You are now registered as a Driver!", "success");
+};
+
+// Restore buttons and clean fake ride elements
+setTimeout(() => {
+    ['bookBtn','driverModeBtn','claimBtn','dailyBtn'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'block';
+    });
+    ['chatSection','rideIdRow','countdownRow','cancelBtn','driverChat'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+}, 800);
+
+console.log("✅ v90 Strong Restore - Colors + Buttons + Layout");
