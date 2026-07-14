@@ -1,7 +1,11 @@
 
 
 const API_URL =
-window.CABLINK_API ||
+typeof window !== "undefined" &&
+window.CABLINK_API
+?
+window.CABLINK_API
+:
 "http://localhost:3000";
 
 
