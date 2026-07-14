@@ -10,6 +10,14 @@
       "ride": "RIDE-PERSIST-001",
       "amount": 1,
       "token": "THB"
+    },
+    {
+      "ride": "RIDE-FINAL-001",
+      "wallet": "PILOT-TEST-WALLET",
+      "amount": 1,
+      "token": "THB",
+      "status": "AVAILABLE",
+      "created": "2026-07-14T14:43:24.090Z"
     }
   ],
   "thb_queue": [
@@ -28,6 +36,15 @@
       "status": "READY_FOR_TRANSFER",
       "contract": "your_thb_contract_address_here",
       "time": "2026-07-14T14:38:15.758Z"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLAIM-1784040204095",
+      "wallet": "PILOT-TEST-WALLET",
+      "amount": 1,
+      "status": "READY_FOR_TRANSFER",
+      "created": "2026-07-14T14:43:24.096Z"
     }
   ]
 }
