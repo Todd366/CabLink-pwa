@@ -1,5 +1,77 @@
 
 
+/*
+=========================================
+🚕 CABLINK STATE RECOVERY
+=========================================
+*/
+
+function CABLINK_STATE_RECOVERY(){
+
+const keys=[
+"cl6_state",
+"cablink_state",
+"rideState",
+"activeRide",
+"currentRide"
+];
+
+const now=Date.now();
+
+keys.forEach(key=>{
+
+try{
+
+let raw=localStorage.getItem(key);
+
+if(!raw) return;
+
+let data=JSON.parse(raw);
+
+let created =
+data.createdAt ||
+data.timestamp ||
+data.time ||
+0;
+
+if(created){
+
+let age=now-new Date(created).getTime();
+
+
+// Clear rides older than 2 hours
+if(age > 7200000){
+
+console.log(
+"🚕 Removing stale CabLink state:",
+key
+);
+
+localStorage.removeItem(key);
+
+}
+
+}
+
+}catch(e){
+
+console.log(
+"🧹 Cleaning corrupted state:",
+key
+);
+
+localStorage.removeItem(key);
+
+}
+
+});
+
+}
+
+CABLINK_STATE_RECOVERY();
+
+
+
 // =========================================
 // CABLINK_REAL_API_BRIDGE
 // =========================================
@@ -46,42 +118,7 @@ error
 console.log("🚀 CabLink App Logic Loaded");
 
 // Your existing fixes go here
-window.bookRide = function() {
 
-// =========================================
-// CABLINK_BOOKING_BACKEND_CONNECTED
-// =========================================
-
-sendRideToBackend({
-
-pickup:
-document.getElementById("pickup")?.value ||
-"BSTM HQ, Mmopane",
-
-dropoff:
-document.getElementById("dropoff")?.value ||
-"Game City Mall",
-
-fare:
-Number(
-document.getElementById("fare")?.value ||
-20
-),
-
-vehicle:
-window.STATE?.vehicle ||
-"standard"
-
-});
-
-
-
-    const pickup = document.getElementById('pickup')?.value?.trim();
-    const dropoff = document.getElementById('dropoff')?.value?.trim();
-    if (!pickup || !dropoff) return toast("Enter pickup and drop-off", "warning");
-    toast("🔍 Searching for drivers...", "info");
-    setTimeout(() => toast("😕 No drivers available in your area right now", "warning"), 1600);
-};
 
 window.toggleDriverMode = function() {
     showDriverRegistrationForm();

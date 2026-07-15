@@ -1643,9 +1643,171 @@ function shortAddr(addr){ if(!addr) return '—'; return addr.substr(0,6)+'…'+
 
 
 
+<script src="frontend/js/app.js"></script>
+<script src="frontend/js/core.js"></script>
 <script src="role.js"></script>
 <script src="fix.js"></script>
 <script src="fare_engine.js"></script>
+
+
+<!-- CABLINK DRIVER APPLICATION -->
+<div id="driverApplyModal" class="modal-overlay">
+<div class="modal">
+
+<h2>🚕 Become a CabLink Driver</h2>
+
+<label>Full Name</label>
+<input id="driverName" class="input" placeholder="Your full name">
+
+<label>Phone Number</label>
+<input id="driverPhone" class="input" placeholder="+267">
+
+<label>Driver Licence</label>
+<input id="driverLicense" class="input" placeholder="Licence number">
+
+<label>Vehicle Model</label>
+<input id="driverVehicle" class="input" placeholder="Toyota Corolla">
+
+<label>Vehicle Registration</label>
+<input id="driverReg" class="input" placeholder="B123 ABC">
+
+<button class="btn btn-green" onclick="submitDriverApplication()">
+Submit Application
+</button>
+
+<button class="btn btn-outline" onclick="closeModal('driverApplyModal')">
+Cancel
+</button>
+
+</div>
+</div>
+
+
+
+<!-- CABLINK ROLE SWITCH -->
+<div id="cablinkRoleSwitch"
+style="
+position:fixed;
+top:12px;
+right:12px;
+z-index:9999;
+background:#ffffff;
+padding:8px;
+border-radius:12px;
+box-shadow:0 3px 15px rgba(0,0,0,.15);
+font-family:sans-serif;
+">
+
+<button id="passengerModeBtn">
+🧍 Passenger
+</button>
+
+<button id="driverModeBtn">
+🚗 Driver
+</button>
+
+<div id="roleStatus"
+style="
+font-size:12px;
+margin-top:5px;
+text-align:center;
+">
+Passenger Mode
+</div>
+
+</div>
+
+
+<script>
+
+(function(){
+
+window.CABLINK_ROLE =
+localStorage.getItem("cablink_role") || "PASSENGER";
+
+
+function updateRole(){
+
+var status=document.getElementById("roleStatus");
+
+if(status){
+
+status.textContent =
+window.CABLINK_ROLE==="DRIVER"
+?
+"🚗 Driver Mode"
+:
+"🧍 Passenger Mode";
+
+}
+
+
+document.body.dataset.role =
+window.CABLINK_ROLE;
+
+
+window.dispatchEvent(
+new CustomEvent(
+"cablinkRoleChanged",
+{
+detail:{
+role:window.CABLINK_ROLE
+}
+}
+));
+
+}
+
+
+window.setCabLinkRole=function(role){
+
+window.CABLINK_ROLE=role;
+
+localStorage.setItem(
+"cablink_role",
+role
+);
+
+updateRole();
+
+console.log(
+"CabLink role:",
+role
+);
+
+};
+
+
+
+document.addEventListener(
+"click",
+function(e){
+
+if(e.target.id==="driverModeBtn"){
+
+setCabLinkRole("DRIVER");
+
+}
+
+
+if(e.target.id==="passengerModeBtn"){
+
+setCabLinkRole("PASSENGER");
+
+}
+
+
+});
+
+
+updateRole();
+
+
+})();
+
+</script>
+
+
 </body>
 </html>
 

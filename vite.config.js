@@ -2,16 +2,25 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+
   plugins: [react()],
+
   root: "frontend",
+
   server: {
     port: 5173,
+
     proxy: {
-      "/api": "process.env.CABLINK_API_URL || ''"
+      "/api": {
+        target: process.env.CABLINK_API_URL || "http://localhost:3000",
+        changeOrigin: true
+      }
     }
   },
+
   build: {
     outDir: "../dist",
     emptyOutDir: true
   }
+
 });

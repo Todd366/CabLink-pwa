@@ -46,14 +46,7 @@ function initFB(){
   console.log('Firebase OK');
 }
 
-window.bookRide=function(){
-  var p=(document.getElementById('pickup')||{}).value||'';
-  var d=(document.getElementById('dropoff')||{}).value||'';
-  if(!p.trim()||!d.trim()){toast('Please enter pickup and drop-off locations','warning');return;}
-  if(!navigator.onLine){toast('Offline - ride queued','warning');return;}
-  toast('Searching for nearby drivers...','warning');
-  setTimeout(function(){toast('No drivers available right now - try again soon','warning');},1800);
-};
+
 
 window.toggleDriverMode=function(){window.showDriverRegistrationForm();};
 window.showDriverRegistrationForm=function(){

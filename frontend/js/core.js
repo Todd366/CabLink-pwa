@@ -1,13 +1,7 @@
 // CabLink Core Logic - Separate file
 console.log("🚀 Core Logic Loaded");
 
-window.bookRide = function() {
-    const pickup = document.getElementById('pickup')?.value?.trim();
-    const dropoff = document.getElementById('dropoff')?.value?.trim();
-    if (!pickup || !dropoff) return toast("Enter pickup and drop-off", "warning");
-    toast("🔍 Searching for drivers...", "info");
-    setTimeout(() => toast("😕 No drivers available in your area right now", "warning"), 1600);
-};
+
 
 window.toggleDriverMode = function() {
     showDriverRegistrationForm();
