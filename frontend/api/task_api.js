@@ -3,7 +3,7 @@
 const BASE_URL =
 typeof window === "undefined"
 ?
-"http://localhost:3000"
+import.meta.env.VITE_CABLINK_API_URL || ''
 :
 "";
 

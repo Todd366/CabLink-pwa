@@ -6,7 +6,7 @@ window.CABLINK_API
 ?
 window.CABLINK_API
 :
-"http://localhost:3000";
+import.meta.env.VITE_CABLINK_API_URL || '';
 
 
 async function request(endpoint,options={}){

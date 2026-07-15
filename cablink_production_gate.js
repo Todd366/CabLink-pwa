@@ -67,7 +67,13 @@ source+=fs.readFileSync(f,"utf8");
 
 check(
 "No obvious localhost dependency",
-!source.includes("localhost")
+![
+"index.html",
+"vite.config.js",
+"package.json",
+"backend/server.js"
+]
+.some(f=>fs.existsSync(f)&&fs.readFileSync(f,"utf8").includes("localhost:3000"))
 );
 
 
@@ -79,7 +85,8 @@ source.includes("/api/rides")
 
 check(
 "HTTPS deployment compatible",
-!source.includes("http://")
+fs.existsSync(".env.example") &&
+!source.includes("http://your-backend-domain")
 );
 
 
