@@ -6,7 +6,7 @@
   "scripts": {
     "start": "serve -s . -l 3000",
     "backend": "node backend/server.js",
-    "dev": "node backend/server.js",
+    "dev": "vite",
     "frontend": "vite",
     "build": "vite build"
   },

@@ -968,76 +968,75 @@ function generateRideId(){ return 'CL-' + Math.random().toString(36).substr(2,6)
 
 
 async function bookRide(){
-  const pickup = document.getElementById('pickup').value.trim();
-  const dropoff = document.getElementById('dropoff').value.trim();
-  if(!pickup || !dropoff){ toast('Please enter pickup and drop-off locations', 'warning'); return; }
-  if(STATE.inRide){ toast('Ride already in progress', 'warning'); return; }
 
-  const payload = {
-    pickup, dropoff,
-    fare: STATE.selectedFare || 0,
-    type: STATE.selectedRideType || 'standard',
-    timestamp: Date.now()
-  };
+console.log("🚕 REAL BOOKING ENGINE");
 
-  STATE.inRide = true; STATE.rideReady = false;
-  updateMapRoute();
-  document.getElementById('rideIdRow').style.display = 'block';
-  document.getElementById('chatSection').style.display = 'block';
-  document.getElementById('cancelBtn').style.display = 'block';
-  document.getElementById('bookBtn').disabled = true;
-  document.getElementById('simBtn').disabled = true;
-  setStatusPip('yellow'); setStatusLabel('🔍 Requesting ride…');
-  showRideProgressBar('FINDING DRIVER', 10);
+let payload={
 
-  try{
-    const response = await fetch('/api/rides', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-    const data = await response.json();
-    console.log('REAL RIDE CREATED:', data);
-    const ride = data.ride || data;
-    STATE.rideId = ride.id || ride._id || ('CL-' + Date.now());
-    document.getElementById('rideId').textContent = STATE.rideId;
-    toast('🚕 Ride requested — waiting for a driver', 'success');
-    pollRideStatus(STATE.rideId);
-  } catch(e){
-    console.error(e);
-    toast('Backend unavailable — could not book ride', 'error');
-    resetRideUI();
-  }
+pickup:
+document.getElementById("pickup")?.value || "Unknown",
+
+dropoff:
+document.getElementById("dropoff")?.value || "Unknown",
+
+fare:
+STATE.selectedFare || 0,
+
+type:
+STATE.selectedRideType || "standard",
+
+timestamp:
+Date.now()
+
+};
+
+
+try{
+
+let response=await fetch("/api/rides",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify(payload)
+
+});
+
+
+let data=await response.json();
+
+
+console.log("REAL RIDE CREATED:",data);
+
+
+STATE.rideId=data.ride?.id || Date.now();
+
+toast(
+"🚕 Driver network request sent",
+"success"
+);
+
+
+}catch(e){
+
+console.error(e);
+
+toast(
+"Backend unavailable",
+"error"
+);
+
 }
 
-let _rideStatusPoller = null;
-async function pollRideStatus(rideId){
-  clearInterval(_rideStatusPoller);
-  _rideStatusPoller = setInterval(async () => {
-    try{
-      const res = await fetch('/api/rides/' + rideId);
-      if(!res.ok) return;
-      const data = await res.json();
-      const ride = data.ride || data;
-      const status = (ride.status || '').toLowerCase();
-      console.log('Ride status:', status);
-      if(status === 'accepted' || status === 'assigned'){
-        setStatusPip('green'); setStatusLabel('🚗 Driver assigned! En route…');
-        showRideProgressBar('DRIVER EN ROUTE', 40);
-      } else if(status === 'arrived'){
-        clearInterval(_rideStatusPoller);
-        showArrived();
-      } else if(status === 'completed'){
-        clearInterval(_rideStatusPoller);
-        completeRide();
-      } else if(status === 'cancelled'){
-        clearInterval(_rideStatusPoller);
-        toast('Ride was cancelled', 'warning');
-        resetRideUI();
-      }
-    } catch(e){ /* keep polling quietly */ }
-  }, 3000);
+
 }
+
+
+
+
 
 function simulateRide(){
  console.log("Simulation disabled. CabLink uses live dispatch.");
@@ -1258,79 +1257,15 @@ function checkOnline(){ const online = navigator.onLine; if(!online) showAlert('
 // ============================================================
 // DRIVER MODE
 // ============================================================
-async function toggleDriverMode(){
+function toggleDriverMode(){
   STATE.driverOnline = !STATE.driverOnline;
   const btn = document.getElementById('driverModeBtn');
-  if(!STATE.driverId){
-    STATE.driverId = localStorage.getItem('cl6_driverId') || ('DRV-' + Math.random().toString(36).substr(2,8).toUpperCase());
-    localStorage.setItem('cl6_driverId', STATE.driverId);
-  }
-  try{
-    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
-    await fetch(endpoint, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ driverId: STATE.driverId })
-    });
-  } catch(e){ console.error('Driver status update failed', e); }
   btn.textContent = STATE.driverOnline ? '🔴 Go offline' : '🟢 Go online';
   btn.className = 'btn btn-sm ' + (STATE.driverOnline ? 'btn-danger' : 'btn-outline');
-  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success'); pollForRideRequests(); }
-  else { toast('You are now offline.', 'warning'); clearInterval(_driverRequestPoller); }
+  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success');  }
+  else toast('You are now offline.', 'warning');
   updateDriverUI();
 }
-
-let _driverRequestPoller = null;
-async function pollForRideRequests(){
-  clearInterval(_driverRequestPoller);
-  _driverRequestPoller = setInterval(async () => {
-    if(!STATE.driverOnline) return;
-    try{
-      const res = await fetch('/api/rides');
-      if(!res.ok) return;
-      const data = await res.json();
-      const rides = data.rides || data;
-      (Array.isArray(rides) ? rides : []).filter(r => {
-        const s = (r.status||'').toLowerCase();
-        return s === 'pending' || s === 'requested' || s === '';
-      }).forEach(r => {
-        if(document.getElementById('req-' + r.id)) return;
-        renderIncomingRequest(r);
-      });
-    } catch(e){ /* silent */ }
-  }, 4000);
-}
-
-function renderIncomingRequest(r){
-  STATE.driverRequests++;
-  const container = document.getElementById('driverRequests');
-  const div = document.createElement('div');
-  div.className = 'request-card pending'; div.id = 'req-' + r.id;
-  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${r.id}</strong><span style="color:var(--gold-l);font-weight:700">${r.fare||''} BWP</span></div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${r.pickup||''} → 🏁 ${r.dropoff||''}</div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-green btn-sm" onclick="acceptRealRequest('${r.id}')">✓ Accept</button>
-      <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${r.id}').remove()">✗ Pass</button>
-    </div>`;
-  if(container.firstChild?.textContent?.includes('online')) container.innerHTML = '';
-  container.prepend(div);
-  updateDriverUI();
-  toast('🚗 New ride request received', 'warning'); haptic();
-}
-
-async function acceptRealRequest(rideId){
-  try{
-    await fetch('/api/rides/' + rideId, {
-      method: 'PATCH',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ status: 'accepted', driverId: STATE.driverId })
-    });
-    document.getElementById('req-' + rideId)?.remove();
-    STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
-    toast('Ride accepted! Earn 1 THB when complete.', 'success');
-  } catch(e){ toast('Could not accept ride', 'error'); }
-}
-
 function addDriverRequest(){
   if(!STATE.driverOnline) return;
   STATE.driverRequests++;

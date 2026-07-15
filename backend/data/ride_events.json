@@ -41,6 +41,40 @@
       "type": "TRIP_COMPLETED",
       "message": "Ride completed successfully",
       "time": "2026-07-14T19:26:33.549Z"
+    },
+    {
+      "id": "EVENT-1784102189545",
+      "driver": {
+        "id": "DRIVER001",
+        "online": true,
+        "location": {
+          "lat": -24.6282,
+          "lng": 25.9231
+        },
+        "name": "Todd Driver",
+        "distance": 0
+      },
+      "ride": "RIDE-1784102189540",
+      "type": "DRIVER_ASSIGNED",
+      "message": "Driver has been assigned",
+      "time": "2026-07-15T07:56:29.545Z"
+    },
+    {
+      "id": "EVENT-1784102603747",
+      "driver": {
+        "id": "DRIVER001",
+        "online": true,
+        "location": {
+          "lat": -24.6282,
+          "lng": 25.9231
+        },
+        "name": "Todd Driver",
+        "distance": 0
+      },
+      "ride": "RIDE-1784102603741",
+      "type": "DRIVER_ASSIGNED",
+      "message": "Driver has been assigned",
+      "time": "2026-07-15T08:03:23.747Z"
     }
   ]
 }

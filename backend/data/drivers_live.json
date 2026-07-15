@@ -6,6 +6,16 @@
       "location": {
         "lat": -24.6282,
         "lng": 25.9231
+      },
+      "name": "Todd Driver"
+    },
+    {
+      "id": "DRV-001",
+      "name": "Todd Driver",
+      "online": true,
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
       }
     }
   ]

@@ -1,0 +1,337 @@
+# CabLink Health Report v2
+
+## Entrypoints found (2)
+
+### frontend/index.html (97.2 KB)
+- Scripts loaded: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js, https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js, /main.jsx
+- fetch() calls found: 0 — none
+- Connected to a real backend route: 0
+- Key function verdicts:
+  - bookRide → FAKE/LOCAL-ONLY
+  - simulateRide → FAKE/LOCAL-ONLY
+  - completeRide → FAKE/LOCAL-ONLY
+  - claimReward → REAL
+  - toggleDriverMode → FAKE/LOCAL-ONLY
+  - addDriverRequest → FAKE/LOCAL-ONLY
+  - acceptRequest → FAKE/LOCAL-ONLY
+  - cancelRide → FAKE/LOCAL-ONLY
+  - showArrived → FAKE/LOCAL-ONLY
+  - connectWallet → FAKE/LOCAL-ONLY
+
+### index.html (98.5 KB)
+- Scripts loaded: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js, https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js, /main.jsx
+- fetch() calls found: 5 — /api/rides, /api/drivers/online, /api/rides, /api/drivers/online, /api/drivers/offline
+- Connected to a real backend route: 5
+- Key function verdicts:
+  - bookRide → FAKE/LOCAL-ONLY
+  - simulateRide → FAKE/LOCAL-ONLY
+  - completeRide → FAKE/LOCAL-ONLY
+  - claimReward → REAL
+  - toggleDriverMode → FAKE/LOCAL-ONLY
+  - addDriverRequest → FAKE/LOCAL-ONLY
+  - acceptRequest → FAKE/LOCAL-ONLY
+  - cancelRide → FAKE/LOCAL-ONLY
+  - showArrived → FAKE/LOCAL-ONLY
+  - connectWallet → FAKE/LOCAL-ONLY
+
+## Backend routes (72 total, real files)
+- POST /api/rides — backend/ride_api_patch.js
+- GET /api/rides — backend/ride_api_patch.js
+- GET /api/rides/:id — backend/ride_api_patch.js
+- PATCH /api/rides/:id — backend/ride_api_patch.js
+- POST /ride/complete — backend/routes/completion_api.js
+- POST /dispatch/request — backend/routes/dispatch_api.js
+- POST /dispatch/match — backend/routes/dispatch_api.js
+- POST /dispatch/accept — backend/routes/dispatch_api.js
+- GET /dispatch/list — backend/routes/dispatch_api.js
+- GET /driver/:id/dashboard — backend/routes/driver_dashboard_api.js
+- GET /driver/demand — backend/routes/driver_demand_api.js
+- GET /driver/:id/economy — backend/routes/driver_economy.js
+- GET /driver/:id/economy — backend/routes/driver_economy_api.js
+- POST /drivers/rank — backend/routes/driver_intelligence_api.js
+- POST /drivers/best — backend/routes/driver_intelligence_api.js
+- POST /driver/location/update — backend/routes/driver_location_api.js
+- POST /ride/tracking — backend/routes/driver_location_api.js
+- GET /drivers/online — backend/routes/driver_online_api.js
+- POST /drivers/online — backend/routes/driver_online_api.js
+- POST /drivers/offline — backend/routes/driver_online_api.js
+- POST /marketplace/order — backend/routes/ecosystem_tasks.js
+- GET /tasks — backend/routes/ecosystem_tasks.js
+- PATCH /tasks/:id — backend/routes/ecosystem_tasks.js
+- POST /update — backend/routes/gps.js
+- GET /:device — backend/routes/gps.js
+- GET /user/:id — backend/routes/identity_api.js
+- POST /user/create — backend/routes/identity_api.js
+- POST /user/verify-role — backend/routes/identity_api.js
+- POST /demand/request — backend/routes/live_demand_api.js
+- POST /demand/complete — backend/routes/live_demand_api.js
+- GET /driver/hotspots — backend/routes/live_demand_api.js
+- POST /ride/create — backend/routes/live_ride_api.js
+- POST /ride/status — backend/routes/live_ride_api.js
+- POST /ride/assign — backend/routes/live_ride_api.js
+- GET /ride/:id — backend/routes/live_ride_api.js
+- POST /driver/location — backend/routes/matching_api.js
+- POST /matching/drivers — backend/routes/matching_api.js
+- POST /register — backend/routes/mobile.js
+- POST /heartbeat/:id — backend/routes/mobile.js
+- POST /trip/start — backend/routes/mobile.js
+- POST /notifications/create — backend/routes/notification_api.js
+- GET /ride/:id/timeline — backend/routes/notification_api.js
+- POST /orchestrator/create — backend/routes/orchestrator_api.js
+- POST /orchestrator/assign — backend/routes/orchestrator_api.js
+- POST /orchestrator/arrived — backend/routes/orchestrator_api.js
+- POST /orchestrator/start — backend/routes/orchestrator_api.js
+- POST /orchestrator/finish — backend/routes/orchestrator_api.js
+- GET /passenger/:id/profile — backend/routes/passenger_intelligence_api.js
+- POST /passenger/update — backend/routes/passenger_intelligence_api.js
+- POST /driver/status — backend/routes/realtime.js
+- POST /driver/location — backend/routes/realtime.js
+- POST /event — backend/routes/realtime.js
+- GET /events — backend/routes/realtime.js
+- POST /economy/ride/accept — backend/routes/ride_economy_api.js
+- POST /economy/ride/complete — backend/routes/ride_economy_api.js
+- GET /economy/rides — backend/routes/ride_economy_api.js
+- POST /ride/create — backend/routes/ride_state_api.js
+- POST /ride/status — backend/routes/ride_state_api.js
+- GET /ride/:id/status — backend/routes/ride_state_api.js
+- POST /request — backend/routes/rides.js
+- GET / — backend/routes/rides.js
+- PATCH /:id — backend/routes/rides.js
+- POST /join — backend/routes/socket_routes.js
+- POST /update — backend/routes/socket_routes.js
+- GET /updates — backend/routes/updates_api.js
+- POST /register — backend/routes/users.js
+- GET / — backend/routes/users.js
+- GET /health — backend/server/app.js
+- GET /api/health — backend/server.js
+- POST /api/drivers/apply — backend/server.js
+- GET /api/drivers — backend/server.js
+- GET * — backend/server.js
+
+## Orphaned routes (declared, never called by ANY entrypoint): 62
+- POST /ride/complete (backend/routes/completion_api.js)
+- POST /dispatch/request (backend/routes/dispatch_api.js)
+- POST /dispatch/match (backend/routes/dispatch_api.js)
+- POST /dispatch/accept (backend/routes/dispatch_api.js)
+- GET /dispatch/list (backend/routes/dispatch_api.js)
+- GET /driver/:id/dashboard (backend/routes/driver_dashboard_api.js)
+- GET /driver/demand (backend/routes/driver_demand_api.js)
+- GET /driver/:id/economy (backend/routes/driver_economy.js)
+- GET /driver/:id/economy (backend/routes/driver_economy_api.js)
+- POST /drivers/rank (backend/routes/driver_intelligence_api.js)
+- POST /drivers/best (backend/routes/driver_intelligence_api.js)
+- POST /driver/location/update (backend/routes/driver_location_api.js)
+- POST /ride/tracking (backend/routes/driver_location_api.js)
+- POST /marketplace/order (backend/routes/ecosystem_tasks.js)
+- GET /tasks (backend/routes/ecosystem_tasks.js)
+- PATCH /tasks/:id (backend/routes/ecosystem_tasks.js)
+- POST /update (backend/routes/gps.js)
+- GET /:device (backend/routes/gps.js)
+- GET /user/:id (backend/routes/identity_api.js)
+- POST /user/create (backend/routes/identity_api.js)
+- POST /user/verify-role (backend/routes/identity_api.js)
+- POST /demand/request (backend/routes/live_demand_api.js)
+- POST /demand/complete (backend/routes/live_demand_api.js)
+- GET /driver/hotspots (backend/routes/live_demand_api.js)
+- POST /ride/create (backend/routes/live_ride_api.js)
+- POST /ride/status (backend/routes/live_ride_api.js)
+- POST /ride/assign (backend/routes/live_ride_api.js)
+- GET /ride/:id (backend/routes/live_ride_api.js)
+- POST /driver/location (backend/routes/matching_api.js)
+- POST /matching/drivers (backend/routes/matching_api.js)
+- POST /register (backend/routes/mobile.js)
+- POST /heartbeat/:id (backend/routes/mobile.js)
+- POST /trip/start (backend/routes/mobile.js)
+- POST /notifications/create (backend/routes/notification_api.js)
+- GET /ride/:id/timeline (backend/routes/notification_api.js)
+- POST /orchestrator/create (backend/routes/orchestrator_api.js)
+- POST /orchestrator/assign (backend/routes/orchestrator_api.js)
+- POST /orchestrator/arrived (backend/routes/orchestrator_api.js)
+- POST /orchestrator/start (backend/routes/orchestrator_api.js)
+- POST /orchestrator/finish (backend/routes/orchestrator_api.js)
+- GET /passenger/:id/profile (backend/routes/passenger_intelligence_api.js)
+- POST /passenger/update (backend/routes/passenger_intelligence_api.js)
+- POST /driver/status (backend/routes/realtime.js)
+- POST /driver/location (backend/routes/realtime.js)
+- POST /event (backend/routes/realtime.js)
+- GET /events (backend/routes/realtime.js)
+- POST /economy/ride/accept (backend/routes/ride_economy_api.js)
+- POST /economy/ride/complete (backend/routes/ride_economy_api.js)
+- GET /economy/rides (backend/routes/ride_economy_api.js)
+- POST /ride/create (backend/routes/ride_state_api.js)
+- POST /ride/status (backend/routes/ride_state_api.js)
+- GET /ride/:id/status (backend/routes/ride_state_api.js)
+- POST /request (backend/routes/rides.js)
+- PATCH /:id (backend/routes/rides.js)
+- POST /join (backend/routes/socket_routes.js)
+- POST /update (backend/routes/socket_routes.js)
+- GET /updates (backend/routes/updates_api.js)
+- POST /register (backend/routes/users.js)
+- GET /health (backend/server/app.js)
+- GET /api/health (backend/server.js)
+- POST /api/drivers/apply (backend/server.js)
+- GET * (backend/server.js)
+
+## Meaningful duplicate functions (≤6 files, likely real collisions): 162
+- **report**: backend/admin/operator_dashboard.js | beta/pilot/issues/issue_tracker.js | cablink_human_pilot_control_engine.js | cablink_phase7_production_connection_install.js | cablink_pilot_control_center_install.js | pilot/dashboard/pilot_status.js
+- **record**: backend/analytics/pilot_failure_tracker.js | backend/location/gps_event_engine.js | cablink_database_wiring_upgrade.js | cablink_phase6_human_pilot_protection_install.js | cablink_pilot_operations_core_install.js
+- **rideRequest**: backend/api/cablink_gateway.js | cablink_final_pilot_bridge_install.js
+- **createSession**: backend/auth/auth_connector.js | cablink_phase7_production_connection_install.js
+- **login**: backend/auth/auth_engine.js | cablink_production_reality_completion_engine.js
+- **send**: backend/auth/otp_service.js | backend/notifications/notification_center.js | backend/notifications/push_bridge.js | cablink_final_gap_closure_engine.js | cablink_phase7_production_connection_install.js | cablink_reality_bridge_phase1_install.js
+- **verify**: backend/auth/otp_service.js | backend/auth/phone_verification_engine.js | cablink_live_network_layer_install.js | cablink_phase7_production_connection_install.js
+- **sendCode**: backend/auth/phone_verification_engine.js | cablink_live_network_layer_install.js
+- **executeTransfer**: backend/blockchain/thb_real_executor.js | cablink_thb_real_executor_install.js
+- **createTransaction**: backend/blockchain/thb_transaction_engine.js | backend/payments/payment_transaction_layer.js | cablink_final_reality_transaction_engine.js | cablink_thb_transfer_simulator_install.js
+- **submit**: backend/blockchain/thb_transaction_engine.js | cablink_thb_transfer_simulator_install.js
+- **confirm**: backend/blockchain/thb_transaction_engine.js | backend/payments/payment_engine.js | cablink_phase6_human_pilot_protection_install.js | cablink_thb_transfer_simulator_install.js
+- **processReward**: backend/blockchain/thb_transfer_worker.js | cablink_thb_blockchain_worker_install.js
+- **valid**: backend/blockchain/wallet_validator.js | cablink_thb_real_chain_connector.js
+- **sync**: backend/cloud/cloud_adapter.js | cablink_final_pilot_bridge_install.js
+- **connect**: backend/cloud/production_adapter.js | backend/providers/cloud_database_connector.js | backend/realtime/presence_engine.js | cablink_final_reality_layers_install.js | cablink_live_network_layer_install.js | cablink_reality_bridge_phase2_install.js
+- **validate**: backend/config/env_check.js | backend/config/environment_validator.js | backend/fraud/ride_validation.js | cablink_missing_parts_completion_engine.js | cablink_phase6_human_pilot_protection_install.js | cablink_reality_bridge_phase5_install.js
+- **migrate**: backend/database/migration_engine.js | cablink_phase7_production_connection_install.js
+- **getSchema**: backend/database/production_schema.js | cablink_phase7_production_connection_install.js
+- **calculateScore**: backend/dispatch/dispatch_engine.js | cablink_reality_bridge_phase1_install.js
+- **select**: backend/dispatch/dispatch_engine.js | cablink_reality_bridge_phase1_install.js
+- **heartbeat**: backend/drivers/heartbeat_engine.js | backend/mobile/device_registry.js | cablink_phase15_real_device_activation_install.js | cablink_pilot_operations_core_install.js
+- **receiveOrder**: backend/ecosystem/marketplace_bridge.js | cablink_phase21_marketplace_task_bridge_install.js
+- **publish**: backend/events/ride_event_bus.js | backend/location/location_stream.js | backend/realtime/event_bus.js | cablink_live_network_layer_install.js | cablink_phase13_realtime_tracking_install.js | cablink_reality_bridge_phase2_install.js
+- **write**: backend/firebase/firebase_adapter.js | backend/storage/database.js | cablink_phase12_persistent_storage_install.js | cablink_pilot_hardening_install.js | cablink_reality_bridge_phase3_install.js
+- **stream**: backend/gps/location_stream.js | cablink_phase16_gps_maps_pilot_install.js
+- **read**: backend/location/location_stream.js | backend/storage/database.js | beta/operations/reports/daily_report.js | cablink_phase12_persistent_storage_install.js | cablink_pilot_operations_logger.js | cablink_reality_bridge_phase2_install.js
+- **findNearbyDrivers**: backend/location/radar_engine.js | cablink_intelligence_layer_install.js
+- **calculateDistance**: backend/maps/gps_engine.js | cablink_final_reality_layers_install.js
+- **route**: backend/maps/gps_engine.js | backend/maps/map_provider.js | backend/providers/maps_connector.js | cablink_final_reality_layers_install.js | cablink_phase16_gps_maps_pilot_install.js | cablink_reality_bridge_phase2_install.js
+- **provider**: backend/maps/map_provider.js | backend/production/database_adapter.js | cablink_phase16_gps_maps_pilot_install.js | cablink_reality_bridge_phase1_install.js
+- **find**: backend/matching/driver_matcher.js | cablink_phase15_real_device_activation_install.js
+- **findDriver**: backend/matching/driver_matching_engine.js | backend/matching/matching_engine.js | cablink_final_gap_closure_engine.js | cablink_real_hailing_completion_engine.js
+- **sendRideRequest**: backend/notifications/notification_engine.js | cablink_intelligence_layer_install.js
+- **registerDevice**: backend/notifications/push_bridge.js | cablink_reality_bridge_phase1_install.js
+- **registerDriver**: backend/onboarding/onboarding_engine.js | cablink_pilot_deployment_readiness_install.js
+- **registerPassenger**: backend/onboarding/onboarding_engine.js | cablink_pilot_deployment_readiness_install.js
+- **createPayment**: backend/payments/payment_adapter.js | cablink_database_wiring_upgrade.js | cablink_production_reality_completion_engine.js | cablink_reality_integration_engine.js
+- **createCheckout**: backend/payments/payment_provider_adapter.js | cablink_missing_parts_completion_engine.js | cablink_production_wiring_fix.js
+- **verifyWebhook**: backend/payments/payment_provider_adapter.js | cablink_missing_parts_completion_engine.js | cablink_production_wiring_fix.js
+- **recordPayment**: backend/payments/transaction_recorder.js | cablink_reality_hardening_engine.js
+- **notify**: backend/push/push_engine.js | backend/services/notification_service.js | cablink_final_pilot_bridge_install.js | cablink_phase49_notification_engine.js
+- **subscribe**: backend/realtime/channel_manager.js | cablink_final_gap_closure_engine.js
+- **disconnect**: backend/realtime/presence_engine.js | cablink_live_network_layer_install.js
+- **online**: backend/realtime/presence_engine.js | beta/onboarding/driver_system.js | cablink_beta_launch_engine.js | cablink_live_network_layer_install.js
+- **emit**: backend/realtime/realtime_bridge.js | cablink_reality_bridge_phase1_install.js
+- **passengerJoin**: backend/realtime/ride_channel.js | cablink_phase14_websocket_realtime_install.js
+- **driverJoin**: backend/realtime/ride_channel.js | cablink_phase14_websocket_realtime_install.js
+- **sendUpdate**: backend/realtime/ride_channel.js | cablink_phase14_websocket_realtime_install.js
+- **processCompletion**: backend/rewards/auto_reward_trigger.js | cablink_phase28_auto_reward_trigger_install.js
+- **createReward**: backend/rewards/blockchain_reward_adapter.js | cablink_reality_integration_engine.js
+- **completeDelivery**: backend/rewards/delivery_reward_service.js | cablink_phase28_auto_reward_trigger_install.js
+- **createClaim**: backend/rewards/reward_claim_engine.js | cablink_intelligence_layer_install.js
+- **issue**: backend/rewards/reward_engine.js | cablink_real_hailing_completion_engine.js
+- **getDriver**: backend/rewards/reward_history.js | cablink_phase27_reward_wallet_install.js
+- **requestClaim**: backend/rewards/thb_claim_engine.js | cablink_thb_claim_verification_install.js
+- **completeClaim**: backend/rewards/thb_claim_engine.js | cablink_thb_claim_verification_install.js
+- **prepareTransfer**: backend/rewards/thb_contract_adapter.js | cablink_reality_hardening_engine.js
+- **recordPendingReward**: backend/rewards/thb_service.js | cablink_missing_parts_completion_engine.js | cablink_production_wiring_fix.js
+- **createTHBTransaction**: backend/rewards/thb_transaction_layer.js | cablink_final_reality_transaction_engine.js
+- **queueReward**: backend/rewards/thb_transfer_queue.js | cablink_thb_blockchain_worker_install.js
+- **wallet**: backend/rewards/wallet_service.js | cablink_phase27_reward_wallet_install.js
+- **createRide**: backend/ride_store.js | backend/rides/ride_engine.js | backend/services/ride_orchestrator_service.js | cablink_final_reality_layers_install.js | cablink_phase51_orchestrator.js
+- **getRide**: backend/ride_store.js | cablink_phase46_live_ride_state.js | cablink_phase54_passenger_dashboard.js | frontend/services/live_ride_api.js | frontend/services/passenger_dashboard_api.js
+- **saveRide**: backend/rides/ride_persistence.js | cablink_final_reality_transaction_engine.js
+- **settle**: backend/rides/settlement_engine.js | cablink_production_wiring_fix.js
+- **trigger**: backend/safety/emergency_engine.js | cablink_phase6_human_pilot_protection_install.js
+- **checkRide**: backend/security/fraud_engine.js | cablink_pilot_deployment_readiness_install.js
+- **audit**: backend/security/security_audit.js | backend/security/security_engine.js | cablink_final_reality_layers_install.js | cablink_phase8_pilot_deployment_command_center.js | cablink_reality_bridge_phase5_install.js | deployment/go_live_audit.js
+- **rateLimit**: backend/security/security_engine.js | cablink_final_reality_layers_install.js
+- **getDemand**: backend/services/demand_service.js | cablink_phase39_driver_visibility_layer.js | frontend/services/demand_api.js
+- **createRequest**: backend/services/dispatch_service.js | cablink_phase42_dispatch_engine.js
+- **dispatch**: backend/services/dispatch_service.js | cablink_phase42_dispatch_engine.js
+- **accept**: backend/services/dispatch_service.js | backend/services/ride_economy_service.js | cablink_phase23_live_task_api_bridge_install.js | cablink_phase34_ride_economy_loop.js | cablink_phase42_dispatch_engine.js | frontend/services/task_service.js
+- **score**: backend/services/driver_intelligence_service.js | cablink_phase52_driver_intelligence.js | cablink_pilot_command_center_engine.js
+- **rank**: backend/services/driver_intelligence_service.js | cablink_phase52_driver_intelligence.js
+- **best**: backend/services/driver_intelligence_service.js | cablink_phase52_driver_intelligence.js
+- **updateDriver**: backend/services/driver_matching_service.js | cablink_phase41_driver_matching_engine.js
+- **nearby**: backend/services/driver_matching_service.js | cablink_phase41_driver_matching_engine.js
+- **recordRide**: backend/services/economy_ledger_service.js | cablink_phase35_persistent_economy_ledger.js
+- **recordReward**: backend/services/economy_ledger_service.js | cablink_phase35_persistent_economy_ledger.js
+- **updateRideStatus**: backend/services/economy_ledger_service.js | cablink_phase37_ledger_sync_dashboard.js
+- **driverEconomy**: backend/services/economy_ledger_service.js | cablink_phase37_ledger_sync_dashboard.js
+- **driverHistory**: backend/services/economy_ledger_service.js | cablink_phase35_persistent_economy_ledger.js | cablink_phase37_ledger_sync_dashboard.js
+- **getUser**: backend/services/identity_service.js | backend/users/user_account_engine.js | cablink_live_network_layer_install.js | cablink_phase53_identity_engine.js | frontend/services/identity_api.js
+- **createUser**: backend/services/identity_service.js | backend/users/user_account_engine.js | cablink_live_network_layer_install.js | cablink_phase53_identity_engine.js
+- **verifyRole**: backend/services/identity_service.js | cablink_phase53_identity_engine.js
+- **addRequest**: backend/services/live_demand_service.js | cablink_phase40_live_demand_engine.js
+- **completeRequest**: backend/services/live_demand_service.js | cablink_phase40_live_demand_engine.js
+- **hotspots**: backend/services/live_demand_service.js | cablink_phase40_live_demand_engine.js
+- **profile**: backend/services/passenger_intelligence_service.js | cablink_phase54_passenger_intelligence.js
+- **driverArrived**: backend/services/ride_orchestrator_service.js | cablink_phase51_orchestrator.js
+- **startTrip**: backend/services/ride_orchestrator_service.js | cablink_phase51_orchestrator.js
+- **finishTrip**: backend/services/ride_orchestrator_service.js | cablink_phase51_orchestrator.js
+- **active**: backend/sessions/session_engine.js | cablink_real_pilot_environment_install.js
+- **sendOTP**: backend/sms/sms_engine.js | cablink_final_reality_layers_install.js
+- **initialize**: backend/socket/server_socket.js | cablink_phase14_websocket_realtime_install.js
+- **join**: backend/socket/socket_manager.js | cablink_phase14_websocket_realtime_install.js
+- **users**: backend/socket/socket_manager.js | cablink_phase10_frontend_backend_bridge_install.js | cablink_phase14_websocket_realtime_install.js | frontend/services/user_service.js
+- **change**: backend/status/ride_status.js | cablink_phase16_gps_maps_pilot_install.js
+- **available**: backend/status/ride_status.js | beta/onboarding/driver_system.js | cablink_beta_launch_engine.js | cablink_phase16_gps_maps_pilot_install.js
+- **assign**: backend/tasks/task_manager.js | cablink_phase21_marketplace_task_bridge_install.js
+- **simulate**: backend/testing/two_phone_pilot.js | cablink_reality_bridge_phase5_install.js
+- **start**: backend/trips/trip_manager.js | beta/operations/session_engine.js | beta/pilot_mission/pilot_session.js | cablink_phase15_real_device_activation_install.js | cablink_pilot_mission_control_engine.js | cablink_pilot_operations_logger.js
+- **evaluateDriver**: backend/trust/trust_engine.js | cablink_intelligence_layer_install.js
+- **attachWallet**: backend/users/wallet_manager.js | cablink_missing_parts_completion_engine.js | cablink_production_wiring_fix.js
+- **required**: backend/validation/input_validator.js | cablink_pilot_hardening_install.js
+- **nearbyDrivers**: beta/geo/geo_engine.js | cablink_geo_intelligence_certification_engine.js
+- **fare**: beta/geo/geo_engine.js | cablink_geo_intelligence_certification_engine.js
+- **updateLocation**: beta/live_gps/live_location_engine.js | cablink_live_gps_foundation_engine.js
+- **latest**: beta/live_gps/live_location_engine.js | cablink_live_gps_foundation_engine.js
+- **approve**: beta/onboarding/driver_system.js | cablink_beta_launch_engine.js
+- **locationPermission**: beta/onboarding/passenger_system.js | cablink_beta_launch_engine.js
+- **event**: beta/pilot_mission/pilot_session.js | cablink_pilot_mission_control_engine.js
+- **exists**: cablink.js | cablink_final_production_gatekeeper_v2.js | cablink_final_release_engine.js | cablink_launch_certification_engine.js | install_cablink_production_monitor.js
+- **requestRide**: cablink_database_wiring_upgrade.js | cablink_phase10_frontend_backend_bridge_install.js | cablink_phase44_pwa_pages.js | cablink_real_hailing_completion_engine.js | frontend/pages/PassengerRide.jsx | frontend/services/ride_service.js
+- **walk**: cablink_dependency_graph.js | cablink_doctor.js | cablink_react_integration_audit.js
+- **sendRideToBackend**: cablink_frontend_real_booking_bridge.js | frontend/js/app.js
+- **health**: cablink_persistent_pilot_database_install.js | database/production/database_health.js
+- **request**: cablink_phase10_frontend_backend_bridge_install.js | cablink_phase11_window_fix.js | cablink_phase18_pwa_mobile_activation_install.js | frontend/api/cablink_api.js | frontend/mobile/device_permissions.js
+- **rides**: cablink_phase10_frontend_backend_bridge_install.js | frontend/services/ride_service.js
+- **setUser**: cablink_phase10_frontend_backend_bridge_install.js | frontend/state/session_store.js
+- **setRide**: cablink_phase10_frontend_backend_bridge_install.js | frontend/state/session_store.js
+- **test**: cablink_phase10_frontend_backend_bridge_install.js | frontend/api/bridge_test.js
+- **enter**: cablink_phase18_pwa_mobile_activation_install.js | frontend/mobile/mobile_entry.js
+- **createCard**: cablink_phase19_bstm_visible_ui_install.js | frontend/components/ecosystem_card.js
+- **menu**: cablink_phase19_bstm_visible_ui_install.js | frontend/components/bstm_menu.js
+- **getTasks**: cablink_phase23_live_task_api_bridge_install.js | cablink_phase30_api_test_fix.js | frontend/api/task_api.js
+- **acceptTask**: cablink_phase23_live_task_api_bridge_install.js | cablink_phase30_api_test_fix.js | frontend/api/task_api.js
+- **refresh**: cablink_phase23_live_task_api_bridge_install.js | frontend/services/task_service.js
+- **button**: cablink_phase24_task_route_mount_install.js | frontend/components/bstm_delivery_button.js
+- **build**: cablink_phase29_driver_economy_dashboard_install.js | frontend/services/driver_economy_service.js
+- **loadDriverEconomy**: cablink_phase30_live_driver_data_install.js | frontend/services/live_driver_economy.js
+- **loadDashboard**: cablink_phase31_live_driver_dashboard_refresh.js | frontend/services/driver_dashboard_live.js
+- **getDriverDashboard**: cablink_phase32_driver_dashboard_api_mount.js | cablink_phase33_api_test_fix.js | frontend/services/economy_dashboard_api.js
+- **getUpdates**: cablink_phase39_driver_visibility_layer.js | cablink_phase43_ui_integration.js | frontend/services/driver_dashboard_api.js | frontend/services/updates_api.js
+- **getDriverEconomy**: cablink_phase43_ui_integration.js | frontend/services/driver_dashboard_api.js
+- **getHotspots**: cablink_phase43_ui_integration.js | frontend/services/driver_dashboard_api.js
+- **DriverDashboard**: cablink_phase44_pwa_pages.js | frontend/pages/DriverDashboard.jsx
+- **PassengerRide**: cablink_phase44_pwa_pages.js | frontend/pages/PassengerRide.jsx
+- **UpdatesCenter**: cablink_phase44_pwa_pages.js | frontend/pages/UpdatesCenter.jsx
+- **StatusCard**: cablink_phase45_app_shell.js | frontend/components/status_card.jsx
+- **getRole**: cablink_phase45_app_shell.js | frontend/js/role.js | frontend/services/role_service.js | role.js
+- **setRole**: cablink_phase45_app_shell.js | frontend/js/role.js | frontend/services/role_service.js | role.js
+- **RideStatusCard**: cablink_phase46_live_ride_state.js | frontend/components/ride_status_card.jsx
+- **getTimeline**: cablink_phase49_notification_engine.js | frontend/services/notification_api.js
+- **RideTimeline**: cablink_phase49_notification_engine.js | frontend/components/ride_timeline.jsx
+- **PassengerDashboard**: cablink_phase54_passenger_dashboard.js | frontend/components/passenger_dashboard.jsx
+- **PassengerProfileCard**: cablink_phase54_passenger_intelligence.js | frontend/components/passenger_profile_card.jsx
+- **metrics**: cablink_pilot_operations_engine_install.js | pilot/operations/pilot_metrics.js
+- **recordTrial**: cablink_pilot_trial_recorder_install.js | pilot/trials/trial_recorder.js
+- **allTrials**: cablink_pilot_trial_recorder_install.js | pilot/trials/trial_recorder.js
+- **checkSection**: cablink_production_monitor.js | install_cablink_production_monitor_v2.js
+- **loadRealDrivers**: cablink_reality_runtime_bridge_install.js | index.html | index_backup_before_bookride_cleanup.html | index_backup_before_real_engine.html | index_backup_before_runtime_merge.html | index_before_reality_cutover.html
+- **createRealRide**: cablink_reality_runtime_bridge_install.js | index.html | index_backup_before_bookride_cleanup.html | index_backup_before_real_engine.html | index_backup_before_runtime_merge.html | index_before_reality_cutover.html
+- **patchProfile**: fix.js | frontend/js/fix.js
+- **loadFB**: fix.js | frontend/js/fix.js
+- **initFB**: fix.js | frontend/js/fix.js
+- **gate**: frontend/js/role.js | role.js
+- **animateDriverDots**: index_before_bstm_mount.html | index_before_role_auto_cleanup.html | index_before_role_cleanup.html | index_before_role_fix_1784018514824.html | index_before_script_repair_1784017559902.html
+- **startMapAnimation**: index_before_bstm_mount.html | index_before_role_auto_cleanup.html | index_before_role_cleanup.html | index_before_role_fix_1784018514824.html | index_before_script_repair_1784017559902.html
+- **showThankYou**: index_before_bstm_mount.html | index_before_role_auto_cleanup.html | index_before_role_cleanup.html | index_before_role_fix_1784018514824.html | index_before_script_repair_1784017559902.html

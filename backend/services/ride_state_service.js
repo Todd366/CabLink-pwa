@@ -1,50 +1,31 @@
 
-const fs=require("fs");
-
-const file="backend/data/live_rides.json";
-
-function load(){
-return JSON.parse(fs.readFileSync(file,"utf8"));
-}
-
-function save(data){
-fs.writeFileSync(file,JSON.stringify(data,null,2));
-}
+const rides=require("../database/ride_repository");
 
 
 function create(ride){
 
-const db=load();
-
-const item={
-id:"RIDE-"+Date.now(),
+let item={
 ...ride,
-status:"SEARCHING",
+id:ride.id || "RIDE-"+Date.now(),
+status:ride.status || "SEARCHING",
 created:new Date().toISOString()
 };
 
-db.rides.push(item);
-save(db);
-
-return item;
+return rides.create(item);
 
 }
 
 
 function update(id,status){
 
-const db=load();
-
-const ride=db.rides.find(
+let ride=
+rides.all().find(
 r=>r.id===id
 );
 
 if(ride){
 
 ride.status=status;
-ride.updated=new Date().toISOString();
-
-save(db);
 
 }
 
@@ -55,9 +36,7 @@ return ride;
 
 function get(id){
 
-const db=load();
-
-return db.rides.find(
+return rides.all().find(
 r=>r.id===id
 );
 

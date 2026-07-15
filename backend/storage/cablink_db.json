@@ -1,0 +1,118 @@
+{
+  "users": [],
+  "rides": [
+    {
+      "id": "RIDE-1784100848290",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:34:08.291Z"
+    },
+    {
+      "id": "RIDE-1784101257089",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:40:57.089Z"
+    },
+    {
+      "id": "RIDE-1784101513116",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:45:13.117Z"
+    },
+    {
+      "id": "RIDE-1784101631715",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:47:11.715Z"
+    },
+    {
+      "id": "RIDE-1784101774519",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:49:34.519Z"
+    },
+    {
+      "id": "RIDE-1784101895961",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:51:35.961Z"
+    },
+    {
+      "id": "RIDE-1784102075114",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:54:35.114Z"
+    },
+    {
+      "id": "RIDE-1784102189540",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:56:29.540Z"
+    },
+    {
+      "id": "RIDE-1784102603741",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T08:03:23.741Z"
+    }
+  ]
+}

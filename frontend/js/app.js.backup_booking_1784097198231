@@ -47,35 +47,6 @@ console.log("🚀 CabLink App Logic Loaded");
 
 // Your existing fixes go here
 window.bookRide = function() {
-
-// =========================================
-// CABLINK_BOOKING_BACKEND_CONNECTED
-// =========================================
-
-sendRideToBackend({
-
-pickup:
-document.getElementById("pickup")?.value ||
-"BSTM HQ, Mmopane",
-
-dropoff:
-document.getElementById("dropoff")?.value ||
-"Game City Mall",
-
-fare:
-Number(
-document.getElementById("fare")?.value ||
-20
-),
-
-vehicle:
-window.STATE?.vehicle ||
-"standard"
-
-});
-
-
-
     const pickup = document.getElementById('pickup')?.value?.trim();
     const dropoff = document.getElementById('dropoff')?.value?.trim();
     if (!pickup || !dropoff) return toast("Enter pickup and drop-off", "warning");

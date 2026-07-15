@@ -87,33 +87,18 @@ drivers.length
 
 
 
-
 router.get(
 "/",
 (req,res)=>{
 
-const db=require("../storage/database");
-
-let data=db.read();
-
-console.log(
-"📦 rides endpoint count:",
-data.rides.length
+res.json(
+rides.all()
 );
-
-res.json({
-
-success:true,
-
-count:data.rides.length,
-
-rides:data.rides
-
-});
 
 }
 
 );
+
 
 
 router.patch(
