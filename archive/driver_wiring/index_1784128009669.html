@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#060911"/>
+<title>CabLink · BSTM Ecosystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+<style>
+:root{
+  --ink:#060911; --surface:#0f1526; --surface2:#161e33; --surface3:#1c2540;
+  --glass:rgba(22,30,51,.62); --hair:rgba(255,255,255,.07); --hair2:rgba(255,255,255,.12);
+  --sapphire:#2e6be6; --sapphire-l:#5b8bff;
+  --gold:#f0b93a; --gold-l:#ffd873;
+  --emerald:#21c980; --coral:#ff5d5d;
+  --text:#edeff5; --muted:#8992a9; --muted2:#5b6376;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --data:'Space Mono',monospace;
+  --nav-h:78px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-font-smoothing:antialiased}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:460px;margin:0 auto;position:relative;overflow:hidden;background:var(--ink)}
+
+/* ambient bg blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;opacity:.35;z-index:0}
+.blob-1{width:260px;height:260px;background:var(--sapphire);top:-80px;left:-60px}
+.blob-2{width:220px;height:220px;background:var(--gold);top:120px;right:-80px;opacity:.18}
+
+.statusbar{position:relative;z-index:2;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;color:var(--muted);flex-shrink:0;font-family:var(--data)}
+.statusbar .time{font-weight:700;color:var(--text)}
+.statusbar .right{display:flex;gap:10px;align-items:center}
+.pip{width:7px;height:7px;border-radius:50%;background:var(--muted2);display:inline-block}
+.pip.green{background:var(--emerald);box-shadow:0 0 8px var(--emerald)}
+.pip.yellow{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.pip.red{background:var(--coral);box-shadow:0 0 8px var(--coral)}
+
+#alertStrip,#chainWarning{display:none;position:relative;z-index:2;font-size:12px;font-weight:600;padding:9px 18px;text-align:center;flex-shrink:0}
+#alertStrip{background:linear-gradient(90deg,#c98a1f,var(--gold));color:#241a04}
+#alertStrip.show{display:block}
+#alertStrip button{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#241a04;font-size:16px;cursor:pointer}
+#chainWarning{background:var(--coral);color:#2a0808;cursor:pointer}
+#chainWarning.show{display:block}
+#surgeBanner{display:none;position:relative;z-index:2;background:linear-gradient(90deg,#7a4d0a,var(--gold));color:#241a04;padding:9px 18px;text-align:center;font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+#surgeBanner.show{display:block}
+#arrivedBanner{display:none;position:relative;z-index:2;background:var(--emerald);color:#04241a;padding:9px 18px;font-weight:700;font-size:12px;text-align:center;flex-shrink:0}
+#arrivedBanner.show{display:block}
+#rideProgressBar{display:none;position:relative;z-index:2;background:var(--surface);padding:12px 18px;border-bottom:1px solid var(--hair);flex-shrink:0}
+#rideProgressBar.show{display:block}
+.rp-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px;font-family:var(--data)}
+.rp-label .rp-status{color:var(--gold-l);font-weight:700}
+.progress-track{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--sapphire),var(--gold));border-radius:2px;transition:width .5s ease;width:0%}
+
+#screens{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#screens::-webkit-scrollbar{display:none}
+.screen{display:none;padding:14px 18px calc(var(--nav-h) + 24px);animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+h1,h2,h3,.disp{font-family:var(--disp)}
+.eyebrow{font-family:var(--data);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.greeting{font-family:var(--disp);font-size:22px;font-weight:600;margin:2px 0 16px}
+.greeting span{color:var(--gold-l)}
+
+/* cards */
+.card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
+.card-title{font-family:var(--disp);font-weight:600;font-size:15px}
+.card-sub{font-size:11px;color:var(--muted);font-family:var(--data)}
+
+/* diamond wallet — signature element */
+.diamond-card{position:relative;background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid var(--hair2);border-radius:var(--r-lg);padding:22px 20px 18px;margin-bottom:14px;overflow:hidden}
+.diamond-card::before{content:'';position:absolute;top:-40%;right:-20%;width:70%;height:180%;background:linear-gradient(135deg,rgba(240,185,58,.18),transparent 60%);transform:rotate(20deg);pointer-events:none}
+.diamond-facet{width:34px;height:34px;background:linear-gradient(135deg,var(--gold-l),var(--gold) 55%,#a3760c);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 18px rgba(240,185,58,.35)}
+.wallet-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.wallet-addr{font-family:var(--data);font-size:11px;color:var(--muted)}
+.wallet-stage{font-size:10px;font-family:var(--data);letter-spacing:.08em;color:var(--gold-l);text-transform:uppercase;margin-top:2px}
+.wallet-bar{display:flex;gap:10px}
+.bal-card{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 10px;text-align:center}
+.bal-card .val{font-family:var(--data);font-size:20px;font-weight:700;color:var(--gold-l)}
+.bal-card .lbl{font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:.05em;text-transform:uppercase}
+.chainrow{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.gas-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--muted);font-family:var(--data)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:var(--r-sm);font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;border:none;transition:.2s;width:100%;letter-spacing:.01em}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 6px 20px -6px rgba(240,185,58,.5)}
+.btn-primary:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--surface3);color:var(--muted2);box-shadow:none;cursor:not-allowed}
+.btn-outline{background:rgba(255,255,255,.02);border:1px solid var(--hair2);color:var(--text)}
+.btn-outline:hover{border-color:var(--sapphire-l);color:var(--sapphire-l)}
+.btn-sapphire{background:linear-gradient(135deg,var(--sapphire-l),var(--sapphire));color:#fff}
+.btn-danger{background:var(--coral);color:#2a0808}
+.btn-green{background:var(--emerald);color:#04241a}
+.btn-sm{padding:9px 14px;font-size:12px;width:auto}
+
+/* inputs */
+.input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--body);font-size:13px;outline:none;transition:.2s}
+.input:focus{border-color:var(--sapphire-l);background:rgba(255,255,255,.05)}
+.input-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;position:relative}
+.input-icon{position:absolute;left:13px;font-size:13px;pointer-events:none;top:50%;transform:translateY(-50%);opacity:.8}
+.input.has-icon{padding-left:36px}
+.loc-line{width:2px;background:linear-gradient(var(--sapphire-l),var(--gold));height:22px;margin:1px 0 1px 17px;opacity:.5}
+
+/* ride types */
+.ride-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ride-type-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 6px;text-align:center;cursor:pointer;transition:.2s}
+.ride-type-card.active{border-color:var(--gold);background:rgba(240,185,58,.08)}
+.ride-type-card .icon{font-size:20px;margin-bottom:5px}
+.ride-type-card .name{font-size:10.5px;font-weight:700}
+.ride-type-card .price{font-size:10px;color:var(--muted);font-family:var(--data)}
+
+.fare-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--hair);font-size:12px;font-family:var(--data)}
+.fare-row:last-child{border:none;font-weight:700;color:var(--gold-l);font-size:13px}
+
+/* map */
+.map-container{position:relative;background:var(--surface2);border-radius:var(--r-md);overflow:hidden;height:230px;margin-bottom:14px;border:1px solid var(--hair)}
+#leafletMap{width:100%;height:100%;filter:saturate(1.15)}
+.map-badge{position:absolute;top:10px;left:10px;z-index:400;background:rgba(6,9,17,.75);backdrop-filter:blur(6px);border:1px solid var(--hair);border-radius:20px;padding:5px 12px;font-size:10px;font-family:var(--data);display:flex;align-items:center;gap:6px}
+.map-recenter{position:absolute;bottom:10px;right:10px;z-index:400;background:rgba(6,9,17,.8);border:1px solid var(--hair2);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
+
+/* chips / status */
+.chip{padding:6px 12px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid var(--hair);background:rgba(255,255,255,.02);color:var(--muted);display:inline-block}
+.chip.active{border-color:var(--gold);background:rgba(240,185,58,.08);color:var(--gold-l)}
+
+/* chat */
+.chat-box{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-md);padding:12px;height:150px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none}
+.msg{max-width:75%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.4}
+.msg.me{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;align-self:flex-end;border-bottom-right-radius:3px;font-weight:600}
+.msg.them{background:var(--surface3);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px}
+.msg .sender{font-size:9px;margin-bottom:2px;opacity:.6;font-family:var(--data)}
+
+/* toast */
+#toastContainer{position:fixed;top:56px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;width:calc(100% - 36px);max-width:424px;pointer-events:none}
+.toast{background:var(--surface2);border:1px solid var(--hair2);border-radius:var(--r-sm);padding:12px 16px;font-size:12px;display:flex;align-items:center;gap:10px;animation:slideDown .3s ease;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.toast.success{border-color:var(--emerald)}
+.toast.error{border-color:var(--coral)}
+.toast.warning{border-color:var(--gold)}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(3,5,10,.78);backdrop-filter:blur(2px);z-index:500;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--surface2);border:1px solid var(--hair2);border-radius:22px 22px 0 0;padding:24px;width:100%;max-width:460px;max-height:82dvh;overflow-y:auto;animation:slideUp .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-family:var(--disp);font-size:17px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
+
+/* onboarding */
+#onboarding{display:none;position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,#0f1c3d,var(--ink) 60%);z-index:99999;flex-direction:column;align-items:center;justify-content:center;padding:32px 26px;text-align:center}
+#onboarding.show{display:flex}
+.ob-slide{display:none}.ob-slide.active{display:block;animation:fadeUp .4s ease}
+.ob-emoji{font-size:60px;margin-bottom:22px}
+.ob-title{font-family:var(--disp);font-size:26px;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,var(--gold-l),var(--sapphire-l));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ob-text{font-size:13.5px;color:var(--muted);line-height:1.65;max-width:290px}
+.ob-dots{display:flex;gap:7px;margin:26px 0}
+.ob-dot{width:7px;height:7px;border-radius:50%;background:var(--hair2)}
+.ob-dot.active{background:var(--gold);width:22px;border-radius:4px}
+.ob-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:270px}
+
+/* rating */
+.stars{display:flex;gap:8px;font-size:28px;cursor:pointer;justify-content:center;margin:16px 0}
+.star{color:var(--hair2);transition:.2s}.star.lit{color:var(--gold)}
+
+/* leaderboard */
+.lb-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--hair)}
+.lb-rank{font-family:var(--disp);font-weight:700;font-size:17px;width:26px;color:var(--muted2)}
+.lb-rank.gold{color:#ffd700}.lb-rank.silver{color:#c9d3e0}.lb-rank.bronze{color:#cd8a4f}
+.lb-info{flex:1}.lb-name{font-weight:600;font-size:13px}.lb-rides{font-size:10.5px;color:var(--muted);font-family:var(--data)}
+.lb-thb{font-family:var(--data);font-weight:700;color:var(--gold-l)}
+.lb-you{background:rgba(240,185,58,.05);margin:0 -18px;padding:11px 18px;border-radius:10px}
+
+#confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:800;display:none}
+
+.tx-row{display:flex;align-items:center;gap:10px;padding:11px;background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);margin-bottom:8px}
+.tx-status{font-size:17px}
+.tx-info{flex:1;font-size:12px}.tx-hash{font-size:10px;color:var(--muted);font-family:var(--data)}
+
+.faq-item{border-bottom:1px solid var(--hair);padding:13px 0}
+.faq-q{display:flex;justify-content:space-between;cursor:pointer;font-weight:600;font-size:13px;user-select:none}
+.faq-a{font-size:12px;color:var(--muted);line-height:1.6;padding-top:10px;display:none}
+.faq-a.open{display:block}
+
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.badge-item{text-align:center;padding:11px 4px;background:rgba(255,255,255,.02);border-radius:var(--r-sm);border:1px solid var(--hair)}
+.badge-item .b-icon{font-size:22px;margin-bottom:4px;display:block}
+.badge-item .b-name{font-size:9.5px;color:var(--muted)}
+.badge-item.unlocked{border-color:var(--gold);background:rgba(240,185,58,.06)}
+.badge-item.unlocked .b-name{color:var(--gold-l)}
+
+.ride-id-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border:1px solid var(--hair2);border-radius:10px;padding:7px 13px;font-size:11px;font-family:var(--data);cursor:pointer}
+
+.request-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-md);padding:14px;margin-bottom:10px}
+.request-card.pending{border-color:var(--gold)}
+
+.scroll-hint{text-align:center;color:var(--muted2);font-size:10.5px;padding:8px 0 0}
+
+#thankYouOverlay{display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#132043,var(--ink) 65%);z-index:700;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+#thankYouOverlay.show{display:flex}
+.ty-emoji{font-size:72px;animation:bounceIn .6s ease}
+@keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+.stop-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.stop-row .rm-btn{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer}
+.share-link{background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:8px;padding:11px 12px;font-size:11px;font-family:var(--data);word-break:break-all;color:var(--sapphire-l);cursor:pointer}
+.nego-card{background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px;margin-bottom:8px}
+.nego-offer{font-family:var(--disp);font-size:21px;font-weight:700;color:var(--gold-l);margin:8px 0}
+.schedule-section{display:none;margin-top:10px}
+.schedule-section.show{display:block}
+.wallet-connect-btn{display:flex;align-items:center;gap:10px;background:rgba(240,185,58,.08);border:1px solid var(--gold);border-radius:var(--r-sm);padding:12px 16px;cursor:pointer;width:100%;color:var(--gold-l);font-family:var(--body);font-weight:700;font-size:13px}
+
+/* profile identity */
+.avatar-ring{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--sapphire-l),var(--gold));display:flex;align-items:center;justify-content:center;margin:0 auto 10px;padding:3px}
+.avatar-ring .inner{width:100%;height:100%;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:26px}
+
+/* ecosystem grid */
+.eco-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.eco-item{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:13px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:6px;transition:.2s}
+.eco-item:hover{border-color:var(--sapphire-l);background:rgba(46,107,230,.06)}
+.eco-icon{font-size:18px}
+.eco-name{font-size:12px;font-weight:700}
+.eco-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.eco-item.wide{grid-column:1/-1;flex-direction:row;align-items:center}
+
+/* nav */
+#nav{position:fixed;bottom:14px;left:14px;right:14px;max-width:432px;margin:0 auto;z-index:9999;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--hair2);border-radius:24px;display:flex;padding:8px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;cursor:pointer;color:var(--muted);transition:.2s;border:none;background:none;font-family:var(--data);font-size:9.5px;min-width:0;border-radius:16px}
+.nav-btn.active{color:var(--gold-l);background:rgba(240,185,58,.08)}
+.nav-btn .icon{font-size:18px}
+.nav-btn.center-btn{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;border-radius:50%;width:52px;height:52px;margin-top:-24px;padding:0;flex:none;align-self:flex-start;font-size:21px;box-shadow:0 6px 22px -4px rgba(240,185,58,.6);font-weight:700;min-width:52px}
+
+@media(max-height:700px){.screen{padding-bottom:calc(var(--nav-h) + 12px)}}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="statusbar">
+  <span class="time" id="clockTime">9:41</span>
+  <div class="right">
+    <span id="netPip" class="pip green"></span>
+    <span id="netLabel">BSC · 97</span>
+  </div>
+</div>
+
+<div id="chainWarning" onclick="switchToBSC()">⚠ Wrong network — tap to switch to BSC Testnet</div>
+<div id="alertStrip"><span id="alertText"></span><button onclick="hideAlert()">×</button></div>
+<div id="surgeBanner" onclick="openModal('surgeModal')">⚡ Surge active · <span id="surgeBannerMult">1.8×</span> — tap to see fares</div>
+<div id="arrivedBanner">🚗 Driver has arrived · <span id="graceTimer">5:00</span> free wait</div>
+<div id="rideProgressBar">
+  <div class="rp-label"><span class="rp-status" id="rideStatusLabel">DRIVER EN ROUTE</span><span id="rideETA">ETA 3 min</span></div>
+  <div class="progress-track"><div class="progress-fill" id="rideProgressFill"></div></div>
+</div>
+
+<div id="screens">
+
+<!-- ===== HOME ===== -->
+<div class="screen active" id="s-home">
+  <div class="eyebrow">Gaborone · Botswana</div>
+  <div class="greeting">Good day, <span id="greetName">Todd</span></div>
+
+  <div class="diamond-card">
+    <div class="wallet-row">
+      <div class="diamond-facet">◆</div>
+      <div style="flex:1">
+        <div class="card-sub" style="font-size:10px">THOBOCOIN WALLET</div>
+        <div class="wallet-addr" id="walletAddr">Not connected</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="connectWallet()" id="connectBtn">Connect</button>
+    </div>
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="thbBal">0</div><div class="lbl">THB</div></div>
+      <div class="bal-card"><div class="val" id="bwpBal">0.00</div><div class="lbl">BWP equiv</div></div>
+      <div class="bal-card"><div class="val" id="bnbBal">0</div><div class="lbl">tBNB gas</div></div>
+    </div>
+    <div class="chainrow">
+      <span class="pip" id="chainPip"></span>
+      <span id="chainLabel" style="font-size:11px;color:var(--muted)">Not connected</span>
+      <span class="gas-pill" id="gasPill">⛽ Gas —</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <a href="https://testnet.binance.org/faucet-smart" target="_blank" class="btn btn-outline btn-sm" style="flex:1">🚰 Faucet</a>
+      <a href="https://testnet.bscscan.com/address/0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628" target="_blank" class="btn btn-outline btn-sm" style="flex:1">🔍 BscScan</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Where to?</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm" onclick="toggleSchedule()" title="Schedule">📅</button>
+        <button class="btn btn-outline btn-sm" onclick="swapLocations()" title="Swap">⇅</button>
+        <button class="btn btn-outline btn-sm" onclick="voiceInput()" title="Voice">🎤</button>
+      </div>
+    </div>
+
+    <div style="position:relative">
+      <div class="input-row"><span class="input-icon">📍</span><input class="input has-icon" id="pickup" placeholder="Pickup location" value="BSTM HQ, Mmopane"/></div>
+      <div class="loc-line"></div>
+      <div id="stopsContainer"></div>
+      <div class="input-row"><span class="input-icon">🏁</span><input class="input has-icon" id="dropoff" placeholder="Where to?" value="Game City Mall"/></div>
+    </div>
+    <button class="btn btn-outline btn-sm" style="margin-bottom:10px" onclick="addStop()">＋ Add stop</button>
+
+    <div class="schedule-section" id="scheduleSection"><input type="datetime-local" class="input" id="scheduleTime" style="margin-bottom:10px"/></div>
+
+    <div class="ride-type-grid" id="rideTypeGrid">
+      <div class="ride-type-card active" data-type="standard" data-fare="20" onclick="selectRideType(this)"><div class="icon">🚕</div><div class="name">Standard</div><div class="price">20 BWP</div></div>
+      <div class="ride-type-card" data-type="premium" data-fare="35" onclick="selectRideType(this)"><div class="icon">🚙</div><div class="name">Premium</div><div class="price">35 BWP</div></div>
+      <div class="ride-type-card" data-type="xl" data-fare="50" onclick="selectRideType(this)"><div class="icon">🚐</div><div class="name">XL / Van</div><div class="price">50 BWP</div></div>
+      <div class="ride-type-card" data-type="moto" data-fare="12" onclick="selectRideType(this)"><div class="icon">🏍</div><div class="name">Moto</div><div class="price">12 BWP</div></div>
+      <div class="ride-type-card" data-type="eco" data-fare="15" onclick="selectRideType(this)"><div class="icon">🌿</div><div class="name">Eco</div><div class="price">15 BWP</div></div>
+      <div class="ride-type-card" data-type="quiet" data-fare="22" onclick="selectRideType(this)"><div class="icon">🤫</div><div class="name">Quiet</div><div class="price">22 BWP</div></div>
+    </div>
+
+    <div id="fareBreakdown" style="background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:12px">
+      <div class="fare-row"><span>Base fare</span><span id="fb-base">20 BWP</span></div>
+      <div class="fare-row" id="fb-surge-row" style="display:none"><span>⚡ Surge</span><span id="fb-surge">0 BWP</span></div>
+      <div class="fare-row" id="fb-stops-row" style="display:none"><span>Extra stops</span><span id="fb-stops">0 BWP</span></div>
+      <div class="fare-row"><span>THB reward</span><span style="color:var(--emerald)">+1 THB</span></div>
+      <div class="fare-row"><span>Total</span><span id="fb-total">20 BWP</span></div>
+    </div>
+
+    <input class="input" placeholder="Notes for driver (luggage, gate code...)" id="rideNotes" style="margin-bottom:10px"/>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <input type="checkbox" id="negoToggle" onchange="toggleNego()"/>
+      <label for="negoToggle" style="font-size:12px;cursor:pointer">💬 Negotiate fare (InDrive-style)</label>
+    </div>
+    <div id="negoSection" style="display:none;margin-bottom:10px">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="input" id="offerAmount" type="number" placeholder="Your offer (BWP)" style="flex:1"/>
+        <button class="btn btn-outline btn-sm" onclick="sendOffer()">Send</button>
+      </div>
+      <div class="nego-card" id="negoConvo" style="display:none">
+        <div class="card-sub">Negotiation</div>
+        <div class="nego-offer" id="currentOffer">—</div>
+        <div style="font-size:11px;color:var(--muted)" id="negoStatus"></div>
+        <div id="negoActions" style="display:none;gap:6px;margin-top:8px">
+          <button class="btn btn-green btn-sm" onclick="acceptOffer()">✓ Accept counter</button>
+          <button class="btn btn-outline btn-sm" onclick="sendOffer()">Send new</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <div class="map-badge"><span class="pip green" id="mapPip"></span><span id="mapDriverCount">Searching live drivers...</span></div>
+      <div class="map-recenter" onclick="recenterMap()">⌖</div>
+      <div id="leafletMap"></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <span class="pip" id="statusPip"></span>
+      <span id="statusLabel" style="font-size:12px;color:var(--muted)">Enter locations to book</span>
+    </div>
+
+    <div id="countdownRow" style="display:none;text-align:center;margin-bottom:10px">
+      <div style="font-size:30px;font-family:var(--data);font-weight:700;color:var(--gold-l)" id="countdown">3:00</div>
+      <div style="font-size:11px;color:var(--muted)">Ride in progress</div>
+    </div>
+
+    <div id="rideIdRow" style="display:none;margin-bottom:10px;text-align:center">
+      <div class="ride-id-chip" onclick="copyRideId()">🎫 Ride <strong id="rideId">—</strong> 📋</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request ride · Earn 1 THB</button>
+      <button class="btn btn-outline" id="simBtn" onclick="bookRide()">🧪 Simulate ride (test mode)</button>
+      <button class="btn btn-danger btn-sm" id="cancelBtn" style="display:none" onclick="cancelRide()">✕ Cancel ride</button>
+    </div>
+
+    <div id="chatSection" style="display:none;margin-top:14px">
+      <div class="card-title" style="margin-bottom:8px;font-size:13px">💬 Chat with driver</div>
+      <div class="chat-box" id="chatBox"></div>
+      <div style="display:flex;gap:8px">
+        <input class="input" id="chatInput" placeholder="Type a message..." style="flex:1" onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="btn btn-primary btn-sm" onclick="sendChat()">Send</button>
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+      <div style="display:flex;justify-content:space-between;margin-top:6px">
+        <span style="font-size:10.5px;color:var(--muted)" id="claimHint">Book or simulate a ride first</span>
+        <span class="gas-pill" id="gasEstimate" style="display:none">⛽ ~0.001 tBNB</span>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-danger" style="flex:1" onclick="openSOS()">🆘 Emergency SOS</button>
+      <button class="btn btn-outline btn-sm" onclick="openModal('shareModal')">📤 Share trip</button>
+    </div>
+    <div class="scroll-hint">↓ scroll for more</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">⭐ Quick favourites</div><button class="btn btn-outline btn-sm" onclick="saveFav()">＋ Save</button></div>
+    <div id="favsList"><div style="font-size:12px;color:var(--muted)">No saved routes yet — book a ride to auto-save.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">🕐 Recent rides</div><button class="btn btn-outline btn-sm" onclick="exportCSV()">📥 CSV</button></div>
+    <div id="rideHistory"><div style="font-size:12px;color:var(--muted)">No rides yet.</div></div>
+  </div>
+</div>
+
+<!-- ===== REWARDS ===== -->
+<div class="screen" id="s-rewards">
+  <div class="eyebrow">Loyalty</div>
+  <div class="greeting">Rewards dashboard</div>
+  <div class="card">
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="r-earned">0</div><div class="lbl">THB earned</div></div>
+      <div class="bal-card"><div class="val" id="r-rides">0</div><div class="lbl">Rides done</div></div>
+      <div class="bal-card"><div class="val" id="r-streak">0</div><div class="lbl">Streak 🔥</div></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;margin:14px 0 12px">
+      <span style="font-size:12px">🏆 Daily bonus</span>
+      <button class="btn btn-primary btn-sm" id="dailyBtn" onclick="claimDaily()">Claim +0.5 THB</button>
+      <span id="dailyStatus" style="font-size:10.5px;color:var(--muted)"></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="streakFill"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:5px" id="streakLabel">0 / 7 days for bonus badge</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">🪙 Claim THB reward</div><div class="gas-pill" id="r-gasPill">⛽ ~0.001 tBNB</div></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">After each ride, claim 1 THB to your wallet on BSC Testnet. Gas paid in tBNB.</div>
+    <button class="btn btn-primary" id="r-claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+    <div id="pendingTxSection" style="margin-top:12px;display:none">
+      <div class="card-sub" style="margin-bottom:8px">📋 Pending transactions</div>
+      <div id="pendingTxList"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:8px">🎁 Referral programme</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Earn +0.2 THB when a friend books their first ride with your code.</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+      <div class="input" style="flex:1;font-size:12px" id="refLink">Share your code to earn THB</div>
+      <button class="btn btn-outline btn-sm" onclick="copyRef()">📋 Copy</button>
+    </div>
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="ref-count">0</div><div class="lbl">Referrals</div></div>
+      <div class="bal-card"><div class="val" id="ref-thb">0.0</div><div class="lbl">THB earned</div></div>
+    </div>
+  </div>
+
+  <div class="card"><div class="card-title" style="margin-bottom:12px">🏆 Gaborone leaderboard</div><div id="leaderboard"></div></div>
+  <div class="card"><div class="card-title" style="margin-bottom:12px">🏅 Badges</div><div class="badge-grid" id="badgeGrid"></div></div>
+  <div class="card"><div class="card-title" style="margin-bottom:12px">❓ FAQ</div><div id="faqList"></div></div>
+</div>
+
+<!-- ===== DRIVER ===== -->
+<div class="screen" id="s-driver">
+  <div class="eyebrow">Driver mode</div>
+  <div class="greeting">Your shift</div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="btn btn-outline btn-sm" id="driverModeBtn" onclick="toggleDriverMode()" style="flex:1">🟢 Go online</button>
+    <button class="btn btn-outline btn-sm" onclick="openModal('earningsModal')" style="flex:1">💰 Earnings</button>
+  </div>
+  <div class="card">
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="drv-requests">0</div><div class="lbl">Requests</div></div>
+      <div class="bal-card"><div class="val" id="drv-accepted">0</div><div class="lbl">Accepted</div></div>
+      <div class="bal-card"><div class="val" id="drv-thb">0</div><div class="lbl">THB earned</div></div>
+    </div>
+  </div>
+  <div class="card-title" style="margin-bottom:10px">📋 Incoming requests</div>
+  <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
+</div>
+
+<!-- ===== PROFILE ===== -->
+<div class="screen" id="s-profile">
+  <div class="card" style="text-align:center">
+    <div class="avatar-ring"><div class="inner">🧍</div></div>
+    <div class="card-title" id="profile-name">Not connected</div>
+    <div class="card-sub" id="profile-sub">Connect wallet to see your profile</div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <span class="chip active">THoBoCoin creator</span>
+      <span class="chip active">BSC Testnet</span>
+      <span class="chip active">Gaborone, BWA</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">📊 My KPIs</div>
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="kpi-rides">0</div><div class="lbl">Rides</div></div>
+      <div class="bal-card"><div class="val" id="kpi-thb">0</div><div class="lbl">THB</div></div>
+      <div class="bal-card"><div class="val" id="kpi-rating">—</div><div class="lbl">Avg ⭐</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">⚙ Settings</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn btn-outline" onclick="clearHistory()">🗑 Clear ride history</button>
+      <button class="btn btn-outline" onclick="deleteMyData()">🔒 Delete my data</button>
+      <button class="btn btn-outline" onclick="showOnboarding()">📖 Replay onboarding</button>
+      <button class="btn btn-outline" onclick="exportCSV()">📥 Export CSV</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:10px">🔗 Contract info</div>
+    <div style="font-size:12px;display:flex;flex-direction:column;gap:6px;font-family:var(--data)">
+      <div>Network: <span style="color:var(--gold-l)">BSC Testnet · chainId 97</span></div>
+      <div>Contract: <span style="color:var(--sapphire-l);word-break:break-all;font-size:10px">0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628</span></div>
+      <div>Function: <span style="color:var(--emerald)">transfer() via ERC-20</span></div>
+      <div>Library: <span style="color:var(--muted)">ethers.js v6</span></div>
+    </div>
+  </div>
+  <div style="text-align:center;font-size:10.5px;color:var(--muted);padding:16px 0;font-family:var(--data)">CabLink v6.0 · BSTM Ecosystem · Gaborone, Botswana</div>
+</div>
+
+<!-- ===== MORE / ECOSYSTEM ===== -->
+<div class="screen" id="s-more">
+  <div class="eyebrow">BSTM Ecosystem</div>
+  <div class="greeting">The full network</div>
+  <div class="card">
+    <div class="card-sub" style="margin-bottom:12px">CabLink is one room in the 63-room BSTM Ecosystem. Tap to open any connected property.</div>
+    <div class="eco-grid" id="ecoGrid"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">🔧 More features</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn btn-outline" onclick="openModal('surgeModal')">⚡ Surge pricing info</button>
+      <button class="btn btn-outline" onclick="openModal('pendingModal')">🔄 Pending transactions</button>
+      <button class="btn btn-outline" onclick="openModal('shareModal')">📤 Share trip link</button>
+      <button class="btn btn-outline" onclick="openModal('privacyModal')">🔒 Privacy settings</button>
+      <button class="btn btn-outline" onclick="openModal('feedbackModal')">💬 Beta feedback</button>
+      <button class="btn btn-outline" onclick="showChangeLog()">📋 Changelog v6.0</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:10px">📡 Offline queue</div>
+    <div id="offlineQueueInfo" style="font-size:12px;color:var(--muted)">No queued rides.</div>
+    <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="syncOfflineQueue()">🔄 Sync now</button>
+  </div>
+</div>
+
+</div><!-- end screens -->
+
+<nav id="nav">
+  <button class="nav-btn active" onclick="showScreen('home',this)" id="nav-home"><span class="icon">🏠</span><span>Home</span></button>
+  <button class="nav-btn" onclick="showScreen('rewards',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>
+  <button class="nav-btn center-btn" onclick="bookRide()">🚕</button>
+  <button class="nav-btn" onclick="showScreen('driver',this)" id="nav-driver"><span class="icon">🚗</span><span>Driver</span></button>
+  <button class="nav-btn" onclick="showScreen('profile',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>
+  <button class="nav-btn" onclick="showScreen('more',this)" id="nav-more"><span class="icon">◆</span><span>Ecosystem</span></button>
+</nav>
+
+</div><!-- end app -->
+
+<div id="toastContainer"></div>
+<canvas id="confettiCanvas"></canvas>
+
+<div id="onboarding">
+  <div class="ob-slide active" id="ob0"><div class="ob-emoji">🚕</div><div class="ob-title">Welcome to CabLink</div><div class="ob-text">The blockchain-powered ride app for Gaborone. Earn THoBoCoin for every trip, part of the BSTM Ecosystem.</div></div>
+  <div class="ob-slide" id="ob1"><div class="ob-emoji">◆</div><div class="ob-title">Earn THB tokens</div><div class="ob-text">Every ride earns 1 THB. Claim direct to your wallet via BSC Testnet. You need MetaMask and tBNB for gas.</div></div>
+  <div class="ob-slide" id="ob2"><div class="ob-emoji">🔗</div><div class="ob-title">Connect MetaMask</div><div class="ob-text">Tap "Connect" on Home. Switch to BSC Testnet (chainId 97). Get free tBNB from the faucet link.</div></div>
+  <div class="ob-slide" id="ob3"><div class="ob-emoji">🏆</div><div class="ob-title">Referrals & streaks</div><div class="ob-text">Share your code → earn +0.2 THB per friend. Ride daily to build a streak and unlock badges.</div></div>
+  <div class="ob-dots" id="obDots"><div class="ob-dot active"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+  <div class="ob-actions"><button class="btn btn-primary" onclick="obNext()">Next →</button><button class="btn btn-outline" onclick="finishOnboarding()">Skip</button></div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="sosModal"><div class="modal-box">
+  <div class="modal-title">🆘 Emergency SOS <button class="modal-close" onclick="closeModal('sosModal')">×</button></div>
+  <div style="text-align:center;margin-bottom:20px"><div style="font-size:44px">🚨</div><div style="font-size:13px;color:var(--muted);margin-top:8px">Your location will be shared when you call.</div></div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <a href="tel:999" class="btn btn-danger">📞 Call 999 — Emergency</a>
+    <a href="tel:911" class="btn btn-danger">📞 Call 911</a>
+    <button class="btn btn-outline" onclick="shareLocation()">📍 Share my location</button>
+    <button class="btn btn-outline" onclick="closeModal('sosModal')">Cancel</button>
+  </div>
+</div></div>
+
+<div class="modal-overlay" id="surgeModal"><div class="modal-box">
+  <div class="modal-title">⚡ Surge pricing <button class="modal-close" onclick="closeModal('surgeModal')">×</button></div>
+  <div style="font-size:30px;text-align:center;font-family:var(--disp);font-weight:700;color:var(--gold-l);margin-bottom:8px" id="surgeMultiplierEl">1.0×</div>
+  <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px" id="surgeReason">Normal pricing — no surge right now.</div>
+  <div class="fare-row"><span>Normal fare</span><span id="sm-normal">—</span></div>
+  <div class="fare-row"><span>Surge fare</span><span id="sm-surge">—</span></div>
+  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-primary" onclick="acceptSurge()">✓ Accept & book</button><button class="btn btn-outline" onclick="closeModal('surgeModal')">Cancel</button></div>
+</div></div>
+
+<div class="modal-overlay" id="shareModal"><div class="modal-box">
+  <div class="modal-title">📤 Share trip <button class="modal-close" onclick="closeModal('shareModal')">×</button></div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Share your live trip link with a trusted contact. Expires when your ride ends.</div>
+  <div class="share-link" id="shareLink" onclick="copyShareLink()">No active ride — book a ride first</div>
+  <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-primary" onclick="copyShareLink()">📋 Copy link</button><button class="btn btn-outline" onclick="closeModal('shareModal')">Close</button></div>
+</div></div>
+
+<div class="modal-overlay" id="pendingModal"><div class="modal-box">
+  <div class="modal-title">🔄 Transactions <button class="modal-close" onclick="closeModal('pendingModal')">×</button></div>
+  <div id="pendingModalList"><div style="font-size:12px;color:var(--muted)">No transactions yet.</div></div>
+  <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('pendingModal')">Close</button>
+</div></div>
+
+<div class="modal-overlay" id="ratingModal"><div class="modal-box">
+  <div class="modal-title">⭐ Rate your driver <button class="modal-close" onclick="closeModal('ratingModal')">×</button></div>
+  <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--muted)">How was your ride with driver #<span id="driverRef">—</span>?</div>
+  <div class="stars" id="modalStars"><span class="star" onclick="setRating(1)">★</span><span class="star" onclick="setRating(2)">★</span><span class="star" onclick="setRating(3)">★</span><span class="star" onclick="setRating(4)">★</span><span class="star" onclick="setRating(5)">★</span></div>
+  <textarea class="input" placeholder="Optional comment..." style="height:76px;resize:none;margin-bottom:12px" id="ratingComment"></textarea>
+  <button class="btn btn-primary" onclick="submitRating()">Submit rating</button>
+</div></div>
+
+<div class="modal-overlay" id="privacyModal"><div class="modal-box">
+  <div class="modal-title">🔒 Privacy settings <button class="modal-close" onclick="closeModal('privacyModal')">×</button></div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:16px">CabLink stores ride history locally on your device only during beta. No data leaves your device.</div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <button class="btn btn-outline" onclick="clearHistory()">🗑 Clear ride history</button>
+    <button class="btn btn-danger" onclick="deleteMyData()">⚠ Delete all my data</button>
+    <button class="btn btn-outline" onclick="closeModal('privacyModal')">Close</button>
+  </div>
+</div></div>
+
+<div class="modal-overlay" id="earningsModal"><div class="modal-box">
+  <div class="modal-title">💰 Driver earnings <button class="modal-close" onclick="closeModal('earningsModal')">×</button></div>
+  <div class="wallet-bar">
+    <div class="bal-card"><div class="val" id="earn-today">0</div><div class="lbl">Today BWP</div></div>
+    <div class="bal-card"><div class="val" id="earn-thb">0</div><div class="lbl">THB earned</div></div>
+    <div class="bal-card"><div class="val" id="earn-rides">0</div><div class="lbl">Trips</div></div>
+  </div>
+  <div style="font-size:12px;color:var(--muted);margin-top:12px">Detailed earnings sync arrives with the Firebase backend in Phase 2.</div>
+  <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('earningsModal')">Close</button>
+</div></div>
+
+<div class="modal-overlay" id="feedbackModal"><div class="modal-box">
+  <div class="modal-title">💬 Beta feedback <button class="modal-close" onclick="closeModal('feedbackModal')">×</button></div>
+  <textarea class="input" placeholder="Tell us what's broken, what's missing, or what you love..." style="height:110px;resize:none;margin-bottom:12px" id="feedbackText"></textarea>
+  <select class="input" id="feedbackType" style="margin-bottom:12px">
+    <option value="bug">🐛 Bug report</option><option value="feature">💡 Feature request</option><option value="love">❤ Positive feedback</option>
+  </select>
+  <button class="btn btn-primary" onclick="submitFeedback()">📤 Submit feedback</button>
+</div></div>
+
+<div id="thankYouOverlay">
+  <div class="ty-emoji">🎉</div>
+  <div style="font-family:var(--disp);font-size:26px;font-weight:700;color:var(--gold-l);margin-bottom:12px">Ride complete!</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:8px">You earned <strong style="color:var(--gold-l)" id="ty-thb">1 THB</strong></div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:24px">Ride ID: <span id="ty-id" style="color:var(--sapphire-l)">—</span></div>
+  <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:270px">
+    <button class="btn btn-primary" onclick="openRating()">⭐ Rate your driver</button>
+    <button class="btn btn-outline" onclick="closeThankyou()">✓ Done</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const STATE = {
+  wallet:null, provider:null, signer:null, chainId:null,
+  thbBalance:0, bnbBalance:'0',
+  totalRides:0, totalEarned:0, rideReady:false, inRide:false, rideId:null,
+  driverOnline:false, driverRequests:0, driverAccepted:0, driverThb:0,
+  ratings:[], avgRating:null, streak:0, lastRideDate:null, lastBonus:null,
+  offlineQueue:[], pendingTxs:[], favourites:[], rideHistory:[],
+  surgeActive:false, surgeMultiplier:1.0,
+  selectedRideType:'standard', selectedFare:20, stops:[],
+  scheduleMode:false, negoActive:false, currentOffer:null, ratingSelected:0,
+  currentScreen:'home',
+  referralCode:'BSTM-' + Math.random().toString(36).substr(2,4).toUpperCase(),
+  referrals:0, tripShareId:null,
+};
+
+const THB_CONTRACT = '0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628';
+const BSC_TESTNET = 97;
+const BSC_TESTNET_HEX = '0x61';
+const THB_ABI = ['function transfer(address to, uint256 amount) returns (bool)','function balanceOf(address) view returns (uint256)','function decimals() view returns (uint8)'];
+
+// Real Gaborone landmark coordinates for the live map
+const LANDMARKS = {
+  bstmHQ:      {lat:-24.5566, lng:25.8494, name:'BSTM HQ, Mmopane'},
+  gameCity:    {lat:-24.6395, lng:25.9089, name:'Game City Mall'},
+  mainMall:    {lat:-24.6559, lng:25.9086, name:'Main Mall'},
+  airport:     {lat:-24.5595, lng:25.9182, name:'Sir Seretse Khama Airport'},
+  riverwalk:   {lat:-24.6890, lng:25.9247, name:'Riverwalk Mall'},
+  ub:          {lat:-24.6845, lng:25.9420, name:'University of Botswana'},
+  molapo:      {lat:-24.6270, lng:25.8930, name:'Molapo Crossing'},
+  kgale:       {lat:-24.6935, lng:25.8880, name:'Kgale Hill'},
+};
+
+// BSTM Ecosystem — connected properties
+const ECOSYSTEM_LINKS = [
+  {icon:'🧾', name:'FlowLedger-Ω', desc:'Chain-of-custody logistics', url:'https://bstm-flowledger.vercel.app/'},
+  {icon:'◆', name:'THoBoCoin', desc:'Token project frontend', url:'https://thobocoin-project-frontend.vercel.app/'},
+  {icon:'🛒', name:'BSTM Marketplace', desc:'Digital marketplace', url:'https://todd366.github.io/bstm-marketplace-app/index.html'},
+  {icon:'🕸', name:'Ecosystem Network', desc:'Network map v2', url:'https://todd366.github.io/bstm-ecosystem-network/'},
+  {icon:'🏢', name:'Business Hub', desc:'BSTM business hub', url:'https://vercel.com/todd366s-projects/business-hub/business-hub-eight.vercel.app'},
+  {icon:'🏬', name:'Business Hub (live)', desc:'Deployed business hub', url:'https://business-hub-bstm.vercel.app/'},
+  {icon:'💠', name:'BSTM ELOS', desc:'Ecosystem layer OS', url:'https://todd366.github.io/bstm-elos/'},
+  {icon:'📊', name:'Trading Dept. Room', desc:'BSTM Trading Department', url:'https://todd366.github.io/BSTM-Trading-Department-Room/'},
+  {icon:'🗺', name:'System Map', desc:'63-room ecosystem map', url:'https://todd366.github.io/bstm-system-map/'},
+  {icon:'💻', name:'GitHub · bstm-x', desc:'Source repository', url:'https://github.com/Todd366/bstm-x'},
+  {icon:'🔬', name:'ORCID', desc:'Researcher record', url:'https://orcid.org/0009-0001-3442-7649'},
+  {icon:'💼', name:'LinkedIn', desc:'BSTM department page', url:'https://www.linkedin.com/in/bstm-dept'},
+  {icon:'📘', name:'Facebook', desc:'Botswana Online New', url:'https://www.facebook.com/BotswanaonlineNew'},
+];
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load', () => {
+  loadState();
+  startClock();
+  renderLeaderboard(); renderBadges(); renderFAQ(); renderHistory(); renderFavourites();
+  renderEcosystem();
+  updateAllUI();
+  checkSurge();
+  initMap();
+  checkOnboarding();
+  checkOnline();
+  window.addEventListener('online', () => { checkOnline(); syncOfflineQueue(); });
+  window.addEventListener('offline', checkOnline);
+});
+
+function renderEcosystem(){
+  const el = document.getElementById('ecoGrid');
+  if(!el) return;
+  el.innerHTML = ECOSYSTEM_LINKS.map(l => `
+    <a class="eco-item" href="${l.url}" target="_blank" rel="noopener">
+      <span class="eco-icon">${l.icon}</span>
+      <span class="eco-name">${l.name}</span>
+      <span class="eco-desc">${l.desc}</span>
+    </a>`).join('');
+}
+
+// ============================================================
+// PERSISTENCE
+// ============================================================
+function saveState(){
+  const s = {totalRides:STATE.totalRides,totalEarned:STATE.totalEarned,ratings:STATE.ratings,avgRating:STATE.avgRating,
+    streak:STATE.streak,lastRideDate:STATE.lastRideDate,lastBonus:STATE.lastBonus,favourites:STATE.favourites,
+    rideHistory:STATE.rideHistory,referrals:STATE.referrals,referralCode:STATE.referralCode,pendingTxs:STATE.pendingTxs,
+    driverRequests:STATE.driverRequests,driverAccepted:STATE.driverAccepted,driverThb:STATE.driverThb,offlineQueue:STATE.offlineQueue};
+  try{ localStorage.setItem('cl6_state', JSON.stringify(s)); }catch(e){}
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem('cl6_state');
+    if(!raw) return;
+    Object.assign(STATE, JSON.parse(raw));
+    if(STATE.lastRideDate){
+      const diff = Math.floor((new Date() - new Date(STATE.lastRideDate)) / 86400000);
+      if(diff > 1) STATE.streak = 0;
+    }
+  }catch(e){}
+}
+
+// ============================================================
+// WALLET
+// ============================================================
+async function connectWallet(){
+  if(!window.ethereum){ toast('MetaMask not found. Install the MetaMask extension or app.', 'error'); return; }
+  try{
+    const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+    STATE.wallet = accounts[0];
+    STATE.provider = new ethers.BrowserProvider(window.ethereum);
+    STATE.signer = await STATE.provider.getSigner();
+    const network = await STATE.provider.getNetwork();
+    STATE.chainId = Number(network.chainId);
+    await updateWalletUI();
+    if(STATE.chainId !== BSC_TESTNET) showChainWarning(); else hideChainWarning();
+    window.ethereum.on('accountsChanged', a => { STATE.wallet = a[0]; updateWalletUI(); });
+    window.ethereum.on('chainChanged', () => window.location.reload());
+    toast('Wallet connected! ' + shortAddr(STATE.wallet), 'success');
+    estimateGas();
+    document.getElementById('profile-name').textContent = shortAddr(STATE.wallet);
+    document.getElementById('profile-sub').textContent = 'BSC Testnet · THoBoCoin holder';
+  }catch(e){ toast('Could not connect: ' + (e.message || 'User rejected'), 'error'); }
+}
+async function updateWalletUI(){
+  if(!STATE.wallet) return;
+  document.getElementById('walletAddr').textContent = shortAddr(STATE.wallet);
+  document.getElementById('connectBtn').textContent = '✓ Connected';
+  document.getElementById('connectBtn').disabled = true;
+  if(STATE.provider){
+    const net = await STATE.provider.getNetwork();
+    STATE.chainId = Number(net.chainId);
+    const onBSC = STATE.chainId === BSC_TESTNET;
+    document.getElementById('chainPip').className = 'pip ' + (onBSC ? 'green' : 'red');
+    document.getElementById('chainLabel').textContent = onBSC ? 'BSC Testnet ✓' : 'Wrong network ✗';
+    document.getElementById('netLabel').textContent = onBSC ? 'BSC · 97' : 'WRONG NET';
+    document.getElementById('netPip').className = 'pip ' + (onBSC ? 'green' : 'red');
+    if(!onBSC) showChainWarning(); else hideChainWarning();
+    if(onBSC){
+      try{
+        const contract = new ethers.Contract(THB_CONTRACT, THB_ABI, STATE.provider);
+        const dec = await contract.decimals();
+        const bal = await contract.balanceOf(STATE.wallet);
+        STATE.thbBalance = Number(ethers.formatUnits(bal, dec)).toFixed(2);
+        const bnb = await STATE.provider.getBalance(STATE.wallet);
+        STATE.bnbBalance = Number(ethers.formatEther(bnb)).toFixed(4);
+      }catch(e){}
+    }
+  }
+  updateAllUI();
+}
+async function estimateGas(){
+  try{
+    const gasPrice = await STATE.provider.getFeeData();
+    const gwei = ethers.formatUnits(gasPrice.gasPrice || 0n, 'gwei');
+    const pill = parseFloat(gwei).toFixed(1);
+    document.getElementById('gasPill').textContent = '⛽ ' + pill + ' Gwei';
+    document.getElementById('r-gasPill').textContent = '⛽ ~' + pill + ' Gwei';
+    document.getElementById('gasEstimate').style.display = 'flex';
+    document.getElementById('gasEstimate').textContent = '⛽ ~' + pill + ' Gwei';
+  }catch(e){}
+}
+async function switchToBSC(){
+  if(!window.ethereum){ toast('No wallet found', 'error'); return; }
+  try{
+    await window.ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId:BSC_TESTNET_HEX}]});
+  }catch(e){
+    if(e.code === 4902){
+      try{
+        await window.ethereum.request({method:'wallet_addEthereumChain', params:[{chainId:BSC_TESTNET_HEX,chainName:'BSC Testnet',nativeCurrency:{name:'tBNB',symbol:'tBNB',decimals:18},rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545'],blockExplorerUrls:['https://testnet.bscscan.com']}]});
+      }catch(e2){ toast('Could not add BSC Testnet: ' + e2.message, 'error'); }
+    }
+  }
+}
+function showChainWarning(){ document.getElementById('chainWarning').classList.add('show'); }
+function hideChainWarning(){ document.getElementById('chainWarning').classList.remove('show'); }
+
+// ============================================================
+// CLAIM REWARD
+// ============================================================
+async function claimReward(){
+  if(!STATE.rideReady){ toast('Complete a ride first!', 'warning'); return; }
+  if(!STATE.wallet){
+    STATE.totalEarned += 1;
+    STATE.thbBalance = (parseFloat(STATE.thbBalance) + 1).toFixed(2);
+    STATE.rideReady = false;
+    saveState(); updateAllUI(); showConfetti(); haptic(); playSound();
+    toast('🧪 Sim mode: +1 THB added locally (no wallet connected)', 'success');
+    ['claimBtn','r-claimBtn'].forEach(id => { const b=document.getElementById(id); if(b){b.disabled=true;b.textContent='✓ Claimed (sim)';} });
+    return;
+  }
+  if(STATE.chainId !== BSC_TESTNET){ toast('Switch to BSC Testnet first!', 'error'); switchToBSC(); return; }
+  const btn = document.getElementById('claimBtn'), btn2 = document.getElementById('r-claimBtn');
+  [btn,btn2].forEach(b => { b.disabled = true; b.textContent = '⏳ Sending tx…'; });
+  addPendingTx({status:'pending', label:'Claim 1 THB reward', time:Date.now()});
+  try{
+    const contract = new ethers.Contract(THB_CONTRACT, THB_ABI, STATE.signer);
+    const dec = await contract.decimals();
+    const amount = ethers.parseUnits('1', dec);
+    const tx = await contract.transfer(STATE.wallet, amount);
+    updateLastTx({status:'pending', hash:tx.hash, label:'Claim 1 THB'});
+    toast('Transaction sent! Waiting for confirmation…', 'success');
+    await tx.wait();
+    updateLastTx({status:'confirmed', hash:tx.hash, label:'Claim 1 THB ✓'});
+    STATE.totalEarned += 1;
+    STATE.thbBalance = (parseFloat(STATE.thbBalance) + 1).toFixed(2);
+    STATE.rideReady = false;
+    saveState(); updateAllUI(); showConfetti(); haptic(); playSound();
+    toast('🎉 1 THB claimed successfully!', 'success');
+    [btn,btn2].forEach(b => b.textContent = '✓ Claimed!');
+  }catch(e){
+    updateLastTx({status:'failed', label:'Claim 1 THB ✗'});
+    let msg = e?.reason || e?.shortMessage || e?.message || 'Unknown error';
+    if(msg.includes('insufficient')||msg.includes('balance')) msg = 'Treasury has insufficient THB. Contact support.';
+    if(msg.includes('rejected')||msg.includes('denied')) msg = 'Transaction rejected by user.';
+    if(msg.includes('network')||msg.includes('chain')) msg = 'Wrong network — switch to BSC Testnet.';
+    toast('Claim failed: ' + msg, 'error');
+    [btn,btn2].forEach(b => { b.disabled = false; b.textContent = '🔄 Retry claim'; });
+  }
+}
+function addPendingTx(tx){ STATE.pendingTxs.unshift({...tx, id:Date.now()}); if(STATE.pendingTxs.length>10) STATE.pendingTxs.pop(); renderPendingTxs(); saveState(); }
+function updateLastTx(update){ if(STATE.pendingTxs.length) Object.assign(STATE.pendingTxs[0], update); renderPendingTxs(); saveState(); }
+function renderPendingTxs(){
+  const list = STATE.pendingTxs;
+  const html = list.length ? list.map(tx => `
+    <div class="tx-row"><span class="tx-status">${tx.status==='confirmed'?'✅':tx.status==='failed'?'❌':'⏳'}</span>
+      <div class="tx-info"><div>${tx.label}</div>${tx.hash?`<div class="tx-hash">${tx.hash.substr(0,14)}…</div>`:''}</div>
+      ${tx.status==='failed'?`<button class="btn btn-outline btn-sm" onclick="claimReward()">Retry</button>`:''}
+    </div>`).join('') : '<div style="font-size:12px;color:var(--muted)">No transactions yet.</div>';
+  const el1=document.getElementById('pendingTxList'), el2=document.getElementById('pendingModalList');
+  if(el1) el1.innerHTML = html; if(el2) el2.innerHTML = html;
+  document.getElementById('pendingTxSection').style.display = list.length ? 'block' : 'none';
+}
+
+// ============================================================
+// LEAFLET MAP — real Gaborone streets & landmarks
+// ============================================================
+let MAP, pickupMarker, dropoffMarker, carMarker, routeLine, driverMarkers = [];
+function initMap(){
+  MAP = L.map('leafletMap', {zoomControl:false, attributionControl:false}).setView([LANDMARKS.bstmHQ.lat, LANDMARKS.bstmHQ.lng], 12);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19, subdomains:'abcd'}).addTo(MAP);
+
+  const goldIcon = L.divIcon({html:'<div style="width:14px;height:14px;border-radius:50%;background:#f0b93a;border:2px solid #060911;box-shadow:0 0 8px #f0b93a"></div>', className:'', iconSize:[14,14]});
+  const blueIcon = L.divIcon({html:'<div style="width:14px;height:14px;border-radius:50%;background:#2e6be6;border:2px solid #060911;box-shadow:0 0 8px #2e6be6"></div>', className:'', iconSize:[14,14]});
+  const carIcon  = L.divIcon({html:'<div style="font-size:20px;transform:translate(-2px,-4px)">🚕</div>', className:'', iconSize:[24,24]});
+
+  pickupMarker = L.marker([LANDMARKS.bstmHQ.lat, LANDMARKS.bstmHQ.lng], {icon:goldIcon}).addTo(MAP).bindPopup(LANDMARKS.bstmHQ.name);
+  dropoffMarker = L.marker([LANDMARKS.gameCity.lat, LANDMARKS.gameCity.lng], {icon:blueIcon}).addTo(MAP).bindPopup(LANDMARKS.gameCity.name);
+  routeLine = L.polyline([[LANDMARKS.bstmHQ.lat,LANDMARKS.bstmHQ.lng],[LANDMARKS.gameCity.lat,LANDMARKS.gameCity.lng]], {color:'#f0b93a', weight:3, dashArray:'6,6', opacity:.85}).addTo(MAP);
+  carMarker = L.marker([LANDMARKS.bstmHQ.lat, LANDMARKS.bstmHQ.lng], {icon:carIcon}).addTo(MAP);
+
+  const nearbyDrivers = [LANDMARKS.molapo, LANDMARKS.mainMall, LANDMARKS.riverwalk];
+  driverMarkers = nearbyDrivers.map(l => L.marker([l.lat + (Math.random()-.5)*.01, l.lng + (Math.random()-.5)*.01], {
+    icon:L.divIcon({html:'<div style="font-size:14px">🚗</div>', className:'', iconSize:[16,16]})
+  }).addTo(MAP));
+
+  MAP.fitBounds(routeLine.getBounds(), {padding:[30,30]});
+  setInterval(driftDriverMarkers, 2800);
+}
+function driftDriverMarkers(){
+  driverMarkers.forEach(m => {
+    const p = m.getLatLng();
+    m.setLatLng([p.lat + (Math.random()-.5)*.002, p.lng + (Math.random()-.5)*.002]);
+  });
+  const n = 0; // real driver count comes from backend
+  const el = document.getElementById('mapDriverCount');
+  if(el) el.textContent = n + ' drivers nearby';
+}
+function recenterMap(){ if(MAP && routeLine) MAP.fitBounds(routeLine.getBounds(), {padding:[30,30]}); }
+function updateMapRoute(){
+  if(!MAP) return;
+  const pu = LANDMARKS.bstmHQ, doOff = pickLandmarkFor(document.getElementById('dropoff').value) || LANDMARKS.gameCity;
+  pickupMarker.setLatLng([pu.lat, pu.lng]);
+  dropoffMarker.setLatLng([doOff.lat, doOff.lng]).bindPopup(doOff.name);
+  routeLine.setLatLngs([[pu.lat,pu.lng],[doOff.lat,doOff.lng]]);
+  carMarker.setLatLng([pu.lat, pu.lng]);
+  recenterMap();
+}
+function pickLandmarkFor(text){
+  if(!text) return null;
+  text = text.toLowerCase();
+  for(const key in LANDMARKS){ if(LANDMARKS[key].name.toLowerCase().includes(text.split(' ')[0])) return LANDMARKS[key]; }
+  if(text.includes('game')) return LANDMARKS.gameCity;
+  if(text.includes('main')) return LANDMARKS.mainMall;
+  if(text.includes('airport')) return LANDMARKS.airport;
+  if(text.includes('river')) return LANDMARKS.riverwalk;
+  if(text.includes('ub')||text.includes('university')) return LANDMARKS.ub;
+  if(text.includes('molapo')) return LANDMARKS.molapo;
+  if(text.includes('kgale')) return LANDMARKS.kgale;
+  return null;
+}
+function animateCarAlongRoute(totalSeconds){
+  const start = pickupMarker.getLatLng(), end = dropoffMarker.getLatLng();
+  const steps = 40; let step = 0;
+  const interval = (totalSeconds*1000)/steps;
+  clearInterval(window._carInterval);
+  window._carInterval = setInterval(() => {
+    if(step >= steps){ clearInterval(window._carInterval); return; }
+    step++;
+    const t = step/steps;
+    carMarker.setLatLng([start.lat + (end.lat-start.lat)*t, start.lng + (end.lng-start.lng)*t]);
+    document.getElementById('rideProgressFill').style.width = (t*100) + '%';
+    document.getElementById('rideETA').textContent = 'ETA ' + Math.max(0, Math.round((1-t)*(totalSeconds/60*10))) + ' min';
+  }, interval);
+}
+
+// ============================================================
+// RIDE FLOW
+// ============================================================
+function generateRideId(){ return 'CL-' + Math.random().toString(36).substr(2,6).toUpperCase(); }
+
+
+
+async function bookRide(){
+  const pickup = document.getElementById('pickup').value.trim();
+  const dropoff = document.getElementById('dropoff').value.trim();
+  if(!pickup || !dropoff){ toast('Please enter pickup and drop-off locations', 'warning'); return; }
+  if(STATE.inRide){ toast('Ride already in progress', 'warning'); return; }
+
+  const payload = {
+    pickup, dropoff,
+    fare: STATE.selectedFare || 0,
+    type: STATE.selectedRideType || 'standard',
+    timestamp: Date.now()
+  };
+
+  STATE.inRide = true; STATE.rideReady = false;
+  updateMapRoute();
+  document.getElementById('rideIdRow').style.display = 'block';
+  document.getElementById('chatSection').style.display = 'block';
+  document.getElementById('cancelBtn').style.display = 'block';
+  document.getElementById('bookBtn').disabled = true;
+  document.getElementById('simBtn').disabled = true;
+  setStatusPip('yellow'); setStatusLabel('🔍 Requesting ride…');
+  showRideProgressBar('FINDING DRIVER', 10);
+
+  try{
+    const response = await fetch('/api/rides', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+    console.log('REAL RIDE CREATED:', data);
+    const ride = data.ride || data;
+    STATE.rideId = ride.id || ride._id || ('CL-' + Date.now());
+    document.getElementById('rideId').textContent = STATE.rideId;
+    toast('🚕 Ride requested — waiting for a driver', 'success');
+    pollRideStatus(STATE.rideId);
+  } catch(e){
+    console.error(e);
+    toast('Backend unavailable — could not book ride', 'error');
+    resetRideUI();
+  }
+}
+
+let _rideStatusPoller = null;
+async function pollRideStatus(rideId){
+  clearInterval(_rideStatusPoller);
+  _rideStatusPoller = setInterval(async () => {
+    try{
+      const res = await fetch('/api/rides/' + rideId);
+      if(!res.ok) return;
+      const data = await res.json();
+      const ride = data.ride || data;
+      const status = (ride.status || '').toLowerCase();
+      console.log('Ride status:', status);
+      if(status === 'accepted' || status === 'assigned'){
+        setStatusPip('green'); setStatusLabel('🚗 Driver assigned! En route…');
+        showRideProgressBar('DRIVER EN ROUTE', 40);
+      } else if(status === 'arrived'){
+        clearInterval(_rideStatusPoller);
+        showArrived();
+      } else if(status === 'completed'){
+        clearInterval(_rideStatusPoller);
+        completeRide();
+      } else if(status === 'cancelled'){
+        clearInterval(_rideStatusPoller);
+        toast('Ride was cancelled', 'warning');
+        resetRideUI();
+      }
+    } catch(e){ /* keep polling quietly */ }
+  }, 3000);
+}
+
+function simulateRide(){
+ console.log("Simulation disabled. CabLink uses live dispatch.");
+ toast("Live dispatch mode active","success");
+}
+
+
+function cancelRide(){
+  if(!STATE.inRide) return;
+  clearInterval(STATE.countdownInterval); clearInterval(STATE.graceInterval); clearInterval(window._carInterval);
+  STATE.inRide = false; STATE.rideReady = false; STATE.rideId = null;
+  resetRideUI(); toast('Ride cancelled.', 'warning');
+}
+
+function completeRide(){
+  clearInterval(STATE.countdownInterval);
+  STATE.inRide = false; STATE.rideReady = true; STATE.totalRides++;
+  STATE.lastRideDate = new Date().toISOString();
+  const today = new Date().toDateString();
+  const lastDay = STATE.lastRideDate ? new Date(STATE.lastRideDate).toDateString() : null;
+  if(lastDay !== today){
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    STATE.streak = (lastDay === yesterday.toDateString()) ? STATE.streak+1 : 1;
+  }
+  const ride = {id:STATE.rideId, from:document.getElementById('pickup').value, to:document.getElementById('dropoff').value,
+    type:STATE.selectedRideType, fare:calcTotalFare(), thb:1, date:new Date().toLocaleString(), rating:null};
+  STATE.rideHistory.unshift(ride);
+  autoSaveFav(ride);
+  saveState(); updateAllUI(); renderHistory(); renderFavourites();
+
+  ['claimBtn','r-claimBtn'].forEach(id => { const b=document.getElementById(id); if(b){ b.disabled=false; b.textContent = STATE.wallet ? 'Claim 1 THB reward' : 'Claim (sim mode)'; } });
+  document.getElementById('claimHint').textContent = STATE.wallet ? 'Ride complete! Claim your THB now.' : 'No wallet connected — claim will be simulated locally.';
+  document.getElementById('gasEstimate').style.display = STATE.wallet ? 'flex' : 'none';
+
+  hideRideProgressBar(); showThankYouOverlay(); resetRideUI(true);
+}
+
+function showArrived(){
+  document.getElementById('arrivedBanner').classList.add('show');
+  document.getElementById('rideStatusLabel').textContent = 'DRIVER ARRIVED';
+  setStatusPip('green'); setStatusLabel('🚗 Driver arrived! 5 min free wait'); toast('🚗 Your driver has arrived!', 'success'); haptic();
+  let secs = 300;
+  STATE.graceInterval = setInterval(() => {
+    secs--; const m=Math.floor(secs/60), s=secs%60;
+    document.getElementById('graceTimer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    if(secs<=0){ clearInterval(STATE.graceInterval); completeRide(); }
+  }, 1000);
+  setTimeout(() => {
+    document.getElementById('arrivedBanner').classList.remove('show');
+    appendDriverMsg('Driver', "All aboard? Let's go! 🚕");
+    showRideProgressBar('RIDE IN PROGRESS', 70);
+    setTimeout(completeRide, 8000);
+  }, 10000);
+}
+
+function resetRideUI(keepId){
+  document.getElementById('countdownRow').style.display = 'none';
+  document.getElementById('chatSection').style.display = 'none';
+  document.getElementById('cancelBtn').style.display = 'none';
+  document.getElementById('bookBtn').disabled = false;
+  document.getElementById('simBtn').disabled = false;
+  if(!keepId){ document.getElementById('rideIdRow').style.display = 'none'; document.getElementById('rideId').textContent = '—'; }
+  setStatusPip(''); setStatusLabel('Enter locations to book');
+  document.getElementById('chatBox').innerHTML = '';
+  hideRideProgressBar();
+}
+
+function calcRideDuration(){ return Math.min(STATE.selectedFare * 2, 90); }
+function calcETA(){ return Math.round(STATE.selectedFare * 0.6); }
+function calcTotalFare(){
+  let total = STATE.selectedFare;
+  total += STATE.stops.length * 5;
+  if(STATE.surgeActive) total = Math.round(total * STATE.surgeMultiplier);
+  return total;
+}
+function startCountdown(seconds, cb){
+  let s = seconds;
+  function tick(){
+    const m=Math.floor(s/60), sec=s%60;
+    document.getElementById('countdown').textContent = `${m}:${sec.toString().padStart(2,'0')}`;
+    if(s<=0){ clearInterval(STATE.countdownInterval); cb(); return; }
+    s--;
+  }
+  tick(); STATE.countdownInterval = setInterval(tick, 1000);
+}
+function updateClaimButtons(){
+  const enabled = STATE.rideReady;
+  ['claimBtn','r-claimBtn'].forEach(id => {
+    const b = document.getElementById(id); if(!b) return;
+    if(b.textContent.includes('Retry') || b.textContent.includes('Sending')) return;
+    b.disabled = !enabled;
+    if(!enabled) b.textContent = 'Complete a ride to claim';
+  });
+}
+
+// ============================================================
+// CHAT
+// ============================================================
+function appendMsg(sender, text, isMe){
+  const box = document.getElementById('chatBox');
+  const div = document.createElement('div');
+  div.className = 'msg ' + (isMe?'me':'them');
+  div.innerHTML = `<div class="sender">${sender}</div>${text}`;
+  box.appendChild(div); box.scrollTop = box.scrollHeight;
+}
+function appendDriverMsg(name, text){ appendMsg(name, text, false); document.getElementById('chatSection').style.display = 'block'; }
+function sendChat(){
+  const input = document.getElementById('chatInput'); const text = input.value.trim();
+  if(!text) return; appendMsg('You', text, true); input.value = '';
+  const replies = ["Got it! On my way 🚗","Sure, no problem!","I can see your location 📍",`ETA about ${calcETA()} minutes.`,"Traffic is light today ✅"];
+  setTimeout(() => appendDriverMsg('Driver', replies[Math.floor(Math.random()*replies.length)]), 1500+Math.random()*2000);
+}
+
+// ============================================================
+// RIDE TYPE / STOPS / SCHEDULE / SURGE / NEGOTIATION
+// ============================================================
+function selectRideType(el){
+  document.querySelectorAll('.ride-type-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  STATE.selectedRideType = el.dataset.type; STATE.selectedFare = parseInt(el.dataset.fare);
+  updateFareBreakdown();
+}
+function updateFareBreakdown(){
+  const base = STATE.selectedFare, stops = STATE.stops.length*5;
+  const surgeAdd = STATE.surgeActive ? Math.round(base*(STATE.surgeMultiplier-1)) : 0;
+  const total = base + stops + surgeAdd;
+  document.getElementById('fb-base').textContent = base + ' BWP';
+  document.getElementById('fb-stops').textContent = stops + ' BWP';
+  document.getElementById('fb-stops-row').style.display = stops ? 'flex' : 'none';
+  document.getElementById('fb-surge').textContent = surgeAdd + ' BWP';
+  document.getElementById('fb-surge-row').style.display = STATE.surgeActive ? 'flex' : 'none';
+  document.getElementById('fb-total').textContent = total + ' BWP';
+  document.getElementById('sm-normal').textContent = base + ' BWP';
+  document.getElementById('sm-surge').textContent = (base+surgeAdd) + ' BWP';
+}
+function addStop(){
+  if(STATE.stops.length>=3){ toast('Max 3 extra stops', 'warning'); return; }
+  STATE.stops.push({id:Date.now(), value:''}); renderStops(); updateFareBreakdown();
+}
+function removeStop(id){ STATE.stops = STATE.stops.filter(s=>s.id!==id); renderStops(); updateFareBreakdown(); }
+function renderStops(){
+  document.getElementById('stopsContainer').innerHTML = STATE.stops.map(s => `
+    <div class="stop-row"><input class="input" placeholder="Via stop…" value="${s.value}" oninput="STATE.stops.find(x=>x.id===${s.id}).value=this.value" style="flex:1"/><button class="rm-btn" onclick="removeStop(${s.id})">✕</button></div>
+    <div class="loc-line"></div>`).join('');
+}
+function toggleSchedule(){
+  STATE.scheduleMode = !STATE.scheduleMode;
+  document.getElementById('scheduleSection').classList.toggle('show', STATE.scheduleMode);
+  if(STATE.scheduleMode){ const now = new Date(); now.setMinutes(now.getMinutes()+30); document.getElementById('scheduleTime').value = now.toISOString().slice(0,16); }
+}
+function swapLocations(){
+  const pu=document.getElementById('pickup'), doo=document.getElementById('dropoff');
+  const tmp=pu.value; pu.value=doo.value; doo.value=tmp; updateMapRoute(); toast('Locations swapped', 'success');
+}
+function voiceInput(){
+  if(!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)){ toast('Voice input not supported', 'error'); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SR(); rec.lang = 'en-ZA';
+  rec.onresult = e => { const t=e.results[0][0].transcript; document.getElementById('dropoff').value=t; updateMapRoute(); toast('🎤 Heard: '+t, 'success'); };
+  rec.onerror = e => { const msgs={'not-allowed':'Microphone permission denied','no-speech':'No speech detected','network':'Network error'}; toast(msgs[e.error]||'Voice error', 'error'); };
+  try{ rec.start(); toast('🎤 Listening…', 'success'); }catch(e){ toast('Voice input failed', 'error'); }
+}
+function checkSurge(){
+  const h = new Date().getHours();
+  const isSurge = (h>=7&&h<=9)||(h>=16&&h<=19);
+  STATE.surgeActive = isSurge;
+  STATE.surgeMultiplier = isSurge ? ((h>=7&&h<=9)?1.6:1.8) : 1.0;
+  const banner = document.getElementById('surgeBanner');
+  if(isSurge){
+    banner.classList.add('show');
+    document.getElementById('surgeBannerMult').textContent = STATE.surgeMultiplier.toFixed(1)+'×';
+    document.getElementById('surgeMultiplierEl').textContent = STATE.surgeMultiplier.toFixed(1)+'×';
+    document.getElementById('surgeReason').textContent = (h>=7&&h<=9)?'Morning rush hour':'Evening rush hour';
+  } else banner.classList.remove('show');
+  updateFareBreakdown();
+}
+function acceptSurge(){ closeModal('surgeModal'); bookRide(); }
+function toggleNego(){ STATE.negoActive = document.getElementById('negoToggle').checked; document.getElementById('negoSection').style.display = STATE.negoActive ? 'block' : 'none'; }
+function sendOffer(){
+  const val = parseFloat(document.getElementById('offerAmount').value);
+  if(!val || val<5){ toast('Enter a valid offer (min 5 BWP)', 'warning'); return; }
+  STATE.currentOffer = val;
+  const card = document.getElementById('negoConvo'); card.style.display='block';
+  document.getElementById('currentOffer').textContent = val + ' BWP (your offer)';
+  document.getElementById('negoStatus').textContent = 'Waiting for driver…';
+  document.getElementById('negoActions').style.display = 'none';
+  setTimeout(() => {
+    const driverCounter = Math.round(val*(1.1+Math.random()*0.3));
+    document.getElementById('currentOffer').textContent = driverCounter + ' BWP (driver counter)';
+    document.getElementById('negoStatus').textContent = `Driver countered at ${driverCounter} BWP`;
+    document.getElementById('negoActions').style.display = 'flex';
+    STATE.currentOffer = driverCounter;
+    toast(`Driver countered: ${driverCounter} BWP`, 'warning');
+  }, 2000+Math.random()*2000);
+}
+function acceptOffer(){
+  STATE.selectedFare = STATE.currentOffer;
+  document.getElementById('currentOffer').textContent = STATE.currentOffer + ' BWP ✓ Accepted';
+  document.getElementById('negoStatus').textContent = 'Agreed! Book now.';
+  document.getElementById('negoActions').style.display = 'none';
+  updateFareBreakdown(); toast('Offer accepted: ' + STATE.currentOffer + ' BWP', 'success');
+}
+
+// ============================================================
+// OFFLINE QUEUE
+// ============================================================
+function queueOfflineRide(ride){ STATE.offlineQueue.push({...ride, queued:Date.now()}); saveState(); renderOfflineQueue(); showAlert('📡 Offline — ride queued. Will book when back online.'); }
+function syncOfflineQueue(){
+  if(!navigator.onLine || !STATE.offlineQueue.length) return;
+  toast(`Syncing ${STATE.offlineQueue.length} queued ride(s)…`, 'success');
+  STATE.offlineQueue.forEach(() => { STATE.totalRides++; STATE.rideReady = true; });
+  STATE.offlineQueue = []; saveState(); renderOfflineQueue(); updateAllUI();
+  toast('Queued rides synced!', 'success');
+}
+function renderOfflineQueue(){ const el=document.getElementById('offlineQueueInfo'); if(el) el.textContent = STATE.offlineQueue.length ? `${STATE.offlineQueue.length} ride(s) queued offline` : 'No queued rides.'; }
+function checkOnline(){ const online = navigator.onLine; if(!online) showAlert('📡 Offline — rides will be queued'); else hideAlert(); document.getElementById('netPip').className = 'pip ' + (online?'green':'red'); }
+
+// ============================================================
+// DRIVER MODE
+// ============================================================
+async function toggleDriverMode(){
+  STATE.driverOnline = !STATE.driverOnline;
+  const btn = document.getElementById('driverModeBtn');
+  if(!STATE.driverId){
+    STATE.driverId = localStorage.getItem('cl6_driverId') || ('DRV-' + Math.random().toString(36).substr(2,8).toUpperCase());
+    localStorage.setItem('cl6_driverId', STATE.driverId);
+  }
+  try{
+    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+    await fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ driverId: STATE.driverId })
+    });
+  } catch(e){ console.error('Driver status update failed', e); }
+  btn.textContent = STATE.driverOnline ? '🔴 Go offline' : '🟢 Go online';
+  btn.className = 'btn btn-sm ' + (STATE.driverOnline ? 'btn-danger' : 'btn-outline');
+  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success'); pollForRideRequests(); }
+  else { toast('You are now offline.', 'warning'); clearInterval(_driverRequestPoller); }
+  updateDriverUI();
+}
+
+let _driverRequestPoller = null;
+async function pollForRideRequests(){
+  clearInterval(_driverRequestPoller);
+  _driverRequestPoller = setInterval(async () => {
+    if(!STATE.driverOnline) return;
+    try{
+      const res = await fetch('/api/rides');
+      if(!res.ok) return;
+      const data = await res.json();
+      const rides = data.rides || data;
+      (Array.isArray(rides) ? rides : []).filter(r => {
+        const s = (r.status||'').toLowerCase();
+        return s === 'pending' || s === 'requested' || s === '';
+      }).forEach(r => {
+        if(document.getElementById('req-' + r.id)) return;
+        renderIncomingRequest(r);
+      });
+    } catch(e){ /* silent */ }
+  }, 4000);
+}
+
+function renderIncomingRequest(r){
+  STATE.driverRequests++;
+  const container = document.getElementById('driverRequests');
+  const div = document.createElement('div');
+  div.className = 'request-card pending'; div.id = 'req-' + r.id;
+  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${r.id}</strong><span style="color:var(--gold-l);font-weight:700">${r.fare||''} BWP</span></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${r.pickup||''} → 🏁 ${r.dropoff||''}</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-green btn-sm" onclick="acceptRealRequest('${r.id}')">✓ Accept</button>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${r.id}').remove()">✗ Pass</button>
+    </div>`;
+  if(container.firstChild?.textContent?.includes('online')) container.innerHTML = '';
+  container.prepend(div);
+  updateDriverUI();
+  toast('🚗 New ride request received', 'warning'); haptic();
+}
+
+async function acceptRealRequest(rideId){
+  try{
+    await fetch('/api/rides/' + rideId, {
+      method: 'PATCH',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ status: 'accepted', driverId: STATE.driverId })
+    });
+    document.getElementById('req-' + rideId)?.remove();
+    STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
+    toast('Ride accepted! Earn 1 THB when complete.', 'success');
+  } catch(e){ toast('Could not accept ride', 'error'); }
+}
+
+function addDriverRequest(){
+  if(!STATE.driverOnline) return;
+  STATE.driverRequests++;
+  const req = {id:'REQ-'+Math.random().toString(36).substr(2,5).toUpperCase(), from:['Gaborone CBD','Airport','BSTM HQ','UB Campus'][Math.floor(Math.random()*4)], to:['Game City','Molapo','Kgale','Riverwalk'][Math.floor(Math.random()*4)], fare:15+Math.floor(Math.random()*35), dist:(Math.random()*8+1).toFixed(1)};
+  const container = document.getElementById('driverRequests');
+  const div = document.createElement('div');
+  div.className = 'request-card pending'; div.id = 'req-' + req.id;
+  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${req.id}</strong><span style="color:var(--gold-l);font-weight:700">${req.fare} BWP</span></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${req.from} → 🏁 ${req.to} · ${req.dist} km</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-green btn-sm" onclick="acceptRequest('${req.id}',${req.fare})">✓ Accept</button>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${req.id}').remove()">✗ Pass</button>
+      <button class="btn btn-outline btn-sm" onclick="negoRequest('${req.id}',${req.fare})">💬 Counter</button>
+    </div>`;
+  if(container.firstChild?.textContent?.includes('online')) container.innerHTML = '';
+  container.prepend(div); updateDriverUI();
+  toast('🚗 New ride request: ' + req.from + ' → ' + req.to, 'warning'); haptic();
+}
+function acceptRequest(id, fare){
+  document.getElementById('req-'+id)?.remove();
+  STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
+  toast('Ride accepted! Earn 1 THB when complete.', 'success');
+  document.getElementById('earn-today').textContent = (STATE.driverAccepted*fare).toString();
+  document.getElementById('earn-thb').textContent = STATE.driverThb.toString();
+  document.getElementById('earn-rides').textContent = STATE.driverAccepted.toString();
+}
+function negoRequest(id, fare){ const counter = prompt(`Counter-offer (original: ${fare} BWP):`); if(counter && parseFloat(counter)>0) toast(`Counter-offer ${counter} BWP sent to rider`, 'success'); }
+function updateDriverUI(){ document.getElementById('drv-requests').textContent=STATE.driverRequests; document.getElementById('drv-accepted').textContent=STATE.driverAccepted; document.getElementById('drv-thb').textContent=STATE.driverThb; }
+
+// ============================================================
+// DAILY BONUS / RATING / REFERRAL / FAVOURITES / HISTORY
+// ============================================================
+function claimDaily(){
+  const today = new Date().toDateString();
+  if(STATE.lastBonus === today){ toast('Daily bonus already claimed today!', 'warning'); document.getElementById('dailyBtn').disabled=true; document.getElementById('dailyStatus').textContent='Come back tomorrow!'; return; }
+  STATE.lastBonus = today; STATE.thbBalance = (parseFloat(STATE.thbBalance)+0.5).toFixed(2); STATE.totalEarned += 0.5;
+  saveState(); updateAllUI();
+  document.getElementById('dailyBtn').disabled = true; document.getElementById('dailyStatus').textContent = '✓ Claimed! Come back tomorrow.';
+  showConfetti(); toast('+0.5 THB daily bonus claimed!', 'success');
+}
+let ratingVal = 0;
+function setRating(val){
+  ratingVal = val;
+  ['ratingStars','modalStars'].forEach(id => { const c=document.getElementById(id); if(!c) return; c.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('lit', i<val)); });
+}
+function openRating(){ document.getElementById('driverRef').textContent = STATE.rideId || '—'; openModal('ratingModal'); }
+function submitRating(){
+  if(ratingVal===0){ toast('Please select a rating', 'warning'); return; }
+  STATE.ratings.push(ratingVal);
+  STATE.avgRating = (STATE.ratings.reduce((a,b)=>a+b,0)/STATE.ratings.length).toFixed(1);
+  if(STATE.rideHistory.length) STATE.rideHistory[0].rating = ratingVal;
+  saveState(); updateAllUI(); closeModal('ratingModal'); closeThankyou();
+  toast('Rating submitted! Thanks 🙏', 'success'); ratingVal = 0;
+}
+function copyRef(){
+  const code = `CabLink Gaborone — Use my code ${STATE.referralCode} for +0.2 THB on your first ride!`;
+  navigator.clipboard?.writeText(code).then(()=>toast('Referral message copied!', 'success')).catch(()=>toast('Copy failed', 'error'));
+}
+function copyRideId(){ navigator.clipboard?.writeText(STATE.rideId||'').then(()=>toast('Ride ID copied!', 'success')).catch(()=>{}); }
+function copyShareLink(){
+  if(!STATE.tripShareId){ toast('No active ride to share', 'warning'); return; }
+  navigator.clipboard?.writeText('https://'+STATE.tripShareId).then(()=>toast('Trip link copied!', 'success')).catch(()=>toast('Copy failed', 'error'));
+}
+function autoSaveFav(ride){
+  const key = ride.from+'→'+ride.to;
+  const existing = STATE.favourites.find(f=>f.key===key);
+  if(existing) existing.count++; else STATE.favourites.unshift({key, from:ride.from, to:ride.to, count:1});
+  if(STATE.favourites.length>5) STATE.favourites = STATE.favourites.slice(0,5);
+  saveState();
+}
+function saveFav(){
+  const from=document.getElementById('pickup').value, to=document.getElementById('dropoff').value;
+  if(!from||!to){ toast('Enter pickup and dropoff first', 'warning'); return; }
+  autoSaveFav({from,to}); renderFavourites(); toast('Route saved to favourites!', 'success');
+}
+function useFav(from,to){ document.getElementById('pickup').value=from; document.getElementById('dropoff').value=to; updateMapRoute(); toast('Favourite loaded!', 'success'); }
+function renderFavourites(){
+  const el = document.getElementById('favsList'); if(!el) return;
+  el.innerHTML = STATE.favourites.length ? STATE.favourites.map(f => `
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--hair);cursor:pointer" onclick="useFav('${f.from.replace(/'/g,"\\'")}','${f.to.replace(/'/g,"\\'")}')">
+      <span style="font-size:15px">⭐</span><div style="flex:1;font-size:12px">${f.from} → ${f.to}</div><span style="font-size:10.5px;color:var(--muted)">${f.count}×</span>
+    </div>`).join('') : '<div style="font-size:12px;color:var(--muted)">No saved routes yet.</div>';
+}
+function renderHistory(){
+  const el = document.getElementById('rideHistory'); if(!el) return;
+  el.innerHTML = STATE.rideHistory.length ? STATE.rideHistory.slice(0,10).map(r => `
+    <div style="padding:10px 0;border-bottom:1px solid var(--hair);font-size:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-family:var(--data);font-size:10px;color:var(--sapphire-l)">${r.id}</span><span style="color:var(--gold-l)">${r.thb} THB</span></div>
+      <div style="color:var(--muted)">${r.from} → ${r.to}</div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--muted)">${r.type} · ${r.fare} BWP</span><span>${r.rating?'⭐'.repeat(r.rating):''}</span></div>
+      <div style="color:var(--muted2);font-size:10px">${r.date}</div>
+    </div>`).join('') : '<div style="font-size:12px;color:var(--muted)">No rides yet.</div>';
+}
+function exportCSV(){
+  if(!STATE.rideHistory.length){ toast('No ride history to export', 'warning'); return; }
+  const header = 'Ride ID,From,To,Type,Fare (BWP),THB Earned,Rating,Date';
+  const rows = STATE.rideHistory.map(r => `${r.id},"${r.from}","${r.to}",${r.type},${r.fare},${r.thb},${r.rating||''},${r.date}`);
+  const blob = new Blob([[header,...rows].join('\n')], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='cablink_rides.csv'; a.click(); URL.revokeObjectURL(url);
+  toast('CSV exported!', 'success');
+}
+function clearHistory(){
+  if(!confirm('Clear all ride history?')) return;
+  STATE.rideHistory=[]; STATE.totalRides=0; STATE.ratings=[]; STATE.avgRating=null;
+  saveState(); renderHistory(); updateAllUI(); closeModal('privacyModal'); toast('Ride history cleared', 'success');
+}
+function deleteMyData(){
+  if(!confirm('Delete ALL your data from this device? This cannot be undone.')) return;
+  localStorage.removeItem('cl6_state'); localStorage.removeItem('cl6_onboarding');
+  toast('All data deleted. Refreshing…', 'success'); setTimeout(()=>location.reload(), 1500);
+}
+
+// ============================================================
+// LEADERBOARD / BADGES / FAQ
+// ============================================================
+function renderLeaderboard(){
+  const lb = [
+    {name:'Thobo A.', rides:STATE.totalRides+12, thb:STATE.totalEarned+15.5, you:true},
+    {name:'Keabetswe M.', rides:34, thb:38.2}, {name:'Oratile D.', rides:28, thb:31.0},
+    {name:'Mpho S.', rides:21, thb:24.5}, {name:'Lesego T.', rides:18, thb:20.1},
+  ].sort((a,b)=>b.thb-a.thb);
+  const medals=['gold','silver','bronze'];
+  const el = document.getElementById('leaderboard'); if(!el) return;
+  el.innerHTML = lb.map((u,i)=>`
+    <div class="lb-row ${u.you?'lb-you':''}"><span class="lb-rank ${medals[i]||''}">${i+1}</span>
+      <div class="lb-info"><div class="lb-name">${u.name}${u.you?' 👈 You':''}</div><div class="lb-rides">${u.rides} rides</div></div>
+      <span class="lb-thb">${u.thb.toFixed(1)} THB</span></div>`).join('');
+}
+const BADGES = [
+  {icon:'🚀',name:'First ride',req:()=>STATE.totalRides>=1}, {icon:'🏅',name:'5 rides',req:()=>STATE.totalRides>=5},
+  {icon:'🔥',name:'3-day streak',req:()=>STATE.streak>=3}, {icon:'🌟',name:'7-day streak',req:()=>STATE.streak>=7},
+  {icon:'◆',name:'First claim',req:()=>STATE.totalEarned>=1}, {icon:'💰',name:'10 THB',req:()=>STATE.totalEarned>=10},
+  {icon:'👥',name:'Referred 1',req:()=>STATE.referrals>=1}, {icon:'🏆',name:'Top rider',req:()=>STATE.totalRides>=25},
+];
+function renderBadges(){
+  const el = document.getElementById('badgeGrid'); if(!el) return;
+  el.innerHTML = BADGES.map(b => `<div class="badge-item ${b.req()?'unlocked':''}"><span class="b-icon">${b.icon}</span><div class="b-name">${b.name}</div></div>`).join('');
+}
+const FAQS = [
+  {q:'What is THB (THoBoCoin)?', a:'THoBoCoin (THB) is a BEP-20 token on BSC Testnet. You earn 1 THB per completed ride, created by the BSTM Ecosystem as a loyalty token.'},
+  {q:'How do I connect my wallet?', a:'Tap "Connect" on the home screen. MetaMask must be installed. Switch to BSC Testnet (chainId 97). Get free tBNB from the faucet link for gas.'},
+  {q:'Why does the claim fail?', a:'Common reasons: wrong network, no tBNB for gas, or the treasury has insufficient THB — contact support.'},
+  {q:'What is surge pricing?', a:'During peak hours (7–9 AM, 4–7 PM) or high demand, fares increase by 1.5–2.5×. You will see a surge banner and can accept or cancel.'},
+  {q:'How does fare negotiation work?', a:'Enable "Negotiate fare" before booking. Enter your offer. The driver can accept or counter.'},
+  {q:'What happens if I book offline?', a:'The ride is queued on your device. When you reconnect, tap "Sync now" or it syncs automatically.'},
+  {q:'How does the referral programme work?', a:'Share your code. When a friend books their first ride using it, you both earn +0.2 THB.'},
+  {q:'Is my data safe?', a:'During beta, all data is stored locally on your device only. You can delete all data any time in Privacy settings.'},
+];
+function renderFAQ(){
+  const el = document.getElementById('faqList'); if(!el) return;
+  el.innerHTML = FAQS.map((f,i) => `<div class="faq-item"><div class="faq-q" onclick="toggleFAQ(${i})"><span>${f.q}</span><span id="faq-arrow-${i}">▼</span></div><div class="faq-a" id="faq-a-${i}">${f.a}</div></div>`).join('');
+}
+function toggleFAQ(i){ const el=document.getElementById('faq-a-'+i), arrow=document.getElementById('faq-arrow-'+i); const open=el.classList.toggle('open'); arrow.textContent = open?'▲':'▼'; }
+
+// ============================================================
+// PROGRESS / STATUS / ALERTS / TOASTS / MODALS
+// ============================================================
+function showRideProgressBar(label, pct){ document.getElementById('rideProgressBar').classList.add('show'); if(label) document.getElementById('rideStatusLabel').textContent = label; document.getElementById('rideProgressFill').style.width = pct+'%'; }
+function hideRideProgressBar(){ document.getElementById('rideProgressBar').classList.remove('show'); }
+function setStatusPip(color){ document.getElementById('statusPip').className = 'pip ' + (color||''); }
+function setStatusLabel(text){ const el=document.getElementById('statusLabel'); if(el) el.textContent = text; }
+function showAlert(text){ document.getElementById('alertText').textContent = text; document.getElementById('alertStrip').classList.add('show'); }
+function hideAlert(){ document.getElementById('alertStrip').classList.remove('show'); }
+function toast(msg, type='success'){
+  const container = document.getElementById('toastContainer');
+  const el = document.createElement('div'); el.className = 'toast '+type;
+  const icons = {success:'✅', error:'❌', warning:'⚠'};
+  el.innerHTML = `<span>${icons[type]||'ℹ'}</span><span>${msg}</span>`;
+  container.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transform='translateY(-10px)'; el.style.transition='.3s'; setTimeout(()=>el.remove(),300); }, 4000);
+}
+function openModal(id){
+  document.getElementById(id).classList.add('show');
+  if(id==='shareModal') document.getElementById('shareLink').textContent = STATE.tripShareId ? 'https://'+STATE.tripShareId : 'No active ride — book a ride first';
+  if(id==='pendingModal') renderPendingTxs();
+}
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('show'); }));
+});
+
+// ============================================================
+// THANK YOU / ONBOARDING / CONFETTI / HAPTIC / SOUND / SOS
+// ============================================================
+function showThankYouOverlay(){
+  document.getElementById('ty-thb').textContent = '1 THB';
+  document.getElementById('ty-id').textContent = STATE.rideId || '—';
+  document.getElementById('thankYouOverlay').classList.add('show');
+  showConfetti(); playSound(); haptic();
+}
+function closeThankyou(){ document.getElementById('thankYouOverlay').classList.remove('show'); }
+function closeThankYou(){ closeThankyou(); }
+
+let obStep = 0; const OB_SLIDES = 4;
+function checkOnboarding(){ if(!localStorage.getItem('cl6_onboarding')) showOnboarding(); }
+function showOnboarding(){ obStep=0; renderObSlide(); document.getElementById('onboarding').classList.add('show'); }
+function renderObSlide(){
+  for(let i=0;i<OB_SLIDES;i++) document.getElementById('ob'+i).classList.toggle('active', i===obStep);
+  document.querySelectorAll('.ob-dot').forEach((d,i)=>d.classList.toggle('active', i===obStep));
+  const nextBtn = document.querySelector('#onboarding .ob-actions .btn-primary');
+  if(nextBtn) nextBtn.textContent = obStep===OB_SLIDES-1 ? "Let's go! 🚀" : 'Next →';
+}
+function obNext(){ if(obStep<OB_SLIDES-1){ obStep++; renderObSlide(); } else finishOnboarding(); }
+function finishOnboarding(){ localStorage.setItem('cl6_onboarding','1'); document.getElementById('onboarding').classList.remove('show'); }
+
+function showConfetti(){
+  const canvas = document.getElementById('confettiCanvas'); canvas.style.display='block';
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const particles = Array.from({length:80}, () => ({x:Math.random()*canvas.width, y:-10, vx:(Math.random()-.5)*4, vy:Math.random()*3+2, color:['#f0b93a','#2e6be6','#21c980','#ff5d5d','#ffd873'][Math.floor(Math.random()*5)], size:Math.random()*8+4, rot:Math.random()*360}));
+  let frame = 0;
+  const anim = setInterval(() => {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p => { p.y+=p.vy; p.x+=p.vx; p.rot+=3; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180); ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size); ctx.restore(); });
+    frame++; if(frame>120){ clearInterval(anim); canvas.style.display='none'; }
+  }, 16);
+}
+function haptic(){ try{ navigator.vibrate?.([50,30,80]); }catch(e){} }
+function playSound(){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = 880; g.gain.setValueAtTime(0.1, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.4);
+    o.start(); o.stop(ctx.currentTime+0.4);
+  }catch(e){}
+}
+function openSOS(){ openModal('sosModal'); haptic(); }
+function shareLocation(){
+  if(!navigator.geolocation){ toast('Geolocation not available', 'error'); return; }
+  navigator.geolocation.getCurrentPosition(pos => {
+    const link = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+    navigator.clipboard?.writeText(link).then(()=>toast('Location link copied! Share with emergency contact.', 'success'));
+  }, () => toast('Could not get location', 'error'));
+}
+
+// ============================================================
+// SCREEN NAVIGATION
+// ============================================================
+function showScreen(name, btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('s-'+name).classList.add('active');
+  btn?.classList.add('active');
+  STATE.currentScreen = name;
+  if(name==='rewards'){ renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
+  if(name==='profile') updateProfileKPI();
+  if(name==='home' && MAP) setTimeout(()=>MAP.invalidateSize(), 200);
+}
+function updateDailyBtn(){
+  const today = new Date().toDateString();
+  const btn = document.getElementById('dailyBtn'), status = document.getElementById('dailyStatus');
+  if(STATE.lastBonus === today){ btn.disabled=true; status.textContent='Come back tomorrow!'; } else { btn.disabled=false; status.textContent=''; }
+}
+function updateProfileKPI(){
+  document.getElementById('kpi-rides').textContent = STATE.totalRides;
+  document.getElementById('kpi-thb').textContent = STATE.totalEarned.toFixed(1);
+  document.getElementById('kpi-rating').textContent = STATE.avgRating || '—';
+}
+function showChangeLog(){ toast('v6.0: Real Gaborone map (Leaflet + OSM), new diamond-cut design system, BSTM Ecosystem hub, wallet + claim flow, surge, negotiation, driver mode, offline queue, chat, haptics, confetti.', 'success'); }
+function submitFeedback(){
+  const text = document.getElementById('feedbackText').value.trim();
+  if(!text){ toast('Please enter feedback', 'warning'); return; }
+  toast('Thank you for your feedback! 🙏 (stored locally in beta)', 'success');
+  document.getElementById('feedbackText').value=''; closeModal('feedbackModal');
+}
+
+// ============================================================
+// MISC UI UPDATES / CLOCK / SHORT ADDR
+// ============================================================
+function updateAllUI(){
+  document.getElementById('thbBal').textContent = STATE.thbBalance;
+  document.getElementById('bwpBal').textContent = (parseFloat(STATE.thbBalance)*0.65).toFixed(2);
+  document.getElementById('bnbBal').textContent = STATE.bnbBalance;
+  document.getElementById('r-earned').textContent = STATE.totalEarned.toFixed(1);
+  document.getElementById('r-rides').textContent = STATE.totalRides;
+  document.getElementById('r-streak').textContent = STATE.streak;
+  document.getElementById('streakFill').style.width = Math.min(STATE.streak/7*100, 100)+'%';
+  document.getElementById('streakLabel').textContent = STATE.streak + ' / 7 days for bonus badge';
+  updateClaimButtons();
+  document.getElementById('refLink').textContent = 'cablink.io/ref/' + STATE.referralCode;
+  document.getElementById('ref-count').textContent = STATE.referrals;
+  document.getElementById('ref-thb').textContent = (STATE.referrals*0.2).toFixed(1);
+  updateFareBreakdown();
+  renderBadges();
+}
+function startClock(){
+  function tick(){ const now=new Date(); document.getElementById('clockTime').textContent = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0'); }
+  tick(); setInterval(tick, 30000);
+}
+function shortAddr(addr){ if(!addr) return '—'; return addr.substr(0,6)+'…'+addr.substr(-4); }
+</script>
+<div id="root"></div><script type="module" src="/main.jsx"></script>
+
+<script>
+
+// =========================================
+// CABLINK_REALITY_RUNTIME_BRIDGE
+// =========================================
+
+window.CABLINK_RUNTIME={
+    ride:null,
+    drivers:[],
+    connected:true
+};
+
+
+// Load real driver availability
+
+async function loadRealDrivers(){
+
+try{
+
+let r=await fetch("/api/drivers/online");
+
+if(r.ok){
+
+let data=await r.json();
+
+window.CABLINK_RUNTIME.drivers=data;
+
+let el=document.getElementById("mapDriverCount");
+
+if(el){
+
+el.textContent =
+data.length+
+" drivers online";
+
+}
+
+}
+
+}catch(e){
+
+console.log(
+"Driver API waiting..."
+);
+
+}
+
+}
+
+
+// Send real ride request
+
+async function createRealRide(payload){
+
+try{
+
+let r=await fetch(
+"/api/rides",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(payload)
+}
+);
+
+
+let data=await r.json();
+
+
+console.log(
+"🚕 REAL RIDE:",
+data
+);
+
+
+window.CABLINK_RUNTIME.ride=data.ride;
+
+
+return data.ride;
+
+
+}catch(e){
+
+console.error(
+"Ride connection failed",
+e
+);
+
+}
+
+}
+
+
+// Replace fake nearby count
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+loadRealDrivers();
+
+});
+
+
+// Expose bridge
+
+window.CabLinkReality={
+drivers:loadRealDrivers,
+ride:createRealRide
+};
+
+
+console.log(
+"🚕 Reality bridge active"
+);
+
+
+</script>
+
+
+
+<script>
+
+// =========================================
+// CABLINK_DRIVER_REALITY_PATCH
+// =========================================
+
+
+const originalToggleDriverMode = window.toggleDriverMode;
+
+
+window.toggleDriverMode = async function(){
+
+
+STATE.driverOnline = !STATE.driverOnline;
+
+
+const btn=document.getElementById("driverModeBtn");
+
+
+if(STATE.driverOnline){
+
+
+btn.textContent="🔴 Go offline";
+
+btn.className=
+"btn btn-sm btn-danger";
+
+
+let driver={
+
+id:
+localStorage.getItem("cablink_driver_id")
+||
+"DRV-"+Date.now(),
+
+name:
+"CabLink Driver",
+
+location:
+"Gaborone",
+
+timestamp:
+Date.now()
+
+};
+
+
+localStorage.setItem(
+"cablink_driver_id",
+driver.id
+);
+
+
+
+try{
+
+
+let r=await fetch(
+"/api/drivers/online",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(driver)
+}
+);
+
+
+let data=await r.json();
+
+
+console.log(
+"🚗 Driver LIVE:",
+data
+);
+
+
+toast(
+"Driver is LIVE on network",
+"success"
+);
+
+
+}catch(e){
+
+console.log(
+"Driver backend unavailable"
+);
+
+}
+
+
+}else{
+
+
+btn.textContent="🚗 Go online";
+
+btn.className=
+"btn btn-sm btn-outline";
+
+
+let id=
+localStorage.getItem(
+"cablink_driver_id"
+);
+
+
+fetch(
+"/api/drivers/offline",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+id
+})
+}
+);
+
+
+toast(
+"Driver offline",
+"warning"
+);
+
+
+}
+
+
+updateDriverUI();
+
+};
+
+
+console.log(
+"🚕 Driver reality patch active"
+);
+
+
+</script>
+
+
+
+<script>
+
+// =========================================
+// CABLINK_DISABLE_FAKE_DRIVER_ENGINE
+// =========================================
+
+window.addDriverRequest=function(){
+
+console.log(
+"🛑 Fake driver request blocked"
+);
+
+};
+
+
+console.log(
+"🚕 Fake request engine disabled"
+);
+
+</script>
+
+
+
+
+<!-- Removed duplicate runtime block -->
+
+
+
+
+
+<!-- Removed duplicate runtime block -->
+
+
+
+
+<script>
+
+/*
+
+🚕 CABLINK_LIVE_DRIVER_BRIDGE
+
+*/
+
+async function CABLINK_LIVE_DRIVER_BRIDGE(){
+
+try{
+
+const response =
+await fetch('/api/drivers/online');
+
+
+const data =
+await response.json();
+
+
+let count=0;
+
+
+if(Array.isArray(data)){
+count=data.length;
+}
+
+
+const elements=[
+"mapDriverCount",
+"driverCount",
+"nearbyDrivers"
+];
+
+
+elements.forEach(id=>{
+
+const el=document.getElementById(id);
+
+if(el){
+
+el.textContent=
+count+" drivers online";
+
+}
+
+});
+
+
+console.log(
+"🚕 Live drivers:",
+count
+);
+
+
+}catch(e){
+
+console.error(
+"Driver bridge error",
+e
+);
+
+}
+
+
+}
+
+
+CABLINK_LIVE_DRIVER_BRIDGE();
+
+
+setInterval(
+CABLINK_LIVE_DRIVER_BRIDGE,
+10000
+);
+
+
+</script>
+
+</body>
+</html>
+
+
+<script>
+
+// =========================================
+// CABLINK_SINGLE_RIDE_BRIDGE
+// =========================================
+
+console.log("🚕 Single ride bridge active");
+
+</script>
+
+
+
+<script>
+
+console.log("🚕 CABLINK REALITY MODE ENABLED");
+
+window.CABLINK_MODE="LIVE";
+
+</script>
+

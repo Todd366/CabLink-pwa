@@ -1,0 +1,55 @@
+frontend/index.html:391:        <span style="font-size:10.5px;color:var(--muted)" id="claimHint">Book or simulate a ride first</span>
+frontend/index.html:671:  referralCode:'BSTM-' + Math.random().toString(36).substr(2,4).toUpperCase(),
+frontend/index.html:908:  const nearbyDrivers = [LANDMARKS.molapo, LANDMARKS.mainMall, LANDMARKS.riverwalk];
+frontend/index.html:909:  driverMarkers = nearbyDrivers.map(l => L.marker([l.lat + (Math.random()-.5)*.01, l.lng + (Math.random()-.5)*.01], {
+frontend/index.html:919:    m.setLatLng([p.lat + (Math.random()-.5)*.002, p.lng + (Math.random()-.5)*.002]);
+frontend/index.html:921:  const n = Math.floor(Math.random()*3)+2;
+frontend/index.html:923:  if(el) el.textContent = n + ' drivers nearby';
+frontend/index.html:966:function generateRideId(){ return 'CL-' + Math.random().toString(36).substr(2,6).toUpperCase(); }
+frontend/index.html:1042:function simulateRide(){
+frontend/index.html:1072:  document.getElementById('claimHint').textContent = STATE.wallet ? 'Ride complete! Claim your THB now.' : 'No wallet connected — claim will be simulated locally.';
+frontend/index.html:1151:  setTimeout(() => appendDriverMsg('Driver', replies[Math.floor(Math.random()*replies.length)]), 1500+Math.random()*2000);
+frontend/index.html:1228:    const driverCounter = Math.round(val*(1.1+Math.random()*0.3));
+frontend/index.html:1234:  }, 2000+Math.random()*2000);
+frontend/index.html:1265:    STATE.driverId = localStorage.getItem('cl6_driverId') || ('DRV-' + Math.random().toString(36).substr(2,8).toUpperCase());
+frontend/index.html:1334:function addDriverRequest(){
+frontend/index.html:1337:  const req = {id:'REQ-'+Math.random().toString(36).substr(2,5).toUpperCase(), from:['Gaborone CBD','Airport','BSTM HQ','UB Campus'][Math.floor(Math.random()*4)], to:['Game City','Molapo','Kgale','Riverwalk'][Math.floor(Math.random()*4)], fare:15+Math.floor(Math.random()*35), dist:(Math.random()*8+1).toFixed(1)};
+frontend/index.html:1544:  const particles = Array.from({length:80}, () => ({x:Math.random()*canvas.width, y:-10, vx:(Math.random()-.5)*4, vy:Math.random()*3+2, color:['#f0b93a','#2e6be6','#21c980','#ff5d5d','#ffd873'][Math.floor(Math.random()*5)], size:Math.random()*8+4, rot:Math.random()*360}));
+frontend/index.html:1724:// Replace fake nearby count
+frontend/index.html:1903:window.addDriverRequest=function(){
+frontend/index.html.bak_before_sync:354:      <div class="map-badge"><span class="pip green" id="mapPip"></span><span id="mapDriverCount">3 drivers nearby</span></div>
+frontend/index.html.bak_before_sync:375:      <button class="btn btn-outline" id="simBtn" onclick="simulateRide()">🧪 Simulate ride (test mode)</button>
+frontend/index.html.bak_before_sync:391:        <span style="font-size:10.5px;color:var(--muted)" id="claimHint">Book or simulate a ride first</span>
+frontend/index.html.bak_before_sync:671:  referralCode:'BSTM-' + Math.random().toString(36).substr(2,4).toUpperCase(),
+frontend/index.html.bak_before_sync:908:  const nearbyDrivers = [LANDMARKS.molapo, LANDMARKS.mainMall, LANDMARKS.riverwalk];
+frontend/index.html.bak_before_sync:909:  driverMarkers = nearbyDrivers.map(l => L.marker([l.lat + (Math.random()-.5)*.01, l.lng + (Math.random()-.5)*.01], {
+frontend/index.html.bak_before_sync:919:    m.setLatLng([p.lat + (Math.random()-.5)*.002, p.lng + (Math.random()-.5)*.002]);
+frontend/index.html.bak_before_sync:921:  const n = Math.floor(Math.random()*3)+2;
+frontend/index.html.bak_before_sync:923:  if(el) el.textContent = n + ' drivers nearby';
+frontend/index.html.bak_before_sync:966:function generateRideId(){ return 'CL-' + Math.random().toString(36).substr(2,6).toUpperCase(); }
+frontend/index.html.bak_before_sync:1000:  addDriverRequest();
+frontend/index.html.bak_before_sync:1004:function simulateRide(){
+frontend/index.html.bak_before_sync:1051:  document.getElementById('claimHint').textContent = STATE.wallet ? 'Ride complete! Claim your THB now.' : 'No wallet connected — claim will be simulated locally.';
+frontend/index.html.bak_before_sync:1130:  setTimeout(() => appendDriverMsg('Driver', replies[Math.floor(Math.random()*replies.length)]), 1500+Math.random()*2000);
+frontend/index.html.bak_before_sync:1207:    const driverCounter = Math.round(val*(1.1+Math.random()*0.3));
+frontend/index.html.bak_before_sync:1213:  }, 2000+Math.random()*2000);
+frontend/index.html.bak_before_sync:1245:  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success'); setTimeout(addDriverRequest,3000); setTimeout(addDriverRequest,8000); }
+frontend/index.html.bak_before_sync:1249:function addDriverRequest(){
+frontend/index.html.bak_before_sync:1252:  const req = {id:'REQ-'+Math.random().toString(36).substr(2,5).toUpperCase(), from:['Gaborone CBD','Airport','BSTM HQ','UB Campus'][Math.floor(Math.random()*4)], to:['Game City','Molapo','Kgale','Riverwalk'][Math.floor(Math.random()*4)], fare:15+Math.floor(Math.random()*35), dist:(Math.random()*8+1).toFixed(1)};
+frontend/index.html.bak_before_sync:1459:  const particles = Array.from({length:80}, () => ({x:Math.random()*canvas.width, y:-10, vx:(Math.random()-.5)*4, vy:Math.random()*3+2, color:['#f0b93a','#2e6be6','#21c980','#ff5d5d','#ffd873'][Math.floor(Math.random()*5)], size:Math.random()*8+4, rot:Math.random()*360}));
+backend/routes/rides.js:36:matching.nearby(
+backend/routes/rides.js:78:nearbyDrivers:
+backend/routes/live_demand_api.js:9:// simulate incoming passenger
+backend/routes/matching_api.js:38:matching.nearby(
+backend/routes/ride_api.js.disabled:21:"CL-"+Math.random()
+backend/routes/rides.js.backup_truth_1784102755787:36:matching.nearby(
+backend/routes/rides.js.backup_truth_1784102755787:78:nearbyDrivers:
+backend/services/driver_matching_service.js:76:// find nearby drivers
+backend/services/driver_matching_service.js:78:function nearby(location){
+backend/services/driver_matching_service.js:108:nearby
+backend/services/ride_dispatch_bridge.js:17:const drivers = matchingService.nearby({
+backend/auth/auth_engine.js:11:Math.floor(Math.random()*100000),
+backend/auth/phone_verification_engine.js:10:Math.random()*900000
+backend/testing/two_phone_pilot.js:3:function simulate(){
+backend/testing/two_phone_pilot.js:43:simulate
+backend/ride_store.js:22:    const id="CL-"+Math.random()

@@ -1,0 +1,98 @@
+
+
+// =========================================
+// CABLINK_REAL_API_BRIDGE
+// =========================================
+
+async function sendRideToBackend(ride){
+
+try{
+
+const response=await fetch(
+"/api/rides",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(ride)
+}
+);
+
+
+const data=await response.json();
+
+
+console.log(
+"🚕 Backend ride created:",
+data
+);
+
+
+window.CABLINK_REAL_RIDE=data.ride;
+
+
+}catch(error){
+
+console.error(
+"❌ Backend ride failed",
+error
+);
+
+}
+
+}
+
+console.log("🚀 CabLink App Logic Loaded");
+
+// Your existing fixes go here
+window.bookRide = function() {
+
+// =========================================
+// CABLINK_BOOKING_BACKEND_CONNECTED
+// =========================================
+
+sendRideToBackend({
+
+pickup:
+document.getElementById("pickup")?.value ||
+"BSTM HQ, Mmopane",
+
+dropoff:
+document.getElementById("dropoff")?.value ||
+"Game City Mall",
+
+fare:
+Number(
+document.getElementById("fare")?.value ||
+20
+),
+
+vehicle:
+window.STATE?.vehicle ||
+"standard"
+
+});
+
+
+
+    const pickup = document.getElementById('pickup')?.value?.trim();
+    const dropoff = document.getElementById('dropoff')?.value?.trim();
+    if (!pickup || !dropoff) return toast("Enter pickup and drop-off", "warning");
+    toast("🔍 Searching for drivers...", "info");
+    setTimeout(() => toast("😕 No drivers available in your area right now", "warning"), 1600);
+};
+
+window.toggleDriverMode = function() {
+    showDriverRegistrationForm();
+};
+
+window.submitDriverForm = function() {
+    const name = document.getElementById('d-name').value.trim();
+    const phone = document.getElementById('d-phone').value.trim();
+    if (!name || !phone) return toast("Name and phone required", "warning");
+    document.querySelector('.driver-modal').remove();
+    toast("✅ Application submitted!", "success");
+};
+
+console.log("✅ Core logic loaded from separate file");

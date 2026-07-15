@@ -1,0 +1,38 @@
+[
+  {
+    "id": "CL-5EO1N3",
+    "status": "requested",
+    "createdAt": "2026-07-15T06:28:25.189Z",
+    "pickup": "BSTM HQ, Mmopane",
+    "dropoff": "Game City Mall",
+    "fare": 20,
+    "vehicle": "standard"
+  },
+  {
+    "id": "CL-T2G5J1",
+    "status": "requested",
+    "createdAt": "2026-07-15T07:24:52.773Z",
+    "pickup": "BSTM HQ",
+    "dropoff": "Game City",
+    "fare": 32,
+    "rideType": "Standard"
+  },
+  {
+    "id": "CL-5CZRMN",
+    "status": "requested",
+    "createdAt": "2026-07-15T07:29:14.573Z",
+    "pickup": "BSTM HQ",
+    "dropoff": "Game City",
+    "fare": 32,
+    "rideType": "Standard"
+  },
+  {
+    "id": "CL-A9JAMB",
+    "status": "requested",
+    "createdAt": "2026-07-15T10:03:22.834Z",
+    "pickup": "BSTM HQ",
+    "dropoff": "Game City",
+    "fare": 20,
+    "type": "standard"
+  }
+]
