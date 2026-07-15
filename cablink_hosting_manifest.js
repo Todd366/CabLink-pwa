@@ -1,0 +1,50 @@
+const fs=require("fs");
+
+console.log(`
+=========================================
+🚕 CABLINK HOSTING MANIFEST
+=========================================
+`);
+
+const manifest = {
+name:"BSTM CabLink",
+version:"5.0.0",
+frontend:{
+type:"Vite PWA",
+build:"npm run build",
+output:"dist",
+environment:[
+"VITE_CABLINK_API_URL"
+]
+},
+backend:{
+runtime:"Node.js",
+start:"npm start",
+entry:"backend/server.js",
+environment:[
+"NODE_ENV",
+"PORT"
+]
+},
+verified:[
+"health API",
+"ride creation",
+"dispatch bridge",
+"ride acceptance",
+"ride completion"
+]
+};
+
+fs.writeFileSync(
+"CABLINK_HOSTING_MANIFEST.json",
+JSON.stringify(manifest,null,2)
+);
+
+console.log("✅ Created CABLINK_HOSTING_MANIFEST.json");
+
+console.log(`
+=========================================
+DONE
+=========================================
+`);
+
