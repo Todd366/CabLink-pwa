@@ -1,4 +1,4 @@
-/* fix.js v67 */
+/* fix.js v67 - CabLink */
 (function(){
   var s=getComputedStyle(document.documentElement);
   if(!s.getPropertyValue('--bg').trim()){
@@ -27,7 +27,7 @@ function patchProfile(){
   a.onload=function(){
     var f=document.createElement('script');
     f.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
-    f.onload=initFB;document.head.appendChild(f);
+    f.onload=initFB; document.head.appendChild(f);
   };
   document.head.appendChild(a);
 })();
@@ -46,16 +46,68 @@ function initFB(){
   console.log('Firebase OK');
 }
 
+// Book ride - calls backend API, shows real response
 window.bookRide=function(){
   var p=(document.getElementById('pickup')||{}).value||'';
   var d=(document.getElementById('dropoff')||{}).value||'';
   if(!p.trim()||!d.trim()){toast('Please enter pickup and drop-off locations','warning');return;}
   if(!navigator.onLine){toast('Offline - ride queued','warning');return;}
   toast('Searching for nearby drivers...','warning');
-  setTimeout(function(){toast('No drivers available right now - try again soon','warning');},1800);
+  var payload={pickup:p,dropoff:d,
+    vehicle:(window.STATE&&window.STATE.selectedRideType)||'standard',
+    fare:(window.STATE&&window.STATE.selectedFare)||20,
+    wallet:(window.STATE&&window.STATE.wallet)||null};
+  fetch('/api/rides',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.success){
+        toast('Ride requested! ID: '+data.ride.id,'success');
+        if(window.STATE){window.STATE.rideId=data.ride.id;window.STATE.inRide=true;}
+      } else {
+        toast('No drivers available right now','warning');
+      }
+    })
+    .catch(function(){
+      setTimeout(function(){toast('No drivers available right now - try again soon','warning');},1800);
+    });
 };
 
-window.toggleDriverMode=function(){window.showDriverRegistrationForm();};
+window.toggleDriverMode=function(){
+  if(!window.STATE)window.STATE={driverOnline:false,driverRequests:0};
+  window.STATE.driverOnline=!window.STATE.driverOnline;
+  var btn=document.getElementById('driverModeBtn');
+  if(window.STATE.driverOnline){
+    if(btn){btn.textContent='🔴 Go Offline';btn.className='btn btn-danger btn-sm';}
+    toast('You are now online and accepting rides!','success');
+    var payload={driverId:Date.now().toString(36),
+      vehicle:(window.STATE.selectedVehicle||'standard'),
+      wallet:(window.STATE.wallet||null)};
+    fetch('/api/drivers/online',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d.pendingRides>0)toast(d.pendingRides+' pending rides waiting!','warning');
+      }).catch(function(){});
+    window._driverPoll=setInterval(function(){
+      fetch('/api/rides').then(function(r){return r.json();})
+        .then(function(d){
+          var pending=(d.rides||[]).filter(function(r){return r.status==='searching';});
+          if(pending.length>0&&typeof addDriverRequest==='function'){
+            addDriverRequest(pending[0]);
+            if(window.STATE)window.STATE.driverRequests=(window.STATE.driverRequests||0)+1;
+          }
+          updateDriverUI&&updateDriverUI();
+        }).catch(function(){});
+    },4000);
+  } else {
+    if(btn){btn.textContent='🟢 Go Online';btn.className='btn btn-outline btn-sm';}
+    clearInterval(window._driverPoll);
+    toast('You are now offline.','warning');
+    fetch('/api/drivers/offline',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({wallet:(window.STATE&&window.STATE.wallet)||null})}).catch(function(){});
+  }
+  if(typeof updateDriverUI==='function')updateDriverUI();
+};
+
 window.showDriverRegistrationForm=function(){
   document.querySelectorAll('.cl-dm').forEach(function(m){m.remove();});
   var modal=document.createElement('div');
@@ -84,14 +136,21 @@ window.submitDriverForm=async function(){
   var rec={name:name,phone:'+267'+phone,license:lic,vehicle:veh,
     wallet:(window.STATE&&window.STATE.wallet)||null,
     status:'pending',createdAt:new Date().toISOString()};
-  if(window.db){try{await window.db.collection('driver_applications').add(rec);}
-  catch(e){var q=JSON.parse(localStorage.getItem('cl_dq')||'[]');q.push(rec);localStorage.setItem('cl_dq',JSON.stringify(q));}}
-  else{var q=JSON.parse(localStorage.getItem('cl_dq')||'[]');q.push(rec);localStorage.setItem('cl_dq',JSON.stringify(q));}
+  try{
+    var r=await fetch('/api/drivers/apply',{method:'POST',
+      headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)});
+    var d=await r.json();
+    if(d.success){toast('Application submitted! ID: '+d.id,'success');}
+    else{throw new Error(d.error||'Failed');}
+  }catch(e){
+    if(window.db){try{await window.db.collection('driver_applications').add(rec);}catch(e2){}}
+    var q=JSON.parse(localStorage.getItem('cl_dq')||'[]');q.push(rec);localStorage.setItem('cl_dq',JSON.stringify(q));
+    toast('Application saved! Will sync when backend connects.','success');
+  }
   localStorage.setItem('userRole','driver');
   if(window.STATE)window.STATE.role='driver';
   document.querySelectorAll('.cl-dm').forEach(function(m){m.remove();});
   patchProfile();
-  toast('Application submitted! We will review and contact you.','success');
 };
 
 document.addEventListener('DOMContentLoaded',function(){

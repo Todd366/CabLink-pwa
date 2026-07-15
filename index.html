@@ -12,15 +12,11 @@
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
 <style>
 :root{
-  --ink:#060911; --surface:#0f1526; --surface2:#161e33; --surface3:#1c2540;
-  --glass:rgba(22,30,51,.62); --hair:rgba(255,255,255,.07); --hair2:rgba(255,255,255,.12);
-  --sapphire:#2e6be6; --sapphire-l:#5b8bff;
-  --gold:#f0b93a; --gold-l:#ffd873;
-  --emerald:#21c980; --coral:#ff5d5d;
-  --text:#edeff5; --muted:#8992a9; --muted2:#5b6376;
-  --r-lg:20px; --r-md:14px; --r-sm:10px;
-  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --data:'Space Mono',monospace;
-  --nav-h:78px;
+  --bg:#0a0a0f;--bg2:#16213e;--bg3:#0f172a;--card:#12121d;
+  --accent:#f5c518;--accent2:#ff8c00;--green:#22d672;--red:#ff4757;
+  --blue:#4fc3f7;--purple:#b388ff;
+  --text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
+  --radius:14px;--font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-font-smoothing:antialiased}
@@ -58,7 +54,7 @@ html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--
 
 #screens{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 #screens::-webkit-scrollbar{display:none}
-.screen{display:none;padding:14px 18px calc(var(--nav-h) + 24px);animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+.screen{display:none;padding:16px 16px 100px;animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
 .screen.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
@@ -228,13 +224,14 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 .eco-item.wide{grid-column:1/-1;flex-direction:row;align-items:center}
 
 /* nav */
-#nav{position:fixed;bottom:14px;left:14px;right:14px;max-width:432px;margin:0 auto;z-index:9999;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--hair2);border-radius:24px;display:flex;padding:8px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;cursor:pointer;color:var(--muted);transition:.2s;border:none;background:none;font-family:var(--data);font-size:9.5px;min-width:0;border-radius:16px}
 .nav-btn.active{color:var(--gold-l);background:rgba(240,185,58,.08)}
 .nav-btn .icon{font-size:18px}
 .nav-btn.center-btn{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;border-radius:50%;width:52px;height:52px;margin-top:-24px;padding:0;flex:none;align-self:flex-start;font-size:21px;box-shadow:0 6px 22px -4px rgba(240,185,58,.6);font-weight:700;min-width:52px}
 
 @media(max-height:700px){.screen{padding-bottom:calc(var(--nav-h) + 12px)}}
+#nav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#16213e;border-top:1px solid #2a2a3e;display:flex;padding-bottom:env(safe-area-inset-bottom);align-items:flex-end;}
 </style>
 </head>
 <body>
@@ -351,7 +348,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
     </div>
 
     <div class="map-container">
-      <div class="map-badge"><span class="pip green" id="mapPip"></span><span id="mapDriverCount">3 drivers nearby</span></div>
+      <div class="map-badge"><span class="pip green" id="mapPip"></span><span id="mapDriverCount">Searching live drivers...</span></div>
       <div class="map-recenter" onclick="recenterMap()">⌖</div>
       <div id="leafletMap"></div>
     </div>
@@ -372,7 +369,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
     <div style="display:flex;flex-direction:column;gap:8px">
       <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request ride · Earn 1 THB</button>
-      <button class="btn btn-outline" id="simBtn" onclick="simulateRide()">🧪 Simulate ride (test mode)</button>
+      <button class="btn btn-outline" id="simBtn" onclick="bookRide()">🧪 Simulate ride (test mode)</button>
       <button class="btn btn-danger btn-sm" id="cancelBtn" style="display:none" onclick="cancelRide()">✕ Cancel ride</button>
     </div>
 
@@ -965,64 +962,85 @@ function animateCarAlongRoute(totalSeconds){
 // ============================================================
 function generateRideId(){ return 'CL-' + Math.random().toString(36).substr(2,6).toUpperCase(); }
 
-function bookRide(){
+
+
+async function bookRide(){
   const pickup = document.getElementById('pickup').value.trim();
   const dropoff = document.getElementById('dropoff').value.trim();
   if(!pickup || !dropoff){ toast('Please enter pickup and drop-off locations', 'warning'); return; }
-  if(!navigator.onLine){ queueOfflineRide({pickup,dropoff,type:STATE.selectedRideType,fare:STATE.selectedFare,time:Date.now()}); toast('📡 Offline — ride queued', 'warning'); return; }
   if(STATE.inRide){ toast('Ride already in progress', 'warning'); return; }
 
-  STATE.rideId = generateRideId(); STATE.inRide = true; STATE.rideReady = false;
-  STATE.tripShareId = 'cablink.io/trip/' + STATE.rideId;
-  updateMapRoute();
+  const payload = {
+    pickup, dropoff,
+    fare: STATE.selectedFare || 0,
+    type: STATE.selectedRideType || 'standard',
+    timestamp: Date.now()
+  };
 
-  document.getElementById('rideId').textContent = STATE.rideId;
+  STATE.inRide = true; STATE.rideReady = false;
+  updateMapRoute();
   document.getElementById('rideIdRow').style.display = 'block';
-  document.getElementById('countdownRow').style.display = 'block';
   document.getElementById('chatSection').style.display = 'block';
   document.getElementById('cancelBtn').style.display = 'block';
   document.getElementById('bookBtn').disabled = true;
   document.getElementById('simBtn').disabled = true;
-
-  setStatusPip('yellow'); setStatusLabel('🔍 Matching driver…');
+  setStatusPip('yellow'); setStatusLabel('🔍 Requesting ride…');
   showRideProgressBar('FINDING DRIVER', 10);
 
-  setTimeout(() => {
-    setStatusPip('green'); setStatusLabel('🚗 Driver accepted! En route…');
-    showRideProgressBar('DRIVER EN ROUTE', 40);
-    appendDriverMsg('Driver', `Hello! I'm on my way. Approx ${calcETA()} min. — Ride ${STATE.rideId}`);
-    toast('🚗 Driver accepted! Check chat for updates.', 'success'); haptic();
-    const dur = calcRideDuration();
-    startCountdown(dur, () => showArrived());
-    animateCarAlongRoute(dur);
-  }, 3000);
+  try{
+    const response = await fetch('/api/rides', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+    console.log('REAL RIDE CREATED:', data);
+    const ride = data.ride || data;
+    STATE.rideId = ride.id || ride._id || ('CL-' + Date.now());
+    document.getElementById('rideId').textContent = STATE.rideId;
+    toast('🚕 Ride requested — waiting for a driver', 'success');
+    pollRideStatus(STATE.rideId);
+  } catch(e){
+    console.error(e);
+    toast('Backend unavailable — could not book ride', 'error');
+    resetRideUI();
+  }
+}
 
-  addDriverRequest();
-  toast(`Ride booked! ID: ${STATE.rideId}`, 'success');
+let _rideStatusPoller = null;
+async function pollRideStatus(rideId){
+  clearInterval(_rideStatusPoller);
+  _rideStatusPoller = setInterval(async () => {
+    try{
+      const res = await fetch('/api/rides/' + rideId);
+      if(!res.ok) return;
+      const data = await res.json();
+      const ride = data.ride || data;
+      const status = (ride.status || '').toLowerCase();
+      console.log('Ride status:', status);
+      if(status === 'accepted' || status === 'assigned'){
+        setStatusPip('green'); setStatusLabel('🚗 Driver assigned! En route…');
+        showRideProgressBar('DRIVER EN ROUTE', 40);
+      } else if(status === 'arrived'){
+        clearInterval(_rideStatusPoller);
+        showArrived();
+      } else if(status === 'completed'){
+        clearInterval(_rideStatusPoller);
+        completeRide();
+      } else if(status === 'cancelled'){
+        clearInterval(_rideStatusPoller);
+        toast('Ride was cancelled', 'warning');
+        resetRideUI();
+      }
+    } catch(e){ /* keep polling quietly */ }
+  }, 3000);
 }
 
 function simulateRide(){
-  if(STATE.inRide){ toast('Ride already in progress', 'warning'); return; }
-  STATE.rideId = generateRideId(); STATE.inRide = true; STATE.rideReady = false;
-  STATE.tripShareId = 'cablink.io/trip/' + STATE.rideId;
-  updateMapRoute();
-
-  document.getElementById('rideId').textContent = STATE.rideId;
-  document.getElementById('rideIdRow').style.display = 'block';
-  document.getElementById('countdownRow').style.display = 'block';
-  document.getElementById('chatSection').style.display = 'block';
-  document.getElementById('cancelBtn').style.display = 'block';
-  document.getElementById('bookBtn').disabled = true;
-  document.getElementById('simBtn').disabled = true;
-
-  setStatusPip('green'); setStatusLabel('🧪 Simulating ride…');
-  showRideProgressBar('SIMULATION IN PROGRESS', 20);
-  appendDriverMsg('SimBot', `Simulation started. Ride ID: ${STATE.rideId}.`);
-  toast('🧪 Simulating ride', 'success');
-  const dur = calcRideDuration();
-  startCountdown(dur, () => completeRide());
-  animateCarAlongRoute(dur);
+ console.log("Simulation disabled. CabLink uses live dispatch.");
+ toast("Live dispatch mode active","success");
 }
+
 
 function cancelRide(){
   if(!STATE.inRide) return;
@@ -1237,15 +1255,79 @@ function checkOnline(){ const online = navigator.onLine; if(!online) showAlert('
 // ============================================================
 // DRIVER MODE
 // ============================================================
-function toggleDriverMode(){
+async function toggleDriverMode(){
   STATE.driverOnline = !STATE.driverOnline;
   const btn = document.getElementById('driverModeBtn');
+  if(!STATE.driverId){
+    STATE.driverId = localStorage.getItem('cl6_driverId') || ('DRV-' + Math.random().toString(36).substr(2,8).toUpperCase());
+    localStorage.setItem('cl6_driverId', STATE.driverId);
+  }
+  try{
+    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+    await fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ driverId: STATE.driverId })
+    });
+  } catch(e){ console.error('Driver status update failed', e); }
   btn.textContent = STATE.driverOnline ? '🔴 Go offline' : '🟢 Go online';
   btn.className = 'btn btn-sm ' + (STATE.driverOnline ? 'btn-danger' : 'btn-outline');
-  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success'); setTimeout(addDriverRequest,3000); setTimeout(addDriverRequest,8000); }
-  else toast('You are now offline.', 'warning');
+  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success'); pollForRideRequests(); }
+  else { toast('You are now offline.', 'warning'); clearInterval(_driverRequestPoller); }
   updateDriverUI();
 }
+
+let _driverRequestPoller = null;
+async function pollForRideRequests(){
+  clearInterval(_driverRequestPoller);
+  _driverRequestPoller = setInterval(async () => {
+    if(!STATE.driverOnline) return;
+    try{
+      const res = await fetch('/api/rides');
+      if(!res.ok) return;
+      const data = await res.json();
+      const rides = data.rides || data;
+      (Array.isArray(rides) ? rides : []).filter(r => {
+        const s = (r.status||'').toLowerCase();
+        return s === 'pending' || s === 'requested' || s === '';
+      }).forEach(r => {
+        if(document.getElementById('req-' + r.id)) return;
+        renderIncomingRequest(r);
+      });
+    } catch(e){ /* silent */ }
+  }, 4000);
+}
+
+function renderIncomingRequest(r){
+  STATE.driverRequests++;
+  const container = document.getElementById('driverRequests');
+  const div = document.createElement('div');
+  div.className = 'request-card pending'; div.id = 'req-' + r.id;
+  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${r.id}</strong><span style="color:var(--gold-l);font-weight:700">${r.fare||''} BWP</span></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${r.pickup||''} → 🏁 ${r.dropoff||''}</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-green btn-sm" onclick="acceptRealRequest('${r.id}')">✓ Accept</button>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${r.id}').remove()">✗ Pass</button>
+    </div>`;
+  if(container.firstChild?.textContent?.includes('online')) container.innerHTML = '';
+  container.prepend(div);
+  updateDriverUI();
+  toast('🚗 New ride request received', 'warning'); haptic();
+}
+
+async function acceptRealRequest(rideId){
+  try{
+    await fetch('/api/rides/' + rideId, {
+      method: 'PATCH',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ status: 'accepted', driverId: STATE.driverId })
+    });
+    document.getElementById('req-' + rideId)?.remove();
+    STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
+    toast('Ride accepted! Earn 1 THB when complete.', 'success');
+  } catch(e){ toast('Could not accept ride', 'error'); }
+}
+
 function addDriverRequest(){
   if(!STATE.driverOnline) return;
   STATE.driverRequests++;
@@ -1539,5 +1621,38 @@ function startClock(){
 }
 function shortAddr(addr){ if(!addr) return '—'; return addr.substr(0,6)+'…'+addr.substr(-4); }
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="role.js"></script>
+<script src="fix.js"></script>
+<script src="fare_engine.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+

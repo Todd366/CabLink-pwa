@@ -1,21 +1,4 @@
-/**
- * CabLink Backend — server.js
- * Minimal Express server for Phase 1 (beta).
- * Serves the static PWA files and exposes a health endpoint.
- *
- * Usage from project root:
- *   node backend/server.js
- *   OR: npm run backend
- *
- * Phase 2 will add:
- *   - Firebase Admin SDK for server-side ride matching
- *   - JWT auth middleware
- *   - Real-time ride dispatch via Firestore triggers
- *   - THB treasury relay (server signs and sends THB to riders)
- */
-
 'use strict';
-
 const express = require('express');
 const cors    = require('cors');
 const path    = require('path');
@@ -23,308 +6,108 @@ const path    = require('path');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
-// ── MIDDLEWARE ────────────────────────────────────────────────
 app.use(cors({ origin: '*' }));
 app.use(express.json());
-
-// Serve the PWA from the project root (one level up from /backend)
 app.use(express.static(path.join(__dirname, '..')));
 
-// ── HEALTH CHECK ─────────────────────────────────────────────
-app.get('/api/health', function (req, res) {
-  res.json({
-    status:    'ok',
-    version:   '5.0.0',
-    ecosystem: 'BSTM CabLink',
-    timestamp: new Date().toISOString()
-  });
+// In-memory stores (Phase 1 — Firebase in Phase 2)
+var rides          = [];
+var driversOnline  = {};
+var driverApps     = [];
+
+// ── HEALTH ────────────────────────────────────────────────────
+app.get('/api/health', function(req, res) {
+  res.json({ status:'ok', version:'5.0.0', ecosystem:'BSTM CabLink',
+    timestamp:new Date().toISOString(), ridesCount:rides.length,
+    driversOnline:Object.keys(driversOnline).length });
 });
 
-// ── DRIVER APPLICATIONS (Phase 1 — in-memory, no Admin SDK yet) ──
-// In Phase 2 this will verify the Firestore write made by fix.js
-// and send a confirmation SMS via Africa's Talking API.
-var driverApplications = [];
-
-app.post('/api/drivers/apply', function (req, res) {
-  var body = req.body || {};
-  if (!body.name || !body.phone || !body.license || !body.vehicle) {
-    return res.status(400).json({ error: 'Missing required fields' });
+// ── RIDES ─────────────────────────────────────────────────────
+app.post('/api/rides', function(req, res) {
+  var b = req.body || {};
+  if (!b.pickup || !b.dropoff) {
+    return res.status(400).json({ error:'pickup and dropoff required' });
   }
-  var record = {
-    id:        'DRV-' + Date.now(),
-    name:      body.name,
-    phone:     body.phone,
-    license:   body.license,
-    vehicle:   body.vehicle,
-    wallet:    body.wallet || null,
-    status:    'pending',
-    createdAt: new Date().toISOString()
+  var ride = {
+    id:        'RIDE-' + Date.now(),
+    pickup:    b.pickup,
+    dropoff:   b.dropoff,
+    vehicle:   b.vehicle   || 'standard',
+    fare:      b.fare      || 20,
+    wallet:    b.wallet    || null,
+    status:    'searching',
+    createdAt: new Date().toISOString(),
+    driverId:  null
   };
-  driverApplications.push(record);
-  console.log('📋 New driver application:', record.id, record.name);
-  res.json({ success: true, id: record.id, message: 'Application received. We will review and contact you.' });
+  rides.unshift(ride);
+  if (rides.length > 100) rides = rides.slice(0, 100);
+  console.log('New ride:', ride.id, ride.pickup, '->', ride.dropoff);
+  res.json({ success:true, ride:ride });
 });
 
-app.get('/api/drivers', function (req, res) {
-  res.json({ count: driverApplications.length, applications: driverApplications });
+app.get('/api/rides', function(req, res) {
+  res.json({ rides: rides.slice(0, 20) });
 });
 
-// ── RIDE BOOKING STUB (Phase 1) ───────────────────────────────
-// Returns "no drivers" for now. Phase 2 will match from Firestore.
-app.post('/api/rides/book', function (req, res) {
-  var body = req.body || {};
-  if (!body.pickup || !body.dropoff) {
-    return res.status(400).json({ error: 'pickup and dropoff required' });
+app.patch('/api/rides/:id', function(req, res) {
+  var ride = rides.find(function(r){ return r.id === req.params.id; });
+  if (!ride) return res.status(404).json({ error:'Ride not found' });
+  Object.assign(ride, req.body, { updatedAt: new Date().toISOString() });
+  res.json({ success:true, ride:ride });
+});
+
+// ── DRIVERS ───────────────────────────────────────────────────
+app.post('/api/drivers/online', function(req, res) {
+  var b = req.body || {};
+  var id = b.driverId || b.wallet || 'driver-' + Date.now();
+  driversOnline[id] = {
+    id:id, vehicle:b.vehicle||'standard',
+    lat:b.lat||-24.6541, lng:b.lng||25.9087,
+    status:'online', onlineSince:new Date().toISOString()
+  };
+  console.log('Driver online:', id);
+  res.json({ success:true, driverId:id, status:'online',
+    pendingRides: rides.filter(function(r){ return r.status==='searching'; }).length });
+});
+
+app.post('/api/drivers/offline', function(req, res) {
+  var b = req.body || {};
+  var id = b.driverId || b.wallet;
+  if (id) delete driversOnline[id];
+  res.json({ success:true, status:'offline' });
+});
+
+app.get('/api/drivers/online', function(req, res) {
+  var list = Object.values(driversOnline);
+  res.json({ count:list.length, drivers:list });
+});
+
+// ── DRIVER APPLICATIONS ───────────────────────────────────────
+app.post('/api/drivers/apply', function(req, res) {
+  var b = req.body || {};
+  if (!b.name || !b.phone || !b.license || !b.vehicle) {
+    return res.status(400).json({ error:'Missing required fields' });
   }
-  // Stub: always no drivers in Phase 1 (real matching comes in Phase 2)
-  res.json({
-    success:  false,
-    status:   'no_drivers',
-    message:  'No drivers available in your area right now. Try again in a few minutes.',
-    rideId:   null
-  });
+  var rec = { id:'DRV-'+Date.now(), name:b.name, phone:b.phone,
+    license:b.license, vehicle:b.vehicle, wallet:b.wallet||null,
+    status:'pending', createdAt:new Date().toISOString() };
+  driverApps.push(rec);
+  console.log('Driver application:', rec.id, rec.name);
+  res.json({ success:true, id:rec.id, message:'Application received.' });
 });
 
-
-
-// ================================
-// CABLINK OPERATION API LAYER
-// ================================
-
-const rideService=require("./services/ride_service");
-const driverService=require("./services/driver_service");
-const paymentService=require("./services/payment_service");
-const rewardService=require("./services/reward_service");
-
-
-app.post("/api/rides/create",function(req,res){
-
-const ride=
-rideService.create(req.body||{});
-
-res.json({
-success:true,
-ride:ride
-});
-
-});
-
-
-app.get("/api/rides",function(req,res){
-
-res.json({
-success:true,
-rides:rideService.list()
-});
-
-});
-
-
-app.post("/api/drivers/register",function(req,res){
-
-const driver=
-driverService.register(req.body||{});
-
-res.json({
-success:true,
-driver:driver
-});
-
-});
-
-
-app.get("/api/drivers/available",function(req,res){
-
-res.json({
-success:true,
-drivers:driverService.available()
-});
-
-});
-
-
-app.post("/api/payments/create",function(req,res){
-
-res.json({
-success:true,
-transaction:
-paymentService.create(
-req.body.ride,
-req.body.finance
-)
-});
-
-});
-
-
-app.post("/api/rewards/create",function(req,res){
-
-res.json({
-success:true,
-reward:
-rewardService.create(
-req.body.userId,
-req.body.rideId
-)
-});
-
-});
-
-
-app.get("/api/system/status",function(req,res){
-
-res.json({
-
-system:"CabLink",
-
-version:"5.0",
-
-status:"operational",
-
-timestamp:new Date().toISOString()
-
-});
-
-});
-
-
-// ================================
-// END CABLINK API LAYER
-// ================================
-
-
-
-// BSTM Marketplace Task Bridge
-const ecosystemTasks=require("./routes/ecosystem_tasks");
-app.use("/api/ecosystem", ecosystemTasks);
-
-
-
-
-
-
-// Driver Dashboard Economy API
-const driverDashboardAPI=require("./routes/driver_dashboard_api");
-app.use("/api", driverDashboardAPI);
-
-
-
-// Ride Economy API
-const rideEconomyAPI=require("./routes/ride_economy_api");
-app.use("/api", rideEconomyAPI);
-
-
-
-
-// Driver Economy Dashboard API
-const driverEconomyAPI=require("./routes/driver_economy_api");
-app.use("/api", driverEconomyAPI);
-
-
-
-
-// Driver Visibility APIs
-const driverDemandAPI=require("./routes/driver_demand_api");
-app.use("/api", driverDemandAPI);
-
-const updatesAPI=require("./routes/updates_api");
-app.use("/api", updatesAPI);
-
-
-
-
-// Live Demand Intelligence API
-const liveDemandAPI=require("./routes/live_demand_api");
-app.use("/api", liveDemandAPI);
-
-
-
-
-// Smart Driver Matching API
-const matchingAPI=require("./routes/matching_api");
-app.use("/api", matchingAPI);
-
-
-
-
-// Smart Dispatch API
-const dispatchAPI=require("./routes/dispatch_api");
-app.use("/api", dispatchAPI);
-
-
-
-
-// Live Ride State API
-const liveRideAPI=require("./routes/live_ride_api");
-app.use("/api", liveRideAPI);
-
-
-
-
-// Driver Location Tracking API
-const driverLocationAPI=require("./routes/driver_location_api");
-app.use("/api", driverLocationAPI);
-
-
-
-
-// Ride Completion Economy API
-const completionAPI=require("./routes/completion_api");
-app.use("/api", completionAPI);
-
-
-
-
-// Notification Timeline API
-const notificationAPI=require("./routes/notification_api");
-app.use("/api", notificationAPI);
-
-
-
-
-// Live Ride State API
-const rideStateAPI=require("./routes/ride_state_api");
-app.use("/api", rideStateAPI);
-
-
-
-
-// Ride Orchestrator API
-const orchestratorAPI=require("./routes/orchestrator_api");
-app.use("/api", orchestratorAPI);
-
-
-
-
-// Driver Intelligence API
-const driverIntelligenceAPI=require("./routes/driver_intelligence_api");
-app.use("/api", driverIntelligenceAPI);
-
-
-
-
-// Passenger Intelligence API
-const passengerIntelligenceAPI=require("./routes/passenger_intelligence_api");
-app.use("/api", passengerIntelligenceAPI);
-
-
-
-
-// Identity Engine API
-const identityAPI=require("./routes/identity_api");
-app.use("/api", identityAPI);
-
-
-// ── CATCH-ALL → serve index.html (SPA routing) ───────────────
-app.get('*', function (req, res) {
+// ── CATCH-ALL ─────────────────────────────────────────────────
+app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
-// ── START ─────────────────────────────────────────────────────
-
-app.listen(PORT, function () {
-  console.log('🚕 CabLink backend running on http://localhost:' + PORT);
-  console.log('   Health: http://localhost:' + PORT + '/api/health');
+app.listen(PORT, function() {
+  console.log('CabLink backend: http://localhost:' + PORT);
+  console.log('  GET  /api/health');
+  console.log('  POST /api/rides');
+  console.log('  GET  /api/rides');
+  console.log('  POST /api/drivers/online');
+  console.log('  GET  /api/drivers/online');
+  console.log('  POST /api/drivers/offline');
+  console.log('  POST /api/drivers/apply');
 });
-
-module.exports = app;

@@ -17,13 +17,10 @@
     var ds=document.getElementById('s-driver');if(!ds)return;
     var ec=document.getElementById('cl-drv-cta');
     if(getRole()!=='driver'){
-      var kp=ds.querySelector('.wallet-bar');
-      var rq=document.getElementById('driverRequests');
-      if(kp)kp.style.display='none';
-      if(rq)rq.style.display='none';
+      var kp=ds.querySelector('.wallet-bar'),rq=document.getElementById('driverRequests');
+      if(kp)kp.style.display='none';if(rq)rq.style.display='none';
       if(!ec){
-        var cta=document.createElement('div');
-        cta.id='cl-drv-cta';
+        var cta=document.createElement('div');cta.id='cl-drv-cta';
         cta.style.cssText='background:#12121d;border:1px solid #2a2a3e;border-radius:14px;padding:24px;text-align:center;margin-bottom:12px;';
         cta.innerHTML='<div style="font-size:48px;margin-bottom:12px;">🚖</div>'
           +'<div style="font-size:15px;font-weight:700;margin-bottom:8px;color:#f0f0f5;">Want to earn as a driver?</div>'
@@ -33,8 +30,7 @@
       }
     } else {
       if(ec)ec.remove();
-      var kp2=ds.querySelector('.wallet-bar');
-      var rq2=document.getElementById('driverRequests');
+      var kp2=ds.querySelector('.wallet-bar'),rq2=document.getElementById('driverRequests');
       if(kp2)kp2.style.display='';if(rq2)rq2.style.display='';
     }
   }
