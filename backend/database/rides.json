@@ -1,0 +1,82 @@
+[
+  {
+    "id": "CL-1784115527974",
+    "pickup": "Gaborone Mall",
+    "dropoff": "Airport",
+    "fare": 50,
+    "status": "SEARCHING",
+    "driverId": null,
+    "createdAt": "2026-07-15T11:38:47.975Z"
+  },
+  {
+    "id": "CL-1784115765768",
+    "pickup": "Gaborone Mall",
+    "dropoff": "Airport",
+    "fare": 50,
+    "status": "SEARCHING",
+    "driverId": null,
+    "createdAt": "2026-07-15T11:42:45.768Z"
+  },
+  {
+    "id": "CL-1784116228491",
+    "pickup": "Gaborone Mall",
+    "dropoff": "Airport",
+    "fare": 50,
+    "status": "SEARCHING",
+    "driverId": null,
+    "createdAt": "2026-07-15T11:50:28.491Z"
+  },
+  {
+    "id": "CL-1784116379442",
+    "pickup": "Gaborone Mall",
+    "dropoff": "Airport",
+    "fare": 50,
+    "status": "COMPLETED",
+    "driverId": "DRIVER-001",
+    "createdAt": "2026-07-15T11:52:59.442Z",
+    "updatedAt": "2026-07-15T11:52:59.522Z",
+    "completedAt": "2026-07-15T11:52:59.521Z"
+  },
+  {
+    "id": "CL-1784117215319",
+    "pickup": "BSTM HQ",
+    "dropoff": "Airport",
+    "fare": 60,
+    "status": "ACCEPTED",
+    "driverId": "DRIVER-TEST-001",
+    "createdAt": "2026-07-15T12:06:55.320Z",
+    "updatedAt": "2026-07-15T12:06:55.404Z"
+  },
+  {
+    "id": "CL-1784117374452",
+    "pickup": "BSTM HQ",
+    "dropoff": "Airport",
+    "fare": 60,
+    "status": "ACCEPTED",
+    "driverId": "DRIVER-TEST-001",
+    "createdAt": "2026-07-15T12:09:34.452Z",
+    "updatedAt": "2026-07-15T12:09:34.486Z"
+  },
+  {
+    "id": "CL-1784117611399",
+    "pickup": "BSTM HQ",
+    "dropoff": "Airport",
+    "fare": 60,
+    "status": "COMPLETED",
+    "driverId": "DRIVER-TEST-001",
+    "createdAt": "2026-07-15T12:13:31.399Z",
+    "updatedAt": "2026-07-15T12:13:31.571Z",
+    "completedAt": "2026-07-15T12:13:31.570Z"
+  },
+  {
+    "id": "CL-1784118881675",
+    "pickup": "BSTM HQ",
+    "dropoff": "Airport",
+    "fare": 60,
+    "status": "COMPLETED",
+    "driverId": "DRIVER-TEST-001",
+    "createdAt": "2026-07-15T12:34:41.675Z",
+    "updatedAt": "2026-07-15T12:34:41.785Z",
+    "completedAt": "2026-07-15T12:34:41.784Z"
+  }
+]

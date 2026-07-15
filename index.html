@@ -989,7 +989,7 @@ async function bookRide(){
 
   try{
     const response = await fetch('/api/rides', {
-      method: 'POST',
+      method: 'PATCH',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(payload)
     });
@@ -1036,7 +1036,7 @@ async function pollRideStatus(rideId){
   }, 3000);
 }
 
-function simulateRide(){
+function legacy_simulateRide_disabled(){
  console.log("Simulation disabled. CabLink uses live dispatch.");
  toast("Live dispatch mode active","success");
 }
@@ -1049,7 +1049,7 @@ function cancelRide(){
   resetRideUI(); toast('Ride cancelled.', 'warning');
 }
 
-function completeRide(){
+function recordCompletedRide(){
   clearInterval(STATE.countdownInterval);
   STATE.inRide = false; STATE.rideReady = true; STATE.totalRides++;
   STATE.lastRideDate = new Date().toISOString();
@@ -1086,7 +1086,7 @@ function showArrived(){
     document.getElementById('arrivedBanner').classList.remove('show');
     appendDriverMsg('Driver', "All aboard? Let's go! 🚕");
     showRideProgressBar('RIDE IN PROGRESS', 70);
-    setTimeout(completeRide, 8000);
+    // REAL COMPLETION: controlled by driver lifecycle API
   }, 10000);
 }
 
@@ -1317,10 +1317,10 @@ function renderIncomingRequest(r){
 
 async function acceptRealRequest(rideId){
   try{
-    await fetch('/api/rides/' + rideId, {
+    await fetch('/api/rides/' + rideId + '/accept', {
       method: 'PATCH',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ status: 'accepted', driverId: STATE.driverId })
+      body: JSON.stringify({ driverId: STATE.driverId })
     });
     document.getElementById('req-' + rideId)?.remove();
     STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
@@ -1654,5 +1654,82 @@ function shortAddr(addr){ if(!addr) return '—'; return addr.substr(0,6)+'…'+
 
 
 
+
+
+
+
+
+async function cablinkAcceptRide(rideId,driverId){
+
+const res = await fetch(
+"/api/rides/"+rideId+"/accept",
+{
+method:"PATCH",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+driverId:driverId
+})
+}
+);
+
+return await res.json();
+
+}
+
+
+
+async function cablinkCompleteRide(rideId){
+
+const res = await fetch(
+"/api/rides/"+rideId+"/complete",
+{
+method:"PATCH"
+}
+);
+
+return await res.json();
+
+}
+
+
+window.cablinkAcceptRide=cablinkAcceptRide;
+window.cablinkCompleteRide=cablinkCompleteRide;
+
+
+
+
+
+async function cablinkSyncRideStatus(rideId){
+
+if(!rideId) return;
+
+const res = await fetch(
+"/api/rides/"+rideId
+);
+
+if(!res.ok) return;
+
+const data = await res.json();
+
+console.log(
+"REAL RIDE STATUS:",
+data.status
+);
+
+
+if(window.STATE){
+
+STATE.rideStatus=data.status;
+
+}
+
+return data;
+
+}
+
+
+window.cablinkSyncRideStatus=cablinkSyncRideStatus;
 
 

@@ -2,6 +2,8 @@
 const express = require('express');
 const cors    = require('cors');
 const path    = require('path');
+const rideService = require('./services/rideService');
+const rideDispatch = require('./services/ride_dispatch_bridge');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -28,25 +30,26 @@ app.post('/api/rides', function(req, res) {
   if (!b.pickup || !b.dropoff) {
     return res.status(400).json({ error:'pickup and dropoff required' });
   }
-  var ride = {
-    id:        'RIDE-' + Date.now(),
-    pickup:    b.pickup,
-    dropoff:   b.dropoff,
-    vehicle:   b.vehicle   || 'standard',
-    fare:      b.fare      || 20,
-    wallet:    b.wallet    || null,
-    status:    'searching',
-    createdAt: new Date().toISOString(),
-    driverId:  null
-  };
-  rides.unshift(ride);
-  if (rides.length > 100) rides = rides.slice(0, 100);
-  console.log('New ride:', ride.id, ride.pickup, '->', ride.dropoff);
-  res.json({ success:true, ride:ride });
+  const ride = rideService.createRide(b);
+
+  rideDispatch.dispatchRide(ride);
+
+  console.log('New REAL ride:', ride.id, ride.pickup, '->', ride.dropoff);
+
+  res.json({
+    success:true,
+    ride:ride
+  });
 });
 
 app.get('/api/rides', function(req, res) {
-  res.json({ rides: rides.slice(0, 20) });
+
+  const rideServiceStore = require('./database/rideRepository');
+
+  res.json({
+    rides: rideServiceStore.all().slice(0,20)
+  });
+
 });
 
 app.patch('/api/rides/:id', function(req, res) {
@@ -95,6 +98,86 @@ app.post('/api/drivers/apply', function(req, res) {
   console.log('Driver application:', rec.id, rec.name);
   res.json({ success:true, id:rec.id, message:'Application received.' });
 });
+
+
+
+
+// ===== REAL RIDE LIFECYCLE =====
+
+app.patch('/api/rides/:id/accept', function(req,res){
+
+const ride = rideService.acceptRide(
+req.params.id,
+req.body.driverId
+);
+
+if(!ride){
+return res.status(404).json({
+error:"Ride not found"
+});
+}
+
+res.json({
+success:true,
+ride
+});
+
+});
+
+
+app.patch('/api/rides/:id/complete', function(req,res){
+
+const ride = rideService.completeRide(
+req.params.id
+);
+
+if(!ride){
+return res.status(404).json({
+error:"Ride not found"
+});
+}
+
+res.json({
+success:true,
+ride
+});
+
+});
+
+
+// ===============================
+
+
+
+
+
+// ===== SINGLE RIDE TRUTH READ =====
+
+app.get('/api/rides/:id', function(req,res){
+
+const rideRepository = require('./database/rideRepository');
+
+const ride = rideRepository.all()
+.find(r => r.id === req.params.id);
+
+
+if(!ride){
+
+return res.status(404).json({
+error:"Ride not found"
+});
+
+}
+
+
+res.json({
+ride
+});
+
+});
+
+
+// ================================
 
 // ── CATCH-ALL ─────────────────────────────────────────────────
 app.get('*', function(req, res) {

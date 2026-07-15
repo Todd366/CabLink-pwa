@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-07-15T10:51:03.527Z",
+  "candidates": [
+    {
+      "file": "cablink_financial_test.js",
+      "reason": "phase installer / one-off audit script",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "frontend/pwa/install_manager.js",
+      "reason": "phase installer / one-off audit script",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_bstm_mount.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_reality_cutover.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_role_auto_cleanup.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_role_cleanup.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_role_fix_1784018514824.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_script_repair_1784017559902.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "pilot/cablink_human_pilot_test.js",
+      "reason": "phase installer / one-off audit script",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "pilot/cablink_pilot_readiness_report.js",
+      "reason": "phase installer / one-off audit script",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    }
+  ]
+}

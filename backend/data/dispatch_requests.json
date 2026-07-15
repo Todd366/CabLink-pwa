@@ -96,6 +96,26 @@
       "status": "SEARCHING",
       "drivers": [],
       "created": "2026-07-14T22:04:43.349Z"
+    },
+    {
+      "id": "REQ-1784118881686",
+      "passenger": "USER001",
+      "pickup": "BSTM HQ",
+      "destination": "Airport",
+      "status": "DRIVER_FOUND",
+      "drivers": [
+        {
+          "id": "DRIVER001",
+          "online": true,
+          "location": {
+            "lat": -24.6282,
+            "lng": 25.9231
+          },
+          "name": "Todd Driver",
+          "distance": 35.76
+        }
+      ],
+      "created": "2026-07-15T12:34:41.686Z"
     }
   ]
 }

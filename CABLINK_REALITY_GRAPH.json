@@ -1,0 +1,4884 @@
+{
+  "meta": {
+    "generatedAt": "2026-07-15T10:51:03.527Z",
+    "mode": "fix-report",
+    "root": "/data/data/com.termux/files/home/CabLink-pwa",
+    "filesScanned": 353
+  },
+  "frontend": {
+    "scriptLoadOrder": [
+      {
+        "order": 0,
+        "type": "src",
+        "src": "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      },
+      {
+        "order": 1,
+        "type": "src",
+        "src": "https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"
+      },
+      {
+        "order": 2,
+        "type": "inline",
+        "startLine": 653,
+        "endLine": 1623
+      },
+      {
+        "order": 3,
+        "type": "src",
+        "src": "role.js"
+      },
+      {
+        "order": 4,
+        "type": "src",
+        "src": "fix.js"
+      },
+      {
+        "order": 5,
+        "type": "src",
+        "src": "fare_engine.js"
+      }
+    ],
+    "fetchCalls": [
+      {
+        "file": "fix.js",
+        "line": 60,
+        "endpoint": "/api/rides",
+        "method": "POST",
+        "calledFromFunction": "bookRide"
+      },
+      {
+        "file": "fix.js",
+        "line": 85,
+        "endpoint": "/api/drivers/online",
+        "method": "POST",
+        "calledFromFunction": "toggleDriverMode"
+      },
+      {
+        "file": "fix.js",
+        "line": 91,
+        "endpoint": "/api/rides",
+        "method": "GET",
+        "calledFromFunction": "toggleDriverMode"
+      },
+      {
+        "file": "fix.js",
+        "line": 105,
+        "endpoint": "/api/drivers/offline",
+        "method": "POST",
+        "calledFromFunction": "toggleDriverMode"
+      },
+      {
+        "file": "fix.js",
+        "line": 140,
+        "endpoint": "/api/drivers/apply",
+        "method": "POST",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/components/passenger_dashboard.jsx",
+        "line": 16,
+        "endpoint": "/api/ride/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/components/passenger_dashboard.jsx",
+        "line": 21,
+        "endpoint": "/api/ride/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 994,
+        "endpoint": "/api/rides",
+        "method": "POST",
+        "calledFromFunction": "bookRide"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1018,
+        "endpoint": "/api/rides/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1289,
+        "endpoint": "/api/rides",
+        "method": "GET",
+        "calledFromFunction": "pollForRideRequests"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1323,
+        "endpoint": "/api/rides/",
+        "method": "PATCH",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1648,
+        "endpoint": "/api/drivers/online",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1685,
+        "endpoint": "/api/rides",
+        "method": "POST",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1809,
+        "endpoint": "/api/drivers/online",
+        "method": "POST",
+        "calledFromFunction": "toggleDriverMode"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1860,
+        "endpoint": "/api/drivers/offline",
+        "method": "POST",
+        "calledFromFunction": "toggleDriverMode"
+      },
+      {
+        "file": "frontend/js/app.js",
+        "line": 11,
+        "endpoint": "/api/rides",
+        "method": "POST",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/pages/DriverDashboard.jsx",
+        "line": 14,
+        "endpoint": "/api/driver/DRIVER001/economy",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/pages/DriverDashboard.jsx",
+        "line": 19,
+        "endpoint": "/api/driver/hotspots",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/pages/PassengerRide.jsx",
+        "line": 25,
+        "endpoint": "/api/dispatch/request",
+        "method": "POST",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/pages/UpdatesCenter.jsx",
+        "line": 13,
+        "endpoint": "/api/updates",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/demand_api.js",
+        "line": 5,
+        "endpoint": "/api/driver/demand",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/driver_dashboard_api.js",
+        "line": 4,
+        "endpoint": "/api/driver/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/driver_dashboard_api.js",
+        "line": 15,
+        "endpoint": "/api/driver/hotspots",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/driver_dashboard_api.js",
+        "line": 26,
+        "endpoint": "/api/updates",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/identity_api.js",
+        "line": 6,
+        "endpoint": "/api/user/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/live_ride_api.js",
+        "line": 6,
+        "endpoint": "/api/ride/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/live_ride_api.js",
+        "line": 18,
+        "endpoint": "/api/ride/status",
+        "method": "POST",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/notification_api.js",
+        "line": 4,
+        "endpoint": "/api/ride/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/passenger_dashboard_api.js",
+        "line": 5,
+        "endpoint": "/api/ride/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/passenger_dashboard_api.js",
+        "line": 10,
+        "endpoint": "/api/ride/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "frontend/services/updates_api.js",
+        "line": 5,
+        "endpoint": "/api/updates",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "index.html",
+        "line": 991,
+        "endpoint": "/api/rides",
+        "method": "POST",
+        "calledFromFunction": "bookRide"
+      },
+      {
+        "file": "index.html",
+        "line": 1015,
+        "endpoint": "/api/rides/",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "index.html",
+        "line": 1286,
+        "endpoint": "/api/rides",
+        "method": "GET",
+        "calledFromFunction": "pollForRideRequests"
+      },
+      {
+        "file": "index.html",
+        "line": 1320,
+        "endpoint": "/api/rides/",
+        "method": "PATCH",
+        "calledFromFunction": null
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 996,
+        "endpoint": "/api/rides",
+        "method": "POST",
+        "calledFromFunction": "bookRide"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1599,
+        "endpoint": "/api/drivers/online",
+        "method": "GET",
+        "calledFromFunction": null
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1636,
+        "endpoint": "/api/rides",
+        "method": "POST",
+        "calledFromFunction": null
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1760,
+        "endpoint": "/api/drivers/online",
+        "method": "POST",
+        "calledFromFunction": "toggleDriverMode"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1811,
+        "endpoint": "/api/drivers/offline",
+        "method": "POST",
+        "calledFromFunction": "toggleDriverMode"
+      }
+    ]
+  },
+  "backend": {
+    "routes": [
+      {
+        "file": "backend/ride_api_patch.js",
+        "line": 7,
+        "method": "POST",
+        "path": "/api/rides"
+      },
+      {
+        "file": "backend/ride_api_patch.js",
+        "line": 36,
+        "method": "GET",
+        "path": "/api/rides"
+      },
+      {
+        "file": "backend/ride_api_patch.js",
+        "line": 46,
+        "method": "GET",
+        "path": "/api/rides/:id"
+      },
+      {
+        "file": "backend/ride_api_patch.js",
+        "line": 65,
+        "method": "PATCH",
+        "path": "/api/rides/:id"
+      },
+      {
+        "file": "backend/routes/completion_api.js",
+        "line": 8,
+        "method": "POST",
+        "path": "/ride/complete"
+      },
+      {
+        "file": "backend/routes/dispatch_api.js",
+        "line": 11,
+        "method": "POST",
+        "path": "/dispatch/request"
+      },
+      {
+        "file": "backend/routes/dispatch_api.js",
+        "line": 31,
+        "method": "POST",
+        "path": "/dispatch/match"
+      },
+      {
+        "file": "backend/routes/dispatch_api.js",
+        "line": 52,
+        "method": "POST",
+        "path": "/dispatch/accept"
+      },
+      {
+        "file": "backend/routes/dispatch_api.js",
+        "line": 73,
+        "method": "GET",
+        "path": "/dispatch/list"
+      },
+      {
+        "file": "backend/routes/driver_dashboard_api.js",
+        "line": 9,
+        "method": "GET",
+        "path": "/driver/:id/dashboard"
+      },
+      {
+        "file": "backend/routes/driver_demand_api.js",
+        "line": 8,
+        "method": "GET",
+        "path": "/driver/demand"
+      },
+      {
+        "file": "backend/routes/driver_economy.js",
+        "line": 9,
+        "method": "GET",
+        "path": "/driver/:id/economy"
+      },
+      {
+        "file": "backend/routes/driver_economy_api.js",
+        "line": 8,
+        "method": "GET",
+        "path": "/driver/:id/economy"
+      },
+      {
+        "file": "backend/routes/driver_intelligence_api.js",
+        "line": 9,
+        "method": "POST",
+        "path": "/drivers/rank"
+      },
+      {
+        "file": "backend/routes/driver_intelligence_api.js",
+        "line": 29,
+        "method": "POST",
+        "path": "/drivers/best"
+      },
+      {
+        "file": "backend/routes/driver_location_api.js",
+        "line": 8,
+        "method": "POST",
+        "path": "/driver/location/update"
+      },
+      {
+        "file": "backend/routes/driver_location_api.js",
+        "line": 21,
+        "method": "POST",
+        "path": "/ride/tracking"
+      },
+      {
+        "file": "backend/routes/driver_online_api.js",
+        "line": 19,
+        "method": "GET",
+        "path": "/drivers/online"
+      },
+      {
+        "file": "backend/routes/driver_online_api.js",
+        "line": 32,
+        "method": "POST",
+        "path": "/drivers/online"
+      },
+      {
+        "file": "backend/routes/driver_online_api.js",
+        "line": 67,
+        "method": "POST",
+        "path": "/drivers/offline"
+      },
+      {
+        "file": "backend/routes/ecosystem_tasks.js",
+        "line": 9,
+        "method": "POST",
+        "path": "/marketplace/order"
+      },
+      {
+        "file": "backend/routes/ecosystem_tasks.js",
+        "line": 22,
+        "method": "GET",
+        "path": "/tasks"
+      },
+      {
+        "file": "backend/routes/ecosystem_tasks.js",
+        "line": 35,
+        "method": "PATCH",
+        "path": "/tasks/:id"
+      },
+      {
+        "file": "backend/routes/gps.js",
+        "line": 7,
+        "method": "POST",
+        "path": "/update"
+      },
+      {
+        "file": "backend/routes/gps.js",
+        "line": 23,
+        "method": "GET",
+        "path": "/:device"
+      },
+      {
+        "file": "backend/routes/identity_api.js",
+        "line": 11,
+        "method": "GET",
+        "path": "/user/:id"
+      },
+      {
+        "file": "backend/routes/identity_api.js",
+        "line": 31,
+        "method": "POST",
+        "path": "/user/create"
+      },
+      {
+        "file": "backend/routes/identity_api.js",
+        "line": 51,
+        "method": "POST",
+        "path": "/user/verify-role"
+      },
+      {
+        "file": "backend/routes/live_demand_api.js",
+        "line": 11,
+        "method": "POST",
+        "path": "/demand/request"
+      },
+      {
+        "file": "backend/routes/live_demand_api.js",
+        "line": 31,
+        "method": "POST",
+        "path": "/demand/complete"
+      },
+      {
+        "file": "backend/routes/live_demand_api.js",
+        "line": 51,
+        "method": "GET",
+        "path": "/driver/hotspots"
+      },
+      {
+        "file": "backend/routes/live_ride_api.js",
+        "line": 11,
+        "method": "POST",
+        "path": "/ride/create"
+      },
+      {
+        "file": "backend/routes/live_ride_api.js",
+        "line": 29,
+        "method": "POST",
+        "path": "/ride/status"
+      },
+      {
+        "file": "backend/routes/live_ride_api.js",
+        "line": 50,
+        "method": "POST",
+        "path": "/ride/assign"
+      },
+      {
+        "file": "backend/routes/live_ride_api.js",
+        "line": 71,
+        "method": "GET",
+        "path": "/ride/:id"
+      },
+      {
+        "file": "backend/routes/matching_api.js",
+        "line": 11,
+        "method": "POST",
+        "path": "/driver/location"
+      },
+      {
+        "file": "backend/routes/matching_api.js",
+        "line": 31,
+        "method": "POST",
+        "path": "/matching/drivers"
+      },
+      {
+        "file": "backend/routes/mobile.js",
+        "line": 8,
+        "method": "POST",
+        "path": "/register"
+      },
+      {
+        "file": "backend/routes/mobile.js",
+        "line": 21,
+        "method": "POST",
+        "path": "/heartbeat/:id"
+      },
+      {
+        "file": "backend/routes/mobile.js",
+        "line": 34,
+        "method": "POST",
+        "path": "/trip/start"
+      },
+      {
+        "file": "backend/routes/notification_api.js",
+        "line": 11,
+        "method": "POST",
+        "path": "/notifications/create"
+      },
+      {
+        "file": "backend/routes/notification_api.js",
+        "line": 27,
+        "method": "GET",
+        "path": "/ride/:id/timeline"
+      },
+      {
+        "file": "backend/routes/orchestrator_api.js",
+        "line": 10,
+        "method": "POST",
+        "path": "/orchestrator/create"
+      },
+      {
+        "file": "backend/routes/orchestrator_api.js",
+        "line": 27,
+        "method": "POST",
+        "path": "/orchestrator/assign"
+      },
+      {
+        "file": "backend/routes/orchestrator_api.js",
+        "line": 47,
+        "method": "POST",
+        "path": "/orchestrator/arrived"
+      },
+      {
+        "file": "backend/routes/orchestrator_api.js",
+        "line": 66,
+        "method": "POST",
+        "path": "/orchestrator/start"
+      },
+      {
+        "file": "backend/routes/orchestrator_api.js",
+        "line": 85,
+        "method": "POST",
+        "path": "/orchestrator/finish"
+      },
+      {
+        "file": "backend/routes/passenger_intelligence_api.js",
+        "line": 8,
+        "method": "GET",
+        "path": "/passenger/:id/profile"
+      },
+      {
+        "file": "backend/routes/passenger_intelligence_api.js",
+        "line": 21,
+        "method": "POST",
+        "path": "/passenger/update"
+      },
+      {
+        "file": "backend/routes/realtime.js",
+        "line": 9,
+        "method": "POST",
+        "path": "/driver/status"
+      },
+      {
+        "file": "backend/routes/realtime.js",
+        "line": 25,
+        "method": "POST",
+        "path": "/driver/location"
+      },
+      {
+        "file": "backend/routes/realtime.js",
+        "line": 41,
+        "method": "POST",
+        "path": "/event"
+      },
+      {
+        "file": "backend/routes/realtime.js",
+        "line": 57,
+        "method": "GET",
+        "path": "/events"
+      },
+      {
+        "file": "backend/routes/ride_economy_api.js",
+        "line": 8,
+        "method": "POST",
+        "path": "/economy/ride/accept"
+      },
+      {
+        "file": "backend/routes/ride_economy_api.js",
+        "line": 27,
+        "method": "POST",
+        "path": "/economy/ride/complete"
+      },
+      {
+        "file": "backend/routes/ride_economy_api.js",
+        "line": 45,
+        "method": "GET",
+        "path": "/economy/rides"
+      },
+      {
+        "file": "backend/routes/ride_state_api.js",
+        "line": 7,
+        "method": "POST",
+        "path": "/ride/create"
+      },
+      {
+        "file": "backend/routes/ride_state_api.js",
+        "line": 17,
+        "method": "POST",
+        "path": "/ride/status"
+      },
+      {
+        "file": "backend/routes/ride_state_api.js",
+        "line": 30,
+        "method": "GET",
+        "path": "/ride/:id/status"
+      },
+      {
+        "file": "backend/routes/rides.js",
+        "line": 11,
+        "method": "POST",
+        "path": "/request"
+      },
+      {
+        "file": "backend/routes/rides.js",
+        "line": 91,
+        "method": "GET",
+        "path": "/"
+      },
+      {
+        "file": "backend/routes/rides.js",
+        "line": 119,
+        "method": "PATCH",
+        "path": "/:id"
+      },
+      {
+        "file": "backend/routes/socket_routes.js",
+        "line": 7,
+        "method": "POST",
+        "path": "/join"
+      },
+      {
+        "file": "backend/routes/socket_routes.js",
+        "line": 23,
+        "method": "POST",
+        "path": "/update"
+      },
+      {
+        "file": "backend/routes/updates_api.js",
+        "line": 7,
+        "method": "GET",
+        "path": "/updates"
+      },
+      {
+        "file": "backend/routes/users.js",
+        "line": 7,
+        "method": "POST",
+        "path": "/register"
+      },
+      {
+        "file": "backend/routes/users.js",
+        "line": 31,
+        "method": "GET",
+        "path": "/"
+      },
+      {
+        "file": "backend/server/app.js",
+        "line": 13,
+        "method": "GET",
+        "path": "/health"
+      },
+      {
+        "file": "backend/server.js",
+        "line": 19,
+        "method": "GET",
+        "path": "/api/health"
+      },
+      {
+        "file": "backend/server.js",
+        "line": 26,
+        "method": "POST",
+        "path": "/api/rides"
+      },
+      {
+        "file": "backend/server.js",
+        "line": 48,
+        "method": "GET",
+        "path": "/api/rides"
+      },
+      {
+        "file": "backend/server.js",
+        "line": 52,
+        "method": "PATCH",
+        "path": "/api/rides/:id"
+      },
+      {
+        "file": "backend/server.js",
+        "line": 60,
+        "method": "POST",
+        "path": "/api/drivers/online"
+      },
+      {
+        "file": "backend/server.js",
+        "line": 73,
+        "method": "POST",
+        "path": "/api/drivers/offline"
+      },
+      {
+        "file": "backend/server.js",
+        "line": 80,
+        "method": "GET",
+        "path": "/api/drivers/online"
+      },
+      {
+        "file": "backend/server.js",
+        "line": 86,
+        "method": "POST",
+        "path": "/api/drivers/apply"
+      },
+      {
+        "file": "backend/server.js",
+        "line": 100,
+        "method": "GET",
+        "path": "*"
+      }
+    ],
+    "requiredEndpointStatus": [
+      {
+        "method": "GET",
+        "path": "/api/health",
+        "status": "PRESENT",
+        "definedAt": "backend/server.js:19"
+      },
+      {
+        "method": "POST",
+        "path": "/api/rides",
+        "status": "PRESENT",
+        "definedAt": "backend/ride_api_patch.js:7"
+      },
+      {
+        "method": "GET",
+        "path": "/api/rides",
+        "status": "PRESENT",
+        "definedAt": "backend/ride_api_patch.js:36"
+      },
+      {
+        "method": "POST",
+        "path": "/api/drivers/online",
+        "status": "PRESENT",
+        "definedAt": "backend/server.js:60"
+      },
+      {
+        "method": "POST",
+        "path": "/api/drivers/offline",
+        "status": "PRESENT",
+        "definedAt": "backend/server.js:73"
+      },
+      {
+        "method": "GET",
+        "path": "/api/drivers/online",
+        "status": "PRESENT",
+        "definedAt": "backend/server.js:80"
+      }
+    ]
+  },
+  "functionOwnership": {
+    "bookRide": [
+      {
+        "file": "fix.js",
+        "line": 50,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          2190,
+          3328
+        ],
+        "loadOrder": 4,
+        "loadedInBrowser": true,
+        "isActive": true
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 970,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          63635,
+          65233
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "frontend/js/app.js",
+        "line": 49,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          608,
+          1392
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "frontend/js/core.js",
+        "line": 4,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          105,
+          477
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 49,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          2125,
+          2573
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "index.html",
+        "line": 967,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          63309,
+          64907
+        ],
+        "loadOrder": 0.5,
+        "loadedInBrowser": true,
+        "isActive": false
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1250,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          59346,
+          61261
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 970,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          63626,
+          64319
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1250,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          59346,
+          61261
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1250,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          59346,
+          61261
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1228,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          59032,
+          60947
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1227,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          59031,
+          60946
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      }
+    ],
+    "toggleDriverMode": [
+      {
+        "file": "fix.js",
+        "line": 75,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          3365,
+          5152
+        ],
+        "loadOrder": 4,
+        "loadedInBrowser": true,
+        "isActive": true
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1261,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          78523,
+          79550
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1762,
+        "kind": "window-override-async",
+        "isWindowOverride": true,
+        "bodyRange": [
+          103783,
+          104869
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "frontend/js/app.js",
+        "line": 86,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          1432,
+          1469
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "frontend/js/core.js",
+        "line": 12,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          517,
+          554
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 58,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          2610,
+          2648
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "index.html",
+        "line": 1258,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          78197,
+          79224
+        ],
+        "loadOrder": 0.5,
+        "loadedInBrowser": true,
+        "isActive": false
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1769,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          78950,
+          79469
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1276,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          77465,
+          77958
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1713,
+        "kind": "window-override-async",
+        "isWindowOverride": true,
+        "bodyRange": [
+          99976,
+          101062
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1769,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          78950,
+          79469
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1769,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          78950,
+          79469
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1747,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          78636,
+          79155
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1746,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          78635,
+          79154
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      }
+    ],
+    "simulateRide": [
+      {
+        "file": "frontend/index.html",
+        "line": 1042,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          66298,
+          66414
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index.html",
+        "line": 1039,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          65972,
+          66088
+        ],
+        "loadOrder": 0.5,
+        "loadedInBrowser": true,
+        "isActive": true
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1302,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          61287,
+          62354
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1040,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          64347,
+          65363
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1302,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          61287,
+          62354
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1302,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          61287,
+          62354
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1280,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          60973,
+          62040
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1279,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          60972,
+          62039
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      }
+    ],
+    "addDriverRequest": [
+      {
+        "file": "cablink_disable_fake_driver_requests.js",
+        "line": 34,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          596,
+          650
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1334,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          81793,
+          83275
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1903,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          105110,
+          105164
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index.html",
+        "line": 1331,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          81467,
+          82949
+        ],
+        "loadOrder": 0.5,
+        "loadedInBrowser": true,
+        "isActive": true
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1784,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          79499,
+          81062
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1285,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          77986,
+          79468
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1854,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          101303,
+          101357
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1784,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          79499,
+          81062
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1784,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          79499,
+          81062
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1762,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          79185,
+          80748
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1761,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          79184,
+          80747
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      }
+    ],
+    "pollForRideRequests": [
+      {
+        "file": "frontend/index.html",
+        "line": 1284,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          79621,
+          80246
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index.html",
+        "line": 1281,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          79295,
+          79920
+        ],
+        "loadOrder": 0.5,
+        "loadedInBrowser": true,
+        "isActive": true
+      }
+    ],
+    "createRide": [
+      {
+        "file": "backend/ride_store.js",
+        "line": 18,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          381,
+          692
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "backend/rides/ride_engine.js",
+        "line": 15,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          201,
+          413
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "backend/services/ride_orchestrator_service.js",
+        "line": 16,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          248,
+          280
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      }
+    ],
+    "acceptRide": [],
+    "completeRide": [
+      {
+        "file": "backend/services/ride_completion_service.js",
+        "line": 6,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          131,
+          571
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1055,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          66732,
+          68079
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index.html",
+        "line": 1052,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          66406,
+          67753
+        ],
+        "loadOrder": 0.5,
+        "loadedInBrowser": true,
+        "isActive": true
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1342,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          62679,
+          64240
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1070,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          65680,
+          67027
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1342,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          62679,
+          64240
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1342,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          62679,
+          64240
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1320,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          62365,
+          63926
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1319,
+        "kind": "declaration",
+        "isWindowOverride": false,
+        "bodyRange": [
+          62364,
+          63925
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": null,
+        "isActive": false
+      }
+    ],
+    "calculateFare": [
+      {
+        "file": "fare_engine.js",
+        "line": 8,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          350,
+          865
+        ],
+        "loadOrder": 5,
+        "loadedInBrowser": true,
+        "isActive": true
+      },
+      {
+        "file": "frontend/js/fare_engine.js",
+        "line": 17,
+        "kind": "window-override",
+        "isWindowOverride": true,
+        "bodyRange": [
+          400,
+          1031
+        ],
+        "loadOrder": null,
+        "loadedInBrowser": false,
+        "isActive": false
+      }
+    ]
+  },
+  "fakeEngine": {
+    "findings": [
+      {
+        "file": "backend/auth/auth_engine.js",
+        "line": 11,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "backend/auth/phone_verification_engine.js",
+        "line": 10,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "backend/ride_store.js",
+        "line": 22,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "backend/routes/live_demand_api.js",
+        "line": 9,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "backend/testing/two_phone_pilot.js",
+        "line": 3,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "backend/testing/two_phone_pilot.js",
+        "line": 43,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_disable_fake_driver_requests.js",
+        "line": 5,
+        "pattern": "fake",
+        "classification": "GREEN",
+        "note": "file name indicates test/demo utility"
+      },
+      {
+        "file": "cablink_disable_fake_driver_requests.js",
+        "line": 37,
+        "pattern": "fake",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "cablink_disable_fake_driver_requests.js",
+        "line": 44,
+        "pattern": "fake",
+        "classification": "GREEN",
+        "note": "file name indicates test/demo utility"
+      },
+      {
+        "file": "cablink_disable_fake_driver_requests.js",
+        "line": 62,
+        "pattern": "fake",
+        "classification": "GREEN",
+        "note": "file name indicates test/demo utility"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 28,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 28,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 38,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 33,
+        "pattern": "mock",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 27,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 32,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 81,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 83,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 83,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 115,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 117,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 117,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 212,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 31,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "cablink_doctor.js",
+        "line": 31,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "deployment/reality_activation_report.js",
+        "line": 16,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "fix.js",
+        "line": 71,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "fix.js",
+        "line": 159,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "fix.js",
+        "line": 16,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "fix.js",
+        "line": 147,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "fix.js",
+        "line": 147,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "fix.js",
+        "line": 150,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "fix.js",
+        "line": 165,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "fix.js",
+        "line": 167,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "fix.js",
+        "line": 168,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/components/passenger_dashboard.jsx",
+        "line": 11,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 375,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 391,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1042,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1072,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1088,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1092,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1151,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1227,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1444,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1504,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1504,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1582,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 671,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 909,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 909,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 919,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 919,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 921,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 966,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1151,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1151,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1228,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1234,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1265,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1337,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1337,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1337,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1337,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1337,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1544,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1544,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1544,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1544,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1544,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1544,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1724,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1906,
+        "pattern": "fake",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1913,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 375,
+        "pattern": "test mode",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 745,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 749,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1265,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1266,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1443,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1443,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1529,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1538,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1783,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1799,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/index.html",
+        "line": 1855,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/js/app.js",
+        "line": 83,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/js/core.js",
+        "line": 9,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/js/core.js",
+        "line": 47,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 55,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 100,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 16,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 88,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 88,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 89,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 89,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 90,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 106,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 108,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/fix.js",
+        "line": 109,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/role.js",
+        "line": 14,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/role.js",
+        "line": 6,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/role.js",
+        "line": 7,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/role.js",
+        "line": 10,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/role.js",
+        "line": 10,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/js/simulation_engine.js",
+        "line": 38,
+        "pattern": "demo",
+        "classification": "GREEN",
+        "note": "file name indicates test/demo utility"
+      },
+      {
+        "file": "frontend/services/role_service.js",
+        "line": 22,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "frontend/services/role_service.js",
+        "line": 31,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 372,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 388,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1039,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1069,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index.html",
+        "line": 1085,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1089,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1148,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1224,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1441,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1501,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1501,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1579,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 668,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 906,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 906,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 916,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 916,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 918,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 963,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1148,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1148,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1225,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1231,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1262,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index.html",
+        "line": 1334,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index.html",
+        "line": 1334,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index.html",
+        "line": 1334,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index.html",
+        "line": 1334,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index.html",
+        "line": 1334,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index.html",
+        "line": 1541,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1541,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1541,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1541,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1541,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1541,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 372,
+        "pattern": "test mode",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 742,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 746,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1262,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index.html",
+        "line": 1263,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index.html",
+        "line": 1440,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1440,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1526,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index.html",
+        "line": 1535,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 510,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 510,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 530,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1280,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1289,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1302,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1379,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1404,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1551,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1281,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1405,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1409,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1559,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1707,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1776,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1777,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2006,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2140,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2140,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 972,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1247,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1519,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1560,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1561,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1708,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1714,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1788,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1789,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1790,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1791,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1792,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2230,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2231,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2231,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2232,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2233,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2233,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1460,
+        "pattern": "mock",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1430,
+        "pattern": "demo",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 510,
+        "pattern": "test mode",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1034,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 1039,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2003,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2004,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2191,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_bstm_mount.html",
+        "line": 2217,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 375,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 391,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1040,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1087,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1103,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1107,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1166,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1242,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1281,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1281,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1395,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1455,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1455,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1533,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 671,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 909,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 909,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 919,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 919,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 921,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 966,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1166,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1166,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1243,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1249,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1288,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1288,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1288,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1288,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1288,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1495,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1495,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1495,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1495,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1495,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1495,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1675,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1857,
+        "pattern": "fake",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1864,
+        "pattern": "fake",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 375,
+        "pattern": "test mode",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 745,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 749,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1394,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1394,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1480,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1489,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1734,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1750,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_reality_cutover.html",
+        "line": 1806,
+        "pattern": "localStorage",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 510,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 510,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 530,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1280,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1289,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1302,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1379,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1404,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1551,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1281,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1405,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1409,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1559,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1707,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1776,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1777,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2006,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2140,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2140,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 972,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1247,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1519,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1560,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1561,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1708,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1714,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1788,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1789,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1790,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1791,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1792,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2230,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2231,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2231,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2232,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2233,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2233,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1460,
+        "pattern": "mock",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1430,
+        "pattern": "demo",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 510,
+        "pattern": "test mode",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1034,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 1039,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2003,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2004,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2191,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_auto_cleanup.html",
+        "line": 2217,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 510,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 510,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 530,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1280,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1289,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1302,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1379,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1404,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1551,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1281,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1405,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1409,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1559,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1707,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1776,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1777,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2006,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2140,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2140,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 972,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1247,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1519,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1560,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1561,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1708,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1714,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1788,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1789,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1790,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1791,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1792,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2230,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2231,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2231,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2232,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2233,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2233,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1460,
+        "pattern": "mock",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1430,
+        "pattern": "demo",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 510,
+        "pattern": "test mode",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1034,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 1039,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2003,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2004,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2191,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_cleanup.html",
+        "line": 2217,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 488,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 488,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 508,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1258,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1267,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1280,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1357,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1382,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1529,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1259,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1383,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1387,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1537,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1685,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1754,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1755,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1984,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2118,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2118,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 950,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1225,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1497,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1538,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1539,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1686,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1692,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1766,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1767,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1768,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1769,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1770,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2208,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2209,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2209,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2210,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2211,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2211,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1438,
+        "pattern": "mock",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1408,
+        "pattern": "demo",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 488,
+        "pattern": "test mode",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1012,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1017,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1981,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 1982,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2169,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_role_fix_1784018514824.html",
+        "line": 2195,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 487,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 487,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 507,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1257,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1266,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1279,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1356,
+        "pattern": "simulate",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1381,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1528,
+        "pattern": "simulate",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1258,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1382,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1386,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1536,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1684,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1753,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1754,
+        "pattern": "setTimeout",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1983,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2117,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2117,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 949,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1224,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1496,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1537,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1538,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1685,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1691,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1765,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1766,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1767,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1768,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1769,
+        "pattern": "Math.random",
+        "classification": "RED",
+        "note": "inside a production function body"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2207,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2208,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2208,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2209,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2210,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2210,
+        "pattern": "Math.random",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1437,
+        "pattern": "mock",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1407,
+        "pattern": "demo",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 487,
+        "pattern": "test mode",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1011,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1016,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1980,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 1981,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2168,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "index_before_script_repair_1784017559902.html",
+        "line": 2194,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "role.js",
+        "line": 14,
+        "pattern": "setTimeout",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "role.js",
+        "line": 6,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "role.js",
+        "line": 7,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "role.js",
+        "line": 10,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "role.js",
+        "line": 10,
+        "pattern": "localStorage",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      },
+      {
+        "file": "sw.js",
+        "line": 1,
+        "pattern": "demo",
+        "classification": "YELLOW",
+        "note": "context unclear — verify manually"
+      }
+    ],
+    "summary": {
+      "RED": 95,
+      "YELLOW": 338,
+      "GREEN": 4
+    }
+  },
+  "connectionMap": [
+    {
+      "step": "bookRide() -> POST /api/rides",
+      "frontendCall": {
+        "file": "fix.js",
+        "line": 60,
+        "endpoint": "/api/rides",
+        "method": "POST",
+        "calledFromFunction": "bookRide"
+      },
+      "backendRoute": {
+        "file": "backend/ride_api_patch.js",
+        "line": 7,
+        "method": "POST",
+        "path": "/api/rides"
+      },
+      "status": "GREEN"
+    },
+    {
+      "step": "createRide() -> POST /api/rides",
+      "frontendCall": null,
+      "backendRoute": {
+        "file": "backend/ride_api_patch.js",
+        "line": 7,
+        "method": "POST",
+        "path": "/api/rides"
+      },
+      "status": "YELLOW"
+    },
+    {
+      "step": "toggleDriverMode() -> POST /api/drivers/online",
+      "frontendCall": {
+        "file": "fix.js",
+        "line": 85,
+        "endpoint": "/api/drivers/online",
+        "method": "POST",
+        "calledFromFunction": "toggleDriverMode"
+      },
+      "backendRoute": {
+        "file": "backend/server.js",
+        "line": 60,
+        "method": "POST",
+        "path": "/api/drivers/online"
+      },
+      "status": "GREEN"
+    },
+    {
+      "step": "pollForRideRequests() -> GET /api/rides",
+      "frontendCall": {
+        "file": "frontend/index.html",
+        "line": 1289,
+        "endpoint": "/api/rides",
+        "method": "GET",
+        "calledFromFunction": "pollForRideRequests"
+      },
+      "backendRoute": {
+        "file": "backend/ride_api_patch.js",
+        "line": 36,
+        "method": "GET",
+        "path": "/api/rides"
+      },
+      "status": "GREEN"
+    },
+    {
+      "step": "acceptRide() -> ride acceptance endpoint",
+      "frontendCall": null,
+      "backendRoute": null,
+      "status": "RED"
+    },
+    {
+      "step": "completeRide() -> ride completion / reward trigger",
+      "frontendCall": null,
+      "backendRoute": null,
+      "status": "RED"
+    }
+  ],
+  "deadCodeCandidates": [
+    {
+      "file": "cablink_financial_test.js",
+      "reason": "phase installer / one-off audit script",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "frontend/pwa/install_manager.js",
+      "reason": "phase installer / one-off audit script",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_bstm_mount.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_reality_cutover.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_role_auto_cleanup.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_role_cleanup.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_role_fix_1784018514824.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "index_before_script_repair_1784017559902.html",
+      "reason": "backup/snapshot file",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "pilot/cablink_human_pilot_test.js",
+      "reason": "phase installer / one-off audit script",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    },
+    {
+      "file": "pilot/cablink_pilot_readiness_report.js",
+      "reason": "phase installer / one-off audit script",
+      "referencedByIndexHtml": false,
+      "requiredByBackend": false,
+      "recommendation": "not referenced by index.html <script> tags or backend require() — safe to archive (do not delete outright)"
+    }
+  ],
+  "recommendedFixes": [],
+  "liveApi": [
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "result": "FAIL",
+      "httpStatus": null,
+      "error": "ECONNREFUSED",
+      "bodyPreview": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/rides",
+      "result": "FAIL",
+      "httpStatus": null,
+      "error": "ECONNREFUSED",
+      "bodyPreview": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/drivers/online",
+      "result": "FAIL",
+      "httpStatus": null,
+      "error": "ECONNREFUSED",
+      "bodyPreview": null
+    }
+  ]
+}
