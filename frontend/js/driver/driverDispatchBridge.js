@@ -154,7 +154,17 @@ data.id
 
 
 
+
+if(window.CABLINK_RIDE_STATE){
+
+window.CABLINK_RIDE_STATE.set(
+"ACCEPTED"
+);
+
+}
+
 box.remove();
+
 
 
 };
