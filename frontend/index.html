@@ -906,22 +906,35 @@ function initMap(){
   routeLine = L.polyline([[LANDMARKS.bstmHQ.lat,LANDMARKS.bstmHQ.lng],[LANDMARKS.gameCity.lat,LANDMARKS.gameCity.lng]], {color:'#f0b93a', weight:3, dashArray:'6,6', opacity:.85}).addTo(MAP);
   carMarker = L.marker([LANDMARKS.bstmHQ.lat, LANDMARKS.bstmHQ.lng], {icon:carIcon}).addTo(MAP);
 
-  const nearbyDrivers = [LANDMARKS.molapo, LANDMARKS.mainMall, LANDMARKS.riverwalk];
-  driverMarkers = nearbyDrivers.map(l => L.marker([l.lat + (Math.random()-.5)*.01, l.lng + (Math.random()-.5)*.01], {
-    icon:L.divIcon({html:'<div style="font-size:14px">🚗</div>', className:'', iconSize:[16,16]})
-  }).addTo(MAP));
+  driverMarkers = {}; // real markers populated by pollOnlineDrivers()
+  pollOnlineDrivers();
+  setInterval(pollOnlineDrivers, 5000);
 
   MAP.fitBounds(routeLine.getBounds(), {padding:[30,30]});
-  setInterval(driftDriverMarkers, 2800);
 }
-function driftDriverMarkers(){
-  driverMarkers.forEach(m => {
-    const p = m.getLatLng();
-    m.setLatLng([p.lat + (Math.random()-.5)*.002, p.lng + (Math.random()-.5)*.002]);
+function pollOnlineDrivers(){
+  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+    const list = data.drivers || [];
+    const seen = new Set();
+    list.forEach(d => {
+      seen.add(d.id);
+      if(driverMarkers[d.id]){
+        driverMarkers[d.id].setLatLng([d.lat, d.lng]);
+      } else {
+        driverMarkers[d.id] = L.marker([d.lat, d.lng], {
+          icon: L.divIcon({html:'<div style="font-size:14px">🚗</div>', className:'', iconSize:[16,16]})
+        }).addTo(MAP).bindPopup('Driver ' + d.id.slice(-4));
+      }
+    });
+    Object.keys(driverMarkers).forEach(id => {
+      if(!seen.has(id)){ MAP.removeLayer(driverMarkers[id]); delete driverMarkers[id]; }
+    });
+    const el = document.getElementById('mapDriverCount');
+    if(el) el.textContent = list.length ? (list.length + ' driver' + (list.length===1?'':'s') + ' online') : 'No drivers online';
+  }).catch(() => {
+    const el = document.getElementById('mapDriverCount');
+    if(el) el.textContent = 'Driver network unavailable';
   });
-  const n = 0; // real driver count comes from backend
-  const el = document.getElementById('mapDriverCount');
-  if(el) el.textContent = n + ' drivers nearby';
 }
 function recenterMap(){ if(MAP && routeLine) MAP.fitBounds(routeLine.getBounds(), {padding:[30,30]}); }
 function updateMapRoute(){
@@ -1014,18 +1027,18 @@ async function pollRideStatus(rideId){
       if(!res.ok) return;
       const data = await res.json();
       const ride = data.ride || data;
-      const status = (ride.status || '').toLowerCase();
+      const status = (ride.status || '').toUpperCase();
       console.log('Ride status:', status);
-      if(status === 'accepted' || status === 'assigned'){
+      if(status === 'ACCEPTED' || status === 'ASSIGNED'){
         setStatusPip('green'); setStatusLabel('🚗 Driver assigned! En route…');
         showRideProgressBar('DRIVER EN ROUTE', 40);
-      } else if(status === 'arrived'){
+      } else if(status === 'ARRIVED'){
         clearInterval(_rideStatusPoller);
         showArrived();
-      } else if(status === 'completed'){
+      } else if(status === 'COMPLETED'){
         clearInterval(_rideStatusPoller);
         completeRide();
-      } else if(status === 'cancelled'){
+      } else if(status === 'CANCELLED'){
         clearInterval(_rideStatusPoller);
         toast('Ride was cancelled', 'warning');
         resetRideUI();
@@ -1083,7 +1096,7 @@ function showArrived(){
     document.getElementById('arrivedBanner').classList.remove('show');
     appendDriverMsg('Driver', "All aboard? Let's go! 🚕");
     showRideProgressBar('RIDE IN PROGRESS', 70);
-    setTimeout(completeRide, 8000);
+    // completeRide() now must be triggered by real backend status
   }, 10000);
 }
 
@@ -1100,8 +1113,80 @@ function resetRideUI(keepId){
 
 function calcRideDuration(){ return Math.min(STATE.selectedFare * 2, 90); }
 function calcETA(){ return Math.round(STATE.selectedFare * 0.6); }
+
+// ═══ REAL FARE ENGINE — replaces flat pricing ═══
+const BOTSWANA_ECONOMY = {
+  fuelPrice: 14.80,       // BWP per litre
+  maintenancePerKm: 0.45,
+  tyresPerKm: 0.18,
+  servicePerKm: 0.22,
+  driverMarginPct: 0.35,
+  platformFeePct: 0.12,
+  minimumFare: 15
+};
+const VEHICLE_CONSUMPTION = { // km per litre
+  standard: 14, premium: 10, xl: 8, moto: 28, eco: 18, quiet: 12
+};
+
+function toRad(v){ return v * Math.PI / 180; }
+function haversineKm(a, b){
+  const R = 6371;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const s = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1-s));
+}
+
+function resolveLandmark(text, fallback){
+  if(!text) return fallback;
+  const lower = text.toLowerCase();
+  for(const key in LANDMARKS){ if(LANDMARKS[key].name.toLowerCase().includes(lower.split(' ')[0])) return LANDMARKS[key]; }
+  if(lower.includes('game')) return LANDMARKS.gameCity;
+  if(lower.includes('main')) return LANDMARKS.mainMall;
+  if(lower.includes('airport')) return LANDMARKS.airport;
+  if(lower.includes('river')) return LANDMARKS.riverwalk;
+  if(lower.includes('ub')||lower.includes('university')) return LANDMARKS.ub;
+  if(lower.includes('molapo')) return LANDMARKS.molapo;
+  if(lower.includes('kgale')) return LANDMARKS.kgale;
+  return fallback;
+}
+
+function getCurrentDistanceKm(){
+  const pu = resolveLandmark(document.getElementById('pickup')?.value, LANDMARKS.bstmHQ);
+  const doff = resolveLandmark(document.getElementById('dropoff')?.value, LANDMARKS.gameCity);
+  return haversineKm(pu, doff);
+}
+
+function calcRealFare(type, distanceKm){
+  const cfg = BOTSWANA_ECONOMY;
+  const consumption = VEHICLE_CONSUMPTION[type] || VEHICLE_CONSUMPTION.standard;
+  const fuelUsed = distanceKm / consumption;
+  const fuelCost = fuelUsed * cfg.fuelPrice;
+  const maintenance = distanceKm * cfg.maintenancePerKm;
+  const tyres = distanceKm * cfg.tyresPerKm;
+  const service = distanceKm * cfg.servicePerKm;
+  const operatingCost = fuelCost + maintenance + tyres + service;
+  const driverMargin = operatingCost * cfg.driverMarginPct;
+  const subtotal = operatingCost + driverMargin;
+  const platformFee = subtotal * cfg.platformFeePct;
+  let total = subtotal + platformFee;
+  total = Math.max(total, cfg.minimumFare);
+  return {
+    distanceKm: +distanceKm.toFixed(2),
+    fuelCost: +fuelCost.toFixed(2),
+    maintenance: +maintenance.toFixed(2),
+    tyres: +tyres.toFixed(2),
+    service: +service.toFixed(2),
+    driverMargin: +driverMargin.toFixed(2),
+    platformFee: +platformFee.toFixed(2),
+    total: Math.round(total)
+  };
+}
+
 function calcTotalFare(){
-  let total = STATE.selectedFare;
+  const distanceKm = getCurrentDistanceKm();
+  const breakdown = calcRealFare(STATE.selectedRideType, distanceKm);
+  let total = breakdown.total;
   total += STATE.stops.length * 5;
   if(STATE.surgeActive) total = Math.round(total * STATE.surgeMultiplier);
   return total;
@@ -1140,8 +1225,7 @@ function appendDriverMsg(name, text){ appendMsg(name, text, false); document.get
 function sendChat(){
   const input = document.getElementById('chatInput'); const text = input.value.trim();
   if(!text) return; appendMsg('You', text, true); input.value = '';
-  const replies = ["Got it! On my way 🚗","Sure, no problem!","I can see your location 📍",`ETA about ${calcETA()} minutes.`,"Traffic is light today ✅"];
-  setTimeout(() => appendDriverMsg('Driver', replies[Math.floor(Math.random()*replies.length)]), 1500+Math.random()*2000);
+  // Real driver replies come from backend chat endpoint (not yet built)
 }
 
 // ============================================================
@@ -1154,17 +1238,26 @@ function selectRideType(el){
   updateFareBreakdown();
 }
 function updateFareBreakdown(){
-  const base = STATE.selectedFare, stops = STATE.stops.length*5;
-  const surgeAdd = STATE.surgeActive ? Math.round(base*(STATE.surgeMultiplier-1)) : 0;
-  const total = base + stops + surgeAdd;
-  document.getElementById('fb-base').textContent = base + ' BWP';
+  const distanceKm = getCurrentDistanceKm();
+  const breakdown = calcRealFare(STATE.selectedRideType, distanceKm);
+  const stops = STATE.stops.length*5;
+  const surgeAdd = STATE.surgeActive ? Math.round(breakdown.total*(STATE.surgeMultiplier-1)) : 0;
+  const total = breakdown.total + stops + surgeAdd;
+  document.getElementById('fb-base').textContent = breakdown.total + ' BWP (' + breakdown.distanceKm + ' km)';
   document.getElementById('fb-stops').textContent = stops + ' BWP';
   document.getElementById('fb-stops-row').style.display = stops ? 'flex' : 'none';
   document.getElementById('fb-surge').textContent = surgeAdd + ' BWP';
   document.getElementById('fb-surge-row').style.display = STATE.surgeActive ? 'flex' : 'none';
   document.getElementById('fb-total').textContent = total + ' BWP';
-  document.getElementById('sm-normal').textContent = base + ' BWP';
-  document.getElementById('sm-surge').textContent = (base+surgeAdd) + ' BWP';
+  document.getElementById('sm-normal').textContent = breakdown.total + ' BWP';
+  document.getElementById('sm-surge').textContent = (breakdown.total+surgeAdd) + ' BWP';
+  // update the live price shown on each ride-type card
+  document.querySelectorAll('.ride-type-card').forEach(card => {
+    const t = card.dataset.type;
+    const b = calcRealFare(t, distanceKm);
+    const priceEl = card.querySelector('.price');
+    if(priceEl) priceEl.textContent = b.total + ' BWP';
+  });
 }
 function addStop(){
   if(STATE.stops.length>=3){ toast('Max 3 extra stops', 'warning'); return; }
@@ -1260,10 +1353,20 @@ async function toggleDriverMode(){
   }
   try{
     const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+    let coords = {};
+    if(STATE.driverOnline && navigator.geolocation){
+      coords = await new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          () => { toast('Location unavailable — using default area', 'warning'); resolve({}); },
+          { timeout: 5000 }
+        );
+      });
+    }
     await fetch(endpoint, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ driverId: STATE.driverId })
+      body: JSON.stringify({ driverId: STATE.driverId, lat: coords.lat, lng: coords.lng })
     });
   } catch(e){ console.error('Driver status update failed', e); }
   btn.textContent = STATE.driverOnline ? '🔴 Go offline' : '🟢 Go online';
@@ -1313,15 +1416,29 @@ function renderIncomingRequest(r){
 
 async function acceptRealRequest(rideId){
   try{
-    await fetch('/api/rides/' + rideId, {
+    await fetch('/api/rides/' + rideId + '/accept', {
       method: 'PATCH',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ status: 'accepted', driverId: STATE.driverId })
+      body: JSON.stringify({ driverId: STATE.driverId })
     });
     document.getElementById('req-' + rideId)?.remove();
     STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
     toast('Ride accepted! Earn 1 THB when complete.', 'success');
   } catch(e){ toast('Could not accept ride', 'error'); }
+}
+
+
+async function completeRealRide(rideId){
+  try{
+    const res = await fetch('/api/rides/' + rideId + '/complete', { method: 'PATCH' });
+    const data = await res.json();
+    console.log('Ride completed on backend:', data);
+    return data.ride;
+  } catch(e){
+    console.error('Complete failed', e);
+    toast('Could not complete ride', 'error');
+    return null;
+  }
 }
 
 function addDriverRequest(){
@@ -1616,6 +1733,16 @@ function startClock(){
   tick(); setInterval(tick, 30000);
 }
 function shortAddr(addr){ if(!addr) return '—'; return addr.substr(0,6)+'…'+addr.substr(-4); }
+<script>
+window.cablinkInputsWired = true;
+document.addEventListener('DOMContentLoaded', () => {
+  const pu = document.getElementById('pickup');
+  const doff = document.getElementById('dropoff');
+  const recalc = () => { updateMapRoute(); updateFareBreakdown(); };
+  if(pu) pu.addEventListener('input', recalc);
+  if(doff) doff.addEventListener('input', recalc);
+});
+</script>
 </script>
 <div id="root"></div><script type="module" src="/main.jsx"></script>
 
@@ -1794,6 +1921,8 @@ localStorage.setItem(
 driver.id
 );
 
+STATE.driverId = driver.id;
+
 
 
 try{
@@ -1824,6 +1953,8 @@ toast(
 "Driver is LIVE on network",
 "success"
 );
+
+pollForRideRequests();
 
 
 }catch(e){
@@ -1863,6 +1994,8 @@ id
 }
 );
 
+
+clearInterval(_driverRequestPoller);
 
 toast(
 "Driver offline",
