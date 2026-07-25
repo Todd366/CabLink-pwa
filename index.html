@@ -369,7 +369,6 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
     <div style="display:flex;flex-direction:column;gap:8px">
       <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request ride · Earn 1 THB</button>
-      <button class="btn btn-outline" id="simBtn" onclick="bookRide()">🧪 Simulate ride (test mode)</button>
       <button class="btn btn-danger btn-sm" id="cancelBtn" style="display:none" onclick="cancelRide()">✕ Cancel ride</button>
     </div>
 
@@ -983,8 +982,7 @@ async function bookRide(){
   document.getElementById('chatSection').style.display = 'block';
   document.getElementById('cancelBtn').style.display = 'block';
   document.getElementById('bookBtn').disabled = true;
-  document.getElementById('simBtn').disabled = true;
-  setStatusPip('yellow'); setStatusLabel('🔍 Requesting ride…');
+    setStatusPip('yellow'); setStatusLabel('🔍 Requesting ride…');
   showRideProgressBar('FINDING DRIVER', 10);
 
   try{
@@ -1044,8 +1042,7 @@ function legacy_simulateRide_disabled(){
 
 function cancelRide(){
   if(!STATE.inRide) return;
-  clearInterval(STATE.countdownInterval); clearInterval(STATE.graceInterval); clearInterval(window._carInterval);
-  STATE.inRide = false; STATE.rideReady = false; STATE.rideId = null;
+  clearInterval(STATE.countdownInterval);   STATE.inRide = false; STATE.rideReady = false; STATE.rideId = null;
   resetRideUI(); toast('Ride cancelled.', 'warning');
 }
 
@@ -1077,11 +1074,9 @@ function showArrived(){
   document.getElementById('rideStatusLabel').textContent = 'DRIVER ARRIVED';
   setStatusPip('green'); setStatusLabel('🚗 Driver arrived! 5 min free wait'); toast('🚗 Your driver has arrived!', 'success'); haptic();
   let secs = 300;
-  STATE.graceInterval = setInterval(() => {
     secs--; const m=Math.floor(secs/60), s=secs%60;
     document.getElementById('graceTimer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-    if(secs<=0){ clearInterval(STATE.graceInterval); completeRide(); }
-  }, 1000);
+    if(secs<=0){   }, 1000);
   setTimeout(() => {
     document.getElementById('arrivedBanner').classList.remove('show');
     appendDriverMsg('Driver', "All aboard? Let's go! 🚕");
@@ -1095,8 +1090,7 @@ function resetRideUI(keepId){
   document.getElementById('chatSection').style.display = 'none';
   document.getElementById('cancelBtn').style.display = 'none';
   document.getElementById('bookBtn').disabled = false;
-  document.getElementById('simBtn').disabled = false;
-  if(!keepId){ document.getElementById('rideIdRow').style.display = 'none'; document.getElementById('rideId').textContent = '—'; }
+    if(!keepId){ document.getElementById('rideIdRow').style.display = 'none'; document.getElementById('rideId').textContent = '—'; }
   setStatusPip(''); setStatusLabel('Enter locations to book');
   document.getElementById('chatBox').innerHTML = '';
   hideRideProgressBar();
@@ -1144,91 +1138,7 @@ function appendDriverMsg(name, text){ appendMsg(name, text, false); document.get
 function sendChat(){
   const input = document.getElementById('chatInput'); const text = input.value.trim();
   if(!text) return; appendMsg('You', text, true); input.value = '';
-  const replies = ["Got it! On my way 🚗","Sure, no problem!","I can see your location 📍",`ETA about ${calcETA()} minutes.`,"Traffic is light today ✅"];
-  setTimeout(() => appendDriverMsg('Driver', replies[Math.floor(Math.random()*replies.length)]), 1500+Math.random()*2000);
-}
-
-// ============================================================
-// RIDE TYPE / STOPS / SCHEDULE / SURGE / NEGOTIATION
-// ============================================================
-function selectRideType(el){
-  document.querySelectorAll('.ride-type-card').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  STATE.selectedRideType = el.dataset.type; STATE.selectedFare = parseInt(el.dataset.fare);
-  updateFareBreakdown();
-}
-function updateFareBreakdown(){
-  const base = STATE.selectedFare, stops = STATE.stops.length*5;
-  const surgeAdd = STATE.surgeActive ? Math.round(base*(STATE.surgeMultiplier-1)) : 0;
-  const total = base + stops + surgeAdd;
-  document.getElementById('fb-base').textContent = base + ' BWP';
-  document.getElementById('fb-stops').textContent = stops + ' BWP';
-  document.getElementById('fb-stops-row').style.display = stops ? 'flex' : 'none';
-  document.getElementById('fb-surge').textContent = surgeAdd + ' BWP';
-  document.getElementById('fb-surge-row').style.display = STATE.surgeActive ? 'flex' : 'none';
-  document.getElementById('fb-total').textContent = total + ' BWP';
-  document.getElementById('sm-normal').textContent = base + ' BWP';
-  document.getElementById('sm-surge').textContent = (base+surgeAdd) + ' BWP';
-}
-function addStop(){
-  if(STATE.stops.length>=3){ toast('Max 3 extra stops', 'warning'); return; }
-  STATE.stops.push({id:Date.now(), value:''}); renderStops(); updateFareBreakdown();
-}
-function removeStop(id){ STATE.stops = STATE.stops.filter(s=>s.id!==id); renderStops(); updateFareBreakdown(); }
-function renderStops(){
-  document.getElementById('stopsContainer').innerHTML = STATE.stops.map(s => `
-    <div class="stop-row"><input class="input" placeholder="Via stop…" value="${s.value}" oninput="STATE.stops.find(x=>x.id===${s.id}).value=this.value" style="flex:1"/><button class="rm-btn" onclick="removeStop(${s.id})">✕</button></div>
-    <div class="loc-line"></div>`).join('');
-}
-function toggleSchedule(){
-  STATE.scheduleMode = !STATE.scheduleMode;
-  document.getElementById('scheduleSection').classList.toggle('show', STATE.scheduleMode);
-  if(STATE.scheduleMode){ const now = new Date(); now.setMinutes(now.getMinutes()+30); document.getElementById('scheduleTime').value = now.toISOString().slice(0,16); }
-}
-function swapLocations(){
-  const pu=document.getElementById('pickup'), doo=document.getElementById('dropoff');
-  const tmp=pu.value; pu.value=doo.value; doo.value=tmp; updateMapRoute(); toast('Locations swapped', 'success');
-}
-function voiceInput(){
-  if(!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)){ toast('Voice input not supported', 'error'); return; }
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const rec = new SR(); rec.lang = 'en-ZA';
-  rec.onresult = e => { const t=e.results[0][0].transcript; document.getElementById('dropoff').value=t; updateMapRoute(); toast('🎤 Heard: '+t, 'success'); };
-  rec.onerror = e => { const msgs={'not-allowed':'Microphone permission denied','no-speech':'No speech detected','network':'Network error'}; toast(msgs[e.error]||'Voice error', 'error'); };
-  try{ rec.start(); toast('🎤 Listening…', 'success'); }catch(e){ toast('Voice input failed', 'error'); }
-}
-function checkSurge(){
-  const h = new Date().getHours();
-  const isSurge = (h>=7&&h<=9)||(h>=16&&h<=19);
-  STATE.surgeActive = isSurge;
-  STATE.surgeMultiplier = isSurge ? ((h>=7&&h<=9)?1.6:1.8) : 1.0;
-  const banner = document.getElementById('surgeBanner');
-  if(isSurge){
-    banner.classList.add('show');
-    document.getElementById('surgeBannerMult').textContent = STATE.surgeMultiplier.toFixed(1)+'×';
-    document.getElementById('surgeMultiplierEl').textContent = STATE.surgeMultiplier.toFixed(1)+'×';
-    document.getElementById('surgeReason').textContent = (h>=7&&h<=9)?'Morning rush hour':'Evening rush hour';
-  } else banner.classList.remove('show');
-  updateFareBreakdown();
-}
-function acceptSurge(){ closeModal('surgeModal'); bookRide(); }
-function toggleNego(){ STATE.negoActive = document.getElementById('negoToggle').checked; document.getElementById('negoSection').style.display = STATE.negoActive ? 'block' : 'none'; }
-function sendOffer(){
-  const val = parseFloat(document.getElementById('offerAmount').value);
-  if(!val || val<5){ toast('Enter a valid offer (min 5 BWP)', 'warning'); return; }
-  STATE.currentOffer = val;
-  const card = document.getElementById('negoConvo'); card.style.display='block';
-  document.getElementById('currentOffer').textContent = val + ' BWP (your offer)';
-  document.getElementById('negoStatus').textContent = 'Waiting for driver…';
-  document.getElementById('negoActions').style.display = 'none';
-  setTimeout(() => {
-    const driverCounter = Math.round(val*(1.1+Math.random()*0.3));
-    document.getElementById('currentOffer').textContent = driverCounter + ' BWP (driver counter)';
-    document.getElementById('negoStatus').textContent = `Driver countered at ${driverCounter} BWP`;
-    document.getElementById('negoActions').style.display = 'flex';
-    STATE.currentOffer = driverCounter;
-    toast(`Driver countered: ${driverCounter} BWP`, 'warning');
-  }, 2000+Math.random()*2000);
+  // Real driver replies from backend
 }
 function acceptOffer(){
   STATE.selectedFare = STATE.currentOffer;
@@ -1623,33 +1533,6 @@ function shortAddr(addr){ if(!addr) return '—'; return addr.substr(0,6)+'…'+
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script src="frontend/js/app.js"></script>
-<script src="frontend/js/core.js"></script>
-<script src="role.js"></script>
-<script src="fix.js"></script>
-<script src="fare_engine.js"></script>
-
-
 <!-- CABLINK DRIVER APPLICATION -->
 <div id="driverApplyModal" class="modal-overlay">
 <div class="modal">
@@ -1807,15 +1690,15 @@ updateRole();
 
 </script>
 
-
-
-<script src="frontend/js/role_switch.js"></script>
-<script src="frontend/js/driver/driverModeBridge.js"></script>
-<script src="frontend/js/driver/driverDispatchBridge.js"></script>
+<!-- CabLink Runtime — DO NOT REORDER -->
+<script src="role.js"></script>
+<script src="fix.js"></script>
+<script src="fare_engine.js"></script>
 <script src="frontend/js/rides/rideStateMachine.js"></script>
 <script src="frontend/js/rides/passengerRideStatus.js"></script>
 <script src="frontend/js/driver/driverLifecycleControls.js"></script>
 <script src="frontend/js/rides/completionRewardBridge.js"></script>
+<!-- END CabLink Runtime -->
 </body>
 </html>
 

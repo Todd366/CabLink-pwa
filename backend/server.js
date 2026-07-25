@@ -52,12 +52,7 @@ app.get('/api/rides', function(req, res) {
 
 });
 
-app.patch('/api/rides/:id', function(req, res) {
-  var ride = rides.find(function(r){ return r.id === req.params.id; });
-  if (!ride) return res.status(404).json({ error:'Ride not found' });
-  Object.assign(ride, req.body, { updatedAt: new Date().toISOString() });
-  res.json({ success:true, ride:ride });
-});
+// removed: broken generic PATCH that used stale local `rides` array
 
 // ── DRIVERS ───────────────────────────────────────────────────
 app.post('/api/drivers/online', function(req, res) {
@@ -99,6 +94,36 @@ app.post('/api/drivers/apply', function(req, res) {
   res.json({ success:true, id:rec.id, message:'Application received.' });
 });
 
+// --- Real driver application review (added Block 9) ---
+app.get('/api/drivers/apply', function(req, res) {
+  res.json({ applications: driverApps });
+});
+
+app.post('/api/drivers/apply/:id/approve', function(req, res) {
+  var app_ = driverApps.find(function(a){ return a.id === req.params.id; });
+  if (!app_) return res.status(404).json({ error: 'Application not found' });
+  app_.status = 'approved';
+  app_.approvedAt = new Date().toISOString();
+  console.log('Driver application approved:', app_.id, app_.name);
+  res.json({ success: true, application: app_ });
+});
+
+app.post('/api/drivers/apply/:id/reject', function(req, res) {
+  var app_ = driverApps.find(function(a){ return a.id === req.params.id; });
+  if (!app_) return res.status(404).json({ error: 'Application not found' });
+  app_.status = 'rejected';
+  app_.rejectedAt = new Date().toISOString();
+  console.log('Driver application rejected:', app_.id, app_.name);
+  res.json({ success: true, application: app_ });
+});
+
+app.get('/api/drivers/apply/:id/status', function(req, res) {
+  var app_ = driverApps.find(function(a){ return a.id === req.params.id; });
+  if (!app_) return res.status(404).json({ error: 'Application not found' });
+  res.json({ status: app_.status });
+});
+
+
 
 
 
@@ -106,10 +131,20 @@ app.post('/api/drivers/apply', function(req, res) {
 
 app.patch('/api/rides/:id/accept', function(req,res){
 
-const ride = rideService.acceptRide(
+let ride;
+try{
+ride = rideService.acceptRide(
 req.params.id,
 req.body.driverId
 );
+}catch(e){
+if(e.code === "RIDE_ALREADY_TAKEN"){
+return res.status(409).json({
+error: e.message
+});
+}
+return res.status(500).json({ error: "Internal error accepting ride" });
+}
 
 if(!ride){
 return res.status(404).json({
