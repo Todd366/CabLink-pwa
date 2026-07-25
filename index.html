@@ -11,6 +11,8 @@
 }
 html,body{background:#0a0a0f!important;color:#f0f0f5!important;}
 #app{background:#0a0a0f!important;}
+@keyframes timerDrain{from{width:100%}to{width:0%}}
+@keyframes slideIn{from{transform:translateY(-10px);opacity:0}to{transform:translateY(0);opacity:1}}
 </style>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
@@ -397,6 +399,7 @@ updateRole();
 </script>
 
 <!-- CabLink Runtime — DO NOT REORDER -->
+<script src="frontend/js/app_core.js"></script>
 <script src="role.js"></script>
 <script src="fix.js"></script>
 <script src="fare_engine.js"></script>
