@@ -8,6 +8,15 @@
   }
 })();
 
+
+// Update greeting with wallet short address
+function updateGreeting() {
+  var el = document.getElementById('greeting-name');
+  if (!el) return;
+  var w = window.STATE && window.STATE.wallet;
+  el.textContent = w ? (', ' + w.slice(0,6) + '...') : '';
+}
+
 function patchProfile(){
   var n=document.getElementById('profile-name')||document.querySelector('#s-profile .card-title');
   var s=document.getElementById('profile-sub') ||document.querySelector('#s-profile .card-sub');
@@ -150,11 +159,11 @@ window.submitDriverForm=async function(){
   localStorage.setItem('userRole','driver');
   if(window.STATE)window.STATE.role='driver';
   document.querySelectorAll('.cl-dm').forEach(function(m){m.remove();});
-  patchProfile();
+  patchProfile(); updateGreeting();
 };
 
 document.addEventListener('DOMContentLoaded',function(){
-  patchProfile();
+  patchProfile(); updateGreeting();
   var pb=document.getElementById('nav-profile');
   if(pb)pb.addEventListener('click',function(){setTimeout(patchProfile,50);});
   var right=document.querySelector('.statusbar .right');
@@ -168,7 +177,7 @@ document.addEventListener('DOMContentLoaded',function(){
       localStorage.setItem('userRole',next);
       if(window.STATE)window.STATE.role=next;
       b.textContent=next==='driver'?'DRIVER':'RIDER';
-      patchProfile();
+      patchProfile(); updateGreeting();
       toast('Switched to '+(next==='driver'?'Driver':'Rider')+' mode','success');
     };
     right.insertBefore(b,right.firstChild);
