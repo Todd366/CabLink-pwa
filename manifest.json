@@ -1,14 +1,17 @@
 {
-  "name": "CabLink — BSTM Ecosystem",
+  "name": "CabLink \u2014 BSTM Ecosystem",
   "short_name": "CabLink",
-  "description": "Blockchain-powered ride-hailing for Gaborone. Earn THoBoCoin for every trip.",
-  "start_url": "/CabLink-pwa/",
-  "scope": "/CabLink-pwa/",
+  "description": "Blockchain ride-hailing for Gaborone. Earn THoBoCoin.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a0a0f",
   "theme_color": "#f5c518",
-  "categories": ["travel", "transportation"],
+  "categories": [
+    "travel",
+    "transportation"
+  ],
   "lang": "en-BW",
   "icons": [
     {

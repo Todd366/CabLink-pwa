@@ -219,13 +219,9 @@ app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
-app.listen(PORT, function() {
-  console.log('CabLink backend: http://localhost:' + PORT);
-  console.log('  GET  /api/health');
-  console.log('  POST /api/rides');
-  console.log('  GET  /api/rides');
-  console.log('  POST /api/drivers/online');
-  console.log('  GET  /api/drivers/online');
-  console.log('  POST /api/drivers/offline');
-  console.log('  POST /api/drivers/apply');
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, function() {
+    console.log('CabLink: http://localhost:' + PORT);
+  });
+}
+module.exports = app;

@@ -1,14 +1,11 @@
 {
   "name": "cablink-pwa",
   "version": "5.0.0",
-  "description": "CabLink — Blockchain-powered ride-hailing for Gaborone. BSTM Ecosystem.",
+  "description": "CabLink \u2014 Blockchain-powered ride-hailing for Gaborone. BSTM Ecosystem.",
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "backend": "node backend/server.js",
-    "dev": "vite",
-    "frontend": "vite",
-    "build": "vite build"
+    "backend": "node backend/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -30,10 +27,6 @@
     "ridehailing",
     "thobocoin"
   ],
-  "author": "Thobo Atlang Mosanako — BSTM Ecosystem",
-  "license": "MIT",
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^5.4.14"
-  }
+  "author": "Thobo Atlang Mosanako \u2014 BSTM Ecosystem",
+  "license": "MIT"
 }

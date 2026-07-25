@@ -2,12 +2,12 @@
 // Disabled in development — enable for production PWA caching
 const CACHE_NAME = 'cablink-v1';
 const STATIC_ASSETS = [
-  '/CabLink-pwa/',
-  '/CabLink-pwa/index.html',
-  '/CabLink-pwa/manifest.json',
-  '/CabLink-pwa/fix.js',
-  '/CabLink-pwa/role.js',
-  '/CabLink-pwa/fare_engine.js'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/fix.js',
+  '/role.js',
+  '/fare_engine.js'
 ];
 
 self.addEventListener('install', function(e) {
