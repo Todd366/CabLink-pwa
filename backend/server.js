@@ -162,11 +162,7 @@ app.post('/api/ratings', function(req, res) {
   res.json({success:true, rating:rating});
 });
 
-// ── CATCH-ALL → index.html ───────────────────────────────
-app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
-});
-
+// catch-all removed — Vercel filesystem serves static files
 // ── START ─────────────────────────────────────────────────
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, function() {

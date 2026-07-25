@@ -9,6 +9,22 @@
       "handle": "filesystem"
     },
     {
+      "src": "/(.*)\\.js$",
+      "dest": "/$1.js"
+    },
+    {
+      "src": "/(.*)\\.css$",
+      "dest": "/$1.css"
+    },
+    {
+      "src": "/(.*)\\.json$",
+      "dest": "/$1.json"
+    },
+    {
+      "src": "/sw\\.js",
+      "dest": "/sw.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
