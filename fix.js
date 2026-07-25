@@ -184,3 +184,34 @@ document.addEventListener('DOMContentLoaded',function(){
   }
 });
 console.log('fix.js v67 OK');
+
+// submitDriverApplication — called from driver registration form
+window.submitDriverApplication = window.submitDriverForm || function() {
+  var name  = ((document.getElementById('cl-dn')||{}).value||'').trim();
+  var phone = ((document.getElementById('cl-dp')||{}).value||'').trim();
+  var lic   = ((document.getElementById('cl-dl')||{}).value||'').trim();
+  var veh   = ((document.getElementById('cl-dv')||{}).value||'').trim();
+  var model = ((document.getElementById('cl-dm')||{}).value||'').trim();
+  var reg   = ((document.getElementById('cl-dr')||{}).value||'').trim();
+  if (!name||!phone||!lic||!veh) { toast('Please fill all fields','warning'); return; }
+  if (!/^[0-9]{7,8}$/.test(phone.replace('+267',''))) {
+    toast('Enter a valid Botswana phone number','warning'); return;
+  }
+  var rec = {name,phone:phone.startsWith('+267')?phone:'+267'+phone,
+    license:lic,vehicle:veh,model,registration:reg,
+    wallet:(window.STATE&&window.STATE.wallet)||null,
+    status:'pending',createdAt:new Date().toISOString()};
+  fetch('/api/drivers/apply',{method:'POST',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)})
+  .then(r=>r.json()).then(d=>{
+    localStorage.setItem('userRole','driver');
+    if(window.STATE) window.STATE.role='driver';
+    document.querySelectorAll('.cl-dm,.driver-modal').forEach(m=>m.remove());
+    toast('Application submitted! We will contact you within 24 hours.','success');
+  }).catch(()=>{
+    var q=JSON.parse(localStorage.getItem('cl_dq')||'[]');
+    q.push(rec); localStorage.setItem('cl_dq',JSON.stringify(q));
+    toast('Saved locally — will sync when online','success');
+    document.querySelectorAll('.cl-dm,.driver-modal').forEach(m=>m.remove());
+  });
+};
