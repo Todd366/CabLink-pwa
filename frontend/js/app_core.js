@@ -259,22 +259,54 @@ window.initMap = function() {
 
 window.updateMapDrivers = function() {
   if (!window._map) return;
+
   fetch('/api/drivers/online')
     .then(function(r){ return r.json(); })
     .then(function(d) {
-      (d.drivers||[]).forEach(function(drv) {
+
+      (d.drivers || []).forEach(function(drv) {
         var key = 'drv_' + drv.id;
-        var dIcon = L.divIcon({className:'',html:'<div style="font-size:18px;">🚗</div>'});
+
+        var dIcon = L.divIcon({
+          className: '',
+          html: '<div style="font-size:18px;">🚗</div>'
+        });
+
+        // Only plot drivers with valid GPS coordinates
+        if (
+          typeof drv.lat !== 'number' ||
+          typeof drv.lng !== 'number'
+        ) {
+          return;
+        }
+
         if (window._markers[key]) {
-          window._markers[key].setLatLng([drv.lat, drv.lng]);
-        } else if (window._map) {
-          window._markers[key] = L.marker([drv.lat||(-24.65+Math.random()*0.05)], {icon:dIcon}).addTo(window._map);
+          window._markers[key].setLatLng([
+            drv.lat,
+            drv.lng
+          ]);
+        } else {
+          window._markers[key] = L.marker(
+            [drv.lat, drv.lng],
+            { icon: dIcon }
+          ).addTo(window._map);
         }
       });
-      var el = document.getElementById('driverCount');
-      if (el) el.textContent = d.count||0;
+
+      // Update the actual driver-count element in index.html
+      var el = document.getElementById('mapDriverCount');
+
+      if (el) {
+        var count = Number(d.count) || 0;
+
+        el.textContent =
+          count + ' live driver' +
+          (count === 1 ? '' : 's');
+      }
     })
-    .catch(function(){});
+    .catch(function(err) {
+      console.error('Driver map update failed:', err);
+    });
 };
 
 window.updateMapRoute = function(from, to) {
@@ -378,82 +410,8 @@ window.submitRatingToBackend = function(rideId, rating, comment) {
   fetch('/api/rides/' + rideId, {
     method: 'PATCH',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({rating: rating, comment: comment, status: 'RATED'})
+    body: JSON.stringify({rating: rating, comment: comment})
   }).catch(function(){});
-};
-
-// ── DRIVER ONLINE STATUS WITH REAL LOCATION ─────────────
-var _origToggle = window.toggleDriverMode;
-window.toggleDriverMode = function() {
-  if (!window.STATE) window.STATE = {};
-  window.STATE.driverOnline = !window.STATE.driverOnline;
-
-  var btn = document.getElementById('driverModeBtn');
-  if (window.STATE.driverOnline) {
-    if (btn) { btn.textContent = '🔴 Go Offline'; btn.className = 'btn btn-danger btn-sm'; }
-    toast('You are online — receiving ride requests', 'success');
-    window.requestNotificationPermission();
-
-    // Send real location to backend
-    navigator.geolocation && navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        fetch('/api/drivers/online', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({
-            driverId: (window.STATE.wallet||'driver-'+Date.now()),
-            vehicle: window.STATE.selectedVehicle || 'standard',
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            wallet: window.STATE.wallet || null
-          })
-        })
-        .then(function(r){ return r.json(); })
-        .then(function(d){
-          if (d.pendingRides > 0) toast(d.pendingRides + ' ride(s) waiting!', 'warning');
-          window.sendNotification('CabLink Driver', 'You are online. Waiting for rides...', '');
-        })
-        .catch(function(){
-          // No location — still go online
-          fetch('/api/drivers/online', {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({driverId:(window.STATE.wallet||'drv-'+Date.now()),vehicle:'standard'})
-          }).catch(function(){});
-        });
-      },
-      function() {
-        fetch('/api/drivers/online', {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({driverId:(window.STATE.wallet||'drv-'+Date.now()),vehicle:'standard'})
-        }).catch(function(){});
-      }
-    );
-
-    // Poll for ride requests every 4 seconds
-    clearInterval(window._driverPoll);
-    window._driverPoll = setInterval(function() {
-      if (!window.STATE.driverOnline) { clearInterval(window._driverPoll); return; }
-      fetch('/api/rides')
-        .then(function(r){ return r.json(); })
-        .then(function(d) {
-          var pending = (d.rides||[]).filter(function(r){ return r.status === 'REQUESTED' || r.status === 'searching'; });
-          if (pending.length > 0) {
-            window.showDriverRequest(pending[0]);
-          }
-          if (typeof updateDriverUI === 'function') updateDriverUI();
-        }).catch(function(){});
-    }, 4000);
-
-  } else {
-    if (btn) { btn.textContent = '🟢 Go Online'; btn.className = 'btn btn-outline btn-sm'; }
-    clearInterval(window._driverPoll);
-    toast('You are offline', 'warning');
-    fetch('/api/drivers/offline', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({wallet: window.STATE.wallet || null})
-    }).catch(function(){});
-  }
-  if (typeof updateDriverUI === 'function') updateDriverUI();
 };
 
 // ── SHOW INCOMING RIDE REQUEST TO DRIVER ─────────────────
@@ -527,6 +485,237 @@ window.declineRideRequest = function(rideId) {
   var card = document.getElementById('req_' + rideId);
   if (card) card.remove();
   toast('Request declined', 'warning');
+};
+
+
+// ── CANONICAL RIDE LIFECYCLE WIRING ─────────────────────────
+//
+// Frontend never mutates canonical ride status directly.
+// Every lifecycle transition goes through the canonical
+// backend PATCH /api/rides/:id endpoint.
+//
+// Canonical lifecycle:
+//
+// REQUESTED
+// → MATCHING
+// → DRIVER_ASSIGNED
+// → DRIVER_ARRIVED
+// → PICKED_UP
+// → STARTED
+// → COMPLETED
+//
+// The backend ride engine remains authoritative.
+
+window.CABLINK_RIDE_LIFECYCLE = {
+
+  STATES: Object.freeze({
+    REQUESTED: 'REQUESTED',
+    MATCHING: 'MATCHING',
+    DRIVER_ASSIGNED: 'DRIVER_ASSIGNED',
+    DRIVER_ARRIVED: 'DRIVER_ARRIVED',
+    PICKED_UP: 'PICKED_UP',
+    STARTED: 'STARTED',
+    COMPLETED: 'COMPLETED',
+    CANCELLED: 'CANCELLED'
+  }),
+
+  transition: async function(rideId, nextState, metadata) {
+
+    if (!rideId) {
+      throw new Error('Ride ID is required');
+    }
+
+    if (!nextState) {
+      throw new Error('Next ride state is required');
+    }
+
+    var payload = Object.assign(
+      {
+        status: nextState
+      },
+      metadata || {}
+    );
+
+    var response = await fetch(
+      '/api/rides/' + encodeURIComponent(rideId),
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    var result = {};
+
+    try {
+      result = await response.json();
+    } catch (e) {
+      result = {};
+    }
+
+    if (!response.ok || result.success === false) {
+
+      throw new Error(
+        result.error ||
+        ('Lifecycle transition failed: ' + nextState)
+      );
+    }
+
+    var ride = result.ride || result;
+
+    // Notify frontend listeners ONLY after the backend
+    // has accepted and persisted the transition.
+    try {
+
+      window.dispatchEvent(
+        new CustomEvent(
+          'cablinkRideStateChanged',
+          {
+            detail: {
+              rideId: rideId,
+              state: nextState,
+              ride: ride
+            }
+          }
+        )
+      );
+
+    } catch (eventError) {
+
+      console.warn(
+        'CabLink lifecycle event dispatch failed:',
+        eventError
+      );
+    }
+
+    return result;
+  },
+
+  arrive: function(rideId) {
+
+    return this.transition(
+      rideId,
+      'DRIVER_ARRIVED'
+    );
+  },
+
+  pickup: function(rideId) {
+
+    return this.transition(
+      rideId,
+      'PICKED_UP'
+    );
+  },
+
+  start: function(rideId) {
+
+    return this.transition(
+      rideId,
+      'STARTED'
+    );
+  },
+
+  complete: function(rideId) {
+
+    return this.transition(
+      rideId,
+      'COMPLETED'
+    );
+  },
+
+  cancel: function(rideId) {
+
+    return this.transition(
+      rideId,
+      'CANCELLED'
+    );
+  }
+};
+
+// Global aliases for existing UI buttons / HTML handlers.
+// These all route through the same canonical lifecycle helper.
+
+window.driverArrived = function(rideId) {
+
+  return window.CABLINK_RIDE_LIFECYCLE.arrive(
+    rideId
+  );
+};
+
+window.pickupRide = function(rideId) {
+
+  return window.CABLINK_RIDE_LIFECYCLE.pickup(
+    rideId
+  );
+};
+
+window.startRide = function(rideId) {
+
+  return window.CABLINK_RIDE_LIFECYCLE.start(
+    rideId
+  );
+};
+
+window.completeRide = function(rideId) {
+
+  return window.CABLINK_RIDE_LIFECYCLE.complete(
+    rideId
+  );
+};
+
+window.cancelRide = function(rideId) {
+
+  return window.CABLINK_RIDE_LIFECYCLE.cancel(
+    rideId
+  );
+};
+
+
+// Optional lifecycle action dispatcher.
+//
+// This is intentionally small and does not own ride state.
+// It delegates all state changes to the canonical lifecycle
+// helper above.
+
+window.CABLINK_RIDE_ACTION = function(action, rideId) {
+
+  if (!rideId) {
+    return Promise.reject(
+      new Error('Ride ID is required')
+    );
+  }
+
+  switch (String(action).toUpperCase()) {
+
+    case 'DRIVER_ARRIVED':
+    case 'ARRIVED':
+      return window.CABLINK_RIDE_LIFECYCLE.arrive(rideId);
+
+    case 'PICKED_UP':
+    case 'PICKUP':
+      return window.CABLINK_RIDE_LIFECYCLE.pickup(rideId);
+
+    case 'STARTED':
+    case 'START':
+      return window.CABLINK_RIDE_LIFECYCLE.start(rideId);
+
+    case 'COMPLETED':
+    case 'COMPLETE':
+      return window.CABLINK_RIDE_LIFECYCLE.complete(rideId);
+
+    case 'CANCELLED':
+    case 'CANCEL':
+      return window.CABLINK_RIDE_LIFECYCLE.cancel(rideId);
+
+    default:
+      return Promise.reject(
+        new Error(
+          'Unsupported lifecycle action: ' + action
+        )
+      );
+  }
 };
 
 // ── INIT ON LOAD ─────────────────────────────────────────
