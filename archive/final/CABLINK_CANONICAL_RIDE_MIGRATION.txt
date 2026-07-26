@@ -1,0 +1,47 @@
+CABLINK CANONICAL RIDE MIGRATION
+
+Migration date:
+2026-07-25T22:15:47.932493
+
+Canonical repository:
+backend/canonical/ride_repository.js
+
+Canonical engine:
+backend/canonical/ride_engine.js
+
+Canonical database:
+backend/data/rides.json
+
+Canonical API:
+backend/routes/rides.js
+
+API:
+POST   /api/rides
+GET    /api/rides
+GET    /api/rides/:id
+PATCH  /api/rides/:id
+
+Canonical lifecycle:
+REQUESTED
+MATCHING
+DRIVER_ASSIGNED
+DRIVER_ARRIVED
+PICKED_UP
+STARTED
+COMPLETED
+CANCELLED
+
+Backup:
+/data/data/com.termux/files/home/CabLink-pwa/cablink_ride_backup_20260725_221547
+
+IMPORTANT:
+The following legacy systems are NOT deleted yet:
+
+backend/database/ride_repository.js
+backend/database/rideRepository.js
+backend/ride_store.js
+backend/services/rideService.js
+backend/services/ride_orchestrator_service.js
+backend/rides/ride_engine.js
+
+They remain available for rollback/reference until Stage 3 verification.

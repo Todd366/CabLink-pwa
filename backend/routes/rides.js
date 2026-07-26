@@ -1,136 +1,222 @@
-const router=require("express").Router();
+const router = require("express").Router();
 
-const rides=require("../database/ride_repository");
+const rideEngine =
+    require("../canonical/ride_engine");
 
-const matching=require("../services/driver_matching_service");
-
-const orchestrator=require("../services/ride_orchestrator_service");
-
-
-
-router.post(
-"/request",
-(req,res)=>{
+const {
+    STATES
+} = rideEngine;
 
 
-let ride={
+// ============================================================
+// POST /api/rides
+// Create new ride
+// ============================================================
 
-id:"RIDE-"+Date.now(),
+router.post("/", (req, res) => {
 
-...req.body,
+    try {
 
-status:"REQUESTED",
+        const {
+            pickup,
+            dropoff,
+            vehicle,
+            fare,
+            distanceKm,
+            wallet,
+            notes,
+            passenger
+        } = req.body || {};
 
-created:new Date().toISOString()
+        if (!pickup) {
+            return res.status(400).json({
+                success: false,
+                error: "Pickup location is required"
+            });
+        }
 
-};
+        if (!dropoff) {
+            return res.status(400).json({
+                success: false,
+                error: "Drop-off location is required"
+            });
+        }
+
+        const ride =
+            rideEngine.createRide({
+                pickup,
+                dropoff,
+                vehicle,
+                fare,
+                distanceKm,
+                wallet,
+                notes,
+                passenger
+            });
+
+        // Move ride into matching state.
+        const matching =
+            rideEngine.transition(
+                ride.id,
+                STATES.MATCHING
+            );
+
+        res.status(201).json({
+            success: true,
+            ride:
+                matching.success
+                    ? matching.ride
+                    : ride
+        });
+
+    } catch (error) {
+
+        console.error(
+            "❌ Ride creation error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to create ride"
+        });
+
+    }
+
+});
 
 
+// ============================================================
+// GET /api/rides
+// Get all rides
+// ============================================================
 
-rides.create(ride);
+router.get("/", (req, res) => {
 
+    try {
 
-// find available drivers
+        const rides =
+            rideEngine.getAllRides();
 
-let drivers=
-matching.nearby(
-req.body.location ||
-{
-lat:-24.6282,
-lng:25.9231
-}
-);
+        res.json({
+            success: true,
+            count: rides.length,
+            rides
+        });
 
+    } catch (error) {
 
+        console.error(
+            "❌ Ride list error:",
+            error
+        );
 
-let nearest=
-drivers[0];
+        res.status(500).json({
+            success: false,
+            error: "Failed to load rides"
+        });
 
-
-
-if(nearest){
-
-
-let assigned=
-orchestrator.assignDriver(
-ride.id,
-nearest
-);
-
-
-ride.status=
-"DRIVER_FOUND";
-
-ride.driver=
-nearest;
-
-
-}
-
-
-
-res.json({
-
-success:true,
-
-ride,
-
-nearbyDrivers:
-drivers.length
+    }
 
 });
 
 
-}
+// ============================================================
+// GET /api/rides/:id
+// Get one ride
+// ============================================================
 
-);
+router.get("/:id", (req, res) => {
 
+    const ride =
+        rideEngine.getRide(
+            req.params.id
+        );
 
+    if (!ride) {
 
+        return res.status(404).json({
+            success: false,
+            error: "Ride not found"
+        });
 
-router.get(
-"/",
-(req,res)=>{
+    }
 
-const db=require("../storage/database");
-
-let data=db.read();
-
-console.log(
-"📦 rides endpoint count:",
-data.rides.length
-);
-
-res.json({
-
-success:true,
-
-count:data.rides.length,
-
-rides:data.rides
+    res.json({
+        success: true,
+        ride
+    });
 
 });
 
-}
 
-);
+// ============================================================
+// PATCH /api/rides/:id
+// Change ride state / update metadata
+// ============================================================
+
+router.patch("/:id", (req, res) => {
+
+    try {
+
+        const {
+            status,
+            driverId,
+            driverName,
+            rating,
+            comment
+        } = req.body || {};
+
+        if (!status) {
+
+            return res.status(400).json({
+                success: false,
+                error: "Ride status is required"
+            });
+
+        }
+
+        const result =
+            rideEngine.transition(
+                req.params.id,
+                status,
+                {
+                    driverId,
+                    driverName,
+                    rating,
+                    comment
+                }
+            );
+
+        if (!result.success) {
+
+            return res.status(400).json(
+                result
+            );
+
+        }
+
+        res.json(result);
+
+    } catch (error) {
+
+        console.error(
+            "❌ Ride update error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to update ride"
+        });
+
+    }
+
+});
 
 
-router.patch(
-"/:id",
-(req,res)=>{
+// ============================================================
+// EXPORT
+// ============================================================
 
-res.json(
-rides.update(
-req.params.id,
-req.body.status
-)
-);
-
-}
-
-);
-
-
-
-module.exports=router;
+module.exports = router;

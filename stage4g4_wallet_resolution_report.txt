@@ -1,0 +1,909 @@
+================================================================================
+CABLINK STAGE 4G.4 — CANONICAL WALLET RESOLUTION TRACE
+================================================================================
+Timestamp: 20260726_000412
+Repository: /data/data/com.termux/files/home/CabLink-pwa
+Backup: backups/stage4g4_20260726_000412
+
+================================================================================
+1. TEST-WALLET OCCURRENCES
+================================================================================
+stage3_canonical_ride_verification.js:147
+  wallet: "TEST-WALLET",
+stage3_canonical_ride_verification.js:350
+  wallet: "API-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:9
+  1. TEST-WALLET OCCURRENCES
+stage4g4_wallet_resolution_report.txt:12
+  wallet: "TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:14
+  wallet: "API-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:16
+  "wallet": "TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:18
+  "wallet": "TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:20
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:22
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:24
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:26
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:28
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:30
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:32
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:34
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:36
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:38
+  "wallet": "PILOT-TEST-WALLET"
+stage4g4_wallet_resolution_report.txt:40
+  "wallet": "PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:42
+  wallet:"PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:44
+  wallet:"PILOT-TEST-WALLET"
+stage4g4_wallet_resolution_report.txt:46
+  wallet:"PILOT-TEST-WALLET"
+stage4g4_wallet_resolution_report.txt:48
+  "PILOT-TEST-WALLET"
+stage4g4_wallet_resolution_report.txt:50
+  "PILOT-TEST-WALLET"
+stage4g4_wallet_resolution_report.txt:52
+  wallet:"PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:54
+  wallet:"PILOT-TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:231
+  78: "wallet": "TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:236
+  61: "wallet": "TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:624
+  61: "wallet": "TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:638
+  78: "wallet": "TEST-WALLET",
+stage4g4_wallet_resolution_report.txt:654
+  BLOCKER FOUND: TEST-WALLET is still present in the repository.
+stage4g4_wallet_resolution_report.txt:672
+  driverId → TEST-WALLET → blockchain
+stage4g4_wallet_resolution_report.txt:693
+  First identify the exact source of TEST-WALLET.
+stage4g4_wallet_resolution_report.txt:699
+  4. Rejects TEST-WALLET and other placeholders.
+backend/data/economy_ledger.json:78
+  "wallet": "TEST-WALLET",
+backend/data/rides.json:61
+  "wallet": "TEST-WALLET",
+backups/stage4g4_20260725_235846/backend/data/rides.json:61
+  "wallet": "TEST-WALLET",
+database/production/database.json:101
+  "wallet": "PILOT-TEST-WALLET",
+database/production/cablink_store.json:32
+  "wallet": "PILOT-TEST-WALLET",
+database/production/cablink_store.json:59
+  "wallet": "PILOT-TEST-WALLET",
+database/production/cablink_store.json:67
+  "wallet": "PILOT-TEST-WALLET",
+database/production/cablink_store.json:76
+  "wallet": "PILOT-TEST-WALLET",
+database/production/cablink_store.json:88
+  "wallet": "PILOT-TEST-WALLET",
+database/production/cablink_store.json:95
+  "wallet": "PILOT-TEST-WALLET",
+archive/phase_scripts/CABLINK_FULL_REWARD_CYCLE_REPORT.json:4
+  "wallet": "PILOT-TEST-WALLET",
+archive/phase_scripts/CABLINK_FULL_REWARD_CYCLE_REPORT.json:12
+  "wallet": "PILOT-TEST-WALLET",
+archive/phase_scripts/CABLINK_HUMAN_PILOT_VERIFICATION.json:15
+  "wallet": "PILOT-TEST-WALLET"
+archive/phase_scripts/CABLINK_HUMAN_PILOT_VERIFICATION.json:40
+  "wallet": "PILOT-TEST-WALLET",
+archive/phase_scripts/cablink_full_reward_cycle_test.js:19
+  wallet:"PILOT-TEST-WALLET",
+archive/phase_scripts/cablink_full_reward_cycle_test.js:32
+  wallet:"PILOT-TEST-WALLET"
+archive/phase_scripts/cablink_human_pilot_final_verification.js:28
+  wallet:"PILOT-TEST-WALLET"
+archive/phase_scripts/cablink_reward_api_bridge_install.js:74
+  "PILOT-TEST-WALLET"
+archive/phase_scripts/cablink_reward_api_test.js:6
+  "PILOT-TEST-WALLET"
+archive/phase_scripts/cablink_thb_transfer_simulation_test.js:9
+  wallet:"PILOT-TEST-WALLET",
+archive/phase_scripts/cablink_thb_transfer_simulator_install.js:109
+  wallet:"PILOT-TEST-WALLET",
+
+================================================================================
+2. EVM ADDRESS DISCOVERY
+================================================================================
+0x0000000000000000000000000000000000000001
+  VALID FORMAT: True
+  - stage4g4_wallet_resolution_report.txt
+  - archive/phase_scripts/cablink_thb_real_executor_install.js
+  - archive/phase_scripts/cablink_thb_executor_test.js
+0x000000000000000000000000000000000000dead
+  VALID FORMAT: True
+  - stage4g4_wallet_resolution_report.txt
+  - scripts/archive/root_migrations/index_before_bstm_mount.html
+  - scripts/archive/root_migrations/index_before_role_auto_cleanup.html
+  - scripts/archive/root_migrations/index_before_role_cleanup.html
+  - scripts/archive/root_migrations/index_before_role_fix_1784018514824.html
+  - scripts/archive/root_migrations/index_before_script_repair_1784017559902.html
+  - archive/old_backups/index_backup_before_cleanup_1783943720472.html
+  - archive/old_backups/index_stable_backup_1784017647536.html
+  - archive/old_backups/index_stable_backup_1784017709341.html
+  - archive/old_backups/index_stable_backup_1784026555127.html
+  - archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/index.html
+0xDd92559E95BAcB66f8a5f983199C40142Da56E27
+  VALID FORMAT: True
+  - stage4g4_wallet_resolution_report.txt
+0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628
+  VALID FORMAT: True
+  - index.html
+  - block13a_canonical_runtime_truth.txt
+  - stage4g4_wallet_resolution_report.txt
+  - frontend/index.html
+  - scripts/archive/root_migrations/index_before_booking_migration.html
+  - scripts/archive/root_migrations/index_before_bookride_cleanup.html
+  - scripts/archive/root_migrations/index_before_bstm_mount.html
+  - scripts/archive/root_migrations/index_before_module_cleanup.html
+  - scripts/archive/root_migrations/index_before_reality_cutover.html
+  - scripts/archive/root_migrations/index_before_role_auto_cleanup.html
+  - scripts/archive/root_migrations/index_before_role_cleanup.html
+  - scripts/archive/root_migrations/index_before_role_fix_1784018514824.html
+  - scripts/archive/root_migrations/index_before_script_repair_1784017559902.html
+  - scripts/archive/root_migrations/index_before_script_restore.html
+  - .cablink_backups/driver_consolidation_20260725_213935/index.html
+  - .cablink_audits/full_runtime_audit_20260725_214339.txt
+  - backups/phase3-runtime-consolidation-20260725-215339/index.html
+  - backups/phase3-runtime-consolidation-20260725-215339/frontend/index.html
+  - migration_backup/index_legacy.html
+  - archive/old_backups/index_backup_before_cleanup_1783943720472.html
+  - archive/old_backups/index_stable_backup_1784017647536.html
+  - archive/old_backups/index_stable_backup_1784017709341.html
+  - archive/old_backups/index_stable_backup_1784026555127.html
+  - archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/index.html
+  - archive/phase_scripts/cablink_audit_now.js
+  - archive/phase_scripts/cablink_sync_thb_configuration.js
+  - archive/phase_scripts/index_backup_before_runtime_merge.html
+  - archive/phase_scripts/index_backup_before_bookride_cleanup.html
+  - archive/phase_scripts/index_react_backup.html
+  - archive/phase_scripts/index_backup_before_real_engine.html
+  - archive/phase_scripts/index_backup_before_driver_override_remove.html
+  - archive/before_architecture_cleanup/index_1784127601.html
+  - archive/before_architecture_cleanup/frontend_1784127601/index.html
+  - archive/driver_upgrade/index_before_driver_upgrade_1784126025.html
+  - archive/driver_wiring/index_1784128009669.html
+  - archive/frontend_cleanup/index_before_bookride_migration_1784131014.html
+  - archive/frontend_cleanup/index_before_cleanup_1784131327228.html
+  - archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html
+  - archive/frontend_cleanup/index_before_truth_migration.html
+  - archive/server_conflicts/index_before_api_fix_1784125371.html
+  - archive/truth_cleanup_1784127676771/frontend_index.html
+
+================================================================================
+3. WALLET / RECIPIENT FLOW REFERENCES
+================================================================================
+
+--- backend/routes/rides.js ---
+26: wallet,
+52: wallet,
+164: driverId,
+184: driverId,
+
+--- backend/routes/driver_dashboard_api.js ---
+5: const wallet=require("../rewards/wallet_service");
+6: const history=require("../rewards/reward_history");
+18: wallet:
+19: wallet.wallet(req.params.id),
+21: rewards:
+
+--- backend/routes/driver_economy.js ---
+5: const wallet=require("../rewards/wallet_service");
+6: const history=require("../rewards/reward_history");
+18: wallet:
+19: wallet.wallet(req.params.id),
+21: rewards:
+
+--- backend/routes/canonical_reward_api.js ---
+4: const rewardService =
+5: require("../services/canonical_reward_service");
+9: * POST /api/rewards/ride/:rideId
+11: * Canonical backend reward endpoint.
+14: * reward identity.
+24: rewardService
+25: .createRewardForCompletedRide(
+36: "REWARD_CREATED"
+47: * Existing reward is not an error.
+51: * original reward.
+56: "ALREADY_REWARDED"
+110: "❌ Canonical reward error:",
+123: "REWARD_PROCESSING_ERROR",
+126: "Failed to process canonical ride reward"
+
+--- backend/services/reward_service.js ---
+5: create:function(userId,rideId){
+9: id:"REWARD-"+Date.now(),
+11: userId:userId,
+
+--- backend/services/economy_ledger_service.js ---
+40: function recordReward(reward){
+48: type:"THB_REWARD",
+50: ...reward,
+152: recordReward,
+
+--- backend/services/rideService.js ---
+20: driverId:null,
+29: function acceptRide(id,driverId){
+35: driverId
+
+--- backend/services/ride_completion_service.js ---
+3: const wallet=require("../rewards/wallet_service");
+19: // calculate reward
+21: const reward={
+34: // wallet
+36: if(wallet.add){
+38: wallet.add(
+40: reward.amount
+52: ledger.recordReward(
+53: reward
+69: reward
+
+--- backend/services/ride_economy_service.js ---
+3: const wallet=require("../rewards/wallet_service");
+4: const history=require("../rewards/reward_history");
+43: const reward={
+52: // wallet update
+53: if(wallet.add){
+54: wallet.add(
+64: history.add(reward);
+66: ledger.recordReward(reward);
+73: reward
+
+--- backend/services/canonical_reward_service.js ---
+79: function findExistingReward(
+89: transaction.type === "THB_REWARD" &&
+99: function createRewardForCompletedRide(
+155: * Reward eligibility:
+158: * may receive a THB reward.
+195: const existingReward =
+196: findExistingReward(
+205: if (existingReward) {
+211: status: "ALREADY_REWARDED",
+220: reward:
+221: existingReward
+229: * Canonical reward calculation.
+231: * Stage 4 reward policy:
+246: * Create exactly one reward transaction.
+252: const reward = {
+259: "THB_REWARD",
+264: driverId:
+265: ride.driverId ||
+268: wallet:
+269: ride.wallet ||
+288: * Persist reward atomically within
+293: reward
+305: status: "REWARD_CREATED",
+314: reward
+323: createRewardForCompletedRide
+
+--- backend/data/economy_ledger.json ---
+39: "type": "THB_REWARD",
+48: "type": "THB_REWARD",
+58: "type": "THB_REWARD",
+67: "type": "THB_REWARD",
+75: "type": "THB_REWARD",
+77: "driverId": "TEST-DRIVER-001",
+78: "wallet": "TEST-WALLET",
+
+--- backend/data/rides.json ---
+45: "wallet": null,
+48: "driverId": "TEST-DRIVER-001",
+61: "wallet": "TEST-WALLET",
+64: "driverId": "TEST-DRIVER-001",
+
+--- backend/rewards/reward_engine.js ---
+7: "function transfer(address,uint256) returns(bool)",
+12: async function issue(walletAddress,amount){
+18: "Treasury wallet not configured"
+24: if(!ethers.isAddress(walletAddress)){
+27: "Invalid wallet address"
+40: new ethers.Wallet(
+66: await token.transfer(
+67: walletAddress,
+79: wallet:walletAddress,
+
+--- backend/rewards/blockchain_reward_adapter.js ---
+3: function createReward(data){
+11: status:"READY_FOR_CONTRACT_TRANSFER",
+13: wallet:data.wallet || null
+20: module.exports={createReward};
+
+--- backend/rewards/thb_contract_adapter.js ---
+2: function prepareTransfer(data){
+10: wallet:data.wallet,
+14: method:"transfer"
+20: module.exports={prepareTransfer};
+
+--- backend/rewards/thb_transaction_layer.js ---
+9: wallet:data.wallet,
+13: contractMethod:"transfer",
+
+--- backend/rewards/thb_service.js ---
+5: function recordPendingReward(data){
+8: "rewards",
+11: wallet:data.wallet,
+23: recordPendingReward
+
+--- backend/rewards/reward_claim_engine.js ---
+2: function createClaim(reward){
+6: wallet:reward.wallet,
+8: amount:reward.amount,
+12: status:"READY_FOR_BLOCKCHAIN_TRANSFER",
+22: createClaim
+
+--- backend/rewards/thb_transfer_queue.js ---
+5: function queueReward(data){
+7: let reward={
+13: wallet:data.wallet,
+26: reward
+30: return reward;
+36: queueReward
+
+--- backend/rewards/thb_claim_engine.js ---
+5: function requestClaim(data){
+7: let rewards=
+8: store.get("rewards");
+12: rewards.filter(
+14: r.wallet===data.wallet &&
+15: r.status!=="CLAIMED"
+23: status:"NO_REWARDS",
+25: wallet:data.wallet
+32: let claim={
+34: id:"CLAIM-"+Date.now(),
+36: wallet:data.wallet,
+44: status:"READY_FOR_TRANSFER",
+52: "claims",
+53: claim
+57: return claim;
+62: function completeClaim(id,tx){
+67: claim:id,
+76: status:"CLAIM_COMPLETED",
+86: requestClaim,
+87: completeClaim
+
+--- backend/rewards/auto_reward_trigger.js ---
+3: const rewardEngine=require("./delivery_reward_engine");
+4: const history=require("./reward_history");
+22: const reward =
+23: rewardEngine.calculate(task);
+26: history.add(reward);
+31: status:"REWARDED",
+33: reward
+
+--- backend/rewards/delivery_completion.js ---
+3: const reward=require("./delivery_reward_engine");
+10: return reward.calculate(task);
+
+--- backend/rewards/delivery_reward_engine.js ---
+5: baseReward:5,
+22: reward:
+23: config.baseReward +
+
+--- backend/rewards/delivery_reward_service.js ---
+3: const trigger=require("./auto_reward_trigger");
+
+--- backend/rewards/wallet_service.js ---
+3: const history=require("./reward_history");
+6: function wallet(driver){
+14: (total,item)=>total+item.reward,
+35: wallet
+
+--- backend/users/wallet_manager.js ---
+4: function attachWallet(userId,wallet){
+7: "wallets",
+9: userId,
+10: wallet,
+17: module.exports={attachWallet};
+
+--- backend/blockchain/thb_config.js ---
+13: wallet:
+14: process.env.TREASURY_WALLET
+
+--- backend/blockchain/thb_transfer_worker.js ---
+6: async function processReward(reward){
+24: reward:reward.id,
+26: status:"READY_FOR_TRANSFER",
+47: processReward
+
+--- backend/blockchain/thb_abi.json ---
+15: "name": "transfer",
+
+--- backend/blockchain/chain_health.js ---
+16: walletConfigured:
+17: !!config.wallet,
+
+--- backend/blockchain/thb_transfer_service.js ---
+5: async function transfer(data){
+26: // Real ethers Contract.transfer()
+36: recipient:data.wallet,
+49: transfer
+
+--- backend/blockchain/thb_transaction_engine.js ---
+11: claim:data.claim,
+13: wallet:data.wallet,
+
+--- backend/blockchain/thb_real_executor.js ---
+8: async function executeTransfer(data){
+19: reason:"Treasury wallet not configured",
+21: recipient:data.wallet,
+36: const wallet=
+37: new ethers.Wallet(
+47: wallet
+52: await contract.transfer(
+53: data.wallet,
+70: executeTransfer
+
+--- backend/canonical/ride_engine.js ---
+72: wallet:
+73: data.wallet ||
+84: driverId: null,
+149: metadata.driverId !== undefined
+151: changes.driverId =
+152: metadata.driverId;
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/routes/driver_dashboard_api.js ---
+5: const wallet=require("../rewards/wallet_service");
+6: const history=require("../rewards/reward_history");
+18: wallet:
+19: wallet.wallet(req.params.id),
+21: rewards:
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/routes/driver_economy.js ---
+5: const wallet=require("../rewards/wallet_service");
+6: const history=require("../rewards/reward_history");
+18: wallet:
+19: wallet.wallet(req.params.id),
+21: rewards:
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/services/reward_service.js ---
+5: create:function(userId,rideId){
+9: id:"REWARD-"+Date.now(),
+11: userId:userId,
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/services/economy_ledger_service.js ---
+40: function recordReward(reward){
+48: type:"THB_REWARD",
+50: ...reward,
+152: recordReward,
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/services/rideService.js ---
+20: driverId:null,
+29: function acceptRide(id,driverId){
+35: driverId
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_completion_service.js ---
+3: const wallet=require("../rewards/wallet_service");
+19: // calculate reward
+21: const reward={
+34: // wallet
+36: if(wallet.add){
+38: wallet.add(
+40: reward.amount
+52: ledger.recordReward(
+53: reward
+69: reward
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_economy_service.js ---
+3: const wallet=require("../rewards/wallet_service");
+4: const history=require("../rewards/reward_history");
+43: const reward={
+52: // wallet update
+53: if(wallet.add){
+54: wallet.add(
+64: history.add(reward);
+66: ledger.recordReward(reward);
+73: reward
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/data/economy_ledger.json ---
+39: "type": "THB_REWARD",
+48: "type": "THB_REWARD",
+58: "type": "THB_REWARD",
+67: "type": "THB_REWARD",
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/reward_engine.js ---
+7: "function transfer(address,uint256) returns(bool)",
+12: async function issue(walletAddress,amount){
+18: "Treasury wallet not configured"
+24: if(!ethers.isAddress(walletAddress)){
+27: "Invalid wallet address"
+40: new ethers.Wallet(
+66: await token.transfer(
+67: walletAddress,
+79: wallet:walletAddress,
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/blockchain_reward_adapter.js ---
+3: function createReward(data){
+11: status:"READY_FOR_CONTRACT_TRANSFER",
+13: wallet:data.wallet || null
+20: module.exports={createReward};
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_contract_adapter.js ---
+2: function prepareTransfer(data){
+10: wallet:data.wallet,
+14: method:"transfer"
+20: module.exports={prepareTransfer};
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_transaction_layer.js ---
+9: wallet:data.wallet,
+13: contractMethod:"transfer",
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_service.js ---
+5: function recordPendingReward(data){
+8: "rewards",
+11: wallet:data.wallet,
+23: recordPendingReward
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/reward_claim_engine.js ---
+2: function createClaim(reward){
+6: wallet:reward.wallet,
+8: amount:reward.amount,
+12: status:"READY_FOR_BLOCKCHAIN_TRANSFER",
+22: createClaim
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_transfer_queue.js ---
+5: function queueReward(data){
+7: let reward={
+13: wallet:data.wallet,
+26: reward
+30: return reward;
+36: queueReward
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_claim_engine.js ---
+5: function requestClaim(data){
+7: let rewards=
+8: store.get("rewards");
+12: rewards.filter(
+14: r.wallet===data.wallet &&
+15: r.status!=="CLAIMED"
+23: status:"NO_REWARDS",
+25: wallet:data.wallet
+32: let claim={
+34: id:"CLAIM-"+Date.now(),
+36: wallet:data.wallet,
+44: status:"READY_FOR_TRANSFER",
+52: "claims",
+53: claim
+57: return claim;
+62: function completeClaim(id,tx){
+67: claim:id,
+76: status:"CLAIM_COMPLETED",
+86: requestClaim,
+87: completeClaim
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/auto_reward_trigger.js ---
+3: const rewardEngine=require("./delivery_reward_engine");
+4: const history=require("./reward_history");
+22: const reward =
+23: rewardEngine.calculate(task);
+26: history.add(reward);
+31: status:"REWARDED",
+33: reward
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/delivery_completion.js ---
+3: const reward=require("./delivery_reward_engine");
+10: return reward.calculate(task);
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/delivery_reward_engine.js ---
+5: baseReward:5,
+22: reward:
+23: config.baseReward +
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/delivery_reward_service.js ---
+3: const trigger=require("./auto_reward_trigger");
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/wallet_service.js ---
+3: const history=require("./reward_history");
+6: function wallet(driver){
+14: (total,item)=>total+item.reward,
+35: wallet
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/users/wallet_manager.js ---
+4: function attachWallet(userId,wallet){
+7: "wallets",
+9: userId,
+10: wallet,
+17: module.exports={attachWallet};
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_config.js ---
+13: wallet:
+14: process.env.TREASURY_WALLET
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_transfer_worker.js ---
+6: async function processReward(reward){
+24: reward:reward.id,
+26: status:"READY_FOR_TRANSFER",
+47: processReward
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_abi.json ---
+15: "name": "transfer",
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/chain_health.js ---
+16: walletConfigured:
+17: !!config.wallet,
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_transfer_service.js ---
+5: async function transfer(data){
+26: // Real ethers Contract.transfer()
+36: recipient:data.wallet,
+49: transfer
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_transaction_engine.js ---
+11: claim:data.claim,
+13: wallet:data.wallet,
+
+--- backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_real_executor.js ---
+8: async function executeTransfer(data){
+19: reason:"Treasury wallet not configured",
+21: recipient:data.wallet,
+36: const wallet=
+37: new ethers.Wallet(
+47: wallet
+52: await contract.transfer(
+53: data.wallet,
+70: executeTransfer
+
+--- backups/stage4g4_20260725_235846/backend/rewards/wallet_service.js ---
+3: const history=require("./reward_history");
+6: function wallet(driver){
+14: (total,item)=>total+item.reward,
+35: wallet
+
+--- backups/stage4g4_20260725_235846/backend/rewards/reward_claim_engine.js ---
+2: function createClaim(reward){
+6: wallet:reward.wallet,
+8: amount:reward.amount,
+12: status:"READY_FOR_BLOCKCHAIN_TRANSFER",
+22: createClaim
+
+--- backups/stage4g4_20260725_235846/backend/rewards/thb_claim_engine.js ---
+5: function requestClaim(data){
+7: let rewards=
+8: store.get("rewards");
+12: rewards.filter(
+14: r.wallet===data.wallet &&
+15: r.status!=="CLAIMED"
+23: status:"NO_REWARDS",
+25: wallet:data.wallet
+32: let claim={
+34: id:"CLAIM-"+Date.now(),
+36: wallet:data.wallet,
+44: status:"READY_FOR_TRANSFER",
+52: "claims",
+53: claim
+57: return claim;
+62: function completeClaim(id,tx){
+67: claim:id,
+76: status:"CLAIM_COMPLETED",
+86: requestClaim,
+87: completeClaim
+
+--- backups/stage4g4_20260725_235846/backend/rewards/blockchain_reward_adapter.js ---
+3: function createReward(data){
+11: status:"READY_FOR_CONTRACT_TRANSFER",
+13: wallet:data.wallet || null
+20: module.exports={createReward};
+
+--- backups/stage4g4_20260725_235846/backend/rewards/thb_transfer_queue.js ---
+5: function queueReward(data){
+7: let reward={
+13: wallet:data.wallet,
+26: reward
+30: return reward;
+36: queueReward
+
+--- backups/stage4g4_20260725_235846/backend/blockchain/thb_real_executor.js ---
+8: async function executeTransfer(data){
+19: reason:"Treasury wallet not configured",
+21: recipient:data.wallet,
+36: const wallet=
+37: new ethers.Wallet(
+47: wallet
+52: await contract.transfer(
+53: data.wallet,
+70: executeTransfer
+
+--- backups/stage4g4_20260725_235846/backend/blockchain/thb_transfer_service.js ---
+5: async function transfer(data){
+26: // Real ethers Contract.transfer()
+36: recipient:data.wallet,
+49: transfer
+
+--- backups/stage4g4_20260725_235846/backend/blockchain/thb_transaction_engine.js ---
+11: claim:data.claim,
+13: wallet:data.wallet,
+
+--- backups/stage4g4_20260725_235846/backend/services/ride_completion_service.js ---
+3: const wallet=require("../rewards/wallet_service");
+19: // calculate reward
+21: const reward={
+34: // wallet
+36: if(wallet.add){
+38: wallet.add(
+40: reward.amount
+52: ledger.recordReward(
+53: reward
+69: reward
+
+--- backups/stage4g4_20260725_235846/backend/services/ride_economy_service.js ---
+3: const wallet=require("../rewards/wallet_service");
+4: const history=require("../rewards/reward_history");
+43: const reward={
+52: // wallet update
+53: if(wallet.add){
+54: wallet.add(
+64: history.add(reward);
+66: ledger.recordReward(reward);
+73: reward
+
+--- backups/stage4g4_20260725_235846/backend/services/canonical_reward_service.js ---
+79: function findExistingReward(
+89: transaction.type === "THB_REWARD" &&
+99: function createRewardForCompletedRide(
+155: * Reward eligibility:
+158: * may receive a THB reward.
+195: const existingReward =
+196: findExistingReward(
+205: if (existingReward) {
+211: status: "ALREADY_REWARDED",
+220: reward:
+221: existingReward
+229: * Canonical reward calculation.
+231: * Stage 4 reward policy:
+246: * Create exactly one reward transaction.
+252: const reward = {
+259: "THB_REWARD",
+264: driverId:
+265: ride.driverId ||
+268: wallet:
+269: ride.wallet ||
+288: * Persist reward atomically within
+293: reward
+305: status: "REWARD_CREATED",
+314: reward
+323: createRewardForCompletedRide
+
+--- backups/stage4g4_20260725_235846/backend/canonical/ride_engine.js ---
+72: wallet:
+73: data.wallet ||
+84: driverId: null,
+149: metadata.driverId !== undefined
+151: changes.driverId =
+152: metadata.driverId;
+
+--- backups/stage4g4_20260725_235846/backend/data/rides.json ---
+45: "wallet": null,
+48: "driverId": "TEST-DRIVER-001",
+61: "wallet": "TEST-WALLET",
+64: "driverId": "TEST-DRIVER-001",
+
+--- cablink_ride_backup_20260725_221547/backend/services/rideService.js ---
+20: driverId:null,
+29: function acceptRide(id,driverId){
+35: driverId
+
+================================================================================
+4. DRIVER / USER WALLET RECORDS
+================================================================================
+
+--- backend/data/drivers.json ---
+4: "id": "DRIVER001",
+12: "id": "DRIVER002",
+
+--- backend/data/drivers_live.json ---
+4: "id": "DRIVER001",
+13: "id": "DRV-001",
+
+--- backend/data/users.json ---
+4: "id": "USER001",
+6: "role": "PASSENGER",
+10: "id": "DRIVER001",
+12: "role": "DRIVER",
+16: "id": "ADMIN001",
+18: "role": "ADMIN",
+
+--- backend/data/rides.json ---
+3: "id": "CL-5EO1N3",
+12: "id": "CL-T2G5J1",
+21: "id": "CL-5CZRMN",
+30: "id": "CL-A9JAMB",
+39: "id": "RIDE-1785010614800",
+45: "wallet": null,
+48: "driverId": "TEST-DRIVER-001",
+55: "id": "RIDE-1785010715936",
+61: "wallet": "TEST-WALLET",
+64: "driverId": "TEST-DRIVER-001",
+
+--- backend/data/economy_ledger.json ---
+4: "id": "RIDE-1784053328781",
+10: "id": "RIDE-1784053510980",
+17: "id": "RIDE-001",
+25: "id": "RIDE-1784057193464",
+38: "id": "TX-1784053328846",
+47: "id": "TX-1784053511041",
+57: "id": "TX-1784056563720",
+66: "id": "TX-1784057193548",
+74: "id": "TX-1785012519292",
+77: "driverId": "TEST-DRIVER-001",
+78: "wallet": "TEST-WALLET",
+
+================================================================================
+5. BLOCKCHAIN ENVIRONMENT CONFIGURATION
+================================================================================
+
+--- .env ---
+1: [PRIVATE KEY CONFIGURATION PRESENT — VALUE REDACTED]
+2: RPC_URL=https://data-seed-prebsc-1-s1.binance.org:8545/
+5: TREASURY_WALLET=0xDd92559E95BAcB66f8a5f983199C40142Da56E27
+
+--- .env.example ---
+
+================================================================================
+6. PRELIMINARY DIAGNOSIS
+================================================================================
+BLOCKER FOUND: TEST-WALLET is still present in the repository.
+
+VALID EVM ADDRESS CANDIDATES FOUND: 4
+These must NOT be automatically selected.
+Each address must be mapped to its actual owner/purpose.
+
+Required canonical flow:
+  Driver/User Identity
+        ↓
+  Wallet Resolution
+        ↓
+  Validate 0x + 40 hex address
+        ↓
+  Reward Claim
+        ↓
+  Blockchain Transfer
+
+INVALID:
+  driverId → TEST-WALLET → blockchain
+
+VALID:
+  driverId/userId → linked wallet → 0x... → blockchain
+
+================================================================================
+7. NEXT SURGICAL TARGET
+================================================================================
+
+The next modification should be limited to canonical wallet resolution.
+
+Do NOT:
+- modify the frontend UI
+- modify the THB contract address
+- modify the token ABI
+- modify ride booking
+- modify the reward amount
+- modify the blockchain executor
+- delete backup files
+- merge duplicate frontend architectures
+
+First identify the exact source of TEST-WALLET.
+
+Then implement one authoritative resolver that:
+1. Accepts driver/user identity.
+2. Checks for a linked wallet.
+3. Validates the wallet using ethers.isAddress().
+4. Rejects TEST-WALLET and other placeholders.
+5. Returns null when no valid wallet exists.
+6. Prevents invalid recipients from reaching the blockchain executor.
+
+================================================================================
+STAGE 4G.4 TRACE COMPLETE
+================================================================================

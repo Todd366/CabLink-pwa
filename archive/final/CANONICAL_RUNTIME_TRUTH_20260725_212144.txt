@@ -1,0 +1,1324 @@
+CABLINK CANONICAL RUNTIME TRUTH AUDIT
+Date: Sat Jul 25 21:21:44 CAT 2026
+Project: /data/data/com.termux/files/home/CabLink-pwa
+
+============================================================
+1. PROJECT ENTRYPOINT CANDIDATES
+============================================================
+[FOUND] package.json
+[FOUND] vite.config.js
+[MISS ] vite.config.ts
+[FOUND] index.html
+[FOUND] frontend/index.html
+[MISS ] src/main.jsx
+[MISS ] src/main.tsx
+[MISS ] src/App.jsx
+[MISS ] src/App.tsx
+[FOUND] frontend/main.jsx
+[MISS ] frontend/main.js
+[FOUND] frontend/js/app.js
+[FOUND] frontend/js/app_core.js
+[FOUND] backend/server.js
+[MISS ] server.js
+
+============================================================
+2. PACKAGE.JSON — SCRIPTS AND MAIN
+============================================================
+name: cablink-pwa
+version: 5.0.0
+main: backend/server.js
+type: (none)
+scripts: {
+  "start": "node backend/server.js",
+  "backend": "node backend/server.js",
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview"
+}
+
+============================================================
+3. HTML SCRIPT LOADING — ALL CANDIDATE ENTRYPOINTS
+============================================================
+
+----- index.html -----
+23:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+24:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+262:<div id="chainWarning" onclick="switchToBSC()">⚠ Wrong network — tap to switch to BSC Testnet</div>
+263:<div id="alertStrip"><span id="alertText"></span><button onclick="hideAlert()">×</button></div>
+264:<div id="surgeBanner" onclick="openModal('surgeModal')" style="display:none">⚡ Surge active · <span id="surgeBannerMult">1.8×</span> — tap to see fares</div>
+285:      <button class="btn btn-outline btn-sm" onclick="connectWallet()" id="connectBtn">Connect</button>
+307:        <button class="btn btn-outline btn-sm" onclick="toggleSchedule()" title="Schedule">📅</button>
+308:        <button class="btn btn-outline btn-sm" onclick="swapLocations()" title="Swap">⇅</button>
+309:        <button class="btn btn-outline btn-sm" onclick="voiceInput()" title="Voice">🎤</button>
+319:    <button class="btn btn-outline btn-sm" style="margin-bottom:10px" onclick="addStop()">＋ Add stop</button>
+324:      <div class="ride-type-card active" data-type="standard" data-fare="20" onclick="selectRideType(this)"><div class="icon">🚕</div><div class="name">Standard</div><div class="price">20 BWP</div></div>
+325:      <div class="ride-type-card" data-type="premium" data-fare="35" onclick="selectRideType(this)"><div class="icon">🚙</div><div class="name">Premium</div><div class="price">35 BWP</div></div>
+326:      <div class="ride-type-card" data-type="xl" data-fare="50" onclick="selectRideType(this)"><div class="icon">🚐</div><div class="name">XL / Van</div><div class="price">50 BWP</div></div>
+327:      <div class="ride-type-card" data-type="moto" data-fare="12" onclick="selectRideType(this)"><div class="icon">🏍</div><div class="name">Moto</div><div class="price">12 BWP</div></div>
+328:      <div class="ride-type-card" data-type="eco" data-fare="15" onclick="selectRideType(this)"><div class="icon">🌿</div><div class="name">Eco</div><div class="price">15 BWP</div></div>
+329:      <div class="ride-type-card" data-type="quiet" data-fare="22" onclick="selectRideType(this)"><div class="icon">🤫</div><div class="name">Quiet</div><div class="price">22 BWP</div></div>
+349:        <button class="btn btn-outline btn-sm" onclick="sendOffer()">Send</button>
+356:          <button class="btn btn-green btn-sm" onclick="acceptOffer()">✓ Accept counter</button>
+357:          <button class="btn btn-outline btn-sm" onclick="sendOffer()">Send new</button>
+364:      <div class="map-recenter" onclick="recenterMap()">⌖</div>
+379:      <div class="ride-id-chip" onclick="copyRideId()">🎫 Ride <strong id="rideId">—</strong> 📋</div>
+383:      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request ride · Earn 1 THB</button>
+384:      <button class="btn btn-danger btn-sm" id="cancelBtn" style="display:none" onclick="cancelRide()" style="display:none">✕ Cancel ride</button>
+392:        <button class="btn btn-primary btn-sm" onclick="sendChat()">Send</button>
+397:      <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+405:      <button class="btn btn-danger" style="flex:1" onclick="openSOS()">🆘 Emergency SOS</button>
+406:      <button class="btn btn-outline btn-sm" onclick="openModal('shareModal')">📤 Share trip</button>
+412:    <div class="card-header"><div class="card-title">⭐ Quick favourites</div><button class="btn btn-outline btn-sm" onclick="saveFav()">＋ Save</button></div>
+417:    <div class="card-header"><div class="card-title">🕐 Recent rides</div><button class="btn btn-outline btn-sm" onclick="exportCSV()">📥 CSV</button></div>
+434:      <button class="btn btn-primary btn-sm" id="dailyBtn" onclick="claimDaily()">Claim +0.5 THB</button>
+444:    <button class="btn btn-primary" id="r-claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+456:      <button class="btn btn-outline btn-sm" onclick="copyRef()">📋 Copy</button>
+474:    <button class="btn btn-outline btn-sm" id="driverModeBtn" onclick="toggleDriverMode()" style="flex:1">🟢 Go online</button>
+475:    <button class="btn btn-outline btn-sm" onclick="openModal('earningsModal')" style="flex:1">💰 Earnings</button>
+511:      <button class="btn btn-outline" onclick="clearHistory()">🗑 Clear ride history</button>
+512:      <button class="btn btn-outline" onclick="deleteMyData()">🔒 Delete my data</button>
+513:      <button class="btn btn-outline" onclick="showOnboarding()">📖 Replay onboarding</button>
+514:      <button class="btn btn-outline" onclick="exportCSV()">📥 Export CSV</button>
+541:      <button class="btn btn-outline" onclick="openModal('surgeModal')">⚡ Surge pricing info</button>
+542:      <button class="btn btn-outline" onclick="openModal('pendingModal')">🔄 Pending transactions</button>
+543:      <button class="btn btn-outline" onclick="openModal('shareModal')">📤 Share trip link</button>
+544:      <button class="btn btn-outline" onclick="openModal('privacyModal')">🔒 Privacy settings</button>
+545:      <button class="btn btn-outline" onclick="openModal('feedbackModal')">💬 Beta feedback</button>
+546:      <button class="btn btn-outline" onclick="showChangeLog()">📋 Changelog v6.0</button>
+552:    <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="syncOfflineQueue()">🔄 Sync now</button>
+559:  <button class="nav-btn active" onclick="showScreen('home',this)" id="nav-home"><span class="icon">🏠</span><span>Home</span></button>
+560:  <button class="nav-btn" onclick="showScreen('rewards',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>
+561:  <button class="nav-btn center-btn" onclick="bookRide()">🚕</button>
+562:  <button class="nav-btn" onclick="showScreen('driver',this)" id="nav-driver"><span class="icon">🚗</span><span>Driver</span></button>
+563:  <button class="nav-btn" onclick="showScreen('profile',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>
+564:  <button class="nav-btn" onclick="showScreen('more',this)" id="nav-more"><span class="icon">◆</span><span>Ecosystem</span></button>
+578:  <div class="ob-actions"><button class="btn btn-primary" onclick="obNext()">Next →</button><button class="btn btn-outline" onclick="finishOnboarding()">Skip</button></div>
+583:  <div class="modal-title">🆘 Emergency SOS <button class="modal-close" onclick="closeModal('sosModal')">×</button></div>
+588:    <button class="btn btn-outline" onclick="shareLocation()">📍 Share my location</button>
+589:    <button class="btn btn-outline" onclick="closeModal('sosModal')">Cancel</button>
+594:  <div class="modal-title">⚡ Surge pricing <button class="modal-close" onclick="closeModal('surgeModal')">×</button></div>
+599:  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-primary" onclick="acceptSurge()">✓ Accept & book</button><button class="btn btn-outline" onclick="closeModal('surgeModal')">Cancel</button></div>
+603:  <div class="modal-title">📤 Share trip <button class="modal-close" onclick="closeModal('shareModal')">×</button></div>
+605:  <div class="share-link" id="shareLink" onclick="copyShareLink()">No active ride — book a ride first</div>
+606:  <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-primary" onclick="copyShareLink()">📋 Copy link</button><button class="btn btn-outline" onclick="closeModal('shareModal')">Close</button></div>
+610:  <div class="modal-title">🔄 Transactions <button class="modal-close" onclick="closeModal('pendingModal')">×</button></div>
+612:  <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('pendingModal')">Close</button>
+616:  <div class="modal-title">⭐ Rate your driver <button class="modal-close" onclick="closeModal('ratingModal')">×</button></div>
+618:  <div class="stars" id="modalStars"><span class="star" onclick="setRating(1)">★</span><span class="star" onclick="setRating(2)">★</span><span class="star" onclick="setRating(3)">★</span><span class="star" onclick="setRating(4)">★</span><span class="star" onclick="setRating(5)">★</span></div>
+620:  <button class="btn btn-primary" onclick="submitRating()">Submit rating</button>
+624:  <div class="modal-title">🔒 Privacy settings <button class="modal-close" onclick="closeModal('privacyModal')">×</button></div>
+627:    <button class="btn btn-outline" onclick="clearHistory()">🗑 Clear ride history</button>
+628:    <button class="btn btn-danger" onclick="deleteMyData()">⚠ Delete all my data</button>
+629:    <button class="btn btn-outline" onclick="closeModal('privacyModal')">Close</button>
+634:  <div class="modal-title">💰 Driver earnings <button class="modal-close" onclick="closeModal('earningsModal')">×</button></div>
+641:  <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('earningsModal')">Close</button>
+645:  <div class="modal-title">💬 Beta feedback <button class="modal-close" onclick="closeModal('feedbackModal')">×</button></div>
+650:  <button class="btn btn-primary" onclick="submitFeedback()">📤 Submit feedback</button>
+659:    <button class="btn btn-primary" onclick="openRating()">⭐ Rate your driver</button>
+660:    <button class="btn btn-outline" onclick="closeThankyou()">✓ Done</button>
+664:<script>
+892:      ${tx.status==='failed'?`<button class="btn btn-outline btn-sm" onclick="claimReward()">Retry</button>`:''}
+1186:    <div class="stop-row"><input class="input" placeholder="Via stop…" value="${s.value}" oninput="STATE.stops.find(x=>x.id===${s.id}).value=this.value" style="flex:1"/><button class="rm-btn" onclick="removeStop(${s.id})">✕</button></div>
+1315:      <button class="btn btn-green btn-sm" onclick="acceptRealRequest('${r.id}')">✓ Accept</button>
+1316:      <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${r.id}').remove()">✗ Pass</button>
+1347:      <button class="btn btn-green btn-sm" onclick="acceptRequest('${req.id}',${req.fare})">✓ Accept</button>
+1348:      <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${req.id}').remove()">✗ Pass</button>
+1349:      <button class="btn btn-outline btn-sm" onclick="negoRequest('${req.id}',${req.fare})">💬 Counter</button>
+1416:    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--hair);cursor:pointer" onclick="useFav('${f.from.replace(/'/g,"\\'")}','${f.to.replace(/'/g,"\\'")}')">
+1488:  el.innerHTML = FAQS.map((f,i) => `<div class="faq-item"><div class="faq-q" onclick="toggleFAQ(${i})"><span>${f.q}</span><span id="faq-arrow-${i}">▼</span></div><div class="faq-a" id="faq-a-${i}">${f.a}</div></div>`).join('');
+1653:<button class="btn btn-green" onclick="submitDriverApplication()">
+1657:<button class="btn btn-outline" onclick="closeModal('driverApplyModal')">
+1700:<script>
+1790:<script src="frontend/js/app_core.js"></script>
+1791:<script src="role.js"></script>
+1792:<script src="fix.js"></script>
+1793:<script src="fare_engine.js"></script>
+1794:<script src="frontend/js/rides/rideStateMachine.js"></script>
+1795:<script src="frontend/js/rides/passengerRideStatus.js"></script>
+1796:<script src="frontend/js/driver/driverLifecycleControls.js"></script>
+1797:<script src="frontend/js/rides/completionRewardBridge.js"></script>
+
+----- frontend/index.html -----
+13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+255:<div id="chainWarning" onclick="switchToBSC()">⚠ Wrong network — tap to switch to BSC Testnet</div>
+256:<div id="alertStrip"><span id="alertText"></span><button onclick="hideAlert()">×</button></div>
+257:<div id="surgeBanner" onclick="openModal('surgeModal')">⚡ Surge active · <span id="surgeBannerMult">1.8×</span> — tap to see fares</div>
+278:      <button class="btn btn-outline btn-sm" onclick="connectWallet()" id="connectBtn">Connect</button>
+300:        <button class="btn btn-outline btn-sm" onclick="toggleSchedule()" title="Schedule">📅</button>
+301:        <button class="btn btn-outline btn-sm" onclick="swapLocations()" title="Swap">⇅</button>
+302:        <button class="btn btn-outline btn-sm" onclick="voiceInput()" title="Voice">🎤</button>
+312:    <button class="btn btn-outline btn-sm" style="margin-bottom:10px" onclick="addStop()">＋ Add stop</button>
+317:      <div class="ride-type-card active" data-type="standard" data-fare="20" onclick="selectRideType(this)"><div class="icon">🚕</div><div class="name">Standard</div><div class="price">20 BWP</div></div>
+318:      <div class="ride-type-card" data-type="premium" data-fare="35" onclick="selectRideType(this)"><div class="icon">🚙</div><div class="name">Premium</div><div class="price">35 BWP</div></div>
+319:      <div class="ride-type-card" data-type="xl" data-fare="50" onclick="selectRideType(this)"><div class="icon">🚐</div><div class="name">XL / Van</div><div class="price">50 BWP</div></div>
+320:      <div class="ride-type-card" data-type="moto" data-fare="12" onclick="selectRideType(this)"><div class="icon">🏍</div><div class="name">Moto</div><div class="price">12 BWP</div></div>
+321:      <div class="ride-type-card" data-type="eco" data-fare="15" onclick="selectRideType(this)"><div class="icon">🌿</div><div class="name">Eco</div><div class="price">15 BWP</div></div>
+322:      <div class="ride-type-card" data-type="quiet" data-fare="22" onclick="selectRideType(this)"><div class="icon">🤫</div><div class="name">Quiet</div><div class="price">22 BWP</div></div>
+342:        <button class="btn btn-outline btn-sm" onclick="sendOffer()">Send</button>
+349:          <button class="btn btn-green btn-sm" onclick="acceptOffer()">✓ Accept counter</button>
+350:          <button class="btn btn-outline btn-sm" onclick="sendOffer()">Send new</button>
+357:      <div class="map-recenter" onclick="recenterMap()">⌖</div>
+372:      <div class="ride-id-chip" onclick="copyRideId()">🎫 Ride <strong id="rideId">—</strong> 📋</div>
+376:      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request Ride</button>
+377:<button class="btn btn-danger btn-sm" id="cancelBtn" style="display:none" onclick="cancelRide()">✕ Cancel ride</button>
+385:        <button class="btn btn-primary btn-sm" onclick="sendChat()">Send</button>
+390:      <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+398:      <button class="btn btn-danger" style="flex:1" onclick="openSOS()">🆘 Emergency SOS</button>
+399:      <button class="btn btn-outline btn-sm" onclick="openModal('shareModal')">📤 Share trip</button>
+405:    <div class="card-header"><div class="card-title">⭐ Quick favourites</div><button class="btn btn-outline btn-sm" onclick="saveFav()">＋ Save</button></div>
+410:    <div class="card-header"><div class="card-title">🕐 Recent rides</div><button class="btn btn-outline btn-sm" onclick="exportCSV()">📥 CSV</button></div>
+427:      <button class="btn btn-primary btn-sm" id="dailyBtn" onclick="claimDaily()">Claim +0.5 THB</button>
+437:    <button class="btn btn-primary" id="r-claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+449:      <button class="btn btn-outline btn-sm" onclick="copyRef()">📋 Copy</button>
+467:    <button class="btn btn-outline btn-sm" id="driverModeBtn" onclick="toggleDriverMode()" style="flex:1">🟢 Go online</button>
+468:    <button class="btn btn-outline btn-sm" onclick="openModal('earningsModal')" style="flex:1">💰 Earnings</button>
+504:      <button class="btn btn-outline" onclick="clearHistory()">🗑 Clear ride history</button>
+505:      <button class="btn btn-outline" onclick="deleteMyData()">🔒 Delete my data</button>
+506:      <button class="btn btn-outline" onclick="showOnboarding()">📖 Replay onboarding</button>
+507:      <button class="btn btn-outline" onclick="exportCSV()">📥 Export CSV</button>
+534:      <button class="btn btn-outline" onclick="openModal('surgeModal')">⚡ Surge pricing info</button>
+535:      <button class="btn btn-outline" onclick="openModal('pendingModal')">🔄 Pending transactions</button>
+536:      <button class="btn btn-outline" onclick="openModal('shareModal')">📤 Share trip link</button>
+537:      <button class="btn btn-outline" onclick="openModal('privacyModal')">🔒 Privacy settings</button>
+538:      <button class="btn btn-outline" onclick="openModal('feedbackModal')">💬 Beta feedback</button>
+539:      <button class="btn btn-outline" onclick="showChangeLog()">📋 Changelog v6.0</button>
+545:    <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="syncOfflineQueue()">🔄 Sync now</button>
+552:  <button class="nav-btn active" onclick="showScreen('home',this)" id="nav-home"><span class="icon">🏠</span><span>Home</span></button>
+553:  <button class="nav-btn" onclick="showScreen('rewards',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>
+554:  <button class="nav-btn center-btn" onclick="bookRide()">🚕</button>
+555:  <button class="nav-btn" onclick="showScreen('driver',this)" id="nav-driver"><span class="icon">🚗</span><span>Driver</span></button>
+556:  <button class="nav-btn" onclick="showScreen('profile',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>
+557:  <button class="nav-btn" onclick="showScreen('more',this)" id="nav-more"><span class="icon">◆</span><span>Ecosystem</span></button>
+571:  <div class="ob-actions"><button class="btn btn-primary" onclick="obNext()">Next →</button><button class="btn btn-outline" onclick="finishOnboarding()">Skip</button></div>
+576:  <div class="modal-title">🆘 Emergency SOS <button class="modal-close" onclick="closeModal('sosModal')">×</button></div>
+581:    <button class="btn btn-outline" onclick="shareLocation()">📍 Share my location</button>
+582:    <button class="btn btn-outline" onclick="closeModal('sosModal')">Cancel</button>
+587:  <div class="modal-title">⚡ Surge pricing <button class="modal-close" onclick="closeModal('surgeModal')">×</button></div>
+592:  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-primary" onclick="acceptSurge()">✓ Accept & book</button><button class="btn btn-outline" onclick="closeModal('surgeModal')">Cancel</button></div>
+596:  <div class="modal-title">📤 Share trip <button class="modal-close" onclick="closeModal('shareModal')">×</button></div>
+598:  <div class="share-link" id="shareLink" onclick="copyShareLink()">No active ride — book a ride first</div>
+599:  <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-primary" onclick="copyShareLink()">📋 Copy link</button><button class="btn btn-outline" onclick="closeModal('shareModal')">Close</button></div>
+603:  <div class="modal-title">🔄 Transactions <button class="modal-close" onclick="closeModal('pendingModal')">×</button></div>
+605:  <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('pendingModal')">Close</button>
+609:  <div class="modal-title">⭐ Rate your driver <button class="modal-close" onclick="closeModal('ratingModal')">×</button></div>
+611:  <div class="stars" id="modalStars"><span class="star" onclick="setRating(1)">★</span><span class="star" onclick="setRating(2)">★</span><span class="star" onclick="setRating(3)">★</span><span class="star" onclick="setRating(4)">★</span><span class="star" onclick="setRating(5)">★</span></div>
+613:  <button class="btn btn-primary" onclick="submitRating()">Submit rating</button>
+617:  <div class="modal-title">🔒 Privacy settings <button class="modal-close" onclick="closeModal('privacyModal')">×</button></div>
+620:    <button class="btn btn-outline" onclick="clearHistory()">🗑 Clear ride history</button>
+621:    <button class="btn btn-danger" onclick="deleteMyData()">⚠ Delete all my data</button>
+622:    <button class="btn btn-outline" onclick="closeModal('privacyModal')">Close</button>
+627:  <div class="modal-title">💰 Driver earnings <button class="modal-close" onclick="closeModal('earningsModal')">×</button></div>
+634:  <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('earningsModal')">Close</button>
+638:  <div class="modal-title">💬 Beta feedback <button class="modal-close" onclick="closeModal('feedbackModal')">×</button></div>
+643:  <button class="btn btn-primary" onclick="submitFeedback()">📤 Submit feedback</button>
+652:    <button class="btn btn-primary" onclick="openRating()">⭐ Rate your driver</button>
+653:    <button class="btn btn-outline" onclick="closeThankyou()">✓ Done</button>
+657:<script>
+885:      ${tx.status==='failed'?`<button class="btn btn-outline btn-sm" onclick="claimReward()">Retry</button>`:''}
+1269:    <div class="stop-row"><input class="input" placeholder="Via stop…" value="${s.value}" oninput="STATE.stops.find(x=>x.id===${s.id}).value=this.value" style="flex:1"/><button class="rm-btn" onclick="removeStop(${s.id})">✕</button></div>
+1408:      <button class="btn btn-green btn-sm" onclick="acceptRealRequest('${r.id}')">✓ Accept</button>
+1409:      <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${r.id}').remove()">✗ Pass</button>
+1454:      <button class="btn btn-green btn-sm" onclick="acceptRequest('${req.id}',${req.fare})">✓ Accept</button>
+1455:      <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${req.id}').remove()">✗ Pass</button>
+1456:      <button class="btn btn-outline btn-sm" onclick="negoRequest('${req.id}',${req.fare})">💬 Counter</button>
+1523:    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--hair);cursor:pointer" onclick="useFav('${f.from.replace(/'/g,"\\'")}','${f.to.replace(/'/g,"\\'")}')">
+1595:  el.innerHTML = FAQS.map((f,i) => `<div class="faq-item"><div class="faq-q" onclick="toggleFAQ(${i})"><span>${f.q}</span><span id="faq-arrow-${i}">▼</span></div><div class="faq-a" id="faq-a-${i}">${f.a}</div></div>`).join('');
+1745:<div id="root"></div><script type="module" src="/main.jsx"></script>
+1747:<script>
+1870:<script>
+2021:<script>
+2056:<script>
+2136:<script>
+2213:<script type="module">
+2257:    <div class="modal-title">🚖 Apply to drive <button class="modal-close" onclick="document.getElementById('driverApplyModal').classList.remove('show')">×</button></div>
+2263:    <button class="btn btn-primary" onclick="submitDriverApplication()">Submit application</button>
+2267:<script>
+2296:          + '<button class="btn btn-primary" onclick="window.showDriverRegistrationForm()">Apply to drive</button>';
+2358:<script>
+2370:<script>
+
+============================================================
+4. DRIVER MODE FUNCTION DEFINITIONS
+============================================================
+./index.html:1264:async function toggleDriverMode(){
+./fix.js:84:window.toggleDriverMode=function(){
+./frontend/js/app.js:123:window.toggleDriverMode = function() {
+./frontend/js/core.js:6:window.toggleDriverMode = function() {
+./frontend/js/fix.js:51:window.toggleDriverMode=function(){window.showDriverRegistrationForm();};
+./frontend/js/app_core.js:386:var _origToggle = window.toggleDriverMode;
+./frontend/js/app_core.js:387:window.toggleDriverMode = function() {
+./frontend/index.html:1347:async function toggleDriverMode(){
+./frontend/index.html:1877:const originalToggleDriverMode = window.toggleDriverMode;
+./frontend/index.html:1880:window.toggleDriverMode = async function(){
+./frontend/index.html.bak_before_sync:1240:function toggleDriverMode(){
+./scripts/archive/root_migrations/app_before_booking_migration.js:86:window.toggleDriverMode = function() {
+./scripts/archive/root_migrations/app_before_bookride_cleanup.js:86:window.toggleDriverMode = function() {
+./scripts/archive/root_migrations/app_before_cleanup_final.js:86:window.toggleDriverMode = function() {
+./scripts/archive/root_migrations/core_before_bookride_cleanup.js:12:window.toggleDriverMode = function() {
+./scripts/archive/root_migrations/fix_before_bookride_cleanup.js:58:window.toggleDriverMode=function(){window.showDriverRegistrationForm();};
+./scripts/archive/root_migrations/index_before_booking_migration.html:1258:async function toggleDriverMode(){
+./scripts/archive/root_migrations/index_before_bookride_cleanup.html:1258:async function toggleDriverMode(){
+./scripts/archive/root_migrations/index_before_bstm_mount.html:1769:function toggleDriverMode() {
+./scripts/archive/root_migrations/index_before_module_cleanup.html:1258:async function toggleDriverMode(){
+./scripts/archive/root_migrations/index_before_reality_cutover.html:1276:function toggleDriverMode(){
+./scripts/archive/root_migrations/index_before_reality_cutover.html:1710:const originalToggleDriverMode = window.toggleDriverMode;
+./scripts/archive/root_migrations/index_before_reality_cutover.html:1713:window.toggleDriverMode = async function(){
+./scripts/archive/root_migrations/index_before_role_auto_cleanup.html:1769:function toggleDriverMode() {
+./scripts/archive/root_migrations/index_before_role_cleanup.html:1769:function toggleDriverMode() {
+./scripts/archive/root_migrations/index_before_role_fix_1784018514824.html:1747:function toggleDriverMode() {
+./scripts/archive/root_migrations/index_before_script_repair_1784017559902.html:1746:function toggleDriverMode() {
+./scripts/archive/root_migrations/index_before_script_restore.html:1258:async function toggleDriverMode(){
+./finalize_check.sh:58:grep -rln "function toggleDriverMode\|toggleDriverMode\s*=\s*function\|window\.toggleDriverMode" --include="*.js" --include="*.html" . | grep -v node_modules
+./gather_info.sh:34:grep -n -A 30 "async function toggleDriverMode" frontend/index.html
+./snapshot.sh:38:grep -c "function toggleDriverMode" frontend/index.html
+./dist/index.html:1348:async function toggleDriverMode(){
+./dist/index.html:1878:const originalToggleDriverMode = window.toggleDriverMode;
+./dist/index.html:1881:window.toggleDriverMode = async function(){
+./migration_backup/index_legacy.html:1240:function toggleDriverMode(){
+./migration_backup/frontend/js/app.js:12:window.toggleDriverMode = function() {
+./migration_backup/frontend/js/core.js:12:window.toggleDriverMode = function() {
+./archive/old_backups/backups_v67/index.html.autobak:1722:function toggleDriverMode() {
+./archive/old_backups/backups_v67/app.js.autobak:12:window.toggleDriverMode = function() {
+./archive/old_backups/backups_v67/core.js.autobak:12:window.toggleDriverMode = function() {
+./archive/old_backups/backups_v67/app_stable_backup.js:12:window.toggleDriverMode = function() {
+./archive/old_backups/backups_v67/core_stable_backup.js:12:window.toggleDriverMode = function() {
+./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/index.html:1723:function toggleDriverMode() {
+./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/fix.js:88:window.toggleDriverMode = function() {
+./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/frontend/js/app.js:12:window.toggleDriverMode = function() {
+./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/frontend/js/core.js:12:window.toggleDriverMode = function() {
+./archive/old_backups/index_backup_before_cleanup_1783943720472.html:1722:function toggleDriverMode() {
+./archive/old_backups/index_stable_backup_1784017647536.html:1746:function toggleDriverMode() {
+./archive/old_backups/index_stable_backup_1784017709341.html:1747:function toggleDriverMode() {
+./archive/old_backups/index_stable_backup_1784026555127.html:1769:function toggleDriverMode() {
+./archive/phase_scripts/cablink_driver_mode_reality_patch.js:35:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/phase_scripts/cablink_driver_mode_reality_patch.js:38:window.toggleDriverMode = async function(){
+./archive/phase_scripts/fix_bookride.js:94:const toggleRe = /function toggleDriverMode\(\)\{[\s\S]*?(?=\nfunction addDriverRequest\(\)\{)/;
+./archive/phase_scripts/fix_bookride.js:96:const newToggle = `async function toggleDriverMode(){
+./archive/phase_scripts/index.html.bak_before_real_wiring:1260:function toggleDriverMode(){
+./archive/phase_scripts/index.html.bak_before_real_wiring:1694:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/phase_scripts/index.html.bak_before_real_wiring:1697:window.toggleDriverMode = async function(){
+./archive/phase_scripts/index_backup_before_runtime_merge.html:1240:function toggleDriverMode(){
+./archive/phase_scripts/index_backup_before_runtime_merge.html:1674:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/phase_scripts/index_backup_before_runtime_merge.html:1677:window.toggleDriverMode = async function(){
+./archive/phase_scripts/index_backup_before_bookride_cleanup.html:1240:function toggleDriverMode(){
+./archive/phase_scripts/index_backup_before_bookride_cleanup.html:1674:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/phase_scripts/index_backup_before_bookride_cleanup.html:1677:window.toggleDriverMode = async function(){
+./archive/phase_scripts/index_react_backup.html:1240:function toggleDriverMode(){
+./archive/phase_scripts/index_backup_before_real_engine.html:1240:function toggleDriverMode(){
+./archive/phase_scripts/index_backup_before_real_engine.html:1674:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/phase_scripts/index_backup_before_real_engine.html:1677:window.toggleDriverMode = async function(){
+./archive/phase_scripts/index_backup_before_driver_override_remove.html:1261:async function toggleDriverMode(){
+./archive/before_architecture_cleanup/frontend_1784127601/index.html:1261:async function toggleDriverMode(){
+./archive/before_architecture_cleanup/frontend_1784127601/index.html:1759:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/before_architecture_cleanup/frontend_1784127601/index.html:1762:window.toggleDriverMode = async function(){
+./archive/before_architecture_cleanup/frontend_1784127601/index.html.bak_before_sync:1240:function toggleDriverMode(){
+./archive/before_architecture_cleanup/frontend_1784127601/js/app.js:123:window.toggleDriverMode = function() {
+./archive/before_architecture_cleanup/frontend_1784127601/js/core.js:6:window.toggleDriverMode = function() {
+./archive/before_architecture_cleanup/frontend_1784127601/js/fix.js:51:window.toggleDriverMode=function(){window.showDriverRegistrationForm();};
+./archive/before_architecture_cleanup/index_1784127601.html:1258:async function toggleDriverMode(){
+./archive/driver_upgrade/index_before_driver_upgrade_1784126025.html:1258:async function toggleDriverMode(){
+./archive/driver_wiring/index_1784128009669.html:1261:async function toggleDriverMode(){
+./archive/driver_wiring/index_1784128009669.html:1759:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/driver_wiring/index_1784128009669.html:1762:window.toggleDriverMode = async function(){
+./archive/frontend_cleanup/index_before_bookride_migration_1784131014.html:1261:async function toggleDriverMode(){
+./archive/frontend_cleanup/index_before_bookride_migration_1784131014.html:1759:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/frontend_cleanup/index_before_bookride_migration_1784131014.html:1762:window.toggleDriverMode = async function(){
+./archive/frontend_cleanup/index_before_cleanup_1784131327228.html:1258:async function toggleDriverMode(){
+./archive/frontend_cleanup/index_before_cleanup_1784131327228.html:1756:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/frontend_cleanup/index_before_cleanup_1784131327228.html:1759:window.toggleDriverMode = async function(){
+./archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html:1261:async function toggleDriverMode(){
+./archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html:1759:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html:1762:window.toggleDriverMode = async function(){
+./archive/frontend_cleanup/index_before_truth_migration.html:1261:async function toggleDriverMode(){
+./archive/frontend_cleanup/index_before_truth_migration.html:1759:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/frontend_cleanup/index_before_truth_migration.html:1762:window.toggleDriverMode = async function(){
+./archive/server_conflicts/index_before_api_fix_1784125371.html:1258:async function toggleDriverMode(){
+./archive/state_recovery/app_before_state_recovery_1784127025.js:51:window.toggleDriverMode = function() {
+./archive/truth_cleanup_1784127676771/frontend_index.html:1261:async function toggleDriverMode(){
+./archive/truth_cleanup_1784127676771/frontend_index.html:1759:const originalToggleDriverMode = window.toggleDriverMode;
+./archive/truth_cleanup_1784127676771/frontend_index.html:1762:window.toggleDriverMode = async function(){
+./archive/truth_cleanup_1784127676771/frontend_js_app.js:123:window.toggleDriverMode = function() {
+
+============================================================
+5. DRIVER ONLINE/OFFLINE API REFERENCES
+============================================================
+./index.html:1272:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./fix.js:94:    fetch('/api/drivers/online',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+./fix.js:114:    fetch('/api/drivers/offline',{method:'POST',headers:{'Content-Type':'application/json'},
+./backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./backend/server.js:170:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+./frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+./frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./frontend/index.html:916:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+./frontend/index.html:1355:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./frontend/index.html:1766:let r=await fetch("/api/drivers/online");
+./frontend/index.html:1930:"/api/drivers/online",
+./frontend/index.html:1983:"/api/drivers/offline",
+./frontend/index.html:2069:await fetch('/api/drivers/online');
+./CABLINK_REALITY_GRAPH.json:53:        "endpoint": "/api/drivers/online",
+./CABLINK_REALITY_GRAPH.json:67:        "endpoint": "/api/drivers/offline",
+./CABLINK_REALITY_GRAPH.json:123:        "endpoint": "/api/drivers/online",
+./CABLINK_REALITY_GRAPH.json:137:        "endpoint": "/api/drivers/online",
+./CABLINK_REALITY_GRAPH.json:144:        "endpoint": "/api/drivers/offline",
+./CABLINK_REALITY_GRAPH.json:298:        "endpoint": "/api/drivers/online",
+./CABLINK_REALITY_GRAPH.json:312:        "endpoint": "/api/drivers/online",
+./CABLINK_REALITY_GRAPH.json:319:        "endpoint": "/api/drivers/offline",
+./CABLINK_REALITY_GRAPH.json:763:        "path": "/api/drivers/online"
+./CABLINK_REALITY_GRAPH.json:769:        "path": "/api/drivers/offline"
+./CABLINK_REALITY_GRAPH.json:775:        "path": "/api/drivers/online"
+./CABLINK_REALITY_GRAPH.json:811:        "path": "/api/drivers/online",
+./CABLINK_REALITY_GRAPH.json:817:        "path": "/api/drivers/offline",
+./CABLINK_REALITY_GRAPH.json:823:        "path": "/api/drivers/online",
+./CABLINK_REALITY_GRAPH.json:4739:      "step": "toggleDriverMode() -> POST /api/drivers/online",
+./CABLINK_REALITY_GRAPH.json:4743:        "endpoint": "/api/drivers/online",
+./CABLINK_REALITY_GRAPH.json:4751:        "path": "/api/drivers/online"
+./CABLINK_REALITY_GRAPH.json:4877:      "path": "/api/drivers/online",
+./CABLINK_TRUTH_REPORT.md:81:- `POST /api/drivers/online` — backend/server.js:60
+./CABLINK_TRUTH_REPORT.md:82:- `POST /api/drivers/offline` — backend/server.js:73
+./CABLINK_TRUTH_REPORT.md:83:- `GET /api/drivers/online` — backend/server.js:80
+./CABLINK_TRUTH_REPORT.md:91:- ✅ `POST /api/drivers/online` — backend/server.js:60
+./CABLINK_TRUTH_REPORT.md:92:- ✅ `POST /api/drivers/offline` — backend/server.js:73
+./CABLINK_TRUTH_REPORT.md:93:- ✅ `GET /api/drivers/online` — backend/server.js:80
+./CABLINK_TRUTH_REPORT.md:169:- ✅ toggleDriverMode() -> POST /api/drivers/online
+./CABLINK_TRUTH_REPORT.md:170:   - frontend: fix.js:85 calls `POST /api/drivers/online`
+./CABLINK_TRUTH_REPORT.md:171:   - backend: backend/server.js:60 defines `POST /api/drivers/online`
+./CABLINK_TRUTH_REPORT.md:262:- ❌ GET /api/drivers/online — FAIL (ECONNREFUSED)
+./diagnose.sh:31:echo "=== 4. Driver going online (POST /api/drivers/online) ==="
+./diagnose.sh:32:curl -s -X POST http://localhost:3000/api/drivers/online \
+./runtime_dependency_graph.json:101:        "/api/drivers/online",
+./runtime_dependency_graph.json:103:        "/api/drivers/online",
+./runtime_dependency_graph.json:104:        "/api/drivers/offline"
+./runtime_dependency_graph.json:112:          "call": "/api/drivers/online",
+./runtime_dependency_graph.json:120:          "call": "/api/drivers/online",
+./runtime_dependency_graph.json:124:          "call": "/api/drivers/offline",
+./scripts/archive/root_migrations/cablink_driver_bridge_repair.js:32:fetch("/api/drivers/online",{
+./scripts/archive/root_migrations/cablink_driver_bridge_repair.js:63:fetch("/api/drivers/offline",{
+./scripts/archive/root_migrations/cablink_driver_mode_bridge_install.js:47:fetch("/api/drivers/online",{
+./scripts/archive/root_migrations/cablink_driver_mode_bridge_install.js:82:fetch("/api/drivers/offline",{
+./scripts/archive/root_migrations/cablink_live_driver_bridge.js:37:await fetch('/api/drivers/online');
+./scripts/archive/root_migrations/cablink_module_builder.js:31:return fetch('/api/drivers/online',{
+./scripts/archive/root_migrations/cablink_module_builder.js:56:drivers:'/api/drivers/online',
+./scripts/archive/root_migrations/cablink_reality_doctor.js:69:  { method: 'POST', p: '/api/drivers/online' },
+./scripts/archive/root_migrations/cablink_reality_doctor.js:70:  { method: 'POST', p: '/api/drivers/offline' },
+./scripts/archive/root_migrations/cablink_reality_doctor.js:71:  { method: 'GET', p: '/api/drivers/online' }
+./scripts/archive/root_migrations/cablink_reality_doctor.js:490:    { step: 'toggleDriverMode() -> POST /api/drivers/online', fn: 'toggleDriverMode', method: 'POST', p: '/api/drivers/online' },
+./scripts/archive/root_migrations/cablink_reality_doctor.js:599:    { method: 'GET', p: '/api/drivers/online' }
+./scripts/archive/root_migrations/cablink_release_readiness_audit.js:47:"/api/drivers/online"
+./scripts/archive/root_migrations/index_before_booking_migration.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./scripts/archive/root_migrations/index_before_bookride_cleanup.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./scripts/archive/root_migrations/index_before_module_cleanup.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./scripts/archive/root_migrations/index_before_reality_cutover.html:1599:let r=await fetch("/api/drivers/online");
+./scripts/archive/root_migrations/index_before_reality_cutover.html:1761:"/api/drivers/online",
+./scripts/archive/root_migrations/index_before_reality_cutover.html:1812:"/api/drivers/offline",
+./scripts/archive/root_migrations/index_before_script_restore.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./block7.py:187:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+./block7.py:221:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./block7.py:229:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./cablink_reality_doctor.js:69:  { method: 'POST', p: '/api/drivers/online' },
+./cablink_reality_doctor.js:70:  { method: 'POST', p: '/api/drivers/offline' },
+./cablink_reality_doctor.js:71:  { method: 'GET', p: '/api/drivers/online' }
+./cablink_reality_doctor.js:541:    { step: 'toggleDriverMode() -> POST /api/drivers/online', fn: 'toggleDriverMode', method: 'POST', p: '/api/drivers/online' },
+./cablink_reality_doctor.js:659:    { method: 'GET', p: '/api/drivers/online' }
+./gather_info.sh:5:echo " 1. GET /api/drivers/online — real response shape"
+./gather_info.sh:7:curl -s http://localhost:3000/api/drivers/online
+./gather_info.sh:40:grep -n -B2 -A 15 "app.post('/api/drivers/online'" backend/server.js
+./gather_info.sh:42:grep -n -B2 -A 10 "app.get('/api/drivers/online'" backend/server.js
+./CABLINK_FORENSIC_AUDIT_V2_REPORT.md:295:- POST /api/drivers/online — backend/server.js:95
+./CABLINK_FORENSIC_AUDIT_V2_REPORT.md:296:- POST /api/drivers/offline — backend/server.js:112
+./CABLINK_FORENSIC_AUDIT_V2_REPORT.md:297:- GET /api/drivers/online — backend/server.js:125
+./block9_runtime_truth.sh:252:echo "GET /api/drivers/online"
+./block9_runtime_truth.sh:253:curl -sS -i --max-time 5 http://localhost:3000/api/drivers/online 2>&1 || true
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:433:app.post('/api/drivers/online', function(req, res) {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:450:app.post('/api/drivers/offline', function(req, res) {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:463:app.get('/api/drivers/online', function(req, res) {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:508:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:593:95:app.post('/api/drivers/online', function(req, res) {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:594:112:app.post('/api/drivers/offline', function(req, res) {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:595:125:app.get('/api/drivers/online', function(req, res) {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:648:frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:649:frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:650:frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:653:frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:656:frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:657:frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:658:frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:660:frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:742:backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:743:backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:744:backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:828:GET /api/drivers/online
+./block10_canonical_runtime_lock.sh:25:echo "6. Verifies /api/drivers/online"
+./block10_canonical_runtime_lock.sh:157:echo "8. GET /api/drivers/online"
+./block10_canonical_runtime_lock.sh:161:  http://127.0.0.1:3000/api/drivers/online \
+./block10_canonical_runtime_lock.sh:257:  http://127.0.0.1:3000/api/drivers/online \
+./block10_canonical_runtime_lock.sh:278:  http://127.0.0.1:3000/api/drivers/online \
+./block10_canonical_runtime_lock.sh:550:  echo "/api/drivers/online"
+./cablink-backend.log:2:Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply
+./block10_backend.log:2:Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply
+./block11_architecture_map.txt:2184:frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./block11_architecture_map.txt:2187:frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./block11_architecture_map.txt:2188:frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./block11_architecture_map.txt:2189:frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./block11_architecture_map.txt:2191:frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./block11_architecture_map.txt:2196:frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./block11_architecture_map.txt:2197:frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./block11_architecture_map.txt:2199:frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./block11_architecture_map.txt:2225:frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./block11_architecture_map.txt:2228:frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./block11_architecture_map.txt:2229:frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./block11_architecture_map.txt:2230:frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./block11_architecture_map.txt:2232:frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./block11_architecture_map.txt:2235:frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+./block11_architecture_map.txt:2239:frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./block11_architecture_map.txt:2240:frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./block11_architecture_map.txt:2242:frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./block11_architecture_map.txt:2247:frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+./block11_architecture_map.txt:2369:app.post('/api/drivers/online', function(req, res) {
+./block11_architecture_map.txt:2386:app.post('/api/drivers/offline', function(req, res) {
+./block11_architecture_map.txt:2399:app.get('/api/drivers/online', function(req, res) {
+./block11_architecture_map.txt:2444:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./block11_architecture_map.txt:2566:backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./block11_architecture_map.txt:2567:backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./block11_architecture_map.txt:2576:backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./block11_architecture_map.txt:2653:95:app.post('/api/drivers/online', function(req, res) {
+./block11_architecture_map.txt:2654:112:app.post('/api/drivers/offline', function(req, res) {
+./block11_architecture_map.txt:2655:125:app.get('/api/drivers/online', function(req, res) {
+./block11_architecture_map.txt:5197:/api/drivers/offline
+./block11_architecture_map.txt:5198:/api/drivers/online
+./block11_architecture_map.txt:5216:'/api/drivers/offline
+./block11_architecture_map.txt:5217:'/api/drivers/online
+./block12_safe_reorganisation_audit.txt:439:app.post('/api/drivers/online', function(req, res) {
+./block12_safe_reorganisation_audit.txt:456:app.post('/api/drivers/offline', function(req, res) {
+./block12_safe_reorganisation_audit.txt:469:app.get('/api/drivers/online', function(req, res) {
+./block12_safe_reorganisation_audit.txt:514:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./block12_safe_reorganisation_audit.txt:1516:/api/drivers/offline
+./block12_safe_reorganisation_audit.txt:1517:/api/drivers/online
+./block12_safe_reorganisation_audit.txt:1600:backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./block12_safe_reorganisation_audit.txt:1602:backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./block12_safe_reorganisation_audit.txt:1611:backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./block13a_canonical_runtime_truth.txt:798:backend/server.js:170:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./block13b_runtime_proof.txt:406:app.post('/api/drivers/online', function(req, res) {
+./block13b_runtime_proof.txt:423:app.post('/api/drivers/offline', function(req, res) {
+./block13b_runtime_proof.txt:436:app.get('/api/drivers/online', function(req, res) {
+./block13b_runtime_proof.txt:481:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./block13b_runtime_proof.txt:495:backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./block13b_runtime_proof.txt:496:backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./block13b_runtime_proof.txt:497:backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./block13b_runtime_proof.txt:509:frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+./block13b_runtime_proof.txt:513:frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+./block13b_runtime_proof.txt:516:frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./block13b_runtime_proof.txt:517:frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./block13b_runtime_proof.txt:518:frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./block13b_runtime_proof.txt:524:frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./block13b_runtime_proof.txt:527:frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./block13b_runtime_proof.txt:528:frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./block13b_runtime_proof.txt:529:frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./block13b_runtime_proof.txt:531:frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./block13b_runtime_proof.txt:557:frontend/index.html:916:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+./block13b_runtime_proof.txt:559:frontend/index.html:1355:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./block13b_runtime_proof.txt:563:frontend/index.html:1766:let r=await fetch("/api/drivers/online");
+./block13b_runtime_proof.txt:565:frontend/index.html:1930:"/api/drivers/online",
+./block13b_runtime_proof.txt:566:frontend/index.html:1983:"/api/drivers/offline",
+./block13b_runtime_proof.txt:567:frontend/index.html:2069:await fetch('/api/drivers/online');
+./canonical_runtime_truth.sh:108:  '/api/drivers/online|/api/drivers/offline' \
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:346:./index.html:1272:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:347:./fix.js:94:    fetch('/api/drivers/online',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:348:./fix.js:114:    fetch('/api/drivers/offline',{method:'POST',headers:{'Content-Type':'application/json'},
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:349:./backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:350:./backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:351:./backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:352:./backend/server.js:170:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:353:./frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:354:./frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:355:./frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:356:./frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:357:./frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:358:./frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:359:./frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:360:./frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:361:./frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:362:./frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:363:./frontend/index.html:916:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:364:./frontend/index.html:1355:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:365:./frontend/index.html:1766:let r=await fetch("/api/drivers/online");
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:366:./frontend/index.html:1930:"/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:367:./frontend/index.html:1983:"/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:368:./frontend/index.html:2069:await fetch('/api/drivers/online');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:369:./CABLINK_REALITY_GRAPH.json:53:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:370:./CABLINK_REALITY_GRAPH.json:67:        "endpoint": "/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:371:./CABLINK_REALITY_GRAPH.json:123:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:372:./CABLINK_REALITY_GRAPH.json:137:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:373:./CABLINK_REALITY_GRAPH.json:144:        "endpoint": "/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:374:./CABLINK_REALITY_GRAPH.json:298:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:375:./CABLINK_REALITY_GRAPH.json:312:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:376:./CABLINK_REALITY_GRAPH.json:319:        "endpoint": "/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:377:./CABLINK_REALITY_GRAPH.json:763:        "path": "/api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:378:./CABLINK_REALITY_GRAPH.json:769:        "path": "/api/drivers/offline"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:379:./CABLINK_REALITY_GRAPH.json:775:        "path": "/api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:380:./CABLINK_REALITY_GRAPH.json:811:        "path": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:381:./CABLINK_REALITY_GRAPH.json:817:        "path": "/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:382:./CABLINK_REALITY_GRAPH.json:823:        "path": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:383:./CABLINK_REALITY_GRAPH.json:4739:      "step": "toggleDriverMode() -> POST /api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:384:./CABLINK_REALITY_GRAPH.json:4743:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:385:./CABLINK_REALITY_GRAPH.json:4751:        "path": "/api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:386:./CABLINK_REALITY_GRAPH.json:4877:      "path": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:387:./CABLINK_TRUTH_REPORT.md:81:- `POST /api/drivers/online` — backend/server.js:60
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:388:./CABLINK_TRUTH_REPORT.md:82:- `POST /api/drivers/offline` — backend/server.js:73
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:389:./CABLINK_TRUTH_REPORT.md:83:- `GET /api/drivers/online` — backend/server.js:80
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:390:./CABLINK_TRUTH_REPORT.md:91:- ✅ `POST /api/drivers/online` — backend/server.js:60
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:391:./CABLINK_TRUTH_REPORT.md:92:- ✅ `POST /api/drivers/offline` — backend/server.js:73
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:392:./CABLINK_TRUTH_REPORT.md:93:- ✅ `GET /api/drivers/online` — backend/server.js:80
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:393:./CABLINK_TRUTH_REPORT.md:169:- ✅ toggleDriverMode() -> POST /api/drivers/online
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:394:./CABLINK_TRUTH_REPORT.md:170:   - frontend: fix.js:85 calls `POST /api/drivers/online`
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:395:./CABLINK_TRUTH_REPORT.md:171:   - backend: backend/server.js:60 defines `POST /api/drivers/online`
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:396:./CABLINK_TRUTH_REPORT.md:262:- ❌ GET /api/drivers/online — FAIL (ECONNREFUSED)
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:397:./diagnose.sh:31:echo "=== 4. Driver going online (POST /api/drivers/online) ==="
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:398:./diagnose.sh:32:curl -s -X POST http://localhost:3000/api/drivers/online \
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:399:./runtime_dependency_graph.json:101:        "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:400:./runtime_dependency_graph.json:103:        "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:401:./runtime_dependency_graph.json:104:        "/api/drivers/offline"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:402:./runtime_dependency_graph.json:112:          "call": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:403:./runtime_dependency_graph.json:120:          "call": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:404:./runtime_dependency_graph.json:124:          "call": "/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:405:./scripts/archive/root_migrations/cablink_driver_bridge_repair.js:32:fetch("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:406:./scripts/archive/root_migrations/cablink_driver_bridge_repair.js:63:fetch("/api/drivers/offline",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:407:./scripts/archive/root_migrations/cablink_driver_mode_bridge_install.js:47:fetch("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:408:./scripts/archive/root_migrations/cablink_driver_mode_bridge_install.js:82:fetch("/api/drivers/offline",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:409:./scripts/archive/root_migrations/cablink_live_driver_bridge.js:37:await fetch('/api/drivers/online');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:410:./scripts/archive/root_migrations/cablink_module_builder.js:31:return fetch('/api/drivers/online',{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:411:./scripts/archive/root_migrations/cablink_module_builder.js:56:drivers:'/api/drivers/online',
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:412:./scripts/archive/root_migrations/cablink_reality_doctor.js:69:  { method: 'POST', p: '/api/drivers/online' },
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:413:./scripts/archive/root_migrations/cablink_reality_doctor.js:70:  { method: 'POST', p: '/api/drivers/offline' },
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:414:./scripts/archive/root_migrations/cablink_reality_doctor.js:71:  { method: 'GET', p: '/api/drivers/online' }
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:415:./scripts/archive/root_migrations/cablink_reality_doctor.js:490:    { step: 'toggleDriverMode() -> POST /api/drivers/online', fn: 'toggleDriverMode', method: 'POST', p: '/api/drivers/online' },
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:416:./scripts/archive/root_migrations/cablink_reality_doctor.js:599:    { method: 'GET', p: '/api/drivers/online' }
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:417:./scripts/archive/root_migrations/cablink_release_readiness_audit.js:47:"/api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:418:./scripts/archive/root_migrations/index_before_booking_migration.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:419:./scripts/archive/root_migrations/index_before_bookride_cleanup.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:420:./scripts/archive/root_migrations/index_before_module_cleanup.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:421:./scripts/archive/root_migrations/index_before_reality_cutover.html:1599:let r=await fetch("/api/drivers/online");
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:422:./scripts/archive/root_migrations/index_before_reality_cutover.html:1761:"/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:423:./scripts/archive/root_migrations/index_before_reality_cutover.html:1812:"/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:424:./scripts/archive/root_migrations/index_before_script_restore.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:425:./block7.py:187:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:426:./block7.py:221:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:427:./block7.py:229:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:428:./cablink_reality_doctor.js:69:  { method: 'POST', p: '/api/drivers/online' },
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:429:./cablink_reality_doctor.js:70:  { method: 'POST', p: '/api/drivers/offline' },
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:430:./cablink_reality_doctor.js:71:  { method: 'GET', p: '/api/drivers/online' }
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:431:./cablink_reality_doctor.js:541:    { step: 'toggleDriverMode() -> POST /api/drivers/online', fn: 'toggleDriverMode', method: 'POST', p: '/api/drivers/online' },
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:432:./cablink_reality_doctor.js:659:    { method: 'GET', p: '/api/drivers/online' }
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:433:./gather_info.sh:5:echo " 1. GET /api/drivers/online — real response shape"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:434:./gather_info.sh:7:curl -s http://localhost:3000/api/drivers/online
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:435:./gather_info.sh:40:grep -n -B2 -A 15 "app.post('/api/drivers/online'" backend/server.js
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:436:./gather_info.sh:42:grep -n -B2 -A 10 "app.get('/api/drivers/online'" backend/server.js
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:437:./CABLINK_FORENSIC_AUDIT_V2_REPORT.md:295:- POST /api/drivers/online — backend/server.js:95
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:438:./CABLINK_FORENSIC_AUDIT_V2_REPORT.md:296:- POST /api/drivers/offline — backend/server.js:112
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:439:./CABLINK_FORENSIC_AUDIT_V2_REPORT.md:297:- GET /api/drivers/online — backend/server.js:125
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:440:./block9_runtime_truth.sh:252:echo "GET /api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:441:./block9_runtime_truth.sh:253:curl -sS -i --max-time 5 http://localhost:3000/api/drivers/online 2>&1 || true
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:442:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:433:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:443:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:450:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:444:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:463:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:445:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:508:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:446:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:593:95:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:447:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:594:112:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:448:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:595:125:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:449:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:648:frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:450:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:649:frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:451:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:650:frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:452:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:653:frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:453:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:656:frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:454:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:657:frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:455:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:658:frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:456:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:660:frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:457:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:742:backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:458:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:743:backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:459:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:744:backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:460:./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt:828:GET /api/drivers/online
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:461:./block10_canonical_runtime_lock.sh:25:echo "6. Verifies /api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:462:./block10_canonical_runtime_lock.sh:157:echo "8. GET /api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:463:./block10_canonical_runtime_lock.sh:161:  http://127.0.0.1:3000/api/drivers/online \
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:464:./block10_canonical_runtime_lock.sh:257:  http://127.0.0.1:3000/api/drivers/online \
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:465:./block10_canonical_runtime_lock.sh:278:  http://127.0.0.1:3000/api/drivers/online \
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:466:./block10_canonical_runtime_lock.sh:550:  echo "/api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:467:./cablink-backend.log:2:Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:468:./block10_backend.log:2:Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:469:./block11_architecture_map.txt:2184:frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:470:./block11_architecture_map.txt:2187:frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:471:./block11_architecture_map.txt:2188:frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:472:./block11_architecture_map.txt:2189:frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:473:./block11_architecture_map.txt:2191:frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:474:./block11_architecture_map.txt:2196:frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:475:./block11_architecture_map.txt:2197:frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:476:./block11_architecture_map.txt:2199:frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:477:./block11_architecture_map.txt:2225:frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:478:./block11_architecture_map.txt:2228:frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:479:./block11_architecture_map.txt:2229:frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:480:./block11_architecture_map.txt:2230:frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:481:./block11_architecture_map.txt:2232:frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:482:./block11_architecture_map.txt:2235:frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:483:./block11_architecture_map.txt:2239:frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:484:./block11_architecture_map.txt:2240:frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:485:./block11_architecture_map.txt:2242:frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:486:./block11_architecture_map.txt:2247:frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:487:./block11_architecture_map.txt:2369:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:488:./block11_architecture_map.txt:2386:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:489:./block11_architecture_map.txt:2399:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:490:./block11_architecture_map.txt:2444:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:491:./block11_architecture_map.txt:2566:backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:492:./block11_architecture_map.txt:2567:backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:493:./block11_architecture_map.txt:2576:backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:494:./block11_architecture_map.txt:2653:95:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:495:./block11_architecture_map.txt:2654:112:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:496:./block11_architecture_map.txt:2655:125:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:497:./block11_architecture_map.txt:5197:/api/drivers/offline
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:498:./block11_architecture_map.txt:5198:/api/drivers/online
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:499:./block11_architecture_map.txt:5216:'/api/drivers/offline
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:500:./block11_architecture_map.txt:5217:'/api/drivers/online
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:501:./block12_safe_reorganisation_audit.txt:439:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:502:./block12_safe_reorganisation_audit.txt:456:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:503:./block12_safe_reorganisation_audit.txt:469:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:504:./block12_safe_reorganisation_audit.txt:514:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:505:./block12_safe_reorganisation_audit.txt:1516:/api/drivers/offline
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:506:./block12_safe_reorganisation_audit.txt:1517:/api/drivers/online
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:507:./block12_safe_reorganisation_audit.txt:1600:backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:508:./block12_safe_reorganisation_audit.txt:1602:backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:509:./block12_safe_reorganisation_audit.txt:1611:backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:510:./block13a_canonical_runtime_truth.txt:798:backend/server.js:170:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:511:./block13b_runtime_proof.txt:406:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:512:./block13b_runtime_proof.txt:423:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:513:./block13b_runtime_proof.txt:436:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:514:./block13b_runtime_proof.txt:481:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:515:./block13b_runtime_proof.txt:495:backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:516:./block13b_runtime_proof.txt:496:backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:517:./block13b_runtime_proof.txt:497:backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:518:./block13b_runtime_proof.txt:509:frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:519:./block13b_runtime_proof.txt:513:frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:520:./block13b_runtime_proof.txt:516:frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:521:./block13b_runtime_proof.txt:517:frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:522:./block13b_runtime_proof.txt:518:frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:523:./block13b_runtime_proof.txt:524:frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:524:./block13b_runtime_proof.txt:527:frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:525:./block13b_runtime_proof.txt:528:frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:526:./block13b_runtime_proof.txt:529:frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:527:./block13b_runtime_proof.txt:531:frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:528:./block13b_runtime_proof.txt:557:frontend/index.html:916:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:529:./block13b_runtime_proof.txt:559:frontend/index.html:1355:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:530:./block13b_runtime_proof.txt:563:frontend/index.html:1766:let r=await fetch("/api/drivers/online");
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:531:./block13b_runtime_proof.txt:565:frontend/index.html:1930:"/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:532:./block13b_runtime_proof.txt:566:frontend/index.html:1983:"/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:533:./block13b_runtime_proof.txt:567:frontend/index.html:2069:await fetch('/api/drivers/online');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:534:./canonical_runtime_truth.sh:108:  '/api/drivers/online|/api/drivers/offline' \
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:535:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:346:./index.html:1272:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:536:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:347:./fix.js:94:    fetch('/api/drivers/online',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:537:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:348:./fix.js:114:    fetch('/api/drivers/offline',{method:'POST',headers:{'Content-Type':'application/json'},
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:538:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:349:./backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:539:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:350:./backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:540:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:351:./backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:541:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:352:./backend/server.js:170:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:542:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:353:./frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:543:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:354:./frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:544:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:355:./frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:545:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:356:./frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:546:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:357:./frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:547:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:358:./frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:548:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:359:./frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:549:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:360:./frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:550:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:361:./frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:551:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:362:./frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:552:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:363:./frontend/index.html:916:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:553:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:364:./frontend/index.html:1355:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:554:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:365:./frontend/index.html:1766:let r=await fetch("/api/drivers/online");
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:555:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:366:./frontend/index.html:1930:"/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:556:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:367:./frontend/index.html:1983:"/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:557:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:368:./frontend/index.html:2069:await fetch('/api/drivers/online');
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:558:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:369:./CABLINK_REALITY_GRAPH.json:53:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:559:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:370:./CABLINK_REALITY_GRAPH.json:67:        "endpoint": "/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:560:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:371:./CABLINK_REALITY_GRAPH.json:123:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:561:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:372:./CABLINK_REALITY_GRAPH.json:137:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:562:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:373:./CABLINK_REALITY_GRAPH.json:144:        "endpoint": "/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:563:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:374:./CABLINK_REALITY_GRAPH.json:298:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:564:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:375:./CABLINK_REALITY_GRAPH.json:312:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:565:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:376:./CABLINK_REALITY_GRAPH.json:319:        "endpoint": "/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:566:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:377:./CABLINK_REALITY_GRAPH.json:763:        "path": "/api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:567:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:378:./CABLINK_REALITY_GRAPH.json:769:        "path": "/api/drivers/offline"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:568:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:379:./CABLINK_REALITY_GRAPH.json:775:        "path": "/api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:569:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:380:./CABLINK_REALITY_GRAPH.json:811:        "path": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:570:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:381:./CABLINK_REALITY_GRAPH.json:817:        "path": "/api/drivers/offline",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:571:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:382:./CABLINK_REALITY_GRAPH.json:823:        "path": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:572:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:383:./CABLINK_REALITY_GRAPH.json:4739:      "step": "toggleDriverMode() -> POST /api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:573:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:384:./CABLINK_REALITY_GRAPH.json:4743:        "endpoint": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:574:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:385:./CABLINK_REALITY_GRAPH.json:4751:        "path": "/api/drivers/online"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:575:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:386:./CABLINK_REALITY_GRAPH.json:4877:      "path": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:576:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:387:./CABLINK_TRUTH_REPORT.md:81:- `POST /api/drivers/online` — backend/server.js:60
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:577:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:388:./CABLINK_TRUTH_REPORT.md:82:- `POST /api/drivers/offline` — backend/server.js:73
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:578:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:389:./CABLINK_TRUTH_REPORT.md:83:- `GET /api/drivers/online` — backend/server.js:80
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:579:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:390:./CABLINK_TRUTH_REPORT.md:91:- ✅ `POST /api/drivers/online` — backend/server.js:60
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:580:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:391:./CABLINK_TRUTH_REPORT.md:92:- ✅ `POST /api/drivers/offline` — backend/server.js:73
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:581:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:392:./CABLINK_TRUTH_REPORT.md:93:- ✅ `GET /api/drivers/online` — backend/server.js:80
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:582:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:393:./CABLINK_TRUTH_REPORT.md:169:- ✅ toggleDriverMode() -> POST /api/drivers/online
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:583:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:394:./CABLINK_TRUTH_REPORT.md:170:   - frontend: fix.js:85 calls `POST /api/drivers/online`
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:584:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:395:./CABLINK_TRUTH_REPORT.md:171:   - backend: backend/server.js:60 defines `POST /api/drivers/online`
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:585:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:396:./CABLINK_TRUTH_REPORT.md:262:- ❌ GET /api/drivers/online — FAIL (ECONNREFUSED)
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:586:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:397:./diagnose.sh:31:echo "=== 4. Driver going online (POST /api/drivers/online) ==="
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:587:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:398:./diagnose.sh:32:curl -s -X POST http://localhost:3000/api/drivers/online \
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:588:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:399:./runtime_dependency_graph.json:101:        "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:589:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:400:./runtime_dependency_graph.json:103:        "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:590:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:401:./runtime_dependency_graph.json:104:        "/api/drivers/offline"
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:591:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:402:./runtime_dependency_graph.json:112:          "call": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:592:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:403:./runtime_dependency_graph.json:120:          "call": "/api/drivers/online",
+./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:593:./CANONICAL_RUNTIME_TRUTH_20260725_212144.txt:404:./runtime_dependency_graph.json:124:          "call": "/api/drivers/offline",
+./dist/index.html:917:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+./dist/index.html:1356:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./dist/index.html:1767:let r=await fetch("/api/drivers/online");
+./dist/index.html:1931:"/api/drivers/online",
+./dist/index.html:1984:"/api/drivers/offline",
+./dist/index.html:2070:await fetch('/api/drivers/online');
+./archive/phase_scripts/CABLINK_HEALTH_REPORT.md:23:- fetch() calls found: 5 — /api/rides, /api/drivers/online, /api/rides, /api/drivers/online, /api/drivers/offline
+./archive/phase_scripts/cablink_driver_api_reality_check.js:58:❌ No /api/drivers/online route found
+./archive/phase_scripts/cablink_driver_mode_reality_patch.js:86:"/api/drivers/online",
+./archive/phase_scripts/cablink_driver_mode_reality_patch.js:137:"/api/drivers/offline",
+./archive/phase_scripts/fix_bookride.js:104:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/phase_scripts/index.html.bak_before_real_wiring:1583:let r=await fetch("/api/drivers/online");
+./archive/phase_scripts/index.html.bak_before_real_wiring:1745:"/api/drivers/online",
+./archive/phase_scripts/index.html.bak_before_real_wiring:1796:"/api/drivers/offline",
+./archive/phase_scripts/cablink_reality_runtime_bridge_install.js:51:let r=await fetch("/api/drivers/online");
+./archive/phase_scripts/index_backup_before_runtime_merge.html:1563:let r=await fetch("/api/drivers/online");
+./archive/phase_scripts/index_backup_before_runtime_merge.html:1725:"/api/drivers/online",
+./archive/phase_scripts/index_backup_before_runtime_merge.html:1776:"/api/drivers/offline",
+./archive/phase_scripts/index_backup_before_bookride_cleanup.html:1563:let r=await fetch("/api/drivers/online");
+./archive/phase_scripts/index_backup_before_bookride_cleanup.html:1725:"/api/drivers/online",
+./archive/phase_scripts/index_backup_before_bookride_cleanup.html:1776:"/api/drivers/offline",
+./archive/phase_scripts/index_backup_before_real_engine.html:1563:let r=await fetch("/api/drivers/online");
+./archive/phase_scripts/index_backup_before_real_engine.html:1725:"/api/drivers/online",
+./archive/phase_scripts/index_backup_before_real_engine.html:1776:"/api/drivers/offline",
+./archive/phase_scripts/index_backup_before_driver_override_remove.html:1269:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/phase_scripts/index_backup_before_driver_override_remove.html:1648:let r=await fetch("/api/drivers/online");
+./archive/before_architecture_cleanup/backend_1784127601/server.js:63:app.post('/api/drivers/online', function(req, res) {
+./archive/before_architecture_cleanup/backend_1784127601/server.js:76:app.post('/api/drivers/offline', function(req, res) {
+./archive/before_architecture_cleanup/backend_1784127601/server.js:83:app.get('/api/drivers/online', function(req, res) {
+./archive/before_architecture_cleanup/backend_1784127601/server.js:192:  console.log('  POST /api/drivers/online');
+./archive/before_architecture_cleanup/backend_1784127601/server.js:193:  console.log('  GET  /api/drivers/online');
+./archive/before_architecture_cleanup/backend_1784127601/server.js:194:  console.log('  POST /api/drivers/offline');
+./archive/before_architecture_cleanup/frontend_1784127601/index.html:1269:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/before_architecture_cleanup/frontend_1784127601/index.html:1648:let r=await fetch("/api/drivers/online");
+./archive/before_architecture_cleanup/frontend_1784127601/index.html:1810:"/api/drivers/online",
+./archive/before_architecture_cleanup/frontend_1784127601/index.html:1861:"/api/drivers/offline",
+./archive/before_architecture_cleanup/index_1784127601.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/driver_upgrade/index_before_driver_upgrade_1784126025.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/driver_upgrade/server_before_driver_upgrade_1784126025.js:63:app.post('/api/drivers/online', function(req, res) {
+./archive/driver_upgrade/server_before_driver_upgrade_1784126025.js:76:app.post('/api/drivers/offline', function(req, res) {
+./archive/driver_upgrade/server_before_driver_upgrade_1784126025.js:83:app.get('/api/drivers/online', function(req, res) {
+./archive/driver_upgrade/server_before_driver_upgrade_1784126025.js:192:  console.log('  POST /api/drivers/online');
+./archive/driver_upgrade/server_before_driver_upgrade_1784126025.js:193:  console.log('  GET  /api/drivers/online');
+./archive/driver_upgrade/server_before_driver_upgrade_1784126025.js:194:  console.log('  POST /api/drivers/offline');
+./archive/driver_wiring/index_1784128009669.html:1269:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/driver_wiring/index_1784128009669.html:1648:let r=await fetch("/api/drivers/online");
+./archive/driver_wiring/index_1784128009669.html:1810:"/api/drivers/online",
+./archive/driver_wiring/index_1784128009669.html:1861:"/api/drivers/offline",
+./archive/driver_wiring/index_1784128009669.html:1945:await fetch('/api/drivers/online');
+./archive/frontend_cleanup/index_before_bookride_migration_1784131014.html:1269:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/frontend_cleanup/index_before_bookride_migration_1784131014.html:1648:let r=await fetch("/api/drivers/online");
+./archive/frontend_cleanup/index_before_bookride_migration_1784131014.html:1810:"/api/drivers/online",
+./archive/frontend_cleanup/index_before_bookride_migration_1784131014.html:1861:"/api/drivers/offline",
+./archive/frontend_cleanup/index_before_bookride_migration_1784131014.html:1945:await fetch('/api/drivers/online');
+./archive/frontend_cleanup/index_before_cleanup_1784131327228.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/frontend_cleanup/index_before_cleanup_1784131327228.html:1645:let r=await fetch("/api/drivers/online");
+./archive/frontend_cleanup/index_before_cleanup_1784131327228.html:1807:"/api/drivers/online",
+./archive/frontend_cleanup/index_before_cleanup_1784131327228.html:1858:"/api/drivers/offline",
+./archive/frontend_cleanup/index_before_cleanup_1784131327228.html:1942:await fetch('/api/drivers/online');
+./archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html:1269:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html:1648:let r=await fetch("/api/drivers/online");
+./archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html:1810:"/api/drivers/online",
+./archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html:1861:"/api/drivers/offline",
+./archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html:1945:await fetch('/api/drivers/online');
+./archive/frontend_cleanup/index_before_truth_migration.html:1269:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/frontend_cleanup/index_before_truth_migration.html:1648:let r=await fetch("/api/drivers/online");
+./archive/frontend_cleanup/index_before_truth_migration.html:1810:"/api/drivers/online",
+./archive/frontend_cleanup/index_before_truth_migration.html:1861:"/api/drivers/offline",
+./archive/frontend_cleanup/index_before_truth_migration.html:1945:await fetch('/api/drivers/online');
+./archive/server_conflicts/index_before_api_fix_1784125371.html:1266:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/server_conflicts/server.js.1784124267:63:app.post('/api/drivers/online', function(req, res) {
+./archive/server_conflicts/server.js.1784124267:76:app.post('/api/drivers/offline', function(req, res) {
+./archive/server_conflicts/server.js.1784124267:83:app.get('/api/drivers/online', function(req, res) {
+./archive/server_conflicts/server.js.1784124267:192:  console.log('  POST /api/drivers/online');
+./archive/server_conflicts/server.js.1784124267:193:  console.log('  GET  /api/drivers/online');
+./archive/server_conflicts/server.js.1784124267:194:  console.log('  POST /api/drivers/offline');
+./archive/truth_cleanup_1784127676771/frontend_index.html:1269:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+./archive/truth_cleanup_1784127676771/frontend_index.html:1648:let r=await fetch("/api/drivers/online");
+./archive/truth_cleanup_1784127676771/frontend_index.html:1810:"/api/drivers/online",
+./archive/truth_cleanup_1784127676771/frontend_index.html:1861:"/api/drivers/offline",
+./backend.log:5:  POST /api/drivers/online
+./backend.log:6:  GET  /api/drivers/online
+./backend.log:7:  POST /api/drivers/offline
+
+============================================================
+6. DRIVER LOCATION / GEOLOCATION REFERENCES
+============================================================
+frontend/js/gps/location_engine.js:10:lat:position.lat,
+frontend/js/gps/location_engine.js:11:lng:position.lng,
+frontend/js/app_core.js:8:  {name:'BSTM HQ, Mmopane',         lat:-24.5765, lng:25.8234},
+frontend/js/app_core.js:9:  {name:'Game City Mall',            lat:-24.6282, lng:25.9056},
+frontend/js/app_core.js:10:  {name:'Main Mall, CBD',            lat:-24.6559, lng:25.9062},
+frontend/js/app_core.js:11:  {name:'Airport Junction Mall',     lat:-24.6024, lng:25.9156},
+frontend/js/app_core.js:12:  {name:'Riverwalk Mall',            lat:-24.6448, lng:25.9271},
+frontend/js/app_core.js:13:  {name:'Molapo Crossing',           lat:-24.6731, lng:25.8847},
+frontend/js/app_core.js:14:  {name:'BBS Mall',                  lat:-24.6554, lng:25.9003},
+frontend/js/app_core.js:15:  {name:'Gaborone Bus Rank',         lat:-24.6548, lng:25.9097},
+frontend/js/app_core.js:16:  {name:'Princess Marina Hospital',  lat:-24.6543, lng:25.9183},
+frontend/js/app_core.js:17:  {name:'University of Botswana',    lat:-24.6573, lng:25.9344},
+frontend/js/app_core.js:18:  {name:'Gaborone Station',          lat:-24.6559, lng:25.9097},
+frontend/js/app_core.js:19:  {name:'Fairground',                lat:-24.6739, lng:25.9053},
+frontend/js/app_core.js:20:  {name:'Kgale Hill',                lat:-24.6891, lng:25.8967},
+frontend/js/app_core.js:21:  {name:'Phakalane',                 lat:-24.5534, lng:25.9123},
+frontend/js/app_core.js:22:  {name:'Tlokweng',                  lat:-24.6448, lng:25.9657},
+frontend/js/app_core.js:23:  {name:'Broadhurst',                lat:-24.6812, lng:25.9023},
+frontend/js/app_core.js:24:  {name:'Block 3',                   lat:-24.6634, lng:25.9187},
+frontend/js/app_core.js:25:  {name:'Block 8',                   lat:-24.6523, lng:25.9312},
+frontend/js/app_core.js:26:  {name:'Lobatse Rd, Gaborone',      lat:-24.7012, lng:25.8934},
+frontend/js/app_core.js:27:  {name:'Maun Bus Stop, CBD',        lat:-24.6545, lng:25.9078},
+frontend/js/app_core.js:28:  {name:'Segoditshane',              lat:-24.6234, lng:25.8723},
+frontend/js/app_core.js:29:  {name:'Mogoditshane',              lat:-24.6012, lng:25.8456},
+frontend/js/app_core.js:30:  {name:'Gaborone Private Hospital', lat:-24.6612, lng:25.9234},
+frontend/js/app_core.js:31:  {name:'Botswana Craft',            lat:-24.6589, lng:25.9123},
+frontend/js/app_core.js:32:  {name:'Three Chiefs Monument',     lat:-24.6534, lng:25.9089},
+frontend/js/app_core.js:54:      return {lat: p.lat, lng: p.lng, name: p.name};
+frontend/js/app_core.js:153:  if (!navigator.geolocation) {
+frontend/js/app_core.js:157:  navigator.geolocation.getCurrentPosition(
+frontend/js/app_core.js:159:      var lat = pos.coords.latitude;
+frontend/js/app_core.js:160:      var lng = pos.coords.longitude;
+frontend/js/app_core.js:398:    navigator.geolocation && navigator.geolocation.getCurrentPosition(
+frontend/js/app_core.js:406:            lat: pos.coords.latitude,
+frontend/js/app_core.js:407:            lng: pos.coords.longitude,
+frontend/testing/human_interface_test.js:33:lat:-24.628,
+frontend/testing/human_interface_test.js:34:lng:25.923
+frontend/testing/human_interface_test.js:38:lat:-24.630,
+frontend/testing/human_interface_test.js:39:lng:25.925
+frontend/index.html:683:  bstmHQ:      {lat:-24.5566, lng:25.8494, name:'BSTM HQ, Mmopane'},
+frontend/index.html:684:  gameCity:    {lat:-24.6395, lng:25.9089, name:'Game City Mall'},
+frontend/index.html:685:  mainMall:    {lat:-24.6559, lng:25.9086, name:'Main Mall'},
+frontend/index.html:686:  airport:     {lat:-24.5595, lng:25.9182, name:'Sir Seretse Khama Airport'},
+frontend/index.html:687:  riverwalk:   {lat:-24.6890, lng:25.9247, name:'Riverwalk Mall'},
+frontend/index.html:688:  ub:          {lat:-24.6845, lng:25.9420, name:'University of Botswana'},
+frontend/index.html:689:  molapo:      {lat:-24.6270, lng:25.8930, name:'Molapo Crossing'},
+frontend/index.html:690:  kgale:       {lat:-24.6935, lng:25.8880, name:'Kgale Hill'},
+frontend/index.html:1357:    if(STATE.driverOnline && navigator.geolocation){
+frontend/index.html:1359:        navigator.geolocation.getCurrentPosition(
+frontend/index.html:1360:          pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+frontend/index.html:1369:      body: JSON.stringify({ driverId: STATE.driverId, lat: coords.lat, lng: coords.lng })
+frontend/index.html:1674:  if(!navigator.geolocation){ toast('Geolocation not available', 'error'); return; }
+frontend/index.html:1675:  navigator.geolocation.getCurrentPosition(pos => {
+frontend/index.html:1676:    const link = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+frontend/index.html.bak_before_sync:682:  bstmHQ:      {lat:-24.5566, lng:25.8494, name:'BSTM HQ, Mmopane'},
+frontend/index.html.bak_before_sync:683:  gameCity:    {lat:-24.6395, lng:25.9089, name:'Game City Mall'},
+frontend/index.html.bak_before_sync:684:  mainMall:    {lat:-24.6559, lng:25.9086, name:'Main Mall'},
+frontend/index.html.bak_before_sync:685:  airport:     {lat:-24.5595, lng:25.9182, name:'Sir Seretse Khama Airport'},
+frontend/index.html.bak_before_sync:686:  riverwalk:   {lat:-24.6890, lng:25.9247, name:'Riverwalk Mall'},
+frontend/index.html.bak_before_sync:687:  ub:          {lat:-24.6845, lng:25.9420, name:'University of Botswana'},
+frontend/index.html.bak_before_sync:688:  molapo:      {lat:-24.6270, lng:25.8930, name:'Molapo Crossing'},
+frontend/index.html.bak_before_sync:689:  kgale:       {lat:-24.6935, lng:25.8880, name:'Kgale Hill'},
+frontend/index.html.bak_before_sync:1479:  if(!navigator.geolocation){ toast('Geolocation not available', 'error'); return; }
+frontend/index.html.bak_before_sync:1480:  navigator.geolocation.getCurrentPosition(pos => {
+frontend/index.html.bak_before_sync:1481:    const link = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+backend/routes/rides.js:39:lat:-24.6282,
+backend/routes/rides.js:40:lng:25.9231
+backend/services/ride_dispatch_bridge.js:18:lat:0,
+backend/services/ride_dispatch_bridge.js:19:lng:0
+backend/server.js:101:    lat:         b.lat     || -24.6541 + (Math.random()-0.5)*0.05,
+backend/server.js:102:    lng:         b.lng     || 25.9087  + (Math.random()-0.5)*0.05,
+backend/matching/driver_matcher.js:15:d.latitude-ride.latitude
+backend/matching/driver_matcher.js:18:d.longitude-ride.longitude
+backend/location/gps_event_engine.js:13:latitude:data.latitude,
+backend/location/gps_event_engine.js:15:longitude:data.longitude,
+backend/location/location_service.js:11:latitude:data.latitude,
+backend/location/location_service.js:13:longitude:data.longitude,
+backend/tracking/location_tracker.js:11:latitude:data.latitude,
+backend/tracking/location_tracker.js:13:longitude:data.longitude,
+backend/testing/pilot_activation_test.js:24:latitude:-24.628,
+backend/testing/pilot_activation_test.js:25:longitude:25.923,
+backend/testing/phase41_matching_test.js:48:lat:-24.6282,
+backend/testing/phase41_matching_test.js:49:lng:25.9231
+backend/testing/phase41_matching_test.js:61:lat:-24.6300,
+backend/testing/phase41_matching_test.js:62:lng:25.9250
+backend/testing/phase47_eta_test.js:46:lat:-24.6282,
+backend/testing/phase47_eta_test.js:47:lng:25.9231
+backend/testing/phase47_eta_test.js:60:lat:-24.6300,
+backend/testing/phase47_eta_test.js:61:lng:25.9250
+backend/gps/gps_service.js:11:latitude:data.latitude,
+backend/gps/gps_service.js:13:longitude:data.longitude,
+
+============================================================
+7. DRIVER IDENTITY SOURCES
+============================================================
+frontend/js/driver/driverDispatchBridge.js:137:driverId:
+frontend/js/driver/driverDispatchBridge.js:139:"cablink_driver_id"
+frontend/js/driver/driverModeBridge.js:7:localStorage.getItem("cablink_driver_online")==="true",
+frontend/js/driver/driverModeBridge.js:27:driverId:
+frontend/js/driver/driverModeBridge.js:28:localStorage.getItem("cablink_driver_id")
+frontend/js/driver/driverModeBridge.js:58:driverId:
+frontend/js/driver/driverModeBridge.js:59:localStorage.getItem("cablink_driver_id")
+frontend/js/fix.js:83:  localStorage.setItem('userRole','driver');
+frontend/js/fix.js:99:    b.textContent=localStorage.getItem('userRole')==='driver'?'DRIVER':'RIDER';
+frontend/js/fix.js:101:      var next=localStorage.getItem('userRole')==='driver'?'customer':'driver';
+frontend/js/role.js:10:  if(localStorage.getItem('isDriver')==='true'&&!localStorage.getItem(K))setRole('driver');
+frontend/js/app_core.js:404:            driverId: (window.STATE.wallet||'driver-'+Date.now()),
+frontend/js/app_core.js:420:            body:JSON.stringify({driverId:(window.STATE.wallet||'drv-'+Date.now()),vehicle:'standard'})
+frontend/js/app_core.js:427:          body:JSON.stringify({driverId:(window.STATE.wallet||'drv-'+Date.now()),vehicle:'standard'})
+frontend/js/app_core.js:517:      driverId: window.STATE && window.STATE.wallet || 'driver-anon',
+frontend/components/thb_wallet_panel.js:9:driver:wallet.driver,
+frontend/index.html:1350:  if(!STATE.driverId){
+frontend/index.html:1351:    STATE.driverId = localStorage.getItem('cl6_driverId') || ('DRV-' + Math.random().toString(36).substr(2,8).toUpperCase());
+frontend/index.html:1352:    localStorage.setItem('cl6_driverId', STATE.driverId);
+frontend/index.html:1369:      body: JSON.stringify({ driverId: STATE.driverId, lat: coords.lat, lng: coords.lng })
+frontend/index.html:1422:      body: JSON.stringify({ driverId: STATE.driverId })
+frontend/index.html:1704:function showChangeLog(){ toast('v6.0: Real Gaborone map (Leaflet + OSM), new diamond-cut design system, BSTM Ecosystem hub, wallet + claim flow, surge, negotiation, driver mode, offline queue, chat, haptics, confetti.', 'success'); }
+frontend/index.html:1901:localStorage.getItem("cablink_driver_id")
+frontend/index.html:1903:"DRV-"+Date.now(),
+frontend/index.html:1918:"cablink_driver_id",
+frontend/index.html:1922:STATE.driverId = driver.id;
+frontend/index.html:1978:"cablink_driver_id"
+frontend/index.html.bak_before_sync:1509:function showChangeLog(){ toast('v6.0: Real Gaborone map (Leaflet + OSM), new diamond-cut design system, BSTM Ecosystem hub, wallet + claim flow, surge, negotiation, driver mode, offline queue, chat, haptics, confetti.', 'success'); }
+backend/routes/driver_online_api.js:42:"DRV-"+Date.now();
+backend/services/driver_service.js:10:id:"DRV-"+Date.now(),
+backend/services/rideService.js:20:driverId:null,
+backend/services/rideService.js:29:function acceptRide(id,driverId){
+backend/services/rideService.js:35:driverId
+backend/server.js:15:var drivers = {};  // driverId -> driver object
+backend/server.js:48:    driverId:   null, driverName: null,
+backend/server.js:82:  var allowed = ['status','driverId','driverName','rating','comment','lat','lng'];
+backend/server.js:97:  var id = b.driverId || b.wallet || ('drv-' + Date.now());
+backend/server.js:109:  res.json({success:true, driverId:id, status:'online', pendingRides:pending.length});
+backend/server.js:114:  var id = b.driverId || b.wallet;
+backend/server.js:119:      if (drivers[k].wallet === id) delete drivers[k];
+backend/server.js:142:    id:        'DRV-' + Date.now().toString(36).toUpperCase(),
+backend/data/drivers_live.json:13:      "id": "DRV-001",
+backend/rewards/wallet_service.js:6:function wallet(driver){
+backend/database/rides.json:8:    "driverId": null,
+backend/database/rides.json:17:    "driverId": null,
+backend/database/rides.json:26:    "driverId": null,
+backend/database/rides.json:35:    "driverId": "DRIVER-001",
+backend/database/rides.json:46:    "driverId": "DRIVER-TEST-001",
+backend/database/rides.json:56:    "driverId": "DRIVER-TEST-001",
+backend/database/rides.json:66:    "driverId": "DRIVER-TEST-001",
+backend/database/rides.json:77:    "driverId": "DRIVER-TEST-001",
+backend/database/rides.json:88:    "driverId": null,
+backend/database/rides.json:97:    "driverId": null,
+backend/database/rides.json:106:    "driverId": null,
+backend/database/rides.json:115:    "driverId": null,
+backend/database/rides.json:124:    "driverId": null,
+backend/database/rides.json:133:    "driverId": null,
+backend/database/rides.json:142:    "driverId": null,
+backend/database/rides.json:151:    "driverId": null,
+backend/database/rides.json:160:    "driverId": null,
+backend/database/rides.json:169:    "driverId": null,
+backend/database/rides.json:178:    "driverId": null,
+backend/database/rides.json:187:    "driverId": null,
+backend/database/rides.json:196:    "driverId": "DRIVER-TEST-001",
+
+============================================================
+8. DRIVER POLLING / REQUEST POLLING
+============================================================
+frontend/js/driver/driverDispatchBridge.js:61:"🚨 New ride request",
+frontend/js/role.js:30:          +'<div style="font-size:12px;color:#888;margin-bottom:16px;">Register to receive ride requests and earn 1 THB per trip.</div>'
+frontend/js/app_core.js:394:    toast('You are online — receiving ride requests', 'success');
+frontend/js/app_core.js:413:          if (d.pendingRides > 0) toast(d.pendingRides + ' ride(s) waiting!', 'warning');
+frontend/js/app_core.js:432:    // Poll for ride requests every 4 seconds
+frontend/js/app_core.js:433:    clearInterval(window._driverPoll);
+frontend/js/app_core.js:434:    window._driverPoll = setInterval(function() {
+frontend/js/app_core.js:435:      if (!window.STATE.driverOnline) { clearInterval(window._driverPoll); return; }
+frontend/js/app_core.js:439:          var pending = (d.rides||[]).filter(function(r){ return r.status === 'REQUESTED' || r.status === 'searching'; });
+frontend/js/app_core.js:441:            window.showDriverRequest(pending[0]);
+frontend/js/app_core.js:449:    clearInterval(window._driverPoll);
+frontend/js/app_core.js:461:window.showDriverRequest = function(ride) {
+frontend/api/bridge_test.js:24:await ride.requestRide({
+frontend/services/ride_service.js:9:"/api/rides/request",
+frontend/components/passenger_trip_status.js:9:rideId:request.id,
+frontend/index.html:478:  <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
+frontend/index.html:667:  offlineQueue:[], pendingTxs:[], favourites:[], rideHistory:[],
+frontend/index.html:1374:  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success'); pollForRideRequests(); }
+frontend/index.html:1380:async function pollForRideRequests(){
+frontend/index.html:1414:  toast('🚗 New ride request received', 'warning'); haptic();
+frontend/index.html:1460:  toast('🚗 New ride request: ' + req.from + ' → ' + req.to, 'warning'); haptic();
+frontend/index.html:1797:// Send real ride request
+frontend/index.html:1955:pollForRideRequests();
+frontend/index.html:2232:"Sending REAL ride request",
+frontend/index.html:2295:          + '<div style="font-size:12px;color:var(--muted);margin-bottom:16px">Apply once — after approval you can go online and receive real ride requests, earning 1 THB per trip.</div>'
+frontend/index.html.bak_before_sync:477:  <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
+frontend/index.html.bak_before_sync:666:  offlineQueue:[], pendingTxs:[], favourites:[], rideHistory:[],
+frontend/index.html.bak_before_sync:1265:  toast('🚗 New ride request: ' + req.from + ' → ' + req.to, 'warning'); haptic();
+backend/server.js:107:  var pending = rides.filter(function(r){ return r.status==='REQUESTED'||r.status==='MATCHING'; });
+backend/server.js:108:  console.log('Driver online:', id, '| pending rides:', pending.length);
+backend/testing/phase42_dispatch_test.js:60:id:ride.request.id,
+backend/testing/phase42_dispatch_test.js:79:id:ride.request.id,
+
+============================================================
+9. BACKEND DRIVER ROUTES
+============================================================
+backend/routes/driver_online_api.js:20:"/drivers/online",
+backend/routes/driver_online_api.js:33:"/drivers/online",
+backend/routes/driver_online_api.js:68:"/drivers/offline",
+backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+backend/server.js:137:app.post('/api/drivers/apply', function(req, res) {
+backend/server.js:153:app.get('/api/drivers/applications', function(req, res) {
+backend/server.js:170:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+
+============================================================
+10. BACKEND SERVER STARTUP REFERENCES
+============================================================
+package.json:7:    "start": "node backend/server.js",
+package.json:8:    "backend": "node backend/server.js",
+package.json:9:    "dev": "vite",
+package.json:10:    "build": "vite build",
+package.json:11:    "preview": "vite preview"
+backend/server.js:6:const app  = express();
+backend/server.js:168:  app.listen(PORT, function() {
+backend/server/app.js:4:const app=express();
+backend/server/index.js:9:app.listen(
+
+============================================================
+11. RIDE REQUEST / ACCEPTANCE / COMPLETION ROUTES
+============================================================
+frontend/js/app.js:84:"/api/rides",
+frontend/js/operations_core.js:39:completeRide:function(ride){
+frontend/js/operations_core.js:43:ride.completedAt=new Date().toISOString();
+frontend/js/services/api.js:4:rides:'/api/rides',
+frontend/js/driver/driverController.js:6:return await api("/api/rides");
+frontend/js/driver/driverService.js:18:const r=await fetch('/api/rides');
+frontend/js/rides/completionRewardBridge.js:7:completeRide:function(){
+frontend/js/rides/completionRewardBridge.js:124:window.CABLINK_FINANCE.completeRide();
+frontend/js/rides/rideController.js:8:const ride=await api("/api/rides",{
+frontend/js/rides/rideController.js:39:await api("/api/rides/"+id);
+frontend/js/rides/rideService.js:3:export async function requestRide(data){
+frontend/js/rides/rideService.js:5:const response=await fetch('/api/rides',{
+frontend/js/app_core.js:302:window.requestRide = function() {
+frontend/js/app_core.js:340:  fetch('/api/rides', {
+frontend/js/app_core.js:373:window.bookRide = window.requestRide;
+frontend/js/app_core.js:378:  fetch('/api/rides/' + rideId, {
+frontend/js/app_core.js:436:      fetch('/api/rides')
+frontend/js/app_core.js:491:      '<button onclick="window.acceptRideRequest(\''+ride.id+'\','+fare+')" style="flex:1;padding:12px;background:#22d672;color:#000;border:none;border-radius:10px;font-weight:700;cursor:pointer;">✓ Accept</button>',
+frontend/js/app_core.js:509:window.acceptRideRequest = function(rideId, fare) {
+frontend/js/app_core.js:512:  fetch('/api/rides/' + rideId, {
+frontend/js/app_core.js:516:      status: 'DRIVER_ASSIGNED',
+frontend/api/bridge_test.js:24:await ride.requestRide({
+frontend/api/task_api.js:23:async function acceptTask(id,driver){
+frontend/api/task_api.js:53:acceptTask
+frontend/services/ride_service.js:6:async function requestRide(data){
+frontend/services/ride_service.js:9:"/api/rides/request",
+frontend/services/ride_service.js:22:"/api/rides"
+frontend/services/ride_service.js:29:requestRide,
+frontend/services/task_service.js:20:await api.acceptTask(id,driver);
+frontend/testing/driver_economy_dashboard_test.js:17:status:"COMPLETED"
+frontend/index.html:1026:      const res = await fetch('/api/rides/' + rideId);
+frontend/index.html:1038:      } else if(status === 'COMPLETED'){
+frontend/index.html:1040:        completeRide();
+frontend/index.html:1062:function completeRide(){
+frontend/index.html:1093:    if(secs<=0){ clearInterval(STATE.graceInterval); completeRide(); }
+frontend/index.html:1099:    // completeRide() now must be triggered by real backend status
+frontend/index.html:1385:      const res = await fetch('/api/rides');
+frontend/index.html:1419:    await fetch('/api/rides/' + rideId + '/accept', {
+frontend/index.html:1433:    const res = await fetch('/api/rides/' + rideId + '/complete', { method: 'PATCH' });
+frontend/index.html:1804:"/api/rides",
+frontend/index.html.bak_before_sync:1023:  startCountdown(dur, () => completeRide());
+frontend/index.html.bak_before_sync:1034:function completeRide(){
+frontend/index.html.bak_before_sync:1065:    if(secs<=0){ clearInterval(STATE.graceInterval); completeRide(); }
+frontend/index.html.bak_before_sync:1071:    setTimeout(completeRide, 8000);
+frontend/pages/PassengerRide.jsx:22:async function requestRide(){
+frontend/pages/PassengerRide.jsx:79:onClick={requestRide}
+backend/routes/completion_api.js:9:"/ride/complete",
+backend/routes/completion_api.js:17:completion.completeRide(
+backend/routes/ride_economy_api.js:28:"/economy/ride/complete",
+backend/services/payment_service.js:19:status:"COMPLETED",
+backend/services/economy_ledger_service.js:106:r=>r.status==="COMPLETED"
+backend/services/rideService.js:29:function acceptRide(id,driverId){
+backend/services/rideService.js:42:function completeRide(id){
+backend/services/rideService.js:47:status:"COMPLETED",
+backend/services/rideService.js:57:acceptRide,
+backend/services/rideService.js:58:completeRide
+backend/services/ride_completion_service.js:6:function completeRide(ride){
+backend/services/ride_completion_service.js:12:status:"COMPLETED",
+backend/services/ride_completion_service.js:59:ride:completed,
+backend/services/ride_completion_service.js:77:completeRide
+backend/services/ride_economy_service.js:40:ride.status="COMPLETED";
+backend/services/ride_orchestrator_service.js:61:type:"DRIVER_ASSIGNED",
+backend/services/ride_orchestrator_service.js:143:completion.completeRide(
+backend/server.js:19:// REQUESTED -> MATCHING -> DRIVER_ASSIGNED -> ACCEPTED
+backend/server.js:33:app.post('/api/rides', function(req, res) {
+backend/server.js:69:app.get('/api/rides', function(req, res) {
+backend/server.js:73:app.get('/api/rides/:id', function(req, res) {
+backend/server.js:79:app.patch('/api/rides/:id', function(req, res) {
+backend/server.js:86:  if (ride.status === 'COMPLETED' && !ride.rewardReady) {
+backend/server.js:170:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+backend/data/economy_ledger.json:7:      "status": "COMPLETED"
+backend/data/economy_ledger.json:21:      "status": "COMPLETED",
+backend/data/economy_ledger.json:29:      "status": "COMPLETED",
+backend/data/ride_events.json:17:      "type": "DRIVER_ASSIGNED",
+backend/data/ride_events.json:58:      "type": "DRIVER_ASSIGNED",
+backend/data/ride_events.json:75:      "type": "DRIVER_ASSIGNED",
+backend/rewards/thb_claim_engine.js:76:status:"CLAIM_COMPLETED",
+backend/rewards/auto_reward_trigger.js:9:if(task.status!=="COMPLETED"){
+backend/rewards/delivery_completion.js:8:task.status="COMPLETED";
+backend/rewards/delivery_reward_service.js:8:task.status="COMPLETED";
+backend/testing/phase34_economy_test.js:57:"/api/economy/ride/complete",
+backend/testing/phase35_ledger_test.js:15:status:"COMPLETED"
+backend/testing/phase48_completion_test.js:43:"/api/ride/complete",
+backend/database/rides.json:34:    "status": "COMPLETED",
+backend/database/rides.json:65:    "status": "COMPLETED",
+backend/database/rides.json:76:    "status": "COMPLETED",
+backend/database/rides.json:195:    "status": "COMPLETED",
+backend/server/app.js:32:app.use("/api/rides",rideRoutes);
+backend/ride_api_patch.js:7:app.post("/api/rides",(req,res)=>{
+backend/ride_api_patch.js:36:app.get("/api/rides",(req,res)=>{
+backend/ride_api_patch.js:46:app.get("/api/rides/:id",(req,res)=>{
+backend/ride_api_patch.js:65:app.patch("/api/rides/:id",(req,res)=>{
+
+============================================================
+12. REWARD AUTHORITY REFERENCES
+============================================================
+frontend/index.html:390:      <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+frontend/index.html:437:    <button class="btn btn-primary" id="r-claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+frontend/index.html:515:      <div>Function: <span style="color:var(--emerald)">transfer() via ERC-20</span></div>
+frontend/index.html:679:const THB_ABI = ['function transfer(address to, uint256 amount) returns (bool)','function balanceOf(address) view returns (uint256)','function decimals() view returns (uint8)'];
+frontend/index.html:838:async function claimReward(){
+frontend/index.html:857:    const tx = await contract.transfer(STATE.wallet, amount);
+frontend/index.html:885:      ${tx.status==='failed'?`<button class="btn btn-outline btn-sm" onclick="claimReward()">Retry</button>`:''}
+frontend/index.html.bak_before_sync:389:      <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+frontend/index.html.bak_before_sync:436:    <button class="btn btn-primary" id="r-claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+frontend/index.html.bak_before_sync:514:      <div>Function: <span style="color:var(--emerald)">transfer() via ERC-20</span></div>
+frontend/index.html.bak_before_sync:678:const THB_ABI = ['function transfer(address to, uint256 amount) returns (bool)','function balanceOf(address) view returns (uint256)','function decimals() view returns (uint8)'];
+frontend/index.html.bak_before_sync:837:async function claimReward(){
+frontend/index.html.bak_before_sync:856:    const tx = await contract.transfer(STATE.wallet, amount);
+frontend/index.html.bak_before_sync:884:      ${tx.status==='failed'?`<button class="btn btn-outline btn-sm" onclick="claimReward()">Retry</button>`:''}
+backend/routes/completion_api.js:5:require("../services/ride_completion_service");
+backend/services/economy_ledger_service.js:40:function recordReward(reward){
+backend/services/economy_ledger_service.js:152:recordReward,
+backend/services/ride_completion_service.js:36:if(wallet.add){
+backend/services/ride_completion_service.js:38:wallet.add(
+backend/services/ride_completion_service.js:52:ledger.recordReward(
+backend/services/ride_economy_service.js:53:if(wallet.add){
+backend/services/ride_economy_service.js:54:wallet.add(
+backend/services/ride_economy_service.js:66:ledger.recordReward(reward);
+backend/services/ride_orchestrator_service.js:10:require("./ride_completion_service");
+backend/api/reward_api.js:2:const claim=require("../rewards/thb_claim_engine");
+backend/api/reward_api.js:3:const executor=require("../blockchain/thb_real_executor");
+backend/api/reward_api.js:6:async function claimReward(wallet){
+backend/api/reward_api.js:44:claimReward
+backend/rewards/reward_engine.js:7:"function transfer(address,uint256) returns(bool)",
+backend/rewards/reward_engine.js:66:await token.transfer(
+backend/blockchain/thb_transfer_service.js:5:async function transfer(data){
+backend/blockchain/thb_transfer_service.js:26:// Real ethers Contract.transfer()
+backend/blockchain/thb_real_executor.js:52:await contract.transfer(
+backend/testing/phase35_ledger_test.js:36:ledger.recordReward({
+
+============================================================
+13. SERVER / PORT CONFIGURATION
+============================================================
+frontend/pwa/install_manager.js:10:offlineSupport:true,
+frontend/index.html:686:  airport:     {lat:-24.5595, lng:25.9182, name:'Sir Seretse Khama Airport'},
+frontend/index.html.bak_before_sync:685:  airport:     {lat:-24.5595, lng:25.9182, name:'Sir Seretse Khama Airport'},
+backend/server.js:7:const PORT = process.env.PORT || 3000;
+backend/testing/phase32_dashboard_api_test.js:6:"http://localhost:3000/api/driver/DRIVER001/dashboard",
+backend/testing/phase34_economy_test.js:12:port:3000,
+backend/testing/phase37_dashboard_test.js:7:"http://localhost:3000/api/driver/DRIVER001/economy",
+backend/testing/phase40_demand_test.js:13:port:3000,
+backend/testing/phase40_demand_test.js:73:"http://localhost:3000/api/driver/hotspots",
+backend/testing/phase41_matching_test.js:13:port:3000,
+backend/testing/phase42_dispatch_test.js:13:port:3000,
+backend/testing/phase46_live_test.js:13:port:3000,
+backend/testing/phase47_eta_test.js:12:port:3000,
+backend/testing/phase48_completion_test.js:12:port:3000,
+backend/testing/phase49_notification_test.js:12:port:3000,
+backend/testing/phase49_notification_test.js:55:"http://localhost:3000/api/ride/RIDE-001/timeline",
+backend/testing/phase50_state_test.js:11:port:3000,
+backend/testing/phase51_orchestrator_test.js:13:port:3000,
+backend/server/index.js:5:const PORT=
+backend/server/index.js:17:port:PORT,
+
+============================================================
+14. CURRENT RUNNING PROCESSES
+============================================================
+--- Node processes ---
+u0_a173  17980 17880  0  1970 pts/0    00:00:02 node backend/server.js
+
+--- Listening ports ---
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp6       0      0 :::3000                 :::*                    LISTEN      17980/node          
+
+============================================================
+15. GIT TRACKING — LIVE SOURCE FILES ONLY
+============================================================
+ M frontend/components/LegacyCabLink.jsx
+ M package.json
+?? .block8_check.js
+?? .vercel/
+?? BLOCK9_RUNTIME_TRUTH_OUTPUT.txt
+?? CABLINK_FORENSIC_AUDIT_V2_REPORT.md
+?? CABLINK_FULL_AUDIT_REPORT.md
+?? CABLINK_RUNTIME_TRUTH_AUDIT_V3_REPORT.md
+?? CANONICAL_RUNTIME_TRUTH_20260725_212144.txt
+?? archive/dead_backend_files/
+?? block10_canonical_runtime_lock.sh
+?? block11_architecture_map.sh
+?? block11_architecture_map.txt
+?? block12_live_source_inventory.txt
+?? block12_safe_reorganisation_audit.sh
+?? block12_safe_reorganisation_audit.txt
+?? block13a_canonical_runtime_truth.sh
+?? block13a_canonical_runtime_truth.txt
+?? block13b_runtime_proof.sh
+?? block13b_runtime_proof.txt
+?? block2.py
+?? block3.py
+?? block4.py
+?? block5.py
+?? block6.py
+?? block7.py
+?? block8.py
+?? block9.py
+?? block9_runtime_truth.sh
+?? cablink_forensic_audit_v2.js
+?? cablink_full_audit.js
+?? cablink_reality_doctor.js
+?? cablink_runtime_truth_audit_v3.js
+?? canonical_runtime_truth.sh
+?? check_all_scripts.py
+?? finalize_check.sh
+?? fix_block7_bug.py
+?? frontend/components/LegacyCabLink.jsx.backup_runtime_reconnect
+?? gather_info.sh
+?? patch_driver_polling.py
+?? snapshot.sh
+?? test_loop.sh
+?? verify_flow.sh
+
+============================================================
+16. FINAL RUNTIME CANDIDATE SUMMARY
+============================================================
+HTML entrypoint candidates:
+./index.html
+./frontend/index.html
+./frontend/main.jsx
+./dist/index.html
+
+Backend server candidates:
+./backend/server.js
+./backend/server/app.js
+./frontend/js/app.js
+
+============================================================
+END OF READ-ONLY AUDIT
+============================================================

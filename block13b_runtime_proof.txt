@@ -1,0 +1,656 @@
+============================================================
+CABLINK BLOCK 13B — CANONICAL RUNTIME PROOF
+============================================================
+
+1. PROJECT ROOT
+/data/data/com.termux/files/home/CabLink-pwa
+
+2. NODE / NPM / VITE
+v26.4.0
+11.18.0
+vite/5.4.21 android-arm64 node-v26.4.0
+
+3. PACKAGE.JSON
+name: cablink-pwa
+scripts: {
+  "start": "node backend/server.js",
+  "backend": "node backend/server.js"
+}
+dependencies: {
+  "cors": "^2.8.5",
+  "express": "^4.18.2"
+}
+devDependencies: {}
+
+4. VITE CONFIG
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+
+  plugins: [react()],
+
+  root: "frontend",
+
+  server: {
+    port: 5173,
+
+    proxy: {
+      "/api": {
+        target: process.env.CABLINK_API_URL || "http://localhost:3000",
+        changeOrigin: true
+      }
+    }
+  },
+
+  build: {
+    outDir: "../dist",
+    emptyOutDir: true
+  }
+
+});
+
+5. FRONTEND ENTRY CHAIN
+
+----- frontend/index.html -----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- CABLINK_BOOKRIDE_TRUTH_MIGRATION -->
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#060911"/>
+<title>CabLink · BSTM Ecosystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+<style>
+:root{
+  --ink:#060911; --surface:#0f1526; --surface2:#161e33; --surface3:#1c2540;
+  --glass:rgba(22,30,51,.62); --hair:rgba(255,255,255,.07); --hair2:rgba(255,255,255,.12);
+  --sapphire:#2e6be6; --sapphire-l:#5b8bff;
+  --gold:#f0b93a; --gold-l:#ffd873;
+  --emerald:#21c980; --coral:#ff5d5d;
+  --text:#edeff5; --muted:#8992a9; --muted2:#5b6376;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --data:'Space Mono',monospace;
+  --nav-h:78px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-font-smoothing:antialiased}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:460px;margin:0 auto;position:relative;overflow:hidden;background:var(--ink)}
+
+/* ambient bg blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;opacity:.35;z-index:0}
+.blob-1{width:260px;height:260px;background:var(--sapphire);top:-80px;left:-60px}
+.blob-2{width:220px;height:220px;background:var(--gold);top:120px;right:-80px;opacity:.18}
+
+.statusbar{position:relative;z-index:2;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;color:var(--muted);flex-shrink:0;font-family:var(--data)}
+.statusbar .time{font-weight:700;color:var(--text)}
+.statusbar .right{display:flex;gap:10px;align-items:center}
+.pip{width:7px;height:7px;border-radius:50%;background:var(--muted2);display:inline-block}
+.pip.green{background:var(--emerald);box-shadow:0 0 8px var(--emerald)}
+.pip.yellow{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.pip.red{background:var(--coral);box-shadow:0 0 8px var(--coral)}
+
+#alertStrip,#chainWarning{display:none;position:relative;z-index:2;font-size:12px;font-weight:600;padding:9px 18px;text-align:center;flex-shrink:0}
+#alertStrip{background:linear-gradient(90deg,#c98a1f,var(--gold));color:#241a04}
+#alertStrip.show{display:block}
+#alertStrip button{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#241a04;font-size:16px;cursor:pointer}
+#chainWarning{background:var(--coral);color:#2a0808;cursor:pointer}
+#chainWarning.show{display:block}
+#surgeBanner{display:none;position:relative;z-index:2;background:linear-gradient(90deg,#7a4d0a,var(--gold));color:#241a04;padding:9px 18px;text-align:center;font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+#surgeBanner.show{display:block}
+#arrivedBanner{display:none;position:relative;z-index:2;background:var(--emerald);color:#04241a;padding:9px 18px;font-weight:700;font-size:12px;text-align:center;flex-shrink:0}
+#arrivedBanner.show{display:block}
+#rideProgressBar{display:none;position:relative;z-index:2;background:var(--surface);padding:12px 18px;border-bottom:1px solid var(--hair);flex-shrink:0}
+#rideProgressBar.show{display:block}
+.rp-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px;font-family:var(--data)}
+.rp-label .rp-status{color:var(--gold-l);font-weight:700}
+.progress-track{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--sapphire),var(--gold));border-radius:2px;transition:width .5s ease;width:0%}
+
+#screens{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#screens::-webkit-scrollbar{display:none}
+.screen{display:none;padding:14px 18px calc(var(--nav-h) + 24px);animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+h1,h2,h3,.disp{font-family:var(--disp)}
+.eyebrow{font-family:var(--data);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.greeting{font-family:var(--disp);font-size:22px;font-weight:600;margin:2px 0 16px}
+.greeting span{color:var(--gold-l)}
+
+/* cards */
+.card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
+.card-title{font-family:var(--disp);font-weight:600;font-size:15px}
+.card-sub{font-size:11px;color:var(--muted);font-family:var(--data)}
+
+/* diamond wallet — signature element */
+.diamond-card{position:relative;background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid var(--hair2);border-radius:var(--r-lg);padding:22px 20px 18px;margin-bottom:14px;overflow:hidden}
+.diamond-card::before{content:'';position:absolute;top:-40%;right:-20%;width:70%;height:180%;background:linear-gradient(135deg,rgba(240,185,58,.18),transparent 60%);transform:rotate(20deg);pointer-events:none}
+.diamond-facet{width:34px;height:34px;background:linear-gradient(135deg,var(--gold-l),var(--gold) 55%,#a3760c);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 18px rgba(240,185,58,.35)}
+.wallet-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.wallet-addr{font-family:var(--data);font-size:11px;color:var(--muted)}
+.wallet-stage{font-size:10px;font-family:var(--data);letter-spacing:.08em;color:var(--gold-l);text-transform:uppercase;margin-top:2px}
+.wallet-bar{display:flex;gap:10px}
+.bal-card{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 10px;text-align:center}
+.bal-card .val{font-family:var(--data);font-size:20px;font-weight:700;color:var(--gold-l)}
+.bal-card .lbl{font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:.05em;text-transform:uppercase}
+.chainrow{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.gas-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--muted);font-family:var(--data)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:var(--r-sm);font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;border:none;transition:.2s;width:100%;letter-spacing:.01em}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 6px 20px -6px rgba(240,185,58,.5)}
+.btn-primary:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--surface3);color:var(--muted2);box-shadow:none;cursor:not-allowed}
+.btn-outline{background:rgba(255,255,255,.02);border:1px solid var(--hair2);color:var(--text)}
+.btn-outline:hover{border-color:var(--sapphire-l);color:var(--sapphire-l)}
+.btn-sapphire{background:linear-gradient(135deg,var(--sapphire-l),var(--sapphire));color:#fff}
+.btn-danger{background:var(--coral);color:#2a0808}
+.btn-green{background:var(--emerald);color:#04241a}
+.btn-sm{padding:9px 14px;font-size:12px;width:auto}
+
+/* inputs */
+.input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--body);font-size:13px;outline:none;transition:.2s}
+.input:focus{border-color:var(--sapphire-l);background:rgba(255,255,255,.05)}
+.input-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;position:relative}
+.input-icon{position:absolute;left:13px;font-size:13px;pointer-events:none;top:50%;transform:translateY(-50%);opacity:.8}
+.input.has-icon{padding-left:36px}
+.loc-line{width:2px;background:linear-gradient(var(--sapphire-l),var(--gold));height:22px;margin:1px 0 1px 17px;opacity:.5}
+
+/* ride types */
+.ride-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ride-type-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 6px;text-align:center;cursor:pointer;transition:.2s}
+.ride-type-card.active{border-color:var(--gold);background:rgba(240,185,58,.08)}
+.ride-type-card .icon{font-size:20px;margin-bottom:5px}
+.ride-type-card .name{font-size:10.5px;font-weight:700}
+.ride-type-card .price{font-size:10px;color:var(--muted);font-family:var(--data)}
+
+.fare-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--hair);font-size:12px;font-family:var(--data)}
+.fare-row:last-child{border:none;font-weight:700;color:var(--gold-l);font-size:13px}
+
+/* map */
+.map-container{position:relative;background:var(--surface2);border-radius:var(--r-md);overflow:hidden;height:230px;margin-bottom:14px;border:1px solid var(--hair)}
+#leafletMap{width:100%;height:100%;filter:saturate(1.15)}
+.map-badge{position:absolute;top:10px;left:10px;z-index:400;background:rgba(6,9,17,.75);backdrop-filter:blur(6px);border:1px solid var(--hair);border-radius:20px;padding:5px 12px;font-size:10px;font-family:var(--data);display:flex;align-items:center;gap:6px}
+.map-recenter{position:absolute;bottom:10px;right:10px;z-index:400;background:rgba(6,9,17,.8);border:1px solid var(--hair2);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
+
+/* chips / status */
+.chip{padding:6px 12px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid var(--hair);background:rgba(255,255,255,.02);color:var(--muted);display:inline-block}
+.chip.active{border-color:var(--gold);background:rgba(240,185,58,.08);color:var(--gold-l)}
+
+/* chat */
+.chat-box{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-md);padding:12px;height:150px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none}
+.msg{max-width:75%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.4}
+.msg.me{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;align-self:flex-end;border-bottom-right-radius:3px;font-weight:600}
+.msg.them{background:var(--surface3);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px}
+.msg .sender{font-size:9px;margin-bottom:2px;opacity:.6;font-family:var(--data)}
+
+/* toast */
+#toastContainer{position:fixed;top:56px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;width:calc(100% - 36px);max-width:424px;pointer-events:none}
+.toast{background:var(--surface2);border:1px solid var(--hair2);border-radius:var(--r-sm);padding:12px 16px;font-size:12px;display:flex;align-items:center;gap:10px;animation:slideDown .3s ease;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.toast.success{border-color:var(--emerald)}
+.toast.error{border-color:var(--coral)}
+.toast.warning{border-color:var(--gold)}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(3,5,10,.78);backdrop-filter:blur(2px);z-index:500;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--surface2);border:1px solid var(--hair2);border-radius:22px 22px 0 0;padding:24px;width:100%;max-width:460px;max-height:82dvh;overflow-y:auto;animation:slideUp .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-family:var(--disp);font-size:17px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
+
+/* onboarding */
+#onboarding{display:none;position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,#0f1c3d,var(--ink) 60%);z-index:99999;flex-direction:column;align-items:center;justify-content:center;padding:32px 26px;text-align:center}
+#onboarding.show{display:flex}
+.ob-slide{display:none}.ob-slide.active{display:block;animation:fadeUp .4s ease}
+.ob-emoji{font-size:60px;margin-bottom:22px}
+.ob-title{font-family:var(--disp);font-size:26px;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,var(--gold-l),var(--sapphire-l));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ob-text{font-size:13.5px;color:var(--muted);line-height:1.65;max-width:290px}
+.ob-dots{display:flex;gap:7px;margin:26px 0}
+.ob-dot{width:7px;height:7px;border-radius:50%;background:var(--hair2)}
+.ob-dot.active{background:var(--gold);width:22px;border-radius:4px}
+.ob-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:270px}
+
+/* rating */
+.stars{display:flex;gap:8px;font-size:28px;cursor:pointer;justify-content:center;margin:16px 0}
+.star{color:var(--hair2);transition:.2s}.star.lit{color:var(--gold)}
+
+/* leaderboard */
+.lb-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--hair)}
+.lb-rank{font-family:var(--disp);font-weight:700;font-size:17px;width:26px;color:var(--muted2)}
+.lb-rank.gold{color:#ffd700}.lb-rank.silver{color:#c9d3e0}.lb-rank.bronze{color:#cd8a4f}
+.lb-info{flex:1}.lb-name{font-weight:600;font-size:13px}.lb-rides{font-size:10.5px;color:var(--muted);font-family:var(--data)}
+.lb-thb{font-family:var(--data);font-weight:700;color:var(--gold-l)}
+.lb-you{background:rgba(240,185,58,.05);margin:0 -18px;padding:11px 18px;border-radius:10px}
+
+#confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:800;display:none}
+
+.tx-row{display:flex;align-items:center;gap:10px;padding:11px;background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);margin-bottom:8px}
+.tx-status{font-size:17px}
+.tx-info{flex:1;font-size:12px}.tx-hash{font-size:10px;color:var(--muted);font-family:var(--data)}
+
+.faq-item{border-bottom:1px solid var(--hair);padding:13px 0}
+.faq-q{display:flex;justify-content:space-between;cursor:pointer;font-weight:600;font-size:13px;user-select:none}
+.faq-a{font-size:12px;color:var(--muted);line-height:1.6;padding-top:10px;display:none}
+.faq-a.open{display:block}
+
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.badge-item{text-align:center;padding:11px 4px;background:rgba(255,255,255,.02);border-radius:var(--r-sm);border:1px solid var(--hair)}
+.badge-item .b-icon{font-size:22px;margin-bottom:4px;display:block}
+.badge-item .b-name{font-size:9.5px;color:var(--muted)}
+.badge-item.unlocked{border-color:var(--gold);background:rgba(240,185,58,.06)}
+.badge-item.unlocked .b-name{color:var(--gold-l)}
+
+.ride-id-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border:1px solid var(--hair2);border-radius:10px;padding:7px 13px;font-size:11px;font-family:var(--data);cursor:pointer}
+
+.request-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-md);padding:14px;margin-bottom:10px}
+.request-card.pending{border-color:var(--gold)}
+
+.scroll-hint{text-align:center;color:var(--muted2);font-size:10.5px;padding:8px 0 0}
+
+#thankYouOverlay{display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#132043,var(--ink) 65%);z-index:700;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+#thankYouOverlay.show{display:flex}
+.ty-emoji{font-size:72px;animation:bounceIn .6s ease}
+@keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+.stop-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.stop-row .rm-btn{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer}
+.share-link{background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:8px;padding:11px 12px;font-size:11px;font-family:var(--data);word-break:break-all;color:var(--sapphire-l);cursor:pointer}
+.nego-card{background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px;margin-bottom:8px}
+.nego-offer{font-family:var(--disp);font-size:21px;font-weight:700;color:var(--gold-l);margin:8px 0}
+.schedule-section{display:none;margin-top:10px}
+.schedule-section.show{display:block}
+.wallet-connect-btn{display:flex;align-items:center;gap:10px;background:rgba(240,185,58,.08);border:1px solid var(--gold);border-radius:var(--r-sm);padding:12px 16px;cursor:pointer;width:100%;color:var(--gold-l);font-family:var(--body);font-weight:700;font-size:13px}
+
+/* profile identity */
+.avatar-ring{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--sapphire-l),var(--gold));display:flex;align-items:center;justify-content:center;margin:0 auto 10px;padding:3px}
+
+----- frontend/main.jsx -----
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import App from "./App.jsx";
+
+ReactDOM.createRoot(
+  document.getElementById("root")
+).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+----- frontend/App.jsx -----
+import React from "react";
+import LegacyCabLink from "./components/LegacyCabLink.jsx";
+
+export default function App(){
+
+return (
+<LegacyCabLink/>
+);
+
+}
+
+----- frontend/components/LegacyCabLink.jsx -----
+import React from "react";
+
+export default function LegacyCabLink(){
+    return null;
+}
+
+6. BACKEND ENTRY
+----- backend/server.js -----
+'use strict';
+const express = require('express');
+const cors    = require('cors');
+const path    = require('path');
+
+const app  = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors({ origin: '*' }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '..')));
+
+// ── IN-MEMORY STORES ─────────────────────────────────────
+var rides   = [];
+var drivers = {};  // driverId -> driver object
+var ratings = [];
+
+// ── RIDE LIFECYCLE STATES ─────────────────────────────────
+// REQUESTED -> MATCHING -> DRIVER_ASSIGNED -> ACCEPTED
+// -> ARRIVED -> IN_PROGRESS -> COMPLETED -> REWARD_PENDING -> REWARD_CLAIMED
+// CANCELLED (any stage before IN_PROGRESS)
+
+// ── HEALTH ────────────────────────────────────────────────
+app.get('/api/health', function(req, res) {
+  res.json({
+    status: 'ok', version: '5.0.0',
+    ecosystem: 'BSTM CabLink', timestamp: new Date().toISOString(),
+    ridesCount: rides.length, driversOnline: Object.keys(drivers).length
+  });
+});
+
+// ── RIDES ─────────────────────────────────────────────────
+app.post('/api/rides', function(req, res) {
+  var b = req.body || {};
+  if (!b.pickup || !b.dropoff)
+    return res.status(400).json({error:'pickup and dropoff required'});
+
+  var ride = {
+    id:         'CL-' + Date.now().toString(36).toUpperCase(),
+    pickup:     b.pickup,
+    dropoff:    b.dropoff,
+    vehicle:    b.vehicle    || 'standard',
+    fare:       b.fare       || 20,
+    distanceKm: b.distanceKm || 5,
+    wallet:     b.wallet     || null,
+    notes:      b.notes      || '',
+    status:     'REQUESTED',
+    driverId:   null, driverName: null,
+    rating:     null, comment: null,
+    createdAt:  new Date().toISOString(),
+    updatedAt:  new Date().toISOString(),
+  };
+  rides.unshift(ride);
+  if (rides.length > 200) rides = rides.slice(0,200);
+
+  // Auto-match to an online driver if one available
+  var available = Object.values(drivers).filter(function(d){ return d.status==='online'; });
+  if (available.length > 0) {
+    ride.status   = 'MATCHING';
+    ride.updatedAt = new Date().toISOString();
+    // In Phase 2: real matching algorithm (nearest driver)
+    // For now: notify all online drivers (they see it via polling)
+  }
+
+  console.log('New ride:', ride.id, ride.pickup, '->', ride.dropoff, ride.fare+'BWP');
+  res.json({success:true, ride:ride});
+});
+
+app.get('/api/rides', function(req, res) {
+  res.json({rides: rides.slice(0,50)});
+});
+
+app.get('/api/rides/:id', function(req, res) {
+  var ride = rides.find(function(r){ return r.id===req.params.id; });
+  if (!ride) return res.status(404).json({error:'Ride not found'});
+  res.json({ride:ride});
+});
+
+app.patch('/api/rides/:id', function(req, res) {
+  var ride = rides.find(function(r){ return r.id===req.params.id; });
+  if (!ride) return res.status(404).json({error:'Ride not found'});
+  var allowed = ['status','driverId','driverName','rating','comment','lat','lng'];
+  allowed.forEach(function(k){ if (req.body[k] !== undefined) ride[k] = req.body[k]; });
+  ride.updatedAt = new Date().toISOString();
+  // If COMPLETED -> REWARD_PENDING
+  if (ride.status === 'COMPLETED' && !ride.rewardReady) {
+    ride.status = 'REWARD_PENDING';
+    ride.rewardReady = true;
+  }
+  console.log('Ride updated:', ride.id, '->', ride.status);
+  res.json({success:true, ride:ride});
+});
+
+// ── DRIVERS ───────────────────────────────────────────────
+app.post('/api/drivers/online', function(req, res) {
+  var b = req.body || {};
+  var id = b.driverId || b.wallet || ('drv-' + Date.now());
+  drivers[id] = {
+    id:          id,
+    vehicle:     b.vehicle || 'standard',
+    lat:         b.lat     || -24.6541 + (Math.random()-0.5)*0.05,
+    lng:         b.lng     || 25.9087  + (Math.random()-0.5)*0.05,
+    status:      'online',
+    wallet:      b.wallet  || null,
+    onlineSince: new Date().toISOString(),
+  };
+  var pending = rides.filter(function(r){ return r.status==='REQUESTED'||r.status==='MATCHING'; });
+  console.log('Driver online:', id, '| pending rides:', pending.length);
+  res.json({success:true, driverId:id, status:'online', pendingRides:pending.length});
+});
+
+app.post('/api/drivers/offline', function(req, res) {
+  var b = req.body || {};
+  var id = b.driverId || b.wallet;
+  if (id && drivers[id]) delete drivers[id];
+  else {
+    // Delete any matching wallet
+    Object.keys(drivers).forEach(function(k){
+      if (drivers[k].wallet === id) delete drivers[k];
+    });
+  }
+  res.json({success:true, status:'offline'});
+});
+
+app.get('/api/drivers/online', function(req, res) {
+  var list = Object.values(drivers);
+  // Slowly drift driver positions (simulate movement)
+  list.forEach(function(d){
+    d.lat += (Math.random()-0.5)*0.001;
+    d.lng += (Math.random()-0.5)*0.001;
+  });
+  res.json({count:list.length, drivers:list});
+});
+
+// ── DRIVER APPLICATIONS ───────────────────────────────────
+var applications = [];
+app.post('/api/drivers/apply', function(req, res) {
+  var b = req.body || {};
+  if (!b.name||!b.phone||!b.license||!b.vehicle)
+    return res.status(400).json({error:'All fields required'});
+  var rec = {
+    id:        'DRV-' + Date.now().toString(36).toUpperCase(),
+    name:      b.name, phone: b.phone,
+    license:   b.license, vehicle: b.vehicle,
+    wallet:    b.wallet || null, status: 'pending',
+    appliedAt: new Date().toISOString()
+  };
+  applications.push(rec);
+  console.log('Driver application:', rec.id, rec.name);
+  res.json({success:true, id:rec.id, message:'Application received. We will contact you within 24 hours.'});
+});
+
+app.get('/api/drivers/applications', function(req, res) {
+  res.json({count:applications.length, applications:applications});
+});
+
+// ── RATINGS ───────────────────────────────────────────────
+app.post('/api/ratings', function(req, res) {
+  var b = req.body||{};
+  var rating = {id:Date.now(), rideId:b.rideId, stars:b.stars, comment:b.comment, date:new Date().toISOString()};
+  ratings.push(rating);
+  res.json({success:true, rating:rating});
+});
+
+// catch-all removed — Vercel filesystem serves static files
+// ── START ─────────────────────────────────────────────────
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, function() {
+    console.log('CabLink backend: http://localhost:' + PORT);
+    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+  });
+}
+module.exports = app;
+
+7. BACKEND ROUTE MOUNTS
+backend/server.js:9:app.use(cors({ origin: '*' }));
+backend/server.js:10:app.use(express.json());
+backend/server.js:11:app.use(express.static(path.join(__dirname, '..')));
+backend/server.js:24:app.get('/api/health', function(req, res) {
+backend/server.js:33:app.post('/api/rides', function(req, res) {
+backend/server.js:69:app.get('/api/rides', function(req, res) {
+backend/server.js:73:app.get('/api/rides/:id', function(req, res) {
+backend/server.js:79:app.patch('/api/rides/:id', function(req, res) {
+backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+backend/server.js:137:app.post('/api/drivers/apply', function(req, res) {
+backend/server.js:153:app.get('/api/drivers/applications', function(req, res) {
+backend/server.js:158:app.post('/api/ratings', function(req, res) {
+backend/server/app.js:6:app.use(express.json());
+backend/server/app.js:13:app.get(
+backend/server/app.js:32:app.use("/api/rides",rideRoutes);
+backend/server/app.js:34:app.use("/api/users",userRoutes);
+
+8. FRONTEND API CALLS
+frontend/js/app.js:84:"/api/rides",
+frontend/js/services/api.js:4:rides:'/api/rides',
+frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+frontend/js/services/api.js:6:health:'/api/health'
+frontend/js/driver/applicationService.js:4:const r = await fetch('/api/drivers/apply',{
+frontend/js/driver/driverController.js:6:return await api("/api/rides");
+frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+frontend/js/driver/driverDispatchBridge.js:44:fetch("/api/dispatch/requests")
+frontend/js/driver/driverDispatchBridge.js:127:fetch("/api/dispatch/accept",{
+frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+frontend/js/driver/driverService.js:18:const r=await fetch('/api/rides');
+frontend/js/app.js.backup_booking_1784097198231:12:"/api/rides",
+frontend/js/rides/rideController.js:8:const ride=await api("/api/rides",{
+frontend/js/rides/rideController.js:39:await api("/api/rides/"+id);
+frontend/js/rides/rideService.js:5:const response=await fetch('/api/rides',{
+frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+frontend/js/app_core.js:340:  fetch('/api/rides', {
+frontend/js/app_core.js:378:  fetch('/api/rides/' + rideId, {
+frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+frontend/js/app_core.js:436:      fetch('/api/rides')
+frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+frontend/js/app_core.js:512:  fetch('/api/rides/' + rideId, {
+frontend/api/task_api.js:14:BASE_URL + "/api/ecosystem/tasks"
+frontend/api/task_api.js:26:BASE_URL + "/api/ecosystem/tasks/"+id,
+frontend/services/user_service.js:3:const api=require("../api/cablink_api");
+frontend/services/user_service.js:9:"/api/users/register",
+frontend/services/user_service.js:22:"/api/users"
+frontend/services/ride_service.js:3:const api=require("../api/cablink_api");
+frontend/services/ride_service.js:9:"/api/rides/request",
+frontend/services/ride_service.js:22:"/api/rides"
+frontend/services/demand_api.js:6:"/api/driver/demand"
+frontend/services/driver_dashboard_api.js:5:"/api/driver/"+id+"/economy"
+frontend/services/driver_dashboard_api.js:16:"/api/driver/hotspots"
+frontend/services/driver_dashboard_api.js:27:"/api/updates"
+frontend/services/driver_dashboard_live.js:3:const taskApi=require("../api/task_api");
+frontend/services/economy_dashboard_api.js:16:"/api/driver/" +
+frontend/services/identity_api.js:7:"/api/user/"+id
+frontend/services/live_driver_economy.js:3:const taskApi=require("../api/task_api");
+frontend/services/live_ride_api.js:7:"/api/ride/"+id
+frontend/services/live_ride_api.js:19:"/api/ride/status",
+frontend/services/notification_api.js:5:"/api/ride/"+id+"/timeline"
+frontend/services/passenger_dashboard_api.js:6:"/api/ride/"+id+"/status"
+frontend/services/passenger_dashboard_api.js:11:"/api/ride/"+id+"/timeline"
+frontend/services/updates_api.js:6:"/api/updates"
+frontend/components/passenger_dashboard.jsx:16:fetch("/api/ride/"+id+"/status")
+frontend/components/passenger_dashboard.jsx:21:fetch("/api/ride/"+id+"/timeline")
+frontend/index.html:916:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+frontend/index.html:1026:      const res = await fetch('/api/rides/' + rideId);
+frontend/index.html:1355:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+frontend/index.html:1385:      const res = await fetch('/api/rides');
+frontend/index.html:1419:    await fetch('/api/rides/' + rideId + '/accept', {
+frontend/index.html:1433:    const res = await fetch('/api/rides/' + rideId + '/complete', { method: 'PATCH' });
+frontend/index.html:1766:let r=await fetch("/api/drivers/online");
+frontend/index.html:1804:"/api/rides",
+frontend/index.html:1930:"/api/drivers/online",
+frontend/index.html:1983:"/api/drivers/offline",
+frontend/index.html:2069:await fetch('/api/drivers/online');
+frontend/index.html:2163:await fetch('/api/drivers/apply',{
+frontend/index.html:2254:<!-- CABLINK ROLE GATING + DRIVER APPLICATION (real, wired to /api/drivers/apply) -->
+frontend/index.html:2321:      const res = await fetch('/api/drivers/apply', {
+frontend/pages/DriverDashboard.jsx:14:fetch("/api/driver/DRIVER001/economy")
+frontend/pages/DriverDashboard.jsx:19:fetch("/api/driver/hotspots")
+frontend/pages/PassengerRide.jsx:26:"/api/dispatch/request",
+frontend/pages/UpdatesCenter.jsx:13:fetch("/api/updates")
+
+9. RIDE ENGINE IMPORT GRAPH
+backend/routes/rides.js:5:const matching=require("../services/driver_matching_service");
+backend/routes/rides.js:7:const orchestrator=require("../services/ride_orchestrator_service");
+backend/routes/dispatch_api.js:6:require("../services/dispatch_service");
+backend/routes/live_ride_api.js:6:require("../services/live_ride_service");
+backend/routes/matching_api.js:6:require("../services/driver_matching_service");
+backend/routes/orchestrator_api.js:6:require("../services/ride_orchestrator_service");
+backend/routes/ride_state_api.js:4:const state=require("../services/ride_state_service");
+backend/routes/rides.js.backup_truth_1784102755787:5:const matching=require("../services/driver_matching_service");
+backend/routes/rides.js.backup_truth_1784102755787:7:const orchestrator=require("../services/ride_orchestrator_service");
+backend/services/ride_dispatch_bridge.js:1:const dispatchService = require("./dispatch_service");
+backend/services/ride_dispatch_bridge.js:2:const matchingService = require("./driver_matching_service");
+backend/services/ride_orchestrator_service.js:4:require("./ride_state_service");
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069:4:require("./ride_state_service");
+backend/server.js.backup_1784096856161:94:const rideService=require("./services/ride_service");
+backend/server.js.backup_route_cleanup_1784103021100:94:const rideService=require("./services/ride_service");
+
+10. RIDE ROUTE IMPORTS
+backend/server/app.js:9:const rideRoutes=require("../routes/rides");
+backend/server.js.backup_1784096856161:213:const rideEconomyAPI=require("./routes/ride_economy_api");
+backend/server.js.backup_1784096856161:244:const matchingAPI=require("./routes/matching_api");
+backend/server.js.backup_1784096856161:251:const dispatchAPI=require("./routes/dispatch_api");
+backend/server.js.backup_1784096856161:258:const liveRideAPI=require("./routes/live_ride_api");
+backend/server.js.backup_1784096856161:272:const completionAPI=require("./routes/completion_api");
+backend/server.js.backup_1784096856161:286:const rideStateAPI=require("./routes/ride_state_api");
+backend/server.js.backup_route_cleanup_1784103021100:213:const rideEconomyAPI=require("./routes/ride_economy_api");
+backend/server.js.backup_route_cleanup_1784103021100:244:const matchingAPI=require("./routes/matching_api");
+backend/server.js.backup_route_cleanup_1784103021100:251:const dispatchAPI=require("./routes/dispatch_api");
+backend/server.js.backup_route_cleanup_1784103021100:258:const liveRideAPI=require("./routes/live_ride_api");
+backend/server.js.backup_route_cleanup_1784103021100:272:const completionAPI=require("./routes/completion_api");
+backend/server.js.backup_route_cleanup_1784103021100:286:const rideStateAPI=require("./routes/ride_state_api");
+backend/server.js.backup_route_cleanup_1784103021100:316:const ridesAPI=require("./routes/rides");
+
+11. REACT PLUGIN RESOLUTION
+@vitejs/plugin-react => /data/data/com.termux/files/home/CabLink-pwa/node_modules/@vitejs/plugin-react/dist/index.cjs
+vite => /data/data/com.termux/files/home/CabLink-pwa/node_modules/vite/index.cjs
+react => /data/data/com.termux/files/home/CabLink-pwa/node_modules/react/index.js
+react-dom => /data/data/com.termux/files/home/CabLink-pwa/node_modules/react-dom/index.js
+
+12. BACKEND SYNTAX CHECK
+backend/server.js syntax: 0
+
+13. FRONTEND MAIN SYNTAX CHECK
+node:internal/modules/esm/get_format:236
+  throw new ERR_UNKNOWN_FILE_EXTENSION(ext, filepath);
+        ^
+
+TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".jsx" for /data/data/com.termux/files/home/CabLink-pwa/frontend/main.jsx
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:236:9)
+    at defaultGetFormat (node:internal/modules/esm/get_format:262:36)
+    at checkSyntax (node:internal/main/check_syntax:67:20) {
+  code: 'ERR_UNKNOWN_FILE_EXTENSION'
+}
+
+Node.js v26.4.0
+
+14. START BACKEND TEMPORARILY
+Backend PID: 6843
+./block13b_runtime_proof.sh: line 132: /tmp/cablink_backend.log: No such file or directory
+
+15. BACKEND LOG
+cat: /tmp/cablink_backend.log: No such file or directory
+
+16. PORT CHECK
+
+17. BACKEND HEALTH PROBE
+curl: (7) Failed to connect to localhost:3000 after 2 ms: Could not connect to server
+
+18. RIDES PROBE
+curl: (7) Failed to connect to localhost:3000 after 1 ms: Could not connect to server
+
+19. STOP TEMPORARY BACKEND
+
+20. FINAL VERDICT
+BLOCK 13B READ-ONLY RUNTIME PROOF COMPLETE
+
+NO SOURCE FILES MODIFIED
+NO SOURCE FILES MOVED
+NO SOURCE FILES DELETED
+
+REPORT COMPLETE

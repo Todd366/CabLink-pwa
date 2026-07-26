@@ -69,6 +69,17 @@
       "currency": "THB",
       "ride": "RIDE-1784057193464",
       "created": "2026-07-14T19:26:33.548Z"
+    },
+    {
+      "id": "TX-1785012519292",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785010715936",
+      "driverId": "TEST-DRIVER-001",
+      "wallet": "TEST-WALLET",
+      "amount": 1,
+      "token": "THB",
+      "status": "PENDING",
+      "createdAt": "2026-07-25T20:48:39.292Z"
     }
   ]
 }

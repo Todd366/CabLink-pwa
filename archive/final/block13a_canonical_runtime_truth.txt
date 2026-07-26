@@ -1,0 +1,1629 @@
+================================================================================
+CABLINK BLOCK 13A — CANONICAL RUNTIME TRUTH
+================================================================================
+Date: Sat Jul 25 19:12:14 CAT 2026
+Repository: /data/data/com.termux/files/home/CabLink-pwa
+
+RULE: READ-ONLY ANALYSIS
+No source files will be modified, moved, renamed, or deleted.
+
+
+================================================================================
+1. REPOSITORY IDENTITY
+================================================================================
+PWD:
+/data/data/com.termux/files/home/CabLink-pwa
+
+Git branch:
+main
+
+Git status:
+?? .block8_check.js
+?? .vercel/
+?? BLOCK9_RUNTIME_TRUTH_OUTPUT.txt
+?? CABLINK_FORENSIC_AUDIT_V2_REPORT.md
+?? CABLINK_FULL_AUDIT_REPORT.md
+?? CABLINK_RUNTIME_TRUTH_AUDIT_V3_REPORT.md
+?? archive/dead_backend_files/
+?? block10_canonical_runtime_lock.sh
+?? block11_architecture_map.sh
+?? block11_architecture_map.txt
+?? block12_live_source_inventory.txt
+?? block12_safe_reorganisation_audit.sh
+?? block12_safe_reorganisation_audit.txt
+?? block13a_canonical_runtime_truth.sh
+?? block13a_canonical_runtime_truth.txt
+?? block2.py
+?? block3.py
+?? block4.py
+?? block5.py
+?? block6.py
+?? block7.py
+?? block8.py
+?? block9.py
+?? block9_runtime_truth.sh
+?? cablink_forensic_audit_v2.js
+?? cablink_full_audit.js
+?? cablink_reality_doctor.js
+?? cablink_runtime_truth_audit_v3.js
+?? check_all_scripts.py
+?? finalize_check.sh
+?? fix_block7_bug.py
+?? gather_info.sh
+?? patch_driver_polling.py
+?? snapshot.sh
+?? test_loop.sh
+?? verify_flow.sh
+
+Package:
+{
+  "name": "cablink-pwa",
+  "version": "5.0.0",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "backend": "node backend/server.js"
+  }
+}
+
+================================================================================
+2. NPM START COMMAND TRUTH
+================================================================================
+package.json start:
+node backend/server.js
+
+package.json backend:
+node backend/server.js
+
+package.json dev:
+NO DEV SCRIPT
+
+================================================================================
+3. BACKEND ENTRY CANDIDATES
+================================================================================
+
+FOUND: backend/server.js
+----- first 80 lines -----
+'use strict';
+const express = require('express');
+const cors    = require('cors');
+const path    = require('path');
+
+const app  = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors({ origin: '*' }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '..')));
+
+// ── IN-MEMORY STORES ─────────────────────────────────────
+var rides   = [];
+var drivers = {};  // driverId -> driver object
+var ratings = [];
+
+// ── RIDE LIFECYCLE STATES ─────────────────────────────────
+// REQUESTED -> MATCHING -> DRIVER_ASSIGNED -> ACCEPTED
+// -> ARRIVED -> IN_PROGRESS -> COMPLETED -> REWARD_PENDING -> REWARD_CLAIMED
+// CANCELLED (any stage before IN_PROGRESS)
+
+// ── HEALTH ────────────────────────────────────────────────
+app.get('/api/health', function(req, res) {
+  res.json({
+    status: 'ok', version: '5.0.0',
+    ecosystem: 'BSTM CabLink', timestamp: new Date().toISOString(),
+    ridesCount: rides.length, driversOnline: Object.keys(drivers).length
+  });
+});
+
+// ── RIDES ─────────────────────────────────────────────────
+app.post('/api/rides', function(req, res) {
+  var b = req.body || {};
+  if (!b.pickup || !b.dropoff)
+    return res.status(400).json({error:'pickup and dropoff required'});
+
+  var ride = {
+    id:         'CL-' + Date.now().toString(36).toUpperCase(),
+    pickup:     b.pickup,
+    dropoff:    b.dropoff,
+    vehicle:    b.vehicle    || 'standard',
+    fare:       b.fare       || 20,
+    distanceKm: b.distanceKm || 5,
+    wallet:     b.wallet     || null,
+    notes:      b.notes      || '',
+    status:     'REQUESTED',
+    driverId:   null, driverName: null,
+    rating:     null, comment: null,
+    createdAt:  new Date().toISOString(),
+    updatedAt:  new Date().toISOString(),
+  };
+  rides.unshift(ride);
+  if (rides.length > 200) rides = rides.slice(0,200);
+
+  // Auto-match to an online driver if one available
+  var available = Object.values(drivers).filter(function(d){ return d.status==='online'; });
+  if (available.length > 0) {
+    ride.status   = 'MATCHING';
+    ride.updatedAt = new Date().toISOString();
+    // In Phase 2: real matching algorithm (nearest driver)
+    // For now: notify all online drivers (they see it via polling)
+  }
+
+  console.log('New ride:', ride.id, ride.pickup, '->', ride.dropoff, ride.fare+'BWP');
+  res.json({success:true, ride:ride});
+});
+
+app.get('/api/rides', function(req, res) {
+  res.json({rides: rides.slice(0,50)});
+});
+
+app.get('/api/rides/:id', function(req, res) {
+  var ride = rides.find(function(r){ return r.id===req.params.id; });
+  if (!ride) return res.status(404).json({error:'Ride not found'});
+  res.json({ride:ride});
+});
+
+app.patch('/api/rides/:id', function(req, res) {
+  var ride = rides.find(function(r){ return r.id===req.params.id; });
+
+FOUND: backend/server/app.js
+----- first 80 lines -----
+
+const express=require("express");
+
+const app=express();
+
+app.use(express.json());
+
+
+const rideRoutes=require("../routes/rides");
+const userRoutes=require("../routes/users");
+
+
+app.get(
+"/health",
+(req,res)=>{
+
+res.json({
+
+system:"CabLink API",
+
+status:"ONLINE",
+
+time:new Date().toISOString()
+
+});
+
+}
+
+);
+
+
+app.use("/api/rides",rideRoutes);
+
+app.use("/api/users",userRoutes);
+
+
+module.exports=app;
+
+
+FOUND: backend/server/index.js
+----- first 80 lines -----
+
+const app=require("./app");
+
+
+const PORT=
+process.env.PORT || 3000;
+
+
+app.listen(
+PORT,
+()=>{
+
+console.log({
+
+system:"CabLink Backend",
+
+port:PORT,
+
+status:"RUNNING"
+
+});
+
+}
+
+);
+
+
+FOUND: api/index.js
+----- first 80 lines -----
+const app = require('../backend/server.js');
+module.exports = app;
+
+================================================================================
+4. BACKEND SERVER DEPENDENCY TRACE
+================================================================================
+server.js require/import references:
+grep: Unmatched ( or \(
+
+backend/server/app.js require/import references:
+grep: Unmatched ( or \(
+
+backend/server/index.js:
+
+const app=require("./app");
+
+
+const PORT=
+process.env.PORT || 3000;
+
+
+app.listen(
+PORT,
+()=>{
+
+console.log({
+
+system:"CabLink Backend",
+
+port:PORT,
+
+status:"RUNNING"
+
+});
+
+}
+
+);
+
+
+================================================================================
+5. CANONICAL BACKEND ROUTE MOUNTS
+================================================================================
+
+===== backend/server.js =====
+grep: Unmatched ( or \(
+
+===== backend/server/app.js =====
+grep: Unmatched ( or \(
+
+================================================================================
+6. ALL BACKEND ROUTE FILES
+================================================================================
+backend/routes/completion_api.js
+backend/routes/dispatch_api.js
+backend/routes/driver_dashboard_api.js
+backend/routes/driver_demand_api.js
+backend/routes/driver_economy.js
+backend/routes/driver_economy_api.js
+backend/routes/driver_intelligence_api.js
+backend/routes/driver_location_api.js
+backend/routes/driver_online_api.js
+backend/routes/ecosystem_tasks.js
+backend/routes/gps.js
+backend/routes/identity_api.js
+backend/routes/live_demand_api.js
+backend/routes/live_ride_api.js
+backend/routes/matching_api.js
+backend/routes/mobile.js
+backend/routes/notification_api.js
+backend/routes/orchestrator_api.js
+backend/routes/passenger_intelligence_api.js
+backend/routes/realtime.js
+backend/routes/ride_api.js.disabled
+backend/routes/ride_economy_api.js
+backend/routes/ride_state_api.js
+backend/routes/rides.js
+backend/routes/rides.js.backup
+backend/routes/rides.js.backup_truth_1784102755787
+backend/routes/socket_routes.js
+backend/routes/updates_api.js
+backend/routes/users.js
+
+================================================================================
+7. ROUTE MOUNT CROSS-CHECK
+================================================================================
+Route files:
+completion_api.js
+dispatch_api.js
+driver_dashboard_api.js
+driver_demand_api.js
+driver_economy.js
+driver_economy_api.js
+driver_intelligence_api.js
+driver_location_api.js
+driver_online_api.js
+ecosystem_tasks.js
+gps.js
+identity_api.js
+live_demand_api.js
+live_ride_api.js
+matching_api.js
+mobile.js
+notification_api.js
+orchestrator_api.js
+passenger_intelligence_api.js
+realtime.js
+ride_economy_api.js
+ride_state_api.js
+rides.js
+socket_routes.js
+updates_api.js
+users.js
+
+References to backend/routes:
+
+================================================================================
+8. FRONTEND BUILD CONFIGURATION
+================================================================================
+vite.config.js:
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+
+  plugins: [react()],
+
+  root: "frontend",
+
+  server: {
+    port: 5173,
+
+    proxy: {
+      "/api": {
+        target: process.env.CABLINK_API_URL || "http://localhost:3000",
+        changeOrigin: true
+      }
+    }
+  },
+
+  build: {
+    outDir: "../dist",
+    emptyOutDir: true
+  }
+
+});
+
+frontend/index.html:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- CABLINK_BOOKRIDE_TRUTH_MIGRATION -->
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#060911"/>
+<title>CabLink · BSTM Ecosystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+<style>
+:root{
+  --ink:#060911; --surface:#0f1526; --surface2:#161e33; --surface3:#1c2540;
+  --glass:rgba(22,30,51,.62); --hair:rgba(255,255,255,.07); --hair2:rgba(255,255,255,.12);
+  --sapphire:#2e6be6; --sapphire-l:#5b8bff;
+  --gold:#f0b93a; --gold-l:#ffd873;
+  --emerald:#21c980; --coral:#ff5d5d;
+  --text:#edeff5; --muted:#8992a9; --muted2:#5b6376;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --data:'Space Mono',monospace;
+  --nav-h:78px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-font-smoothing:antialiased}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:460px;margin:0 auto;position:relative;overflow:hidden;background:var(--ink)}
+
+/* ambient bg blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;opacity:.35;z-index:0}
+.blob-1{width:260px;height:260px;background:var(--sapphire);top:-80px;left:-60px}
+.blob-2{width:220px;height:220px;background:var(--gold);top:120px;right:-80px;opacity:.18}
+
+.statusbar{position:relative;z-index:2;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;color:var(--muted);flex-shrink:0;font-family:var(--data)}
+.statusbar .time{font-weight:700;color:var(--text)}
+.statusbar .right{display:flex;gap:10px;align-items:center}
+.pip{width:7px;height:7px;border-radius:50%;background:var(--muted2);display:inline-block}
+.pip.green{background:var(--emerald);box-shadow:0 0 8px var(--emerald)}
+.pip.yellow{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.pip.red{background:var(--coral);box-shadow:0 0 8px var(--coral)}
+
+#alertStrip,#chainWarning{display:none;position:relative;z-index:2;font-size:12px;font-weight:600;padding:9px 18px;text-align:center;flex-shrink:0}
+#alertStrip{background:linear-gradient(90deg,#c98a1f,var(--gold));color:#241a04}
+#alertStrip.show{display:block}
+#alertStrip button{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#241a04;font-size:16px;cursor:pointer}
+#chainWarning{background:var(--coral);color:#2a0808;cursor:pointer}
+#chainWarning.show{display:block}
+#surgeBanner{display:none;position:relative;z-index:2;background:linear-gradient(90deg,#7a4d0a,var(--gold));color:#241a04;padding:9px 18px;text-align:center;font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+#surgeBanner.show{display:block}
+#arrivedBanner{display:none;position:relative;z-index:2;background:var(--emerald);color:#04241a;padding:9px 18px;font-weight:700;font-size:12px;text-align:center;flex-shrink:0}
+#arrivedBanner.show{display:block}
+#rideProgressBar{display:none;position:relative;z-index:2;background:var(--surface);padding:12px 18px;border-bottom:1px solid var(--hair);flex-shrink:0}
+#rideProgressBar.show{display:block}
+.rp-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px;font-family:var(--data)}
+.rp-label .rp-status{color:var(--gold-l);font-weight:700}
+.progress-track{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--sapphire),var(--gold));border-radius:2px;transition:width .5s ease;width:0%}
+
+#screens{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#screens::-webkit-scrollbar{display:none}
+.screen{display:none;padding:14px 18px calc(var(--nav-h) + 24px);animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+h1,h2,h3,.disp{font-family:var(--disp)}
+.eyebrow{font-family:var(--data);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.greeting{font-family:var(--disp);font-size:22px;font-weight:600;margin:2px 0 16px}
+.greeting span{color:var(--gold-l)}
+
+/* cards */
+.card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
+.card-title{font-family:var(--disp);font-weight:600;font-size:15px}
+.card-sub{font-size:11px;color:var(--muted);font-family:var(--data)}
+
+/* diamond wallet — signature element */
+.diamond-card{position:relative;background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid var(--hair2);border-radius:var(--r-lg);padding:22px 20px 18px;margin-bottom:14px;overflow:hidden}
+.diamond-card::before{content:'';position:absolute;top:-40%;right:-20%;width:70%;height:180%;background:linear-gradient(135deg,rgba(240,185,58,.18),transparent 60%);transform:rotate(20deg);pointer-events:none}
+.diamond-facet{width:34px;height:34px;background:linear-gradient(135deg,var(--gold-l),var(--gold) 55%,#a3760c);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 18px rgba(240,185,58,.35)}
+.wallet-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.wallet-addr{font-family:var(--data);font-size:11px;color:var(--muted)}
+.wallet-stage{font-size:10px;font-family:var(--data);letter-spacing:.08em;color:var(--gold-l);text-transform:uppercase;margin-top:2px}
+.wallet-bar{display:flex;gap:10px}
+.bal-card{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 10px;text-align:center}
+.bal-card .val{font-family:var(--data);font-size:20px;font-weight:700;color:var(--gold-l)}
+.bal-card .lbl{font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:.05em;text-transform:uppercase}
+.chainrow{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.gas-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--muted);font-family:var(--data)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:var(--r-sm);font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;border:none;transition:.2s;width:100%;letter-spacing:.01em}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 6px 20px -6px rgba(240,185,58,.5)}
+.btn-primary:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--surface3);color:var(--muted2);box-shadow:none;cursor:not-allowed}
+.btn-outline{background:rgba(255,255,255,.02);border:1px solid var(--hair2);color:var(--text)}
+.btn-outline:hover{border-color:var(--sapphire-l);color:var(--sapphire-l)}
+.btn-sapphire{background:linear-gradient(135deg,var(--sapphire-l),var(--sapphire));color:#fff}
+.btn-danger{background:var(--coral);color:#2a0808}
+.btn-green{background:var(--emerald);color:#04241a}
+.btn-sm{padding:9px 14px;font-size:12px;width:auto}
+
+/* inputs */
+.input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--body);font-size:13px;outline:none;transition:.2s}
+.input:focus{border-color:var(--sapphire-l);background:rgba(255,255,255,.05)}
+.input-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;position:relative}
+.input-icon{position:absolute;left:13px;font-size:13px;pointer-events:none;top:50%;transform:translateY(-50%);opacity:.8}
+.input.has-icon{padding-left:36px}
+.loc-line{width:2px;background:linear-gradient(var(--sapphire-l),var(--gold));height:22px;margin:1px 0 1px 17px;opacity:.5}
+
+/* ride types */
+.ride-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ride-type-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 6px;text-align:center;cursor:pointer;transition:.2s}
+.ride-type-card.active{border-color:var(--gold);background:rgba(240,185,58,.08)}
+.ride-type-card .icon{font-size:20px;margin-bottom:5px}
+.ride-type-card .name{font-size:10.5px;font-weight:700}
+.ride-type-card .price{font-size:10px;color:var(--muted);font-family:var(--data)}
+
+.fare-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--hair);font-size:12px;font-family:var(--data)}
+
+root index.html:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="cl-critical">
+:root{
+  --bg:#0a0a0f;--bg2:#16213e;--bg3:#0f172a;--card:#12121d;
+  --accent:#f5c518;--accent2:#ff8c00;--green:#22d672;--red:#ff4757;
+  --blue:#4fc3f7;--purple:#b388ff;
+  --text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
+  --radius:14px;--font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
+}
+html,body,#app{background:#0a0a0f!important;color:#f0f0f5!important;}
+@keyframes timerDrain{from{width:100%}to{width:0%}}
+@keyframes slideIn{from{transform:translateY(-8px);opacity:0}to{transform:translateY(0);opacity:1}}
+</style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#060911"/>
+<title>CabLink · BSTM Ecosystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0a0a0f;--bg2:#16213e;--bg3:#0f172a;--card:#12121d;
+  --accent:#f5c518;--accent2:#ff8c00;--green:#22d672;--red:#ff4757;
+  --blue:#4fc3f7;--purple:#b388ff;
+  --text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
+  --radius:14px;--font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-font-smoothing:antialiased}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:460px;margin:0 auto;position:relative;overflow:hidden;background:var(--ink)}
+
+/* ambient bg blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;opacity:.35;z-index:0}
+.blob-1{width:260px;height:260px;background:var(--sapphire);top:-80px;left:-60px}
+.blob-2{width:220px;height:220px;background:var(--gold);top:120px;right:-80px;opacity:.18}
+
+.statusbar{position:relative;z-index:2;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;color:var(--muted);flex-shrink:0;font-family:var(--data)}
+.statusbar .time{font-weight:700;color:var(--text)}
+.statusbar .right{display:flex;gap:10px;align-items:center}
+.pip{width:7px;height:7px;border-radius:50%;background:var(--muted2);display:inline-block}
+.pip.green{background:var(--emerald);box-shadow:0 0 8px var(--emerald)}
+.pip.yellow{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.pip.red{background:var(--coral);box-shadow:0 0 8px var(--coral)}
+
+#alertStrip,#chainWarning{display:none;position:relative;z-index:2;font-size:12px;font-weight:600;padding:9px 18px;text-align:center;flex-shrink:0}
+#alertStrip{background:linear-gradient(90deg,#c98a1f,var(--gold));color:#241a04}
+#alertStrip.show{display:block}
+#alertStrip button{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#241a04;font-size:16px;cursor:pointer}
+#chainWarning{background:var(--coral);color:#2a0808;cursor:pointer}
+#chainWarning.show{display:block}
+#surgeBanner{display:none;position:relative;z-index:2;background:linear-gradient(90deg,#7a4d0a,var(--gold));color:#241a04;padding:9px 18px;text-align:center;font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+#surgeBanner.show{display:block}
+#arrivedBanner{display:none;position:relative;z-index:2;background:var(--emerald);color:#04241a;padding:9px 18px;font-weight:700;font-size:12px;text-align:center;flex-shrink:0}
+#arrivedBanner.show{display:block}
+#rideProgressBar{display:none;position:relative;z-index:2;background:var(--surface);padding:12px 18px;border-bottom:1px solid var(--hair);flex-shrink:0}
+#rideProgressBar.show{display:block}
+.rp-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px;font-family:var(--data)}
+.rp-label .rp-status{color:var(--gold-l);font-weight:700}
+.progress-track{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--sapphire),var(--gold));border-radius:2px;transition:width .5s ease;width:0%}
+
+#screens{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#screens::-webkit-scrollbar{display:none}
+.screen{display:none;padding:16px 16px 100px;animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+h1,h2,h3,.disp{font-family:var(--disp)}
+.eyebrow{font-family:var(--data);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.greeting{font-family:var(--disp);font-size:22px;font-weight:600;margin:2px 0 16px}
+.greeting span{color:var(--gold-l)}
+
+/* cards */
+.card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
+.card-title{font-family:var(--disp);font-weight:600;font-size:15px}
+.card-sub{font-size:11px;color:var(--muted);font-family:var(--data)}
+
+/* diamond wallet — signature element */
+.diamond-card{position:relative;background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid var(--hair2);border-radius:var(--r-lg);padding:22px 20px 18px;margin-bottom:14px;overflow:hidden}
+.diamond-card::before{content:'';position:absolute;top:-40%;right:-20%;width:70%;height:180%;background:linear-gradient(135deg,rgba(240,185,58,.18),transparent 60%);transform:rotate(20deg);pointer-events:none}
+.diamond-facet{width:34px;height:34px;background:linear-gradient(135deg,var(--gold-l),var(--gold) 55%,#a3760c);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 18px rgba(240,185,58,.35)}
+.wallet-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.wallet-addr{font-family:var(--data);font-size:11px;color:var(--muted)}
+.wallet-stage{font-size:10px;font-family:var(--data);letter-spacing:.08em;color:var(--gold-l);text-transform:uppercase;margin-top:2px}
+.wallet-bar{display:flex;gap:10px}
+.bal-card{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 10px;text-align:center}
+.bal-card .val{font-family:var(--data);font-size:20px;font-weight:700;color:var(--gold-l)}
+.bal-card .lbl{font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:.05em;text-transform:uppercase}
+.chainrow{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.gas-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--muted);font-family:var(--data)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:var(--r-sm);font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;border:none;transition:.2s;width:100%;letter-spacing:.01em}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 6px 20px -6px rgba(240,185,58,.5)}
+.btn-primary:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--surface3);color:var(--muted2);box-shadow:none;cursor:not-allowed}
+.btn-outline{background:rgba(255,255,255,.02);border:1px solid var(--hair2);color:var(--text)}
+.btn-outline:hover{border-color:var(--sapphire-l);color:var(--sapphire-l)}
+.btn-sapphire{background:linear-gradient(135deg,var(--sapphire-l),var(--sapphire));color:#fff}
+.btn-danger{background:var(--coral);color:#2a0808}
+.btn-green{background:var(--emerald);color:#04241a}
+.btn-sm{padding:9px 14px;font-size:12px;width:auto}
+
+/* inputs */
+.input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--body);font-size:13px;outline:none;transition:.2s}
+.input:focus{border-color:var(--sapphire-l);background:rgba(255,255,255,.05)}
+.input-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;position:relative}
+.input-icon{position:absolute;left:13px;font-size:13px;pointer-events:none;top:50%;transform:translateY(-50%);opacity:.8}
+.input.has-icon{padding-left:36px}
+.loc-line{width:2px;background:linear-gradient(var(--sapphire-l),var(--gold));height:22px;margin:1px 0 1px 17px;opacity:.5}
+
+/* ride types */
+.ride-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ride-type-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 6px;text-align:center;cursor:pointer;transition:.2s}
+
+================================================================================
+9. FRONTEND ENTRY TRACE
+================================================================================
+frontend/main.jsx:
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import App from "./App.jsx";
+
+ReactDOM.createRoot(
+  document.getElementById("root")
+).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+frontend/App.jsx:
+import React from "react";
+import LegacyCabLink from "./components/LegacyCabLink.jsx";
+
+export default function App(){
+
+return (
+<LegacyCabLink/>
+);
+
+}
+
+LegacyCabLink:
+import React from "react";
+
+export default function LegacyCabLink(){
+    return null;
+}
+
+================================================================================
+10. FRONTEND IMPORT GRAPH — FIRST LEVEL
+================================================================================
+Imports from main.jsx:
+
+Imports from App.jsx:
+
+Imports from LegacyCabLink.jsx:
+
+================================================================================
+11. FRONTEND ENTRY REFERENCES
+================================================================================
+All references to frontend/main.jsx:
+./cablink_runtime_truth_audit_v3.js:175:      /main\.jsx/i.test(content) ||
+./cablink_runtime_truth_audit_v3.js:179:      /main\.jsx/i.test(content)
+./block9_runtime_truth.sh:314:    grep -nE '<script|src=|type="module"|main\.jsx|app_core|LegacyCabLink|assets/index-' "$f" | head -80
+./block11_architecture_map.sh:380:      '<script|<script[^>]*src=|type="module"|iframe|main\.jsx|app_core|fix\.js|role\.js|fare_engine|rideStateMachine|passengerRideStatus|driverLifecycleControls|completionRewardBridge' \
+./block12_safe_reorganisation_audit.sh:116:  'main\.jsx|App\.jsx|script|iframe|index-C|frontend/' \
+./block12_safe_reorganisation_audit.sh:382:      '<script|iframe|main\.jsx|App\.jsx|frontend/js|fix\.js|role\.js|fare_engine|rideStateMachine|passengerRideStatus|driverLifecycleControls|completionRewardBridge' \
+
+================================================================================
+12. FRONTEND LEGACY SCRIPT REFERENCES
+================================================================================
+
+===== index.html =====
+23:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+24:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+664:<script>
+1700:<script>
+1790:<script src="frontend/js/app_core.js"></script>
+1791:<script src="role.js"></script>
+1792:<script src="fix.js"></script>
+1793:<script src="fare_engine.js"></script>
+1794:<script src="frontend/js/rides/rideStateMachine.js"></script>
+1795:<script src="frontend/js/rides/passengerRideStatus.js"></script>
+1796:<script src="frontend/js/driver/driverLifecycleControls.js"></script>
+1797:<script src="frontend/js/rides/completionRewardBridge.js"></script>
+
+===== frontend/index.html =====
+13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+657:<script>
+1745:<div id="root"></div><script type="module" src="/main.jsx"></script>
+1747:<script>
+1870:<script>
+2021:<script>
+2056:<script>
+2136:<script>
+2213:<script type="module">
+2267:<script>
+2358:<script>
+2370:<script>
+
+===== launcher.html =====
+13:  <iframe src="index.html" id="app"></iframe>
+15:  <script>
+
+================================================================================
+13. VITE / REACT ENTRY TRUTH
+================================================================================
+Searching for Vite entry references:
+
+Searching for ReactDOM mounting:
+frontend/main.jsx:6:ReactDOM.createRoot(
+
+================================================================================
+14. API BASE URL REFERENCES
+================================================================================
+
+================================================================================
+15. RIDE LIFECYCLE CANDIDATES
+================================================================================
+Booking:
+frontend/js/app.js:84:"/api/rides",
+frontend/js/app_working_1345.bak:4:window.bookRide = function() {
+frontend/js/core_working_1345.bak:4:window.bookRide = function() {
+frontend/js/services/api.js:4:rides:'/api/rides',
+frontend/js/driver/driverController.js:6:return await api("/api/rides");
+frontend/js/driver/driverService.js:18:const r=await fetch('/api/rides');
+frontend/js/app.js.backup_1784097007863:4:window.bookRide = function() {
+frontend/js/app.js.backup_booking_1784097198231:12:"/api/rides",
+frontend/js/app.js.backup_booking_1784097198231:49:window.bookRide = function() {
+frontend/js/rides/rideController.js:8:const ride=await api("/api/rides",{
+frontend/js/rides/rideController.js:39:await api("/api/rides/"+id);
+frontend/js/rides/rideService.js:3:export async function requestRide(data){
+frontend/js/rides/rideService.js:5:const response=await fetch('/api/rides',{
+frontend/js/app_core.js:302:window.requestRide = function() {
+frontend/js/app_core.js:340:  fetch('/api/rides', {
+frontend/js/app_core.js:372:// Override bookRide globally
+frontend/js/app_core.js:373:window.bookRide = window.requestRide;
+frontend/js/app_core.js:378:  fetch('/api/rides/' + rideId, {
+frontend/js/app_core.js:436:      fetch('/api/rides')
+frontend/js/app_core.js:512:  fetch('/api/rides/' + rideId, {
+frontend/api/bridge_test.js:24:await ride.requestRide({
+frontend/services/ride_service.js:6:async function requestRide(data){
+frontend/services/ride_service.js:9:"/api/rides/request",
+frontend/services/ride_service.js:22:"/api/rides"
+frontend/services/ride_service.js:29:requestRide,
+frontend/services/live_ride_api.js:7:"/api/ride/"+id
+frontend/services/live_ride_api.js:19:"/api/ride/status",
+frontend/services/notification_api.js:5:"/api/ride/"+id+"/timeline"
+frontend/services/passenger_dashboard_api.js:6:"/api/ride/"+id+"/status"
+frontend/services/passenger_dashboard_api.js:11:"/api/ride/"+id+"/timeline"
+frontend/components/passenger_dashboard.jsx:16:fetch("/api/ride/"+id+"/status")
+frontend/components/passenger_dashboard.jsx:21:fetch("/api/ride/"+id+"/timeline")
+frontend/index.html:376:      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request Ride</button>
+frontend/index.html:554:  <button class="nav-btn center-btn" onclick="bookRide()">🚕</button>
+frontend/index.html:984:async function bookRide(){
+frontend/index.html:1026:      const res = await fetch('/api/rides/' + rideId);
+frontend/index.html:1303:function acceptSurge(){ closeModal('surgeModal'); bookRide(); }
+frontend/index.html:1385:      const res = await fetch('/api/rides');
+frontend/index.html:1419:    await fetch('/api/rides/' + rideId + '/accept', {
+frontend/index.html:1433:    const res = await fetch('/api/rides/' + rideId + '/complete', { method: 'PATCH' });
+frontend/index.html:1804:"/api/rides",
+frontend/index.html.bak_before_sync:374:      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request ride · Earn 1 THB</button>
+frontend/index.html.bak_before_sync:553:  <button class="nav-btn center-btn" onclick="bookRide()">🚕</button>
+frontend/index.html.bak_before_sync:968:function bookRide(){
+frontend/index.html.bak_before_sync:1196:function acceptSurge(){ closeModal('surgeModal'); bookRide(); }
+frontend/pages/PassengerRide.jsx:22:async function requestRide(){
+frontend/pages/PassengerRide.jsx:79:onClick={requestRide}
+backend/routes/orchestrator_api.js:19:engine.createRide(req.body)
+backend/services/rideService.js:6:function createRide(data){
+backend/services/rideService.js:56:createRide,
+backend/services/ride_orchestrator_service.js:16:function createRide(data){
+backend/services/ride_orchestrator_service.js:170:createRide,
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069:14:function createRide(data){
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069:147:createRide,
+backend/server.js:33:app.post('/api/rides', function(req, res) {
+backend/server.js:69:app.get('/api/rides', function(req, res) {
+backend/server.js:73:app.get('/api/rides/:id', function(req, res) {
+backend/server.js:79:app.patch('/api/rides/:id', function(req, res) {
+backend/server.js:170:    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+backend/server_before_api_layer.bak:74:app.post('/api/rides/book', function (req, res) {
+backend/rides/ride_engine.js:15:function createRide(data){
+backend/rides/ride_engine.js:53:createRide,
+backend/testing/phase46_live_test.js:43:"/api/ride/create",
+backend/testing/phase46_live_test.js:58:"/api/ride/assign",
+backend/testing/phase46_live_test.js:73:"/api/ride/status",
+backend/testing/phase47_eta_test.js:56:"/api/ride/tracking",
+backend/testing/phase48_completion_test.js:43:"/api/ride/complete",
+backend/testing/phase49_notification_test.js:55:"http://localhost:3000/api/ride/RIDE-001/timeline",
+backend/testing/phase50_state_test.js:39:"/api/ride/create",
+backend/testing/phase50_state_test.js:53:"/api/ride/status",
+backend/testing/phase50_state_test.js:64:"/api/ride/status",
+backend/server/app.js:32:app.use("/api/rides",rideRoutes);
+backend/ride_api_patch.js:7:app.post("/api/rides",(req,res)=>{
+backend/ride_api_patch.js:11:        const ride=store.createRide(req.body);
+backend/ride_api_patch.js:36:app.get("/api/rides",(req,res)=>{
+backend/ride_api_patch.js:46:app.get("/api/rides/:id",(req,res)=>{
+backend/ride_api_patch.js:65:app.patch("/api/rides/:id",(req,res)=>{
+backend/ride_store.js:18:function createRide(ride){
+backend/ride_store.js:76:    createRide,
+backend/server.js.backup_1784096856161:74:app.post('/api/rides/book', function (req, res) {
+backend/server.js.backup_1784096856161:100:app.post("/api/rides/create",function(req,res){
+backend/server.js.backup_1784096856161:113:app.get("/api/rides",function(req,res){
+backend/server.js.backup_route_cleanup_1784103021100:74:app.post('/api/rides/book', function (req, res) {
+backend/server.js.backup_route_cleanup_1784103021100:100:app.post("/api/rides/create",function(req,res){
+backend/server.js.backup_route_cleanup_1784103021100:113:app.get("/api/rides",function(req,res){
+backend/server_before_task_mount.bak:74:app.post('/api/rides/book', function (req, res) {
+backend/server_before_task_mount.bak:100:app.post("/api/rides/create",function(req,res){
+backend/server_before_task_mount.bak:113:app.get("/api/rides",function(req,res){
+
+Dispatch:
+frontend/js/operations_core.js:51:dispatch:function(ride,drivers){
+frontend/js/simulation_engine.js:45:window.CABLINK_OPS.dispatch(
+frontend/js/driver/driverDispatchBridge.js:27:"Driver dispatch listener active"
+frontend/js/driver/driverDispatchBridge.js:44:fetch("/api/dispatch/requests")
+frontend/js/driver/driverDispatchBridge.js:113:"<button id='acceptCabRide'>Accept</button>";
+frontend/js/driver/driverDispatchBridge.js:122:"acceptCabRide"
+frontend/js/driver/driverDispatchBridge.js:127:fetch("/api/dispatch/accept",{
+frontend/js/rides/completionRewardBridge.js:97:window.dispatchEvent(
+frontend/js/rides/rideStateMachine.js:60:window.dispatchEvent(
+frontend/js/app_core.js:353:    toast('Ride requested! Looking for drivers...', 'success');
+frontend/js/app_core.js:491:      '<button onclick="window.acceptRideRequest(\''+ride.id+'\','+fare+')" style="flex:1;padding:12px;background:#22d672;color:#000;border:none;border-radius:10px;font-weight:700;cursor:pointer;">✓ Accept</button>',
+frontend/js/app_core.js:509:window.acceptRideRequest = function(rideId, fare) {
+frontend/js/app_core.js:520:  }).then(function(){ toast('Ride accepted! Head to pickup ✓', 'success'); })
+frontend/api/task_api.js:23:async function acceptTask(id,driver){
+frontend/api/task_api.js:53:acceptTask
+frontend/services/task_service.js:17:async function accept(api,id,driver){
+frontend/services/task_service.js:20:await api.acceptTask(id,driver);
+frontend/services/task_service.js:30:accept
+frontend/components/passenger_trip_status.js:14:request.driver || "Searching"
+frontend/index.html:349:          <button class="btn btn-green btn-sm" onclick="acceptOffer()">✓ Accept counter</button>
+frontend/index.html:473:      <div class="bal-card"><div class="val" id="drv-accepted">0</div><div class="lbl">Accepted</div></div>
+frontend/index.html:478:  <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
+frontend/index.html:592:  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-primary" onclick="acceptSurge()">✓ Accept & book</button><button class="btn btn-outline" onclick="closeModal('surgeModal')">Cancel</button></div>
+frontend/index.html:1012:    toast('🚕 Ride requested — waiting for a driver', 'success');
+frontend/index.html:1303:function acceptSurge(){ closeModal('surgeModal'); bookRide(); }
+frontend/index.html:1322:function acceptOffer(){
+frontend/index.html:1327:  updateFareBreakdown(); toast('Offer accepted: ' + STATE.currentOffer + ' BWP', 'success');
+frontend/index.html:1374:  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success'); pollForRideRequests(); }
+frontend/index.html:1408:      <button class="btn btn-green btn-sm" onclick="acceptRealRequest('${r.id}')">✓ Accept</button>
+frontend/index.html:1417:async function acceptRealRequest(rideId){
+frontend/index.html:1419:    await fetch('/api/rides/' + rideId + '/accept', {
+frontend/index.html:1426:    toast('Ride accepted! Earn 1 THB when complete.', 'success');
+frontend/index.html:1427:  } catch(e){ toast('Could not accept ride', 'error'); }
+frontend/index.html:1454:      <button class="btn btn-green btn-sm" onclick="acceptRequest('${req.id}',${req.fare})">✓ Accept</button>
+frontend/index.html:1462:function acceptRequest(id, fare){
+frontend/index.html:1465:  toast('Ride accepted! Earn 1 THB when complete.', 'success');
+frontend/index.html:1471:function updateDriverUI(){ document.getElementById('drv-requests').textContent=STATE.driverRequests; document.getElementById('drv-accepted').textContent=STATE.driverAccepted; document.getElementById('drv-thb').textContent=STATE.driverThb; }
+frontend/index.html:1587:  {q:'What is surge pricing?', a:'During peak hours (7–9 AM, 4–7 PM) or high demand, fares increase by 1.5–2.5×. You will see a surge banner and can accept or cancel.'},
+frontend/index.html:1588:  {q:'How does fare negotiation work?', a:'Enable "Negotiate fare" before booking. Enter your offer. The driver can accept or counter.'},
+frontend/index.html:2030:"🛑 Fake driver request blocked"
+frontend/index.html.bak_before_sync:347:          <button class="btn btn-green btn-sm" onclick="acceptOffer()">✓ Accept counter</button>
+frontend/index.html.bak_before_sync:472:      <div class="bal-card"><div class="val" id="drv-accepted">0</div><div class="lbl">Accepted</div></div>
+frontend/index.html.bak_before_sync:477:  <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
+frontend/index.html.bak_before_sync:591:  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-primary" onclick="acceptSurge()">✓ Accept & book</button><button class="btn btn-outline" onclick="closeModal('surgeModal')">Cancel</button></div>
+frontend/index.html.bak_before_sync:991:    setStatusPip('green'); setStatusLabel('🚗 Driver accepted! En route…');
+frontend/index.html.bak_before_sync:994:    toast('🚗 Driver accepted! Check chat for updates.', 'success'); haptic();
+frontend/index.html.bak_before_sync:1196:function acceptSurge(){ closeModal('surgeModal'); bookRide(); }
+frontend/index.html.bak_before_sync:1215:function acceptOffer(){
+frontend/index.html.bak_before_sync:1220:  updateFareBreakdown(); toast('Offer accepted: ' + STATE.currentOffer + ' BWP', 'success');
+frontend/index.html.bak_before_sync:1245:  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success'); setTimeout(addDriverRequest,3000); setTimeout(addDriverRequest,8000); }
+frontend/index.html.bak_before_sync:1259:      <button class="btn btn-green btn-sm" onclick="acceptRequest('${req.id}',${req.fare})">✓ Accept</button>
+frontend/index.html.bak_before_sync:1267:function acceptRequest(id, fare){
+frontend/index.html.bak_before_sync:1270:  toast('Ride accepted! Earn 1 THB when complete.', 'success');
+frontend/index.html.bak_before_sync:1276:function updateDriverUI(){ document.getElementById('drv-requests').textContent=STATE.driverRequests; document.getElementById('drv-accepted').textContent=STATE.driverAccepted; document.getElementById('drv-thb').textContent=STATE.driverThb; }
+frontend/index.html.bak_before_sync:1392:  {q:'What is surge pricing?', a:'During peak hours (7–9 AM, 4–7 PM) or high demand, fares increase by 1.5–2.5×. You will see a surge banner and can accept or cancel.'},
+frontend/index.html.bak_before_sync:1393:  {q:'How does fare negotiation work?', a:'Enable "Negotiate fare" before booking. Enter your offer. The driver can accept or counter.'},
+frontend/pages/PassengerRide.jsx:26:"/api/dispatch/request",
+frontend/pages/PassengerRide.jsx:58:driver:data.request.driver,
+backend/routes/rides.js:5:const matching=require("../services/driver_matching_service");
+backend/routes/rides.js:36:matching.nearby(
+backend/routes/dispatch_api.js:5:const dispatch=
+backend/routes/dispatch_api.js:6:require("../services/dispatch_service");
+backend/routes/dispatch_api.js:12:"/dispatch/request",
+backend/routes/dispatch_api.js:20:dispatch.createRequest(
+backend/routes/dispatch_api.js:32:"/dispatch/match",
+backend/routes/dispatch_api.js:40:dispatch.dispatch(
+backend/routes/dispatch_api.js:50:// driver accepts
+backend/routes/dispatch_api.js:53:"/dispatch/accept",
+backend/routes/dispatch_api.js:61:dispatch.accept(
+backend/routes/dispatch_api.js:74:"/dispatch/list",
+backend/routes/dispatch_api.js:78:dispatch.list()
+backend/routes/live_ride_api.js:48:// driver accepts
+backend/routes/matching_api.js:5:const matching=
+backend/routes/matching_api.js:6:require("../services/driver_matching_service");
+backend/routes/matching_api.js:20:matching.updateDriver(
+backend/routes/matching_api.js:32:"/matching/drivers",
+backend/routes/matching_api.js:38:matching.nearby(
+backend/routes/ride_economy_api.js:9:"/economy/ride/accept",
+backend/routes/ride_economy_api.js:17:economy.accept(
+backend/routes/rides.js.backup_truth_1784102755787:5:const matching=require("../services/driver_matching_service");
+backend/routes/rides.js.backup_truth_1784102755787:36:matching.nearby(
+backend/services/dispatch_service.js:5:const file="backend/data/dispatch_requests.json";
+backend/services/dispatch_service.js:63:function dispatch(id,drivers){
+backend/services/dispatch_service.js:75:request.drivers=drivers;
+backend/services/dispatch_service.js:86:// driver accepts
+backend/services/dispatch_service.js:88:function accept(id,driver){
+backend/services/dispatch_service.js:100:request.driver=driver;
+backend/services/dispatch_service.js:104:request.acceptedAt=
+backend/services/dispatch_service.js:124:dispatch,
+backend/services/dispatch_service.js:125:accept,
+backend/services/driver_intelligence_service.js:25:let acceptanceScore =
+backend/services/driver_intelligence_service.js:26:(driver.acceptance/100)*30;
+backend/services/driver_intelligence_service.js:39:acceptanceScore+
+backend/services/driver_intelligence_service.js:55:dispatchScore:
+backend/services/driver_intelligence_service.js:61:b.dispatchScore-a.dispatchScore
+backend/services/rideService.js:29:function acceptRide(id,driverId){
+backend/services/rideService.js:57:acceptRide,
+backend/services/ride_dispatch_bridge.js:1:const dispatchService = require("./dispatch_service");
+backend/services/ride_dispatch_bridge.js:2:const matchingService = require("./driver_matching_service");
+backend/services/ride_dispatch_bridge.js:3:const dispatchEngine = require("../dispatch/dispatch_engine");
+backend/services/ride_dispatch_bridge.js:6:function dispatchRide(ride){
+backend/services/ride_dispatch_bridge.js:8:const request = dispatchService.createRequest({
+backend/services/ride_dispatch_bridge.js:17:const drivers = matchingService.nearby({
+backend/services/ride_dispatch_bridge.js:26:dispatchEngine.select(
+backend/services/ride_dispatch_bridge.js:34:dispatchService.dispatch(
+backend/services/ride_dispatch_bridge.js:58:dispatchRide
+backend/services/ride_economy_service.js:11:function accept(driver,ride){
+backend/services/ride_economy_service.js:85:accept,
+backend/server.js:61:    // In Phase 2: real matching algorithm (nearest driver)
+backend/server.js:117:    // Delete any matching wallet
+backend/data/dispatch_requests.json:17:      "acceptedAt": "2026-07-14T18:56:39.141Z"
+backend/data/drivers.json:8:      "acceptance": 95,
+backend/data/drivers.json:16:      "acceptance": 75,
+backend/server_before_api_layer.bak:11: *   - Firebase Admin SDK for server-side ride matching
+backend/server_before_api_layer.bak:13: *   - Real-time ride dispatch via Firestore triggers
+backend/server_before_api_layer.bak:79:  // Stub: always no drivers in Phase 1 (real matching comes in Phase 2)
+backend/audit/production_audit.js:8:matching:true,
+backend/testing/phase34_economy_test.js:39:let accepted=
+backend/testing/phase34_economy_test.js:41:"/api/economy/ride/accept",
+backend/testing/phase34_economy_test.js:52:console.log(accepted);
+backend/testing/phase34_economy_test.js:59:id:accepted.ride.id
+backend/testing/phase41_matching_test.js:58:"/api/matching/drivers",
+backend/testing/phase42_dispatch_test.js:43:"/api/dispatch/request",
+backend/testing/phase42_dispatch_test.js:58:"/api/dispatch/match",
+backend/testing/phase42_dispatch_test.js:75:let accepted=
+backend/testing/phase42_dispatch_test.js:77:"/api/dispatch/accept",
+backend/testing/phase42_dispatch_test.js:86:console.log(accepted);
+backend/testing/phase46_live_test.js:71:let accepted=
+backend/testing/phase46_live_test.js:82:console.log(accepted);
+backend/testing/phase52_driver_test.js:19:acceptance:100,
+backend/testing/phase52_driver_test.js:26:acceptance:60,
+backend/server.js.backup_1784096856161:11: *   - Firebase Admin SDK for server-side ride matching
+backend/server.js.backup_1784096856161:13: *   - Real-time ride dispatch via Firestore triggers
+backend/server.js.backup_1784096856161:79:  // Stub: always no drivers in Phase 1 (real matching comes in Phase 2)
+backend/server.js.backup_1784096856161:244:const matchingAPI=require("./routes/matching_api");
+backend/server.js.backup_1784096856161:245:app.use("/api", matchingAPI);
+backend/server.js.backup_1784096856161:251:const dispatchAPI=require("./routes/dispatch_api");
+backend/server.js.backup_1784096856161:252:app.use("/api", dispatchAPI);
+backend/server.js.backup_route_cleanup_1784103021100:11: *   - Firebase Admin SDK for server-side ride matching
+backend/server.js.backup_route_cleanup_1784103021100:13: *   - Real-time ride dispatch via Firestore triggers
+backend/server.js.backup_route_cleanup_1784103021100:79:  // Stub: always no drivers in Phase 1 (real matching comes in Phase 2)
+backend/server.js.backup_route_cleanup_1784103021100:244:const matchingAPI=require("./routes/matching_api");
+backend/server.js.backup_route_cleanup_1784103021100:245:app.use("/api", matchingAPI);
+backend/server.js.backup_route_cleanup_1784103021100:251:const dispatchAPI=require("./routes/dispatch_api");
+backend/server.js.backup_route_cleanup_1784103021100:252:app.use("/api", dispatchAPI);
+backend/server_before_task_mount.bak:11: *   - Firebase Admin SDK for server-side ride matching
+backend/server_before_task_mount.bak:13: *   - Real-time ride dispatch via Firestore triggers
+backend/server_before_task_mount.bak:79:  // Stub: always no drivers in Phase 1 (real matching comes in Phase 2)
+
+Completion:
+frontend/js/operations_core.js:39:completeRide:function(ride){
+frontend/js/operations_core.js:43:ride.completedAt=new Date().toISOString();
+frontend/js/driver/driverLifecycleControls.js:63:"<button id='completeBtn'>Complete</button>";
+frontend/js/driver/driverLifecycleControls.js:105:"completeBtn"
+frontend/js/rides/completionRewardBridge.js:7:completeRide:function(){
+frontend/js/rides/completionRewardBridge.js:10:"🚕 Ride completed - creating transaction"
+frontend/js/rides/completionRewardBridge.js:38:"cablink_last_completed_ride",
+frontend/js/rides/completionRewardBridge.js:124:window.CABLINK_FINANCE.completeRide();
+frontend/js/app_core.js:77:window.setupLocationAutocomplete = function(inputId) {
+frontend/js/app_core.js:138:      // Recalc fare when user finishes typing
+frontend/js/app_core.js:534:  // Setup autocomplete
+frontend/js/app_core.js:535:  window.setupLocationAutocomplete('pickup');
+frontend/js/app_core.js:536:  window.setupLocationAutocomplete('dropoff');
+frontend/components/driver_dashboard.js:23:count:data.completed
+frontend/testing/phase43_ui_test.js:14:completed:4,
+frontend/index.html:571:  <div class="ob-actions"><button class="btn btn-primary" onclick="obNext()">Next →</button><button class="btn btn-outline" onclick="finishOnboarding()">Skip</button></div>
+frontend/index.html:648:  <div style="font-family:var(--disp);font-size:26px;font-weight:700;color:var(--gold-l);margin-bottom:12px">Ride complete!</div>
+frontend/index.html:1040:        completeRide();
+frontend/index.html:1062:function completeRide(){
+frontend/index.html:1079:  document.getElementById('claimHint').textContent = STATE.wallet ? 'Ride complete! Claim your THB now.' : 'No wallet connected — claim will be simulated locally.';
+frontend/index.html:1093:    if(secs<=0){ clearInterval(STATE.graceInterval); completeRide(); }
+frontend/index.html:1099:    // completeRide() now must be triggered by real backend status
+frontend/index.html:1426:    toast('Ride accepted! Earn 1 THB when complete.', 'success');
+frontend/index.html:1431:async function completeRealRide(rideId){
+frontend/index.html:1433:    const res = await fetch('/api/rides/' + rideId + '/complete', { method: 'PATCH' });
+frontend/index.html:1435:    console.log('Ride completed on backend:', data);
+frontend/index.html:1439:    toast('Could not complete ride', 'error');
+frontend/index.html:1465:  toast('Ride accepted! Earn 1 THB when complete.', 'success');
+frontend/index.html:1584:  {q:'What is THB (THoBoCoin)?', a:'THoBoCoin (THB) is a BEP-20 token on BSC Testnet. You earn 1 THB per completed ride, created by the BSTM Ecosystem as a loyalty token.'},
+frontend/index.html:1647:function obNext(){ if(obStep<OB_SLIDES-1){ obStep++; renderObSlide(); } else finishOnboarding(); }
+frontend/index.html:1648:function finishOnboarding(){ localStorage.setItem('cl6_onboarding','1'); document.getElementById('onboarding').classList.remove('show'); }
+frontend/index.html.bak_before_sync:570:  <div class="ob-actions"><button class="btn btn-primary" onclick="obNext()">Next →</button><button class="btn btn-outline" onclick="finishOnboarding()">Skip</button></div>
+frontend/index.html.bak_before_sync:647:  <div style="font-family:var(--disp);font-size:26px;font-weight:700;color:var(--gold-l);margin-bottom:12px">Ride complete!</div>
+frontend/index.html.bak_before_sync:1023:  startCountdown(dur, () => completeRide());
+frontend/index.html.bak_before_sync:1034:function completeRide(){
+frontend/index.html.bak_before_sync:1051:  document.getElementById('claimHint').textContent = STATE.wallet ? 'Ride complete! Claim your THB now.' : 'No wallet connected — claim will be simulated locally.';
+frontend/index.html.bak_before_sync:1065:    if(secs<=0){ clearInterval(STATE.graceInterval); completeRide(); }
+frontend/index.html.bak_before_sync:1071:    setTimeout(completeRide, 8000);
+frontend/index.html.bak_before_sync:1270:  toast('Ride accepted! Earn 1 THB when complete.', 'success');
+frontend/index.html.bak_before_sync:1389:  {q:'What is THB (THoBoCoin)?', a:'THoBoCoin (THB) is a BEP-20 token on BSC Testnet. You earn 1 THB per completed ride, created by the BSTM Ecosystem as a loyalty token.'},
+frontend/index.html.bak_before_sync:1452:function obNext(){ if(obStep<OB_SLIDES-1){ obStep++; renderObSlide(); } else finishOnboarding(); }
+frontend/index.html.bak_before_sync:1453:function finishOnboarding(){ localStorage.setItem('cl6_onboarding','1'); document.getElementById('onboarding').classList.remove('show'); }
+frontend/pages/DriverDashboard.jsx:45:<p>Completed: {economy.completed}</p>
+backend/routes/completion_api.js:4:const completion=
+backend/routes/completion_api.js:5:require("../services/ride_completion_service");
+backend/routes/completion_api.js:9:"/ride/complete",
+backend/routes/completion_api.js:17:completion.completeRide(
+backend/routes/live_demand_api.js:29:// complete ride
+backend/routes/live_demand_api.js:32:"/demand/complete",
+backend/routes/live_demand_api.js:40:demand.completeRequest(
+backend/routes/orchestrator_api.js:86:"/orchestrator/finish",
+backend/routes/orchestrator_api.js:94:engine.finishTrip(
+backend/routes/ride_economy_api.js:28:"/economy/ride/complete",
+backend/routes/ride_economy_api.js:36:economy.complete(
+backend/services/driver_intelligence_service.js:30:Math.min(driver.completed/200,1)*20;
+backend/services/economy_ledger_service.js:104:completed:
+backend/services/live_demand_service.js:46:completedRequests:0,
+backend/services/live_demand_service.js:66:// complete request
+backend/services/live_demand_service.js:68:function completeRequest(location){
+backend/services/live_demand_service.js:87:area.completedRequests++;
+backend/services/live_demand_service.js:108:(area.completedRequests*2)
+backend/services/live_demand_service.js:127:completeRequest,
+backend/services/passenger_intelligence_service.js:38:user.completed++;
+backend/services/rideService.js:42:function completeRide(id){
+backend/services/rideService.js:48:completedAt:new Date().toISOString()
+backend/services/rideService.js:58:completeRide
+backend/services/ride_completion_service.js:6:function completeRide(ride){
+backend/services/ride_completion_service.js:8:const completed={
+backend/services/ride_completion_service.js:14:completedAt:new Date().toISOString()
+backend/services/ride_completion_service.js:49:completed
+backend/services/ride_completion_service.js:59:ride:completed,
+backend/services/ride_completion_service.js:77:completeRide
+backend/services/ride_economy_service.js:32:function complete(id){
+backend/services/ride_economy_service.js:86:complete,
+backend/services/ride_orchestrator_service.js:9:const completion =
+backend/services/ride_orchestrator_service.js:10:require("./ride_completion_service");
+backend/services/ride_orchestrator_service.js:133:function finishTrip(id,fare){
+backend/services/ride_orchestrator_service.js:143:completion.completeRide(
+backend/services/ride_orchestrator_service.js:158:message:"Ride completed successfully"
+backend/services/ride_orchestrator_service.js:174:finishTrip
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069:9:const completion =
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069:10:require("./ride_completion_service");
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069:110:function finishTrip(id,fare){
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069:120:completion.completeRide(
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069:135:message:"Ride completed successfully"
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069:151:finishTrip
+backend/data/drivers.json:7:      "completed": 120,
+backend/data/drivers.json:15:      "completed": 80,
+backend/data/economy_ledger.json:22:      "completedAt": "2026-07-14T19:16:03.713Z"
+backend/data/economy_ledger.json:33:      "completedAt": "2026-07-14T19:26:33.547Z"
+backend/data/live_demand.json:6:      "completedRequests": 0,
+backend/data/live_demand.json:12:      "completedRequests": 0,
+backend/data/passengers.json:7:      "completed": 5,
+backend/data/ride_events.json:42:      "message": "Ride completed successfully",
+backend/rewards/thb_claim_engine.js:62:function completeClaim(id,tx){
+backend/rewards/thb_claim_engine.js:87:completeClaim
+backend/rewards/auto_reward_trigger.js:15:reason:"Task not completed"
+backend/rewards/delivery_completion.js:6:function complete(task){
+backend/rewards/delivery_completion.js:16:complete
+backend/rewards/delivery_reward_service.js:6:function completeDelivery(task){
+backend/rewards/delivery_reward_service.js:17:completeDelivery
+backend/trust/trust_engine.js:12:if(driver.completedRides>10)
+backend/testing/human_ride_scenario.js:30:completed:true
+backend/testing/phase28_reward_flow_test.js:9:service.completeDelivery({
+backend/testing/phase34_economy_test.js:55:let completed=
+backend/testing/phase34_economy_test.js:57:"/api/economy/ride/complete",
+backend/testing/phase34_economy_test.js:65:console.log(completed);
+backend/testing/phase48_completion_test.js:43:"/api/ride/complete",
+backend/testing/phase51_orchestrator_test.js:95:"/api/orchestrator/finish",
+backend/testing/phase52_driver_test.js:18:completed:200,
+backend/testing/phase52_driver_test.js:25:completed:20,
+backend/testing/thb_delivery_reward_test.js:1:const completion=require("../rewards/delivery_completion");
+backend/testing/thb_delivery_reward_test.js:6:completion.complete({
+backend/fraud/reward_guard.js:7:data.completed===true,
+backend/fraud/reward_guard.js:10:data.completed
+backend/database/rides.json:38:    "completedAt": "2026-07-15T11:52:59.521Z"
+backend/database/rides.json:69:    "completedAt": "2026-07-15T12:13:31.570Z"
+backend/database/rides.json:80:    "completedAt": "2026-07-15T12:34:41.784Z"
+backend/database/rides.json:199:    "completedAt": "2026-07-15T15:43:45.721Z"
+backend/server.js.backup_1784096856161:272:const completionAPI=require("./routes/completion_api");
+backend/server.js.backup_1784096856161:273:app.use("/api", completionAPI);
+backend/server.js.backup_route_cleanup_1784103021100:272:const completionAPI=require("./routes/completion_api");
+backend/server.js.backup_route_cleanup_1784103021100:273:app.use("/api", completionAPI);
+
+Rewards:
+frontend/js/fix.js:17:  var w=window.STATE&&window.STATE.wallet;
+frontend/js/fix.js:19:  if(s)s.textContent=w?(role==='driver'?'CabLink Driver - BSC Testnet':'CabLink Rider - BSC Testnet'):'Connect wallet to see your profile';
+frontend/js/fix.js:78:    wallet:(window.STATE&&window.STATE.wallet)||null,
+frontend/js/rides/completionRewardBridge.js:61:const reward=
+frontend/js/rides/completionRewardBridge.js:68:const rewardData={
+frontend/js/rides/completionRewardBridge.js:74:THBReward:reward,
+frontend/js/rides/completionRewardBridge.js:84:"cablink_thb_reward",
+frontend/js/rides/completionRewardBridge.js:85:JSON.stringify(rewardData)
+frontend/js/rides/completionRewardBridge.js:91:"THB Reward Generated:",
+frontend/js/rides/completionRewardBridge.js:92:rewardData
+frontend/js/rides/completionRewardBridge.js:102:detail:rewardData
+frontend/js/role.js:20:      var kp=ds.querySelector('.wallet-bar');
+frontend/js/role.js:30:          +'<div style="font-size:12px;color:#888;margin-bottom:16px;">Register to receive ride requests and earn 1 THB per trip.</div>'
+frontend/js/role.js:36:      var kp2=ds.querySelector('.wallet-bar');
+frontend/js/role_switch.js:22:- rewards
+frontend/js/app_core.js:322:    wallet:  (window.STATE && window.STATE.wallet) || null,
+frontend/js/app_core.js:366:    if (bookBtn) { bookBtn.disabled = false; bookBtn.textContent = 'Request Ride · Earn 1 THB'; }
+frontend/js/app_core.js:404:            driverId: (window.STATE.wallet||'driver-'+Date.now()),
+frontend/js/app_core.js:408:            wallet: window.STATE.wallet || null
+frontend/js/app_core.js:420:            body:JSON.stringify({driverId:(window.STATE.wallet||'drv-'+Date.now()),vehicle:'standard'})
+frontend/js/app_core.js:427:          body:JSON.stringify({driverId:(window.STATE.wallet||'drv-'+Date.now()),vehicle:'standard'})
+frontend/js/app_core.js:453:      body:JSON.stringify({wallet: window.STATE.wallet || null})
+frontend/js/app_core.js:517:      driverId: window.STATE && window.STATE.wallet || 'driver-anon',
+frontend/services/driver_economy_service.js:3:function build(tasks,earnings,wallet,rewards){
+frontend/services/driver_economy_service.js:13:wallet,
+frontend/services/driver_economy_service.js:15:rewards
+frontend/components/driver_dashboard.js:13:THB:data.thbEarned
+frontend/components/driver_economy_dashboard.js:21:wallet:{
+frontend/components/driver_economy_dashboard.js:23:balance:data.wallet || 0,
+frontend/components/driver_economy_dashboard.js:25:currency:"THB"
+frontend/components/driver_economy_dashboard.js:29:rewards:data.rewards || [],
+frontend/components/driver_economy_screen.js:11:wallet:{
+frontend/components/driver_economy_screen.js:14:data.wallet?.balance || 0,
+frontend/components/driver_economy_screen.js:17:data.wallet?.currency || "THB"
+frontend/components/driver_economy_screen.js:21:rewards:
+frontend/components/driver_economy_screen.js:22:data.rewards || [],
+frontend/components/passenger_profile_card.jsx:19:THB Earned: {profile.thbEarned}
+frontend/components/thb_reward_panel.js:9:amount:data.reward,
+frontend/components/thb_reward_panel.jsx:3:export default function THBRewardPanel({
+frontend/components/thb_reward_panel.jsx:4:    reward=0,
+frontend/components/thb_reward_panel.jsx:5:    currency="THB",
+frontend/components/thb_reward_panel.jsx:18:Reward: {reward} {currency}
+frontend/components/thb_wallet_panel.js:3:function render(wallet){
+frontend/components/thb_wallet_panel.js:9:driver:wallet.driver,
+frontend/components/thb_wallet_panel.js:11:balance:wallet.balance,
+frontend/components/thb_wallet_panel.js:13:currency:wallet.currency,
+frontend/components/thb_wallet_panel.js:16:wallet.transactions,
+frontend/screens/driver_dashboard.js:18:"Earn THB Rewards"
+frontend/testing/driver_economy_dashboard_test.js:33:reward:7,
+frontend/testing/driver_economy_dashboard_test.js:35:currency:"THB"
+frontend/index.html:78:/* diamond wallet — signature element */
+frontend/index.html:82:.wallet-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+frontend/index.html:83:.wallet-addr{font-family:var(--data);font-size:11px;color:var(--muted)}
+frontend/index.html:84:.wallet-stage{font-size:10px;font-family:var(--data);letter-spacing:.08em;color:var(--gold-l);text-transform:uppercase;margin-top:2px}
+frontend/index.html:85:.wallet-bar{display:flex;gap:10px}
+frontend/index.html:217:.wallet-connect-btn{display:flex;align-items:center;gap:10px;background:rgba(240,185,58,.08);border:1px solid var(--gold);border-radius:var(--r-sm);padding:12px 16px;cursor:pointer;width:100%;color:var(--gold-l);font-family:var(--body);font-weight:700;font-size:13px}
+frontend/index.html:272:    <div class="wallet-row">
+frontend/index.html:276:        <div class="wallet-addr" id="walletAddr">Not connected</div>
+frontend/index.html:280:    <div class="wallet-bar">
+frontend/index.html:281:      <div class="bal-card"><div class="val" id="thbBal">0</div><div class="lbl">THB</div></div>
+frontend/index.html:329:      <div class="fare-row"><span>THB reward</span><span style="color:var(--emerald)">+1 THB</span></div>
+frontend/index.html:390:      <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+frontend/index.html:392:        <span style="font-size:10.5px;color:var(--muted)" id="claimHint">Book a ride first</span>
+frontend/index.html:416:<div class="screen" id="s-rewards">
+frontend/index.html:420:    <div class="wallet-bar">
+frontend/index.html:421:      <div class="bal-card"><div class="val" id="r-earned">0</div><div class="lbl">THB earned</div></div>
+frontend/index.html:427:      <button class="btn btn-primary btn-sm" id="dailyBtn" onclick="claimDaily()">Claim +0.5 THB</button>
+frontend/index.html:435:    <div class="card-header"><div class="card-title">🪙 Claim THB reward</div><div class="gas-pill" id="r-gasPill">⛽ ~0.001 tBNB</div></div>
+frontend/index.html:436:    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">After each ride, claim 1 THB to your wallet on BSC Testnet. Gas paid in tBNB.</div>
+frontend/index.html:437:    <button class="btn btn-primary" id="r-claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+frontend/index.html:446:    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Earn +0.2 THB when a friend books their first ride with your code.</div>
+frontend/index.html:448:      <div class="input" style="flex:1;font-size:12px" id="refLink">Share your code to earn THB</div>
+frontend/index.html:451:    <div class="wallet-bar">
+frontend/index.html:453:      <div class="bal-card"><div class="val" id="ref-thb">0.0</div><div class="lbl">THB earned</div></div>
+frontend/index.html:471:    <div class="wallet-bar">
+frontend/index.html:474:      <div class="bal-card"><div class="val" id="drv-thb">0</div><div class="lbl">THB earned</div></div>
+frontend/index.html:486:    <div class="card-sub" id="profile-sub">Connect wallet to see your profile</div>
+frontend/index.html:495:    <div class="wallet-bar">
+frontend/index.html:497:      <div class="bal-card"><div class="val" id="kpi-thb">0</div><div class="lbl">THB</div></div>
+frontend/index.html:553:  <button class="nav-btn" onclick="showScreen('rewards',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>
+frontend/index.html:567:  <div class="ob-slide" id="ob1"><div class="ob-emoji">◆</div><div class="ob-title">Earn THB tokens</div><div class="ob-text">Every ride earns 1 THB. Claim direct to your wallet via BSC Testnet. You need MetaMask and tBNB for gas.</div></div>
+frontend/index.html:569:  <div class="ob-slide" id="ob3"><div class="ob-emoji">🏆</div><div class="ob-title">Referrals & streaks</div><div class="ob-text">Share your code → earn +0.2 THB per friend. Ride daily to build a streak and unlock badges.</div></div>
+frontend/index.html:628:  <div class="wallet-bar">
+frontend/index.html:630:    <div class="bal-card"><div class="val" id="earn-thb">0</div><div class="lbl">THB earned</div></div>
+frontend/index.html:649:  <div style="font-size:13px;color:var(--muted);margin-bottom:8px">You earned <strong style="color:var(--gold-l)" id="ty-thb">1 THB</strong></div>
+frontend/index.html:662:  wallet:null, provider:null, signer:null, chainId:null,
+frontend/index.html:676:const THB_CONTRACT = '0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628';
+frontend/index.html:679:const THB_ABI = ['function transfer(address to, uint256 amount) returns (bool)','function balanceOf(address) view returns (uint256)','function decimals() view returns (uint8)'];
+frontend/index.html:767:    STATE.wallet = accounts[0];
+frontend/index.html:774:    window.ethereum.on('accountsChanged', a => { STATE.wallet = a[0]; updateWalletUI(); });
+frontend/index.html:776:    toast('Wallet connected! ' + shortAddr(STATE.wallet), 'success');
+frontend/index.html:778:    document.getElementById('profile-name').textContent = shortAddr(STATE.wallet);
+frontend/index.html:783:  if(!STATE.wallet) return;
+frontend/index.html:784:  document.getElementById('walletAddr').textContent = shortAddr(STATE.wallet);
+frontend/index.html:798:        const contract = new ethers.Contract(THB_CONTRACT, THB_ABI, STATE.provider);
+frontend/index.html:800:        const bal = await contract.balanceOf(STATE.wallet);
+frontend/index.html:802:        const bnb = await STATE.provider.getBalance(STATE.wallet);
+frontend/index.html:821:  if(!window.ethereum){ toast('No wallet found', 'error'); return; }
+frontend/index.html:823:    await window.ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId:BSC_TESTNET_HEX}]});
+frontend/index.html:827:        await window.ethereum.request({method:'wallet_addEthereumChain', params:[{chainId:BSC_TESTNET_HEX,chainName:'BSC Testnet',nativeCurrency:{name:'tBNB',symbol:'tBNB',decimals:18},rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545'],blockExplorerUrls:['https://testnet.bscscan.com']}]});
+frontend/index.html:838:async function claimReward(){
+frontend/index.html:840:  if(!STATE.wallet){
+frontend/index.html:845:    toast('🧪 Sim mode: +1 THB added locally (no wallet connected)', 'success');
+frontend/index.html:846:    ['claimBtn','r-claimBtn'].forEach(id => { const b=document.getElementById(id); if(b){b.disabled=true;b.textContent='✓ Claimed (sim)';} });
+frontend/index.html:850:  const btn = document.getElementById('claimBtn'), btn2 = document.getElementById('r-claimBtn');
+frontend/index.html:852:  addPendingTx({status:'pending', label:'Claim 1 THB reward', time:Date.now()});
+frontend/index.html:854:    const contract = new ethers.Contract(THB_CONTRACT, THB_ABI, STATE.signer);
+frontend/index.html:857:    const tx = await contract.transfer(STATE.wallet, amount);
+frontend/index.html:858:    updateLastTx({status:'pending', hash:tx.hash, label:'Claim 1 THB'});
+frontend/index.html:861:    updateLastTx({status:'confirmed', hash:tx.hash, label:'Claim 1 THB ✓'});
+frontend/index.html:866:    toast('🎉 1 THB claimed successfully!', 'success');
+frontend/index.html:869:    updateLastTx({status:'failed', label:'Claim 1 THB ✗'});
+frontend/index.html:871:    if(msg.includes('insufficient')||msg.includes('balance')) msg = 'Treasury has insufficient THB. Contact support.';
+frontend/index.html:875:    [btn,btn2].forEach(b => { b.disabled = false; b.textContent = '🔄 Retry claim'; });
+frontend/index.html:885:      ${tx.status==='failed'?`<button class="btn btn-outline btn-sm" onclick="claimReward()">Retry</button>`:''}
+frontend/index.html:1078:  ['claimBtn','r-claimBtn'].forEach(id => { const b=document.getElementById(id); if(b){ b.disabled=false; b.textContent = STATE.wallet ? 'Claim 1 THB reward' : 'Claim (sim mode)'; } });
+frontend/index.html:1079:  document.getElementById('claimHint').textContent = STATE.wallet ? 'Ride complete! Claim your THB now.' : 'No wallet connected — claim will be simulated locally.';
+frontend/index.html:1080:  document.getElementById('gasEstimate').style.display = STATE.wallet ? 'flex' : 'none';
+frontend/index.html:1206:  ['claimBtn','r-claimBtn'].forEach(id => {
+frontend/index.html:1210:    if(!enabled) b.textContent = 'Complete a ride to claim';
+frontend/index.html:1426:    toast('Ride accepted! Earn 1 THB when complete.', 'success');
+frontend/index.html:1465:  toast('Ride accepted! Earn 1 THB when complete.', 'success');
+frontend/index.html:1476:function claimDaily(){
+frontend/index.html:1478:  if(STATE.lastBonus === today){ toast('Daily bonus already claimed today!', 'warning'); document.getElementById('dailyBtn').disabled=true; document.getElementById('dailyStatus').textContent='Come back tomorrow!'; return; }
+frontend/index.html:1482:  showConfetti(); toast('+0.5 THB daily bonus claimed!', 'success');
+frontend/index.html:1499:  const code = `CabLink Gaborone — Use my code ${STATE.referralCode} for +0.2 THB on your first ride!`;
+frontend/index.html:1531:      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-family:var(--data);font-size:10px;color:var(--sapphire-l)">${r.id}</span><span style="color:var(--gold-l)">${r.thb} THB</span></div>
+frontend/index.html:1539:  const header = 'Ride ID,From,To,Type,Fare (BWP),THB Earned,Rating,Date';
+frontend/index.html:1571:      <span class="lb-thb">${u.thb.toFixed(1)} THB</span></div>`).join('');
+frontend/index.html:1576:  {icon:'◆',name:'First claim',req:()=>STATE.totalEarned>=1}, {icon:'💰',name:'10 THB',req:()=>STATE.totalEarned>=10},
+frontend/index.html:1584:  {q:'What is THB (THoBoCoin)?', a:'THoBoCoin (THB) is a BEP-20 token on BSC Testnet. You earn 1 THB per completed ride, created by the BSTM Ecosystem as a loyalty token.'},
+frontend/index.html:1585:  {q:'How do I connect my wallet?', a:'Tap "Connect" on the home screen. MetaMask must be installed. Switch to BSC Testnet (chainId 97). Get free tBNB from the faucet link for gas.'},
+frontend/index.html:1586:  {q:'Why does the claim fail?', a:'Common reasons: wrong network, no tBNB for gas, or the treasury has insufficient THB — contact support.'},
+frontend/index.html:1590:  {q:'How does the referral programme work?', a:'Share your code. When a friend books their first ride using it, you both earn +0.2 THB.'},
+frontend/index.html:1630:  document.getElementById('ty-thb').textContent = '1 THB';
+frontend/index.html:1690:  if(name==='rewards'){ renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
+frontend/index.html:1704:function showChangeLog(){ toast('v6.0: Real Gaborone map (Leaflet + OSM), new diamond-cut design system, BSTM Ecosystem hub, wallet + claim flow, surge, negotiation, driver mode, offline queue, chat, haptics, confetti.', 'success'); }
+frontend/index.html:2280:    var walletBar = ds.querySelector('.wallet-bar');
+frontend/index.html:2285:      if(walletBar) walletBar.style.display = 'none';
+frontend/index.html:2295:          + '<div style="font-size:12px;color:var(--muted);margin-bottom:16px">Apply once — after approval you can go online and receive real ride requests, earning 1 THB per trip.</div>'
+frontend/index.html:2301:      if(walletBar) walletBar.style.display = '';
+frontend/index.html.bak_before_sync:76:/* diamond wallet — signature element */
+frontend/index.html.bak_before_sync:80:.wallet-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+frontend/index.html.bak_before_sync:81:.wallet-addr{font-family:var(--data);font-size:11px;color:var(--muted)}
+frontend/index.html.bak_before_sync:82:.wallet-stage{font-size:10px;font-family:var(--data);letter-spacing:.08em;color:var(--gold-l);text-transform:uppercase;margin-top:2px}
+frontend/index.html.bak_before_sync:83:.wallet-bar{display:flex;gap:10px}
+frontend/index.html.bak_before_sync:215:.wallet-connect-btn{display:flex;align-items:center;gap:10px;background:rgba(240,185,58,.08);border:1px solid var(--gold);border-radius:var(--r-sm);padding:12px 16px;cursor:pointer;width:100%;color:var(--gold-l);font-family:var(--body);font-weight:700;font-size:13px}
+frontend/index.html.bak_before_sync:270:    <div class="wallet-row">
+frontend/index.html.bak_before_sync:274:        <div class="wallet-addr" id="walletAddr">Not connected</div>
+frontend/index.html.bak_before_sync:278:    <div class="wallet-bar">
+frontend/index.html.bak_before_sync:279:      <div class="bal-card"><div class="val" id="thbBal">0</div><div class="lbl">THB</div></div>
+frontend/index.html.bak_before_sync:327:      <div class="fare-row"><span>THB reward</span><span style="color:var(--emerald)">+1 THB</span></div>
+frontend/index.html.bak_before_sync:374:      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request ride · Earn 1 THB</button>
+frontend/index.html.bak_before_sync:389:      <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+frontend/index.html.bak_before_sync:391:        <span style="font-size:10.5px;color:var(--muted)" id="claimHint">Book or simulate a ride first</span>
+frontend/index.html.bak_before_sync:415:<div class="screen" id="s-rewards">
+frontend/index.html.bak_before_sync:419:    <div class="wallet-bar">
+frontend/index.html.bak_before_sync:420:      <div class="bal-card"><div class="val" id="r-earned">0</div><div class="lbl">THB earned</div></div>
+frontend/index.html.bak_before_sync:426:      <button class="btn btn-primary btn-sm" id="dailyBtn" onclick="claimDaily()">Claim +0.5 THB</button>
+frontend/index.html.bak_before_sync:434:    <div class="card-header"><div class="card-title">🪙 Claim THB reward</div><div class="gas-pill" id="r-gasPill">⛽ ~0.001 tBNB</div></div>
+frontend/index.html.bak_before_sync:435:    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">After each ride, claim 1 THB to your wallet on BSC Testnet. Gas paid in tBNB.</div>
+frontend/index.html.bak_before_sync:436:    <button class="btn btn-primary" id="r-claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+frontend/index.html.bak_before_sync:445:    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Earn +0.2 THB when a friend books their first ride with your code.</div>
+frontend/index.html.bak_before_sync:447:      <div class="input" style="flex:1;font-size:12px" id="refLink">Share your code to earn THB</div>
+frontend/index.html.bak_before_sync:450:    <div class="wallet-bar">
+frontend/index.html.bak_before_sync:452:      <div class="bal-card"><div class="val" id="ref-thb">0.0</div><div class="lbl">THB earned</div></div>
+frontend/index.html.bak_before_sync:470:    <div class="wallet-bar">
+frontend/index.html.bak_before_sync:473:      <div class="bal-card"><div class="val" id="drv-thb">0</div><div class="lbl">THB earned</div></div>
+frontend/index.html.bak_before_sync:485:    <div class="card-sub" id="profile-sub">Connect wallet to see your profile</div>
+frontend/index.html.bak_before_sync:494:    <div class="wallet-bar">
+frontend/index.html.bak_before_sync:496:      <div class="bal-card"><div class="val" id="kpi-thb">0</div><div class="lbl">THB</div></div>
+frontend/index.html.bak_before_sync:552:  <button class="nav-btn" onclick="showScreen('rewards',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>
+frontend/index.html.bak_before_sync:566:  <div class="ob-slide" id="ob1"><div class="ob-emoji">◆</div><div class="ob-title">Earn THB tokens</div><div class="ob-text">Every ride earns 1 THB. Claim direct to your wallet via BSC Testnet. You need MetaMask and tBNB for gas.</div></div>
+frontend/index.html.bak_before_sync:568:  <div class="ob-slide" id="ob3"><div class="ob-emoji">🏆</div><div class="ob-title">Referrals & streaks</div><div class="ob-text">Share your code → earn +0.2 THB per friend. Ride daily to build a streak and unlock badges.</div></div>
+frontend/index.html.bak_before_sync:627:  <div class="wallet-bar">
+frontend/index.html.bak_before_sync:629:    <div class="bal-card"><div class="val" id="earn-thb">0</div><div class="lbl">THB earned</div></div>
+frontend/index.html.bak_before_sync:648:  <div style="font-size:13px;color:var(--muted);margin-bottom:8px">You earned <strong style="color:var(--gold-l)" id="ty-thb">1 THB</strong></div>
+frontend/index.html.bak_before_sync:661:  wallet:null, provider:null, signer:null, chainId:null,
+frontend/index.html.bak_before_sync:675:const THB_CONTRACT = '0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628';
+frontend/index.html.bak_before_sync:678:const THB_ABI = ['function transfer(address to, uint256 amount) returns (bool)','function balanceOf(address) view returns (uint256)','function decimals() view returns (uint8)'];
+frontend/index.html.bak_before_sync:766:    STATE.wallet = accounts[0];
+frontend/index.html.bak_before_sync:773:    window.ethereum.on('accountsChanged', a => { STATE.wallet = a[0]; updateWalletUI(); });
+frontend/index.html.bak_before_sync:775:    toast('Wallet connected! ' + shortAddr(STATE.wallet), 'success');
+frontend/index.html.bak_before_sync:777:    document.getElementById('profile-name').textContent = shortAddr(STATE.wallet);
+frontend/index.html.bak_before_sync:782:  if(!STATE.wallet) return;
+frontend/index.html.bak_before_sync:783:  document.getElementById('walletAddr').textContent = shortAddr(STATE.wallet);
+frontend/index.html.bak_before_sync:797:        const contract = new ethers.Contract(THB_CONTRACT, THB_ABI, STATE.provider);
+frontend/index.html.bak_before_sync:799:        const bal = await contract.balanceOf(STATE.wallet);
+frontend/index.html.bak_before_sync:801:        const bnb = await STATE.provider.getBalance(STATE.wallet);
+frontend/index.html.bak_before_sync:820:  if(!window.ethereum){ toast('No wallet found', 'error'); return; }
+frontend/index.html.bak_before_sync:822:    await window.ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId:BSC_TESTNET_HEX}]});
+frontend/index.html.bak_before_sync:826:        await window.ethereum.request({method:'wallet_addEthereumChain', params:[{chainId:BSC_TESTNET_HEX,chainName:'BSC Testnet',nativeCurrency:{name:'tBNB',symbol:'tBNB',decimals:18},rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545'],blockExplorerUrls:['https://testnet.bscscan.com']}]});
+frontend/index.html.bak_before_sync:837:async function claimReward(){
+frontend/index.html.bak_before_sync:839:  if(!STATE.wallet){
+frontend/index.html.bak_before_sync:844:    toast('🧪 Sim mode: +1 THB added locally (no wallet connected)', 'success');
+frontend/index.html.bak_before_sync:845:    ['claimBtn','r-claimBtn'].forEach(id => { const b=document.getElementById(id); if(b){b.disabled=true;b.textContent='✓ Claimed (sim)';} });
+frontend/index.html.bak_before_sync:849:  const btn = document.getElementById('claimBtn'), btn2 = document.getElementById('r-claimBtn');
+frontend/index.html.bak_before_sync:851:  addPendingTx({status:'pending', label:'Claim 1 THB reward', time:Date.now()});
+frontend/index.html.bak_before_sync:853:    const contract = new ethers.Contract(THB_CONTRACT, THB_ABI, STATE.signer);
+frontend/index.html.bak_before_sync:856:    const tx = await contract.transfer(STATE.wallet, amount);
+frontend/index.html.bak_before_sync:857:    updateLastTx({status:'pending', hash:tx.hash, label:'Claim 1 THB'});
+frontend/index.html.bak_before_sync:860:    updateLastTx({status:'confirmed', hash:tx.hash, label:'Claim 1 THB ✓'});
+frontend/index.html.bak_before_sync:865:    toast('🎉 1 THB claimed successfully!', 'success');
+frontend/index.html.bak_before_sync:868:    updateLastTx({status:'failed', label:'Claim 1 THB ✗'});
+frontend/index.html.bak_before_sync:870:    if(msg.includes('insufficient')||msg.includes('balance')) msg = 'Treasury has insufficient THB. Contact support.';
+frontend/index.html.bak_before_sync:874:    [btn,btn2].forEach(b => { b.disabled = false; b.textContent = '🔄 Retry claim'; });
+frontend/index.html.bak_before_sync:884:      ${tx.status==='failed'?`<button class="btn btn-outline btn-sm" onclick="claimReward()">Retry</button>`:''}
+frontend/index.html.bak_before_sync:1050:  ['claimBtn','r-claimBtn'].forEach(id => { const b=document.getElementById(id); if(b){ b.disabled=false; b.textContent = STATE.wallet ? 'Claim 1 THB reward' : 'Claim (sim mode)'; } });
+frontend/index.html.bak_before_sync:1051:  document.getElementById('claimHint').textContent = STATE.wallet ? 'Ride complete! Claim your THB now.' : 'No wallet connected — claim will be simulated locally.';
+frontend/index.html.bak_before_sync:1052:  document.getElementById('gasEstimate').style.display = STATE.wallet ? 'flex' : 'none';
+frontend/index.html.bak_before_sync:1107:  ['claimBtn','r-claimBtn'].forEach(id => {
+frontend/index.html.bak_before_sync:1111:    if(!enabled) b.textContent = 'Complete a ride to claim';
+frontend/index.html.bak_before_sync:1270:  toast('Ride accepted! Earn 1 THB when complete.', 'success');
+frontend/index.html.bak_before_sync:1281:function claimDaily(){
+frontend/index.html.bak_before_sync:1283:  if(STATE.lastBonus === today){ toast('Daily bonus already claimed today!', 'warning'); document.getElementById('dailyBtn').disabled=true; document.getElementById('dailyStatus').textContent='Come back tomorrow!'; return; }
+frontend/index.html.bak_before_sync:1287:  showConfetti(); toast('+0.5 THB daily bonus claimed!', 'success');
+frontend/index.html.bak_before_sync:1304:  const code = `CabLink Gaborone — Use my code ${STATE.referralCode} for +0.2 THB on your first ride!`;
+frontend/index.html.bak_before_sync:1336:      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-family:var(--data);font-size:10px;color:var(--sapphire-l)">${r.id}</span><span style="color:var(--gold-l)">${r.thb} THB</span></div>
+frontend/index.html.bak_before_sync:1344:  const header = 'Ride ID,From,To,Type,Fare (BWP),THB Earned,Rating,Date';
+frontend/index.html.bak_before_sync:1376:      <span class="lb-thb">${u.thb.toFixed(1)} THB</span></div>`).join('');
+frontend/index.html.bak_before_sync:1381:  {icon:'◆',name:'First claim',req:()=>STATE.totalEarned>=1}, {icon:'💰',name:'10 THB',req:()=>STATE.totalEarned>=10},
+frontend/index.html.bak_before_sync:1389:  {q:'What is THB (THoBoCoin)?', a:'THoBoCoin (THB) is a BEP-20 token on BSC Testnet. You earn 1 THB per completed ride, created by the BSTM Ecosystem as a loyalty token.'},
+frontend/index.html.bak_before_sync:1390:  {q:'How do I connect my wallet?', a:'Tap "Connect" on the home screen. MetaMask must be installed. Switch to BSC Testnet (chainId 97). Get free tBNB from the faucet link for gas.'},
+frontend/index.html.bak_before_sync:1391:  {q:'Why does the claim fail?', a:'Common reasons: wrong network, no tBNB for gas, or the treasury has insufficient THB — contact support.'},
+frontend/index.html.bak_before_sync:1395:  {q:'How does the referral programme work?', a:'Share your code. When a friend books their first ride using it, you both earn +0.2 THB.'},
+frontend/index.html.bak_before_sync:1435:  document.getElementById('ty-thb').textContent = '1 THB';
+frontend/index.html.bak_before_sync:1495:  if(name==='rewards'){ renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
+frontend/index.html.bak_before_sync:1509:function showChangeLog(){ toast('v6.0: Real Gaborone map (Leaflet + OSM), new diamond-cut design system, BSTM Ecosystem hub, wallet + claim flow, surge, negotiation, driver mode, offline queue, chat, haptics, confetti.', 'success'); }
+frontend/pages/DriverDashboard.jsx:47:<p>THB Earned: {economy.thbEarned}</p>
+frontend/pages/PassengerRide.jsx:6:import THBRewardPanel
+frontend/pages/PassengerRide.jsx:7:from "../components/thb_reward_panel.jsx";
+frontend/pages/PassengerRide.jsx:17:reward:0
+frontend/pages/PassengerRide.jsx:60:reward:1
+frontend/pages/PassengerRide.jsx:98:<THBRewardPanel
+frontend/pages/PassengerRide.jsx:100:reward={ride.reward}
+frontend/pages/PassengerRide.jsx:102:currency="THB"
+backend/config/environment_validator.js:21:wallet:
+backend/routes/driver_dashboard_api.js:5:const wallet=require("../rewards/wallet_service");
+backend/routes/driver_dashboard_api.js:6:const history=require("../rewards/reward_history");
+backend/routes/driver_dashboard_api.js:18:wallet:
+backend/routes/driver_dashboard_api.js:19:wallet.wallet(req.params.id),
+backend/routes/driver_dashboard_api.js:21:rewards:
+backend/routes/driver_economy.js:5:const wallet=require("../rewards/wallet_service");
+backend/routes/driver_economy.js:6:const history=require("../rewards/reward_history");
+backend/routes/driver_economy.js:18:wallet:
+backend/routes/driver_economy.js:19:wallet.wallet(req.params.id),
+backend/routes/driver_economy.js:21:rewards:
+backend/services/reward_service.js:15:token:"THB",
+backend/services/economy_ledger_service.js:40:function recordReward(reward){
+backend/services/economy_ledger_service.js:48:type:"THB_REWARD",
+backend/services/economy_ledger_service.js:50:...reward,
+backend/services/ride_completion_service.js:3:const wallet=require("../rewards/wallet_service");
+backend/services/ride_completion_service.js:19:// calculate reward
+backend/services/ride_completion_service.js:21:const reward={
+backend/services/ride_completion_service.js:27:currency:"THB",
+backend/services/ride_completion_service.js:34:// wallet
+backend/services/ride_completion_service.js:36:if(wallet.add){
+backend/services/ride_completion_service.js:38:wallet.add(
+backend/services/ride_completion_service.js:40:reward.amount
+backend/services/ride_completion_service.js:53:reward
+backend/services/ride_completion_service.js:69:reward
+backend/services/ride_economy_service.js:3:const wallet=require("../rewards/wallet_service");
+backend/services/ride_economy_service.js:4:const history=require("../rewards/reward_history");
+backend/services/ride_economy_service.js:43:const reward={
+backend/services/ride_economy_service.js:46:currency:"THB",
+backend/services/ride_economy_service.js:52:// wallet update
+backend/services/ride_economy_service.js:53:if(wallet.add){
+backend/services/ride_economy_service.js:54:wallet.add(
+backend/services/ride_economy_service.js:64:history.add(reward);
+backend/services/ride_economy_service.js:66:ledger.recordReward(reward);
+backend/services/ride_economy_service.js:73:reward
+backend/server.js:45:    wallet:     b.wallet     || null,
+backend/server.js:86:  if (ride.status === 'COMPLETED' && !ride.rewardReady) {
+backend/server.js:88:    ride.rewardReady = true;
+backend/server.js:97:  var id = b.driverId || b.wallet || ('drv-' + Date.now());
+backend/server.js:104:    wallet:      b.wallet  || null,
+backend/server.js:114:  var id = b.driverId || b.wallet;
+backend/server.js:117:    // Delete any matching wallet
+backend/server.js:119:      if (drivers[k].wallet === id) delete drivers[k];
+backend/server.js:145:    wallet:    b.wallet || null, status: 'pending',
+backend/data/economy_ledger.json:39:      "type": "THB_REWARD",
+backend/data/economy_ledger.json:42:      "currency": "THB",
+backend/data/economy_ledger.json:48:      "type": "THB_REWARD",
+backend/data/economy_ledger.json:51:      "currency": "THB",
+backend/data/economy_ledger.json:58:      "type": "THB_REWARD",
+backend/data/economy_ledger.json:61:      "currency": "THB",
+backend/data/economy_ledger.json:67:      "type": "THB_REWARD",
+backend/data/economy_ledger.json:69:      "currency": "THB",
+backend/api/reward_api.js:2:const claim=require("../rewards/thb_claim_engine");
+backend/api/reward_api.js:6:async function claimReward(wallet){
+backend/api/reward_api.js:8:let claimResult=
+backend/api/reward_api.js:9:claim.requestClaim({
+backend/api/reward_api.js:10:wallet
+backend/api/reward_api.js:15:claimResult.status==="NO_REWARDS"
+backend/api/reward_api.js:18:return claimResult;
+backend/api/reward_api.js:26:wallet,
+backend/api/reward_api.js:27:amount:claimResult.amount
+backend/api/reward_api.js:34:claim:claimResult,
+backend/api/reward_api.js:44:claimReward
+backend/server_before_api_layer.bak:14: *   - THB treasury relay (server signs and sends THB to riders)
+
+================================================================================
+16. CANONICAL RIDE ENGINE CANDIDATES
+================================================================================
+
+FOUND CANDIDATE: backend/rides/ride_engine.js
+References:
+
+FOUND CANDIDATE: backend/services/rideService.js
+References:
+
+FOUND CANDIDATE: backend/services/ride_service.js
+References:
+
+FOUND CANDIDATE: backend/services/ride_state_service.js
+References:
+
+FOUND CANDIDATE: backend/services/ride_orchestrator_service.js
+References:
+
+FOUND CANDIDATE: backend/database/ride_repository.js
+References:
+
+FOUND CANDIDATE: backend/database/rideRepository.js
+References:
+
+FOUND CANDIDATE: backend/ride_api_patch.js
+References:
+
+FOUND CANDIDATE: backend/ride_store.js
+References:
+
+FOUND CANDIDATE: frontend/js/ride_engine.js
+References:
+
+FOUND CANDIDATE: frontend/js/rides/rideService.js
+References:
+
+FOUND CANDIDATE: frontend/js/rides/rideController.js
+References:
+
+FOUND CANDIDATE: frontend/services/ride_service.js
+References:
+
+FOUND CANDIDATE: frontend/services/live_ride_api.js
+References:
+
+================================================================================
+17. BACKEND DATABASE / STORAGE CANDIDATES
+================================================================================
+backend/broadcast/ride_broadcast.js
+backend/data/driver_positions.json
+backend/data/drivers.json
+backend/data/drivers_live.json
+backend/data/live_rides.json
+backend/data/ride_events.json
+backend/data/rides.json
+backend/data/users.json
+backend/database/rideRepository.js
+backend/database/ride_repository.js
+backend/database/rides.json
+backend/database/user_repository.js
+backend/drivers/driver_state.js
+backend/events/ride_event_bus.js
+backend/fraud/ride_validation.js
+backend/matching/driver_matcher.js
+backend/matching/driver_matching_engine.js
+backend/production/database_adapter.js
+backend/providers/cloud_database_connector.js
+backend/realtime/ride_channel.js
+backend/ride_api_patch.js
+backend/ride_store.js
+backend/rides/ride_engine.js
+backend/rides/ride_lifecycle.js
+backend/rides/ride_persistence.js
+backend/rides/ride_state_engine.js
+backend/routes/driver_dashboard_api.js
+backend/routes/driver_demand_api.js
+backend/routes/driver_economy.js
+backend/routes/driver_economy_api.js
+backend/routes/driver_intelligence_api.js
+backend/routes/driver_location_api.js
+backend/routes/driver_online_api.js
+backend/routes/live_ride_api.js
+backend/routes/ride_api.js.disabled
+backend/routes/ride_economy_api.js
+backend/routes/ride_state_api.js
+backend/routes/rides.js
+backend/routes/rides.js.backup
+backend/routes/rides.js.backup_truth_1784102755787
+backend/routes/users.js
+backend/services/driver_intelligence_service.js
+backend/services/driver_location_service.js
+backend/services/driver_matching_service.js
+backend/services/driver_service.js
+backend/services/live_ride_service.js
+backend/services/rideService.js
+backend/services/ride_completion_service.js
+backend/services/ride_dispatch_bridge.js
+backend/services/ride_economy_service.js
+backend/services/ride_event_service.js
+backend/services/ride_orchestrator_service.js
+backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069
+backend/services/ride_service.js
+backend/services/ride_state_service.js
+backend/services/ride_state_service.js.backup_create_order_1784101726427
+backend/services/ride_state_service.js.backup_identity_1784101614431
+backend/services/ride_state_service.js.backup_single_storage_1784102172187
+backend/status/ride_status.js
+backend/storage/database.js
+backend/testing/human_ride_scenario.js
+backend/testing/phase52_driver_test.js
+backend/users/user_account_engine.js
+database/beta/beta_users.json
+database/production/cablink_store.json
+database/production/database.json
+database/production/database_health.js
+database/production/store_engine.js
+database/schema/drivers.json
+database/schema/rides.json
+database/schema/users.json
+
+================================================================================
+18. ACTIVE SERVER PROCESS CHECK
+================================================================================
+Node processes:
+
+Listening ports:
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+
+================================================================================
+19. RUNTIME ENDPOINT PROBE
+================================================================================
+
+===== PROBE: http://localhost:3000/api/health =====
+curl: (7) Failed to connect to localhost:3000 after 3 ms: Could not connect to server
+
+===== PROBE: http://localhost:3000/api/rides =====
+curl: (7) Failed to connect to localhost:3000 after 1 ms: Could not connect to server
+
+===== PROBE: http://localhost:5173 =====
+curl: (7) Failed to connect to localhost:5173 after 1 ms: Could not connect to server
+
+===== PROBE: http://localhost:5173/api/health =====
+curl: (7) Failed to connect to localhost:5173 after 1 ms: Could not connect to server
+
+================================================================================
+20. BUILD AVAILABILITY
+================================================================================
+node:
+v26.4.0
+
+npm:
+11.18.0
+
+vite:
+vite/5.4.21 android-arm64 node-v26.4.0
+
+React packages:
+react 19.2.7
+react-dom 19.2.7
+vite 5.4.21
+@vitejs/plugin-react NOT RESOLVABLE
+
+================================================================================
+21. GIT TRACKING OF CRITICAL FILES
+================================================================================
+TRACKED: package.json
+TRACKED: vite.config.js
+TRACKED: vercel.json
+TRACKED: backend/server.js
+TRACKED: backend/server/app.js
+TRACKED: backend/server/index.js
+TRACKED: frontend/index.html
+TRACKED: frontend/main.jsx
+TRACKED: frontend/App.jsx
+TRACKED: frontend/components/LegacyCabLink.jsx
+TRACKED: frontend/js/app.js
+TRACKED: frontend/js/app_core.js
+TRACKED: index.html
+TRACKED: launcher.html
+
+================================================================================
+22. CANONICAL RUNTIME TRUTH MATRIX
+================================================================================
+BACKEND:
+  npm start command:
+node backend/server.js
+
+FRONTEND:
+  Vite root:
+8:  root: "frontend",
+
+  Frontend HTML:
+frontend/index.html EXISTS
+
+  React entry:
+frontend/main.jsx EXISTS
+
+  React App:
+frontend/App.jsx EXISTS
+
+  Legacy root HTML:
+index.html EXISTS
+
+================================================================================
+23. BLOCK 13A VERDICT
+================================================================================
+READ-ONLY ANALYSIS COMPLETE
+
+NO SOURCE FILES MODIFIED
+NO SOURCE FILES MOVED
+NO SOURCE FILES DELETED
+
+REPORT:
+/data/data/com.termux/files/home/CabLink-pwa/block13a_canonical_runtime_truth.txt
+
+NEXT STEP:
+Review this report before any structural reorganisation.
+Do NOT run Block 13B until the canonical backend and frontend runtime are proven.
+
+================================================================================
+BLOCK 13A COMPLETE
+================================================================================

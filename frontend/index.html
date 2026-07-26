@@ -1405,26 +1405,13 @@ function renderIncomingRequest(r){
   div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${r.id}</strong><span style="color:var(--gold-l);font-weight:700">${r.fare||''} BWP</span></div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${r.pickup||''} → 🏁 ${r.dropoff||''}</div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-green btn-sm" onclick="acceptRealRequest('${r.id}')">✓ Accept</button>
+      <button class="btn btn-green btn-sm" onclick="window.acceptRideRequest('${r.id}',${r.fare||20})">✓ Accept</button>
       <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${r.id}').remove()">✗ Pass</button>
     </div>`;
   if(container.firstChild?.textContent?.includes('online')) container.innerHTML = '';
   container.prepend(div);
   updateDriverUI();
   toast('🚗 New ride request received', 'warning'); haptic();
-}
-
-async function acceptRealRequest(rideId){
-  try{
-    await fetch('/api/rides/' + rideId + '/accept', {
-      method: 'PATCH',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ driverId: STATE.driverId })
-    });
-    document.getElementById('req-' + rideId)?.remove();
-    STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
-    toast('Ride accepted! Earn 1 THB when complete.', 'success');
-  } catch(e){ toast('Could not accept ride', 'error'); }
 }
 
 
@@ -1451,21 +1438,13 @@ function addDriverRequest(){
   div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${req.id}</strong><span style="color:var(--gold-l);font-weight:700">${req.fare} BWP</span></div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${req.from} → 🏁 ${req.to} · ${req.dist} km</div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-green btn-sm" onclick="acceptRequest('${req.id}',${req.fare})">✓ Accept</button>
+      <button class="btn btn-green btn-sm" onclick="window.acceptRideRequest('${req.id}',${req.fare})">✓ Accept</button>
       <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${req.id}').remove()">✗ Pass</button>
       <button class="btn btn-outline btn-sm" onclick="negoRequest('${req.id}',${req.fare})">💬 Counter</button>
     </div>`;
   if(container.firstChild?.textContent?.includes('online')) container.innerHTML = '';
   container.prepend(div); updateDriverUI();
   toast('🚗 New ride request: ' + req.from + ' → ' + req.to, 'warning'); haptic();
-}
-function acceptRequest(id, fare){
-  document.getElementById('req-'+id)?.remove();
-  STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
-  toast('Ride accepted! Earn 1 THB when complete.', 'success');
-  document.getElementById('earn-today').textContent = (STATE.driverAccepted*fare).toString();
-  document.getElementById('earn-thb').textContent = STATE.driverThb.toString();
-  document.getElementById('earn-rides').textContent = STATE.driverAccepted.toString();
 }
 function negoRequest(id, fare){ const counter = prompt(`Counter-offer (original: ${fare} BWP):`); if(counter && parseFloat(counter)>0) toast(`Counter-offer ${counter} BWP sent to rider`, 'success'); }
 function updateDriverUI(){ document.getElementById('drv-requests').textContent=STATE.driverRequests; document.getElementById('drv-accepted').textContent=STATE.driverAccepted; document.getElementById('drv-thb').textContent=STATE.driverThb; }

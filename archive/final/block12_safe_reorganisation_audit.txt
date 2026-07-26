@@ -1,0 +1,2060 @@
+================================================================================
+CABLINK BLOCK 12 — SAFE REORGANISATION + DEPENDENCY AUDIT
+================================================================================
+Repository: /data/data/com.termux/files/home/CabLink-pwa
+Sat Jul 25 19:02:43 CAT 2026
+
+MODE: READ-ONLY
+
+This block DOES NOT:
+- modify application source files
+- move application files
+- delete application files
+- rewrite imports
+- create replacement application files
+
+Purpose:
+1. Separate live source from archives/backups/build artifacts
+2. Identify the canonical React entry chain
+3. Identify the canonical backend
+4. Map frontend imports
+5. Map backend imports
+6. Detect live-source duplicate basenames only
+7. Detect legacy HTML/launcher references
+8. Identify missing canonical frontend services
+9. Identify potentially disconnected React components
+10. Produce safe candidates for Block 13
+
+./block12_safe_reorganisation_audit.sh: line 40: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 41: 1.: command not found
+./block12_safe_reorganisation_audit.sh: line 42: ================================================================================: command not found
+================================================================================
+1. ENVIRONMENT
+================================================================================
+Node:
+v26.4.0
+NPM:
+11.18.0
+PWD:
+/data/data/com.termux/files/home/CabLink-pwa
+
+./block12_safe_reorganisation_audit.sh: line 59: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 60: 2.: command not found
+./block12_safe_reorganisation_audit.sh: line 61: ================================================================================: command not found
+================================================================================
+2. LIVE SOURCE SCOPE
+================================================================================
+Excluded from live duplicate analysis:
+  archive/
+  migration_backup/
+  node_modules/
+  dist/
+  .git/
+  .vercel/
+
+Top-level structure:
+.
+./.block8_check.js
+./.env
+./.env.example
+./BLOCK9_RUNTIME_TRUTH_OUTPUT.txt
+./CABLINK_ARCHITECTURE_REPORT.md
+./CABLINK_DEAD_CODE_REPORT.json
+./CABLINK_FORENSIC_AUDIT_V2_REPORT.md
+./CABLINK_FULL_AUDIT_REPORT.md
+./CABLINK_HOSTING_MANIFEST.json
+./CABLINK_REALITY_GRAPH.json
+./CABLINK_RUNTIME_TRUTH_AUDIT_V3_REPORT.md
+./CABLINK_TRUTH_REPORT.md
+./CabLink-pwa.zip
+./DEPLOYMENT_READY.md
+./LICENSE
+./README.md
+./admin
+./admin/README.md
+./api
+./api/index.js
+./backend
+./backend.log
+./backend/admin
+./backend/analytics
+./backend/api
+./backend/audit
+./backend/auth
+./backend/blockchain
+./backend/broadcast
+./backend/cloud
+./backend/config
+./backend/controllers
+./backend/data
+./backend/database
+./backend/devices
+./backend/dispatch
+./backend/drivers
+./backend/economy
+./backend/ecosystem
+./backend/environment
+./backend/events
+./backend/extensions
+./backend/fare
+./backend/firebase
+./backend/fraud
+./backend/gps
+./backend/heartbeat
+./backend/location
+./backend/logs
+./backend/maps
+./backend/matching
+./backend/middleware
+./backend/mobile
+./backend/monitoring
+./backend/notifications
+./backend/onboarding
+./backend/payments
+./backend/pricing
+./backend/production
+./backend/providers
+./backend/push
+./backend/realtime
+./backend/rewards
+./backend/ride_api_patch.js
+./backend/ride_store.js
+./backend/rides
+./backend/routes
+./backend/safety
+./backend/security
+./backend/server
+./backend/server.js
+./backend/server.js.backup_1784096856161
+./backend/server.js.backup_route_cleanup_1784103021100
+./backend/server_before_api_layer.bak
+./backend/server_before_task_mount.bak
+./backend/services
+./backend/sessions
+./backend/sms
+./backend/socket
+./backend/status
+./backend/storage
+./backend/support
+./backend/sync
+./backend/tasks
+./backend/testing
+./backend/tracking
+./backend/transactions
+./backend/trips
+./backend/trust
+./backend/users
+./backend/validation
+./beta
+./beta/command
+./beta/dashboard
+./beta/final_readiness_report.json
+./beta/geo
+./beta/hailing_tests
+./beta/health
+./beta/human_pilot
+./beta/live_gps
+./beta/onboarding
+./beta/operations
+./beta/pilot
+./beta/pilot_mission
+./beta/real_world
+./beta/tests
+./block10_backend.log
+./block10_canonical_runtime_lock.sh
+./block11_architecture_map.sh
+./block11_architecture_map.txt
+./block12_safe_reorganisation_audit.sh
+./block12_safe_reorganisation_audit.txt
+./block2.py
+./block3.py
+./block4.py
+./block5.py
+./block6.py
+./block7.py
+./block8.py
+./block9.py
+./block9_runtime_truth.sh
+./cablink.js
+./cablink_architecture_health_audit.js
+./cablink_forensic_audit_v2.js
+./cablink_full_audit.js
+./cablink_reality_doctor.js
+./cablink_runtime_truth_audit_v3.js
+./check_all_scripts.py
+./clear_cablink_state.js
+./config
+./config/version.json
+./database
+./database/README.md
+./database/beta
+./database/production
+./database/schema
+./deployment
+./deployment/API_TEST_GUIDE.md
+./deployment/CABLINK_PILOT_CHECKLIST.md
+./deployment/FRONTEND_BACKEND_CONNECTION.md
+./deployment/go_live_audit.js
+./deployment/pilot_environment_check.js
+./deployment/production_readiness_check.js
+./deployment/pwa_readiness_check.js
+./deployment/reality_activation_report.js
+./deployment/service_readiness_check.js
+./deployment/storage_test.md
+./diagnose.sh
+./docs
+./docs/CABLINK_TARGET_ARCHITECTURE.md
+./docs/architecture
+./docs/fake_logic_audit.txt
+./fare_engine.js
+./finalize_check.sh
+./fix.js
+./fix_block7_bug.py
+./frontend
+./frontend/App.jsx
+./frontend/api
+./frontend/components
+./frontend/config
+./frontend/ecosystem
+./frontend/index.html
+./frontend/index.html.bak_before_sync
+./frontend/js
+./frontend/main.jsx
+./frontend/maps
+./frontend/mobile
+./frontend/monitoring
+./frontend/pages
+./frontend/pwa
+./frontend/screens
+./frontend/services
+./frontend/state
+./frontend/styles
+./frontend/testing
+./future
+./future/README.md
+./gather_info.sh
+./health.sh
+./index.html
+./launcher.html
+./logs
+./logs/.gitkeep
+./manifest.json
+./package-lock.json
+./package.json
+./patch_driver_polling.py
+./pilot
+./pilot/cablink_human_pilot_test.js
+./pilot/cablink_pilot_readiness_report.js
+./pilot/dashboard
+./pilot/devices
+./pilot/operations
+./pilot/protocols
+./pilot/reports
+./pilot/trials
+./role.js
+./runtime_dependency_graph.json
+./scripts
+./scripts/archive
+./snapshot.sh
+./sw.js
+./test_loop.sh
+./vercel.json
+./verify_flow.sh
+./vite.config.js
+
+./block12_safe_reorganisation_audit.sh: line 88: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 89: 3.: command not found
+./block12_safe_reorganisation_audit.sh: line 90: ================================================================================: command not found
+================================================================================
+3. CANONICAL ENTRY CHAIN
+================================================================================
+PRESENT: frontend/index.html
+PRESENT: frontend/main.jsx
+PRESENT: frontend/App.jsx
+PRESENT: frontend/components/LegacyCabLink.jsx
+PRESENT: backend/server.js
+PRESENT: backend/server/app.js
+PRESENT: backend/server/index.js
+
+----- frontend/index.html ENTRY REFERENCES -----
+13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+657:<script>
+1285:  rec.onresult = e => { const t=e.results[0][0].transcript; document.getElementById('dropoff').value=t; updateMapRoute(); toast('🎤 Heard: '+t, 'success'); };
+1744:</script>
+1745:<div id="root"></div><script type="module" src="/main.jsx"></script>
+1747:<script>
+1866:</script>
+1870:<script>
+2017:</script>
+2021:<script>
+2040:</script>
+2056:<script>
+2133:</script>
+2136:<script>
+2209:</script>
+2213:<script type="module">
+2251:</script>
+2267:<script>
+2351:</script>
+2358:<script>
+2366:</script>
+2370:<script>
+2376:</script>
+
+----- frontend/main.jsx -----
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import App from "./App.jsx";
+
+ReactDOM.createRoot(
+  document.getElementById("root")
+).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+----- frontend/App.jsx -----
+import React from "react";
+import LegacyCabLink from "./components/LegacyCabLink.jsx";
+
+export default function App(){
+
+return (
+<LegacyCabLink/>
+);
+
+}
+
+----- LegacyCabLink.jsx -----
+import React from "react";
+
+export default function LegacyCabLink(){
+    return null;
+}
+
+./block12_safe_reorganisation_audit.sh: line 136: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 137: 4.: command not found
+./block12_safe_reorganisation_audit.sh: line 138: ================================================================================: command not found
+================================================================================
+4. CANONICAL BACKEND
+================================================================================
+----- backend/server.js HEAD -----
+'use strict';
+const express = require('express');
+const cors    = require('cors');
+const path    = require('path');
+
+const app  = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors({ origin: '*' }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '..')));
+
+// ── IN-MEMORY STORES ─────────────────────────────────────
+var rides   = [];
+var drivers = {};  // driverId -> driver object
+var ratings = [];
+
+// ── RIDE LIFECYCLE STATES ─────────────────────────────────
+// REQUESTED -> MATCHING -> DRIVER_ASSIGNED -> ACCEPTED
+// -> ARRIVED -> IN_PROGRESS -> COMPLETED -> REWARD_PENDING -> REWARD_CLAIMED
+// CANCELLED (any stage before IN_PROGRESS)
+
+// ── HEALTH ────────────────────────────────────────────────
+app.get('/api/health', function(req, res) {
+  res.json({
+    status: 'ok', version: '5.0.0',
+    ecosystem: 'BSTM CabLink', timestamp: new Date().toISOString(),
+    ridesCount: rides.length, driversOnline: Object.keys(drivers).length
+  });
+});
+
+// ── RIDES ─────────────────────────────────────────────────
+app.post('/api/rides', function(req, res) {
+  var b = req.body || {};
+  if (!b.pickup || !b.dropoff)
+    return res.status(400).json({error:'pickup and dropoff required'});
+
+  var ride = {
+    id:         'CL-' + Date.now().toString(36).toUpperCase(),
+    pickup:     b.pickup,
+    dropoff:    b.dropoff,
+    vehicle:    b.vehicle    || 'standard',
+    fare:       b.fare       || 20,
+    distanceKm: b.distanceKm || 5,
+    wallet:     b.wallet     || null,
+    notes:      b.notes      || '',
+    status:     'REQUESTED',
+    driverId:   null, driverName: null,
+    rating:     null, comment: null,
+    createdAt:  new Date().toISOString(),
+    updatedAt:  new Date().toISOString(),
+  };
+  rides.unshift(ride);
+  if (rides.length > 200) rides = rides.slice(0,200);
+
+  // Auto-match to an online driver if one available
+  var available = Object.values(drivers).filter(function(d){ return d.status==='online'; });
+  if (available.length > 0) {
+    ride.status   = 'MATCHING';
+    ride.updatedAt = new Date().toISOString();
+    // In Phase 2: real matching algorithm (nearest driver)
+    // For now: notify all online drivers (they see it via polling)
+  }
+
+  console.log('New ride:', ride.id, ride.pickup, '->', ride.dropoff, ride.fare+'BWP');
+  res.json({success:true, ride:ride});
+});
+
+app.get('/api/rides', function(req, res) {
+  res.json({rides: rides.slice(0,50)});
+});
+
+app.get('/api/rides/:id', function(req, res) {
+  var ride = rides.find(function(r){ return r.id===req.params.id; });
+  if (!ride) return res.status(404).json({error:'Ride not found'});
+  res.json({ride:ride});
+});
+
+app.patch('/api/rides/:id', function(req, res) {
+  var ride = rides.find(function(r){ return r.id===req.params.id; });
+  if (!ride) return res.status(404).json({error:'Ride not found'});
+  var allowed = ['status','driverId','driverName','rating','comment','lat','lng'];
+  allowed.forEach(function(k){ if (req.body[k] !== undefined) ride[k] = req.body[k]; });
+  ride.updatedAt = new Date().toISOString();
+  // If COMPLETED -> REWARD_PENDING
+  if (ride.status === 'COMPLETED' && !ride.rewardReady) {
+    ride.status = 'REWARD_PENDING';
+    ride.rewardReady = true;
+  }
+  console.log('Ride updated:', ride.id, '->', ride.status);
+  res.json({success:true, ride:ride});
+});
+
+// ── DRIVERS ───────────────────────────────────────────────
+app.post('/api/drivers/online', function(req, res) {
+  var b = req.body || {};
+  var id = b.driverId || b.wallet || ('drv-' + Date.now());
+  drivers[id] = {
+    id:          id,
+    vehicle:     b.vehicle || 'standard',
+    lat:         b.lat     || -24.6541 + (Math.random()-0.5)*0.05,
+    lng:         b.lng     || 25.9087  + (Math.random()-0.5)*0.05,
+    status:      'online',
+    wallet:      b.wallet  || null,
+    onlineSince: new Date().toISOString(),
+  };
+  var pending = rides.filter(function(r){ return r.status==='REQUESTED'||r.status==='MATCHING'; });
+  console.log('Driver online:', id, '| pending rides:', pending.length);
+  res.json({success:true, driverId:id, status:'online', pendingRides:pending.length});
+});
+
+app.post('/api/drivers/offline', function(req, res) {
+  var b = req.body || {};
+  var id = b.driverId || b.wallet;
+  if (id && drivers[id]) delete drivers[id];
+  else {
+    // Delete any matching wallet
+    Object.keys(drivers).forEach(function(k){
+      if (drivers[k].wallet === id) delete drivers[k];
+    });
+  }
+  res.json({success:true, status:'offline'});
+});
+
+app.get('/api/drivers/online', function(req, res) {
+  var list = Object.values(drivers);
+  // Slowly drift driver positions (simulate movement)
+  list.forEach(function(d){
+    d.lat += (Math.random()-0.5)*0.001;
+    d.lng += (Math.random()-0.5)*0.001;
+  });
+  res.json({count:list.length, drivers:list});
+});
+
+// ── DRIVER APPLICATIONS ───────────────────────────────────
+var applications = [];
+app.post('/api/drivers/apply', function(req, res) {
+  var b = req.body || {};
+  if (!b.name||!b.phone||!b.license||!b.vehicle)
+    return res.status(400).json({error:'All fields required'});
+  var rec = {
+    id:        'DRV-' + Date.now().toString(36).toUpperCase(),
+    name:      b.name, phone: b.phone,
+    license:   b.license, vehicle: b.vehicle,
+    wallet:    b.wallet || null, status: 'pending',
+    appliedAt: new Date().toISOString()
+  };
+  applications.push(rec);
+  console.log('Driver application:', rec.id, rec.name);
+  res.json({success:true, id:rec.id, message:'Application received. We will contact you within 24 hours.'});
+});
+
+app.get('/api/drivers/applications', function(req, res) {
+  res.json({count:applications.length, applications:applications});
+});
+
+// ── RATINGS ───────────────────────────────────────────────
+app.post('/api/ratings', function(req, res) {
+  var b = req.body||{};
+  var rating = {id:Date.now(), rideId:b.rideId, stars:b.stars, comment:b.comment, date:new Date().toISOString()};
+  ratings.push(rating);
+  res.json({success:true, rating:rating});
+});
+
+// catch-all removed — Vercel filesystem serves static files
+// ── START ─────────────────────────────────────────────────
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, function() {
+    console.log('CabLink backend: http://localhost:' + PORT);
+    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+  });
+}
+module.exports = app;
+
+----- backend/server/app.js HEAD -----
+
+const express=require("express");
+
+const app=express();
+
+app.use(express.json());
+
+
+const rideRoutes=require("../routes/rides");
+const userRoutes=require("../routes/users");
+
+
+app.get(
+"/health",
+(req,res)=>{
+
+res.json({
+
+system:"CabLink API",
+
+status:"ONLINE",
+
+time:new Date().toISOString()
+
+});
+
+}
+
+);
+
+
+app.use("/api/rides",rideRoutes);
+
+app.use("/api/users",userRoutes);
+
+
+module.exports=app;
+
+
+----- backend/server/index.js HEAD -----
+
+const app=require("./app");
+
+
+const PORT=
+process.env.PORT || 3000;
+
+
+app.listen(
+PORT,
+()=>{
+
+console.log({
+
+system:"CabLink Backend",
+
+port:PORT,
+
+status:"RUNNING"
+
+});
+
+}
+
+);
+
+
+./block12_safe_reorganisation_audit.sh: line 159: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 160: 5.: command not found
+./block12_safe_reorganisation_audit.sh: line 161: ================================================================================: command not found
+================================================================================
+5. LIVE SOURCE FILE INVENTORY
+================================================================================
+Inventory:
+./.block8_check.js
+./CABLINK_DEAD_CODE_REPORT.json
+./CABLINK_HOSTING_MANIFEST.json
+./CABLINK_REALITY_GRAPH.json
+./api/index.js
+./backend/admin/admin_monitor.js
+./backend/admin/operator_dashboard.js
+./backend/analytics/pilot_analytics.js
+./backend/analytics/pilot_failure_tracker.js
+./backend/api/cablink_gateway.js
+./backend/api/reward_api.js
+./backend/audit/production_audit.js
+./backend/auth/auth_connector.js
+./backend/auth/auth_engine.js
+./backend/auth/otp_service.js
+./backend/auth/phone_verification_engine.js
+./backend/blockchain/chain_health.js
+./backend/blockchain/thb_abi.json
+./backend/blockchain/thb_config.js
+./backend/blockchain/thb_real_executor.js
+./backend/blockchain/thb_transaction_engine.js
+./backend/blockchain/thb_transfer_service.js
+./backend/blockchain/thb_transfer_worker.js
+./backend/blockchain/wallet_validator.js
+./backend/broadcast/ride_broadcast.js
+./backend/cloud/cloud_adapter.js
+./backend/cloud/production_adapter.js
+./backend/config/env_check.js
+./backend/config/environment_validator.js
+./backend/config/provider_config.js
+./backend/data/cablink_updates.json
+./backend/data/client_demand.json
+./backend/data/dispatch_requests.json
+./backend/data/driver_positions.json
+./backend/data/drivers.json
+./backend/data/drivers_live.json
+./backend/data/economy_ledger.json
+./backend/data/live_demand.json
+./backend/data/live_rides.json
+./backend/data/passengers.json
+./backend/data/ride_events.json
+./backend/data/rides.json
+./backend/data/users.json
+./backend/database/migration_engine.js
+./backend/database/production_schema.js
+./backend/database/rideRepository.js
+./backend/database/ride_repository.js
+./backend/database/rides.json
+./backend/database/user_repository.js
+./backend/devices/device_registry.js
+./backend/dispatch/dispatch_engine.js
+./backend/drivers/driver_state.js
+./backend/drivers/heartbeat_engine.js
+./backend/economy/delivery_fare_engine.js
+./backend/ecosystem/marketplace_bridge.js
+./backend/environment/readiness_check.js
+./backend/events/ride_event_bus.js
+./backend/extensions/extension_registry.js
+./backend/fare/fare_engine.js
+./backend/firebase/firebase_adapter.js
+./backend/fraud/reward_guard.js
+./backend/fraud/ride_validation.js
+./backend/gps/gps_service.js
+./backend/gps/location_stream.js
+./backend/heartbeat/device_monitor.js
+./backend/location/gps_event_engine.js
+./backend/location/location_service.js
+./backend/location/location_stream.js
+./backend/location/radar_engine.js
+./backend/logs/system_logger.js
+./backend/maps/gps_engine.js
+./backend/maps/map_provider.js
+./backend/matching/driver_matcher.js
+./backend/matching/driver_matching_engine.js
+./backend/matching/matching_engine.js
+./backend/middleware/error_handler.js
+./backend/mobile/device_registry.js
+./backend/monitoring/system_health.js
+./backend/notifications/notification_center.js
+./backend/notifications/notification_engine.js
+./backend/notifications/push_bridge.js
+./backend/onboarding/onboarding_engine.js
+./backend/payments/payment_adapter.js
+./backend/payments/payment_engine.js
+./backend/payments/payment_provider_adapter.js
+./backend/payments/payment_transaction_layer.js
+./backend/payments/transaction_recorder.js
+./backend/pricing/fare_calculator.js
+./backend/production/database_adapter.js
+./backend/providers/cloud_database_connector.js
+./backend/providers/cloud_provider.js
+./backend/providers/maps_connector.js
+./backend/push/push_engine.js
+./backend/realtime/channel_manager.js
+./backend/realtime/event_bus.js
+./backend/realtime/presence_engine.js
+./backend/realtime/realtime_bridge.js
+./backend/realtime/ride_channel.js
+./backend/rewards/auto_reward_trigger.js
+./backend/rewards/blockchain_reward_adapter.js
+./backend/rewards/delivery_completion.js
+./backend/rewards/delivery_reward_engine.js
+./backend/rewards/delivery_reward_service.js
+./backend/rewards/reward_claim_engine.js
+./backend/rewards/reward_engine.js
+./backend/rewards/reward_history.js
+./backend/rewards/thb_claim_engine.js
+./backend/rewards/thb_contract_adapter.js
+./backend/rewards/thb_service.js
+./backend/rewards/thb_transaction_layer.js
+./backend/rewards/thb_transfer_queue.js
+./backend/rewards/wallet_service.js
+./backend/ride_api_patch.js
+./backend/ride_store.js
+./backend/rides/ride_engine.js
+./backend/rides/ride_lifecycle.js
+./backend/rides/ride_persistence.js
+./backend/rides/ride_state_engine.js
+./backend/rides/settlement_engine.js
+./backend/routes/completion_api.js
+./backend/routes/dispatch_api.js
+./backend/routes/driver_dashboard_api.js
+./backend/routes/driver_demand_api.js
+./backend/routes/driver_economy.js
+./backend/routes/driver_economy_api.js
+./backend/routes/driver_intelligence_api.js
+./backend/routes/driver_location_api.js
+./backend/routes/driver_online_api.js
+./backend/routes/ecosystem_tasks.js
+./backend/routes/gps.js
+./backend/routes/identity_api.js
+./backend/routes/live_demand_api.js
+./backend/routes/live_ride_api.js
+./backend/routes/matching_api.js
+./backend/routes/mobile.js
+./backend/routes/notification_api.js
+./backend/routes/orchestrator_api.js
+./backend/routes/passenger_intelligence_api.js
+./backend/routes/realtime.js
+./backend/routes/ride_economy_api.js
+./backend/routes/ride_state_api.js
+./backend/routes/rides.js
+./backend/routes/socket_routes.js
+./backend/routes/updates_api.js
+./backend/routes/users.js
+./backend/safety/emergency_engine.js
+./backend/safety/incident_report.js
+./backend/safety/safety_engine.js
+./backend/security/device_registry.js
+./backend/security/fraud_engine.js
+./backend/security/security_audit.js
+./backend/security/security_engine.js
+./backend/server.js
+./backend/server/app.js
+./backend/server/index.js
+./backend/services/demand_service.js
+./backend/services/dispatch_service.js
+./backend/services/driver_intelligence_service.js
+./backend/services/driver_location_service.js
+./backend/services/driver_matching_service.js
+./backend/services/driver_service.js
+./backend/services/economy_ledger_service.js
+./backend/services/identity_service.js
+./backend/services/live_demand_service.js
+./backend/services/live_ride_service.js
+./backend/services/location/location_service.js
+./backend/services/notification_service.js
+./backend/services/notifications/notification_service.js
+./backend/services/passenger_intelligence_service.js
+./backend/services/payment_service.js
+./backend/services/realtime/realtime_service.js
+./backend/services/reward_service.js
+./backend/services/rideService.js
+./backend/services/ride_completion_service.js
+./backend/services/ride_dispatch_bridge.js
+./backend/services/ride_economy_service.js
+./backend/services/ride_event_service.js
+./backend/services/ride_orchestrator_service.js
+./backend/services/ride_service.js
+./backend/services/ride_state_service.js
+./backend/sessions/session_engine.js
+./backend/sms/sms_engine.js
+./backend/socket/server_socket.js
+./backend/socket/socket_manager.js
+./backend/status/ride_status.js
+./backend/storage/cablink_db.json
+./backend/storage/database.js
+./backend/support/ticket_system.js
+./backend/sync/live_sync_engine.js
+./backend/tasks/task_manager.js
+./backend/testing/delivery_economy_test.js
+./backend/testing/human_ride_scenario.js
+./backend/testing/live_task_flow_test.js
+./backend/testing/marketplace_bridge_test.js
+./backend/testing/phase24_verification.js
+./backend/testing/phase28_reward_flow_test.js
+./backend/testing/phase32_dashboard_api_test.js
+./backend/testing/phase34_economy_test.js
+./backend/testing/phase35_ledger_test.js
+./backend/testing/phase37_dashboard_test.js
+./backend/testing/phase40_demand_test.js
+./backend/testing/phase41_matching_test.js
+./backend/testing/phase42_dispatch_test.js
+./backend/testing/phase46_live_test.js
+./backend/testing/phase47_eta_test.js
+./backend/testing/phase48_completion_test.js
+./backend/testing/phase49_notification_test.js
+./backend/testing/phase50_state_test.js
+./backend/testing/phase51_orchestrator_test.js
+./backend/testing/phase52_driver_test.js
+./backend/testing/phase53_identity_test.js
+./backend/testing/pilot_activation_test.js
+./backend/testing/reward_wallet_test.js
+./backend/testing/thb_delivery_reward_test.js
+./backend/testing/two_phone_pilot.js
+./backend/tracking/location_session.js
+./backend/tracking/location_tracker.js
+./backend/transactions/transaction_record.js
+./backend/trips/trip_manager.js
+./backend/trust/trust_engine.js
+./backend/users/user_account_engine.js
+./backend/users/wallet_manager.js
+./backend/validation/input_validator.js
+./beta/command/logs/incidents.json
+./beta/command/logs/status.json
+./beta/command/reports/pilot_decision.js
+./beta/dashboard/dashboard_data.js
+./beta/dashboard/live_state.json
+./beta/final_readiness_report.json
+./beta/geo/geo_engine.js
+./beta/geo/reports/GEO_CERTIFICATION_REPORT.json
+./beta/geo/tests/geo_test.js
+./beta/hailing_tests/hailing_test.js
+./beta/health/production_health.js
+./beta/human_pilot/feedback/feedback.json
+./beta/human_pilot/feedback/feedback_engine.js
+./beta/human_pilot/participants/participants.json
+./beta/human_pilot/participants/registry.js
+./beta/human_pilot/reports/HUMAN_PILOT_SUMMARY.json
+./beta/human_pilot/reports/pilot_summary.js
+./beta/human_pilot/rides/test_framework.js
+./beta/live_gps/live_location_engine.js
+./beta/live_gps/logs/locations.json
+./beta/live_gps/reports/GPS_REPORT.json
+./beta/live_gps/reports/gps_test.js
+./beta/onboarding/driver_system.js
+./beta/onboarding/passenger_system.js
+./beta/operations/event_logger.js
+./beta/operations/logs/events.json
+./beta/operations/logs/sessions.json
+./beta/operations/reports/DAILY_PILOT_REPORT.json
+./beta/operations/reports/daily_report.js
+./beta/operations/session_engine.js
+./beta/pilot/feedback/PILOT-RIDE-001.json
+./beta/pilot/issues/issue_tracker.js
+./beta/pilot/issues/issues.json
+./beta/pilot/reports/LAST_COMPLETED_RIDE.json
+./beta/pilot/reports/PILOT_TEST_001_REPORT.json
+./beta/pilot/reports/pilot_health.js
+./beta/pilot/rides/PILOT-RIDE-001.json
+./beta/pilot/rides/ride_registry.js
+./beta/pilot/rides/rides.json
+./beta/pilot/users/registry.js
+./beta/pilot/users/users.json
+./beta/pilot_mission/pilot_session.js
+./beta/pilot_mission/reports/pilot_evidence_report.js
+./beta/real_world/reports/REAL_WORLD_HAILING_CERTIFICATION.json
+./beta/tests/ride_tests.js
+./cablink.js
+./cablink_architecture_health_audit.js
+./cablink_forensic_audit_v2.js
+./cablink_full_audit.js
+./cablink_reality_doctor.js
+./cablink_runtime_truth_audit_v3.js
+./clear_cablink_state.js
+./config/version.json
+./database/beta/beta_users.json
+./database/production/cablink_store.json
+./database/production/database.json
+./database/production/database_health.js
+./database/production/store_engine.js
+./database/schema/drivers.json
+./database/schema/location.json
+./database/schema/notifications.json
+./database/schema/rewards.json
+./database/schema/rides.json
+./database/schema/transactions.json
+./database/schema/users.json
+./deployment/go_live_audit.js
+./deployment/pilot_environment_check.js
+./deployment/production_readiness_check.js
+./deployment/pwa_readiness_check.js
+./deployment/reality_activation_report.js
+./deployment/service_readiness_check.js
+./fare_engine.js
+./fix.js
+./frontend/App.jsx
+./frontend/api/bridge_test.js
+./frontend/api/cablink_api.js
+./frontend/api/task_api.js
+./frontend/components/BottomNavigation.jsx
+./frontend/components/CabLinkHeader.jsx
+./frontend/components/DashboardCard.jsx
+./frontend/components/LegacyCabLink.jsx
+./frontend/components/bstm_delivery_button.js
+./frontend/components/bstm_menu.js
+./frontend/components/dashboard_registry.js
+./frontend/components/delivery_earnings_panel.js
+./frontend/components/demand_panel.js
+./frontend/components/driver_dashboard.js
+./frontend/components/driver_demand_map.js
+./frontend/components/driver_economy_dashboard.js
+./frontend/components/driver_economy_screen.js
+./frontend/components/driver_task_panel.js
+./frontend/components/ecosystem_card.js
+./frontend/components/live_driver_dashboard.js
+./frontend/components/mobile_dashboard.js
+./frontend/components/passenger_dashboard.jsx
+./frontend/components/passenger_profile_card.jsx
+./frontend/components/passenger_trip_status.js
+./frontend/components/passenger_trip_status.jsx
+./frontend/components/ride_status_card.jsx
+./frontend/components/ride_timeline.jsx
+./frontend/components/status_card.jsx
+./frontend/components/status_panel.js
+./frontend/components/thb_reward_panel.js
+./frontend/components/thb_reward_panel.jsx
+./frontend/components/thb_wallet_panel.js
+./frontend/components/updates_center.js
+./frontend/config/app_config.js
+./frontend/ecosystem/bstm_links.js
+./frontend/index.html
+./frontend/js/app.js
+./frontend/js/app_core.js
+./frontend/js/bstm_hub_ui.js
+./frontend/js/core.js
+./frontend/js/driver/applicationService.js
+./frontend/js/driver/driverController.js
+./frontend/js/driver/driverDispatchBridge.js
+./frontend/js/driver/driverLifecycleControls.js
+./frontend/js/driver/driverModeBridge.js
+./frontend/js/driver/driverService.js
+./frontend/js/fare_engine.js
+./frontend/js/financial_intelligence.js
+./frontend/js/firebase.js
+./frontend/js/fix.js
+./frontend/js/gps/location_engine.js
+./frontend/js/operations_core.js
+./frontend/js/realtime/tracking_engine.js
+./frontend/js/ride_engine.js
+./frontend/js/rides/completionRewardBridge.js
+./frontend/js/rides/passengerRideStatus.js
+./frontend/js/rides/rideController.js
+./frontend/js/rides/rideService.js
+./frontend/js/rides/rideStateMachine.js
+./frontend/js/role.js
+./frontend/js/role_switch.js
+./frontend/js/services/api.js
+./frontend/js/services/cablinkAPI.js
+./frontend/js/simulation_engine.js
+./frontend/main.jsx
+./frontend/maps/live_map_component.js
+./frontend/mobile/device_permissions.js
+./frontend/mobile/mobile_entry.js
+./frontend/monitoring/ui_health.js
+./frontend/pages/DriverDashboard.jsx
+./frontend/pages/PassengerRide.jsx
+./frontend/pages/UpdatesCenter.jsx
+./frontend/pwa/install_manager.js
+./frontend/screens/driver_control_screen.js
+./frontend/screens/driver_dashboard.js
+./frontend/screens/ecosystem_hub_screen.js
+./frontend/screens/passenger_dashboard.js
+./frontend/screens/passenger_ride_screen.js
+./frontend/services/demand_api.js
+./frontend/services/driver_dashboard_api.js
+./frontend/services/driver_dashboard_live.js
+./frontend/services/driver_economy_screen_service.js
+./frontend/services/driver_economy_service.js
+./frontend/services/economy_dashboard_api.js
+./frontend/services/identity_api.js
+./frontend/services/live_driver_economy.js
+./frontend/services/live_ride_api.js
+./frontend/services/notification_api.js
+./frontend/services/passenger_dashboard_api.js
+./frontend/services/ride_service.js
+./frontend/services/role_service.js
+./frontend/services/task_service.js
+./frontend/services/updates_api.js
+./frontend/services/user_service.js
+./frontend/state/ride_ui_state.js
+./frontend/state/session_store.js
+./frontend/state/task_state.js
+./frontend/styles/cablink.css
+./frontend/testing/bstm_hub_test.js
+./frontend/testing/bstm_visible_ui_test.js
+./frontend/testing/driver_economy_dashboard_test.js
+./frontend/testing/driver_economy_screen_test.js
+./frontend/testing/driver_task_dashboard_test.js
+./frontend/testing/human_interface_test.js
+./frontend/testing/live_driver_dashboard_test.js
+./frontend/testing/live_driver_economy_test.js
+./frontend/testing/phase43_ui_test.js
+./frontend/testing/phase44_page_test.js
+./frontend/testing/phase45_shell_test.js
+./index.html
+./launcher.html
+./manifest.json
+./package-lock.json
+./package.json
+./pilot/cablink_human_pilot_test.js
+./pilot/cablink_pilot_readiness_report.js
+./pilot/dashboard/pilot_status.js
+./pilot/dashboard/run_dashboard.js
+./pilot/devices/device_registry.js
+./pilot/operations/pilot_metrics.js
+./pilot/operations/run_operations.js
+./pilot/reports/run_pilot_audit.js
+./pilot/trials/run_trial_test.js
+./pilot/trials/trial_recorder.js
+./role.js
+./runtime_dependency_graph.json
+./scripts/archive/root_migrations/app_before_booking_migration.js
+./scripts/archive/root_migrations/app_before_bookride_cleanup.js
+./scripts/archive/root_migrations/app_before_cleanup_final.js
+./scripts/archive/root_migrations/cablink_accept_complete_truth_test.js
+./scripts/archive/root_migrations/cablink_accept_state_bridge_install.js
+./scripts/archive/root_migrations/cablink_add_single_ride_read.js
+./scripts/archive/root_migrations/cablink_architecture_cleanup.js
+./scripts/archive/root_migrations/cablink_architecture_health_audit.js
+./scripts/archive/root_migrations/cablink_bookride_truth_migration.js
+./scripts/archive/root_migrations/cablink_check_booking_truth.js
+./scripts/archive/root_migrations/cablink_check_single_ride_route.js
+./scripts/archive/root_migrations/cablink_completion_finance_reward_bridge_install.js
+./scripts/archive/root_migrations/cablink_connect_ride_routes.js
+./scripts/archive/root_migrations/cablink_deploy_package_check.js
+./scripts/archive/root_migrations/cablink_disable_fake_driver_requests.js
+./scripts/archive/root_migrations/cablink_dispatch_connection_audit.js
+./scripts/archive/root_migrations/cablink_doctor.js
+./scripts/archive/root_migrations/cablink_driver_bridge_repair.js
+./scripts/archive/root_migrations/cablink_driver_lifecycle_controls_install.js
+./scripts/archive/root_migrations/cablink_driver_mode_bridge_install.js
+./scripts/archive/root_migrations/cablink_driver_wiring_engine.js
+./scripts/archive/root_migrations/cablink_extract_fake_logic.js
+./scripts/archive/root_migrations/cablink_final_deployment_cleanup.js
+./scripts/archive/root_migrations/cablink_financial_test.js
+./scripts/archive/root_migrations/cablink_find_booking_wiring.js
+./scripts/archive/root_migrations/cablink_find_old_ride_controls.js
+./scripts/archive/root_migrations/cablink_fix_driver_accept_truth.js
+./scripts/archive/root_migrations/cablink_fix_https_readiness_check.js
+./scripts/archive/root_migrations/cablink_fix_production_gate_scope.js
+./scripts/archive/root_migrations/cablink_fix_start_script.js
+./scripts/archive/root_migrations/cablink_force_production_gate_fix.js
+./scripts/archive/root_migrations/cablink_force_server_newline_fix.js
+./scripts/archive/root_migrations/cablink_frontend_cleanup_v2.js
+./scripts/archive/root_migrations/cablink_frontend_ride_truth_bridge.js
+./scripts/archive/root_migrations/cablink_frontend_truth_audit.js
+./scripts/archive/root_migrations/cablink_frontend_truth_bridge.js
+./scripts/archive/root_migrations/cablink_frontend_truth_status_sync.js
+./scripts/archive/root_migrations/cablink_full_dispatch_truth_test.js
+./scripts/archive/root_migrations/cablink_hosting_manifest.js
+./scripts/archive/root_migrations/cablink_inspect_https_gate.js
+./scripts/archive/root_migrations/cablink_inspect_production_gate.js
+./scripts/archive/root_migrations/cablink_launch_verification.js
+./scripts/archive/root_migrations/cablink_live_dispatch_bridge_install.js
+./scripts/archive/root_migrations/cablink_live_driver_bridge.js
+./scripts/archive/root_migrations/cablink_module_builder.js
+./scripts/archive/root_migrations/cablink_passenger_state_listener_install.js
+./scripts/archive/root_migrations/cablink_production_gate.js
+./scripts/archive/root_migrations/cablink_production_url_fix.js
+./scripts/archive/root_migrations/cablink_reality_doctor.js
+./scripts/archive/root_migrations/cablink_release_checkpoint.js
+./scripts/archive/root_migrations/cablink_release_gate.js
+./scripts/archive/root_migrations/cablink_release_readiness_audit.js
+./scripts/archive/root_migrations/cablink_remove_fake_completion.js
+./scripts/archive/root_migrations/cablink_repair_gate_scan_engine.js
+./scripts/archive/root_migrations/cablink_repair_server_newline.js
+./scripts/archive/root_migrations/cablink_replace_driver_accept.js
+./scripts/archive/root_migrations/cablink_restore_and_clean_server.js
+./scripts/archive/root_migrations/cablink_ride_state_machine_install.js
+./scripts/archive/root_migrations/cablink_ride_truth_engine.js
+./scripts/archive/root_migrations/cablink_ride_truth_test.js
+./scripts/archive/root_migrations/cablink_role_switch_install.js
+./scripts/archive/root_migrations/cablink_separate_frontend_completion.js
+./scripts/archive/root_migrations/cablink_test_accept_complete.js
+./scripts/archive/root_migrations/cablink_trace_backend_routes.js
+./scripts/archive/root_migrations/cablink_trace_booking_function.js
+./scripts/archive/root_migrations/cablink_trace_fake_ride_id.js
+./scripts/archive/root_migrations/cablink_truth_cleanup_v1.js
+./scripts/archive/root_migrations/cablink_unify_ride_creation.js
+./scripts/archive/root_migrations/cablink_unify_ride_reads.js
+./scripts/archive/root_migrations/cablink_wire_dispatch_bridge.js
+./scripts/archive/root_migrations/cablink_wire_role_controller.js
+./scripts/archive/root_migrations/core_before_bookride_cleanup.js
+./scripts/archive/root_migrations/fix_before_bookride_cleanup.js
+./scripts/archive/root_migrations/index_before_booking_migration.html
+./scripts/archive/root_migrations/index_before_bookride_cleanup.html
+./scripts/archive/root_migrations/index_before_bstm_mount.html
+./scripts/archive/root_migrations/index_before_module_cleanup.html
+./scripts/archive/root_migrations/index_before_reality_cutover.html
+./scripts/archive/root_migrations/index_before_role_auto_cleanup.html
+./scripts/archive/root_migrations/index_before_role_cleanup.html
+./scripts/archive/root_migrations/index_before_role_fix_1784018514824.html
+./scripts/archive/root_migrations/index_before_script_repair_1784017559902.html
+./scripts/archive/root_migrations/index_before_script_restore.html
+./scripts/archive/root_migrations/ride_engine_before_booking_merge.js
+./scripts/archive/root_migrations/vite.config_before_proxy_fix.js
+./sw.js
+./vercel.json
+./vite.config.js
+
+./block12_safe_reorganisation_audit.sh: line 183: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 184: 6.: command not found
+./block12_safe_reorganisation_audit.sh: line 185: ================================================================================: command not found
+================================================================================
+6. LIVE DUPLICATE BASENAME ANALYSIS
+================================================================================
+
+LIVE DUPLICATE BASENAME: PILOT-RIDE-001.json
+  beta/pilot/feedback/PILOT-RIDE-001.json
+  beta/pilot/rides/PILOT-RIDE-001.json
+
+LIVE DUPLICATE BASENAME: app.js
+  backend/server/app.js
+  frontend/js/app.js
+
+LIVE DUPLICATE BASENAME: device_registry.js
+  backend/devices/device_registry.js
+  backend/mobile/device_registry.js
+  backend/security/device_registry.js
+  pilot/devices/device_registry.js
+
+LIVE DUPLICATE BASENAME: driver_dashboard.js
+  frontend/components/driver_dashboard.js
+  frontend/screens/driver_dashboard.js
+
+LIVE DUPLICATE BASENAME: driver_dashboard_api.js
+  backend/routes/driver_dashboard_api.js
+  frontend/services/driver_dashboard_api.js
+
+LIVE DUPLICATE BASENAME: drivers.json
+  backend/data/drivers.json
+  database/schema/drivers.json
+
+LIVE DUPLICATE BASENAME: fare_engine.js
+  backend/fare/fare_engine.js
+  fare_engine.js
+  frontend/js/fare_engine.js
+
+LIVE DUPLICATE BASENAME: fix.js
+  fix.js
+  frontend/js/fix.js
+
+LIVE DUPLICATE BASENAME: identity_api.js
+  backend/routes/identity_api.js
+  frontend/services/identity_api.js
+
+LIVE DUPLICATE BASENAME: index.html
+  frontend/index.html
+  index.html
+
+LIVE DUPLICATE BASENAME: index.js
+  api/index.js
+  backend/server/index.js
+
+LIVE DUPLICATE BASENAME: live_ride_api.js
+  backend/routes/live_ride_api.js
+  frontend/services/live_ride_api.js
+
+LIVE DUPLICATE BASENAME: location_service.js
+  backend/location/location_service.js
+  backend/services/location/location_service.js
+
+LIVE DUPLICATE BASENAME: location_stream.js
+  backend/gps/location_stream.js
+  backend/location/location_stream.js
+
+LIVE DUPLICATE BASENAME: notification_api.js
+  backend/routes/notification_api.js
+  frontend/services/notification_api.js
+
+LIVE DUPLICATE BASENAME: notification_service.js
+  backend/services/notification_service.js
+  backend/services/notifications/notification_service.js
+
+LIVE DUPLICATE BASENAME: registry.js
+  beta/human_pilot/participants/registry.js
+  beta/pilot/users/registry.js
+
+LIVE DUPLICATE BASENAME: rideService.js
+  backend/services/rideService.js
+  frontend/js/rides/rideService.js
+
+LIVE DUPLICATE BASENAME: ride_engine.js
+  backend/rides/ride_engine.js
+  frontend/js/ride_engine.js
+
+LIVE DUPLICATE BASENAME: ride_service.js
+  backend/services/ride_service.js
+  frontend/services/ride_service.js
+
+LIVE DUPLICATE BASENAME: rides.json
+  backend/data/rides.json
+  backend/database/rides.json
+  beta/pilot/rides/rides.json
+  database/schema/rides.json
+
+LIVE DUPLICATE BASENAME: role.js
+  frontend/js/role.js
+  role.js
+
+LIVE DUPLICATE BASENAME: session_engine.js
+  backend/sessions/session_engine.js
+  beta/operations/session_engine.js
+
+LIVE DUPLICATE BASENAME: updates_api.js
+  backend/routes/updates_api.js
+  frontend/services/updates_api.js
+
+LIVE DUPLICATE BASENAME: users.json
+  backend/data/users.json
+  beta/pilot/users/users.json
+  database/schema/users.json
+
+TOTAL LIVE DUPLICATE BASENAME GROUPS: 25
+
+./block12_safe_reorganisation_audit.sh: line 254: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 255: 7.: command not found
+./block12_safe_reorganisation_audit.sh: line 256: ================================================================================: command not found
+================================================================================
+7. FRONTEND IMPORT MAP
+================================================================================
+----- ALL FRONTEND IMPORTS / REQUIRES -----
+frontend/js/driver/driverController.js:1:import {api} from "../services/cablinkAPI.js";
+frontend/js/rides/rideController.js:1:import {api} from "../services/cablinkAPI.js";
+frontend/api/bridge_test.js:3:const ride=require("../services/ride_service");
+frontend/api/bridge_test.js:4:const user=require("../services/user_service");
+frontend/services/user_service.js:3:const api=require("../api/cablink_api");
+frontend/services/ride_service.js:3:const api=require("../api/cablink_api");
+frontend/services/driver_dashboard_live.js:3:const taskApi=require("../api/task_api");
+frontend/services/driver_economy_screen_service.js:4:require("./economy_dashboard_api");
+frontend/services/live_driver_economy.js:3:const taskApi=require("../api/task_api");
+frontend/services/task_service.js:3:const state=require("../state/task_state");
+frontend/components/BottomNavigation.jsx:1:import React from "react";
+frontend/components/CabLinkHeader.jsx:1:import React from "react";
+frontend/components/DashboardCard.jsx:1:import React from "react";
+frontend/components/LegacyCabLink.jsx:1:import React from "react";
+frontend/components/bstm_menu.js:3:const ecosystem=require("../ecosystem/bstm_links");
+frontend/components/bstm_menu.js:4:const card=require("./ecosystem_card");
+frontend/components/dashboard_registry.js:2:import PassengerDashboard from "./passenger_dashboard";
+frontend/components/passenger_dashboard.jsx:2:import {useEffect,useState} from "react";
+frontend/components/passenger_trip_status.jsx:1:import React from "react";
+frontend/components/thb_reward_panel.jsx:1:import React from "react";
+frontend/screens/passenger_dashboard.js:2:const ride=require("../services/ride_service");
+frontend/screens/passenger_ride_screen.js:2:const ride=require("../state/ride_ui_state");
+frontend/screens/driver_control_screen.js:2:const ride=require("../state/ride_ui_state");
+frontend/screens/ecosystem_hub_screen.js:3:const ecosystem=require("../ecosystem/bstm_links");
+frontend/testing/human_interface_test.js:2:const state=require("../state/ride_ui_state");
+frontend/testing/human_interface_test.js:3:const passenger=require("../screens/passenger_ride_screen");
+frontend/testing/human_interface_test.js:4:const driver=require("../screens/driver_control_screen");
+frontend/testing/human_interface_test.js:5:const map=require("../maps/live_map_component");
+frontend/testing/human_interface_test.js:6:const dash=require("../components/mobile_dashboard");
+frontend/testing/bstm_hub_test.js:3:const hub=require("../screens/ecosystem_hub_screen");
+frontend/testing/bstm_visible_ui_test.js:3:const menu=require("../components/bstm_menu");
+frontend/testing/driver_economy_dashboard_test.js:3:const dashboard=require("../components/driver_economy_dashboard");
+frontend/testing/driver_economy_dashboard_test.js:4:const service=require("../services/driver_economy_service");
+frontend/testing/driver_economy_screen_test.js:4:require("../services/driver_economy_screen_service");
+frontend/testing/driver_economy_screen_test.js:7:require("../components/driver_economy_screen");
+frontend/testing/driver_task_dashboard_test.js:3:const panel=require("../components/driver_task_panel");
+frontend/testing/live_driver_dashboard_test.js:3:const service=require("../services/driver_dashboard_live");
+frontend/testing/live_driver_dashboard_test.js:4:const dashboard=require("../components/live_driver_dashboard");
+frontend/testing/live_driver_economy_test.js:3:const service=require("../services/live_driver_economy");
+frontend/testing/phase43_ui_test.js:4:require("../components/driver_dashboard");
+frontend/testing/phase43_ui_test.js:7:require("../components/demand_panel");
+frontend/testing/phase44_page_test.js:3:const fs=require("fs");
+frontend/testing/phase45_shell_test.js:3:const fs=require("fs");
+frontend/App.jsx:1:import React from "react";
+frontend/App.jsx:2:import LegacyCabLink from "./components/LegacyCabLink.jsx";
+frontend/main.jsx:1:import React from "react";
+frontend/main.jsx:2:import ReactDOM from "react-dom/client";
+frontend/main.jsx:4:import App from "./App.jsx";
+frontend/pages/DriverDashboard.jsx:3:import React,{useEffect,useState} from "react";
+frontend/pages/PassengerRide.jsx:1:import React,{useState} from "react";
+frontend/pages/PassengerRide.jsx:3:import PassengerTripStatus 
+frontend/pages/PassengerRide.jsx:6:import THBRewardPanel
+frontend/pages/UpdatesCenter.jsx:3:import React,{useEffect,useState} from "react";
+
+./block12_safe_reorganisation_audit.sh: line 278: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 279: 8.: command not found
+./block12_safe_reorganisation_audit.sh: line 280: ================================================================================: command not found
+================================================================================
+8. BACKEND IMPORT MAP
+================================================================================
+----- ALL BACKEND IMPORTS / REQUIRES -----
+backend/config/env_check.js:2:require("dotenv").config();
+backend/config/provider_config.js:2:require("dotenv").config();
+backend/config/environment_validator.js:2:require("dotenv").config();
+backend/routes/rides.js:1:const router=require("express").Router();
+backend/routes/rides.js:3:const rides=require("../database/ride_repository");
+backend/routes/rides.js:5:const matching=require("../services/driver_matching_service");
+backend/routes/rides.js:7:const orchestrator=require("../services/ride_orchestrator_service");
+backend/routes/rides.js:95:const db=require("../storage/database");
+backend/routes/users.js:2:const router=require("express").Router();
+backend/routes/users.js:4:const users=require("../database/user_repository");
+backend/routes/realtime.js:2:const router=require("express").Router();
+backend/routes/realtime.js:4:const driver=require("../drivers/driver_state");
+backend/routes/realtime.js:5:const gps=require("../tracking/location_tracker");
+backend/routes/realtime.js:6:const events=require("../realtime/event_bus");
+backend/routes/socket_routes.js:2:const router=require("express").Router();
+backend/routes/socket_routes.js:4:const channel=require("../realtime/ride_channel");
+backend/routes/mobile.js:2:const router=require("express").Router();
+backend/routes/mobile.js:4:const devices=require("../mobile/device_registry");
+backend/routes/mobile.js:5:const trips=require("../trips/trip_manager");
+backend/routes/gps.js:2:const router=require("express").Router();
+backend/routes/gps.js:4:const gps=require("../gps/gps_service");
+backend/routes/completion_api.js:2:const router=require("express").Router();
+backend/routes/completion_api.js:5:require("../services/ride_completion_service");
+backend/routes/dispatch_api.js:3:const router=require("express").Router();
+backend/routes/dispatch_api.js:6:require("../services/dispatch_service");
+backend/routes/driver_dashboard_api.js:3:const router=require("express").Router();
+backend/routes/driver_dashboard_api.js:5:const wallet=require("../rewards/wallet_service");
+backend/routes/driver_dashboard_api.js:6:const history=require("../rewards/reward_history");
+backend/routes/driver_demand_api.js:3:const router=require("express").Router();
+backend/routes/driver_demand_api.js:5:const demand=require("../services/demand_service");
+backend/routes/driver_economy.js:3:const router=require("express").Router();
+backend/routes/driver_economy.js:5:const wallet=require("../rewards/wallet_service");
+backend/routes/driver_economy.js:6:const history=require("../rewards/reward_history");
+backend/routes/driver_economy_api.js:3:const router=require("express").Router();
+backend/routes/driver_economy_api.js:5:const ledger=require("../services/economy_ledger_service");
+backend/routes/driver_intelligence_api.js:3:const router=require("express").Router();
+backend/routes/driver_intelligence_api.js:6:require("../services/driver_intelligence_service");
+backend/routes/driver_intelligence_api.js:19:require("../data/drivers.json").drivers,
+backend/routes/driver_location_api.js:2:const router=require("express").Router();
+backend/routes/driver_location_api.js:5:require("../services/driver_location_service");
+backend/routes/driver_online_api.js:6:const express=require("express");
+backend/routes/ecosystem_tasks.js:3:const router=require("express").Router();
+backend/routes/ecosystem_tasks.js:5:const bridge=require("../ecosystem/marketplace_bridge");
+backend/routes/ecosystem_tasks.js:6:const tasks=require("../tasks/task_manager");
+backend/routes/identity_api.js:3:const router=require("express").Router();
+backend/routes/identity_api.js:6:require("../services/identity_service");
+backend/routes/live_demand_api.js:3:const router=require("express").Router();
+backend/routes/live_demand_api.js:6:require("../services/live_demand_service");
+backend/routes/live_ride_api.js:3:const router=require("express").Router();
+backend/routes/live_ride_api.js:6:require("../services/live_ride_service");
+backend/routes/matching_api.js:3:const router=require("express").Router();
+backend/routes/matching_api.js:6:require("../services/driver_matching_service");
+backend/routes/notification_api.js:2:const router=require("express").Router();
+backend/routes/notification_api.js:5:require("../services/notification_service");
+backend/routes/notification_api.js:8:require("../services/ride_event_service");
+backend/routes/orchestrator_api.js:3:const router=require("express").Router();
+backend/routes/orchestrator_api.js:6:require("../services/ride_orchestrator_service");
+backend/routes/passenger_intelligence_api.js:2:const router=require("express").Router();
+backend/routes/passenger_intelligence_api.js:5:require("../services/passenger_intelligence_service");
+backend/routes/ride_economy_api.js:3:const router=require("express").Router();
+backend/routes/ride_economy_api.js:5:const economy=require("../services/ride_economy_service");
+backend/routes/ride_state_api.js:2:const router=require("express").Router();
+backend/routes/ride_state_api.js:4:const state=require("../services/ride_state_service");
+backend/routes/updates_api.js:3:const router=require("express").Router();
+backend/routes/updates_api.js:4:const fs=require("fs");
+backend/services/demand_service.js:3:const fs=require("fs");
+backend/services/dispatch_service.js:3:const fs=require("fs");
+backend/services/driver_intelligence_service.js:3:const fs=require("fs");
+backend/services/driver_location_service.js:2:const fs=require("fs");
+backend/services/driver_matching_service.js:3:const fs=require("fs");
+backend/services/economy_ledger_service.js:3:const fs=require("fs");
+backend/services/identity_service.js:3:const fs=require("fs");
+backend/services/live_demand_service.js:3:const fs=require("fs");
+backend/services/live_ride_service.js:3:const fs=require("fs");
+backend/services/notification_service.js:3:require("./ride_event_service");
+backend/services/passenger_intelligence_service.js:2:const fs=require("fs");
+backend/services/rideService.js:3:const repo=require("../database/rideRepository");
+backend/services/ride_completion_service.js:2:const ledger=require("./economy_ledger_service");
+backend/services/ride_completion_service.js:3:const wallet=require("../rewards/wallet_service");
+backend/services/ride_dispatch_bridge.js:1:const dispatchService = require("./dispatch_service");
+backend/services/ride_dispatch_bridge.js:2:const matchingService = require("./driver_matching_service");
+backend/services/ride_dispatch_bridge.js:3:const dispatchEngine = require("../dispatch/dispatch_engine");
+backend/services/ride_economy_service.js:3:const wallet=require("../rewards/wallet_service");
+backend/services/ride_economy_service.js:4:const history=require("../rewards/reward_history");
+backend/services/ride_economy_service.js:5:const ledger=require("./economy_ledger_service");
+backend/services/ride_event_service.js:2:const fs=require("fs");
+backend/services/ride_orchestrator_service.js:4:require("./ride_state_service");
+backend/services/ride_orchestrator_service.js:7:require("./notification_service");
+backend/services/ride_orchestrator_service.js:10:require("./ride_completion_service");
+backend/services/ride_orchestrator_service.js:12:const rideRepository=require("../database/ride_repository");
+backend/services/ride_state_service.js:2:const rides=require("../database/ride_repository");
+backend/server.js:2:const express = require('express');
+backend/server.js:3:const cors    = require('cors');
+backend/server.js:4:const path    = require('path');
+backend/api/reward_api.js:2:const claim=require("../rewards/thb_claim_engine");
+backend/api/reward_api.js:3:const executor=require("../blockchain/thb_real_executor");
+backend/api/cablink_gateway.js:2:const sync=require("../sync/live_sync_engine");
+backend/api/cablink_gateway.js:3:const push=require("../push/push_engine");
+backend/auth/auth_connector.js:2:require("dotenv").config();
+backend/payments/transaction_recorder.js:2:const store=require("../../database/production/store_engine");
+backend/payments/payment_transaction_layer.js:3:const store=require("../../database/production/store_engine");
+backend/rides/ride_engine.js:2:const store=require("../../database/production/store_engine");
+backend/rides/ride_persistence.js:3:const store=require("../../database/production/store_engine");
+backend/rides/settlement_engine.js:2:const payment=require("../payments/payment_engine");
+backend/rides/settlement_engine.js:3:const reward=require("../rewards/thb_service");
+backend/rewards/reward_engine.js:1:require("dotenv").config();
+backend/rewards/reward_engine.js:3:const {ethers}=require("ethers");
+backend/rewards/thb_service.js:2:const store=require("../../database/production/store_engine");
+backend/rewards/thb_transfer_queue.js:2:const store=require("../../database/production/store_engine");
+backend/rewards/thb_claim_engine.js:2:const store=require("../../database/production/store_engine");
+backend/rewards/auto_reward_trigger.js:3:const rewardEngine=require("./delivery_reward_engine");
+backend/rewards/auto_reward_trigger.js:4:const history=require("./reward_history");
+backend/rewards/delivery_completion.js:3:const reward=require("./delivery_reward_engine");
+backend/rewards/delivery_reward_service.js:3:const trigger=require("./auto_reward_trigger");
+backend/rewards/wallet_service.js:3:const history=require("./reward_history");
+backend/users/wallet_manager.js:2:const store=require("../../database/production/store_engine");
+backend/users/user_account_engine.js:2:const store=require("../../database/production/store_engine");
+backend/location/gps_event_engine.js:2:const store=require("../../database/production/store_engine");
+backend/onboarding/onboarding_engine.js:2:const store=require("../../database/production/store_engine");
+backend/blockchain/thb_config.js:2:require("dotenv").config();
+backend/blockchain/thb_transfer_worker.js:2:const config=require("./thb_config");
+backend/blockchain/thb_transfer_worker.js:3:const store=require("../../database/production/store_engine");
+backend/blockchain/chain_health.js:2:const config=require("./thb_config");
+backend/blockchain/thb_transfer_service.js:2:const health=require("./chain_health");
+backend/blockchain/thb_transaction_engine.js:2:const store=require("../../database/production/store_engine");
+backend/blockchain/thb_real_executor.js:2:require("dotenv").config();
+backend/blockchain/thb_real_executor.js:4:const {ethers}=require("ethers");
+backend/blockchain/thb_real_executor.js:5:const abi=require("./thb_abi.json");
+backend/realtime/ride_channel.js:2:const socket=require("../socket/socket_manager");
+backend/cloud/cloud_adapter.js:2:const store=require("../../database/production/store_engine");
+backend/sync/live_sync_engine.js:2:const cloud=require("../cloud/cloud_adapter");
+backend/providers/cloud_provider.js:2:require("dotenv").config();
+backend/providers/cloud_database_connector.js:2:const config=require("../config/provider_config");
+backend/providers/maps_connector.js:2:const config=require("../config/provider_config");
+backend/production/database_adapter.js:2:require("dotenv").config();
+backend/firebase/firebase_adapter.js:2:require("dotenv").config();
+backend/broadcast/ride_broadcast.js:2:const firebase=require("../firebase/firebase_adapter");
+backend/environment/readiness_check.js:2:const firebase=require("../firebase/firebase_adapter");
+backend/environment/readiness_check.js:3:const devices=require("../devices/device_registry");
+backend/testing/human_ride_scenario.js:2:const payment=require("../payments/payment_engine");
+backend/testing/human_ride_scenario.js:3:const safety=require("../safety/emergency_engine");
+backend/testing/human_ride_scenario.js:4:const fraud=require("../fraud/ride_validation");
+backend/testing/human_ride_scenario.js:5:const reward=require("../fraud/reward_guard");
+backend/testing/pilot_activation_test.js:2:const gps=require("../gps/gps_service");
+backend/testing/pilot_activation_test.js:3:const maps=require("../maps/map_provider");
+backend/testing/pilot_activation_test.js:4:const status=require("../status/ride_status");
+backend/testing/delivery_economy_test.js:3:const fare=require("../economy/delivery_fare_engine");
+backend/testing/live_task_flow_test.js:3:const tasks=require("../tasks/task_manager");
+backend/testing/marketplace_bridge_test.js:3:const bridge=require("../ecosystem/marketplace_bridge");
+backend/testing/phase24_verification.js:3:const bridge=require("../ecosystem/marketplace_bridge");
+backend/testing/phase28_reward_flow_test.js:3:const service=require("../rewards/delivery_reward_service");
+backend/testing/phase28_reward_flow_test.js:4:const wallet=require("../rewards/wallet_service");
+backend/testing/phase32_dashboard_api_test.js:3:const http=require("http");
+backend/testing/phase34_economy_test.js:3:const http=require("http");
+backend/testing/phase35_ledger_test.js:4:require("../services/economy_ledger_service");
+backend/testing/phase37_dashboard_test.js:3:const http=require("http");
+backend/testing/phase40_demand_test.js:3:const http=require("http");
+backend/testing/phase41_matching_test.js:3:const http=require("http");
+backend/testing/phase42_dispatch_test.js:3:const http=require("http");
+backend/testing/phase46_live_test.js:3:const http=require("http");
+backend/testing/phase47_eta_test.js:2:const http=require("http");
+backend/testing/phase48_completion_test.js:2:const http=require("http");
+backend/testing/phase49_notification_test.js:2:const http=require("http");
+backend/testing/phase50_state_test.js:2:const http=require("http");
+backend/testing/phase51_orchestrator_test.js:3:const http=require("http");
+backend/testing/phase52_driver_test.js:4:require("../services/driver_intelligence_service");
+backend/testing/phase53_identity_test.js:4:require("../services/identity_service");
+backend/testing/reward_wallet_test.js:3:const history=require("../rewards/reward_history");
+backend/testing/reward_wallet_test.js:4:const wallet=require("../rewards/wallet_service");
+backend/testing/thb_delivery_reward_test.js:1:const completion=require("../rewards/delivery_completion");
+backend/database/user_repository.js:2:const db=require("../storage/database");
+backend/database/ride_repository.js:2:const db=require("../storage/database");
+backend/database/rideRepository.js:3:const fs=require("fs");
+backend/server/app.js:2:const express=require("express");
+backend/server/app.js:9:const rideRoutes=require("../routes/rides");
+backend/server/app.js:10:const userRoutes=require("../routes/users");
+backend/server/index.js:2:const app=require("./app");
+backend/storage/database.js:2:const fs=require("fs");
+backend/gps/location_stream.js:2:const gps=require("./gps_service");
+backend/ecosystem/marketplace_bridge.js:3:const tasks=require("../tasks/task_manager");
+backend/ride_api_patch.js:1:const store=require("./ride_store");
+backend/ride_store.js:1:const fs=require("fs");
+backend/ride_store.js:2:const path=require("path");
+
+./block12_safe_reorganisation_audit.sh: line 300: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 301: 9.: command not found
+./block12_safe_reorganisation_audit.sh: line 302: ================================================================================: command not found
+================================================================================
+9. FRONTEND SERVICE LAYER CHECK
+================================================================================
+MISSING: frontend/services/api.js
+MISSING: frontend/services/rideService.js
+MISSING: frontend/services/driverService.js
+MISSING: frontend/services/ratingService.js
+
+Existing frontend services:
+frontend/services/demand_api.js
+frontend/services/driver_dashboard_api.js
+frontend/services/driver_dashboard_live.js
+frontend/services/driver_economy_screen_service.js
+frontend/services/driver_economy_service.js
+frontend/services/economy_dashboard_api.js
+frontend/services/identity_api.js
+frontend/services/live_driver_economy.js
+frontend/services/live_ride_api.js
+frontend/services/notification_api.js
+frontend/services/passenger_dashboard_api.js
+frontend/services/ride_service.js
+frontend/services/role_service.js
+frontend/services/task_service.js
+frontend/services/updates_api.js
+frontend/services/user_service.js
+
+./block12_safe_reorganisation_audit.sh: line 328: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 329: 10.: command not found
+./block12_safe_reorganisation_audit.sh: line 330: ================================================================================: command not found
+================================================================================
+10. API CONTRACT REFERENCES
+================================================================================
+----- FRONTEND API REFERENCES -----
+/api/dispatch/accept
+/api/dispatch/request
+/api/dispatch/requests
+/api/driver/
+/api/driver/DRIVER001/economy
+/api/driver/demand
+/api/driver/hotspots
+/api/drivers/apply
+/api/drivers/offline
+/api/drivers/online
+/api/ecosystem/tasks
+/api/ecosystem/tasks/
+/api/health
+/api/ride/
+/api/ride/status
+/api/rides
+/api/rides/
+/api/rides/request
+/api/updates
+/api/user/
+/api/users
+/api/users/register
+
+----- BACKEND ROUTE DEFINITIONS -----
+backend/ride_api_patch.js:36:app.get("/api/rides",(req,res)=>{
+backend/ride_api_patch.js:46:app.get("/api/rides/:id",(req,res)=>{
+backend/ride_api_patch.js:65:app.patch("/api/rides/:id",(req,res)=>{
+backend/ride_api_patch.js:7:app.post("/api/rides",(req,res)=>{
+backend/routes/completion_api.js:8:router.post(
+backend/routes/dispatch_api.js:11:router.post(
+backend/routes/dispatch_api.js:31:router.post(
+backend/routes/dispatch_api.js:52:router.post(
+backend/routes/dispatch_api.js:73:router.get(
+backend/routes/driver_dashboard_api.js:9:router.get(
+backend/routes/driver_demand_api.js:8:router.get(
+backend/routes/driver_economy.js:9:router.get(
+backend/routes/driver_economy_api.js:8:router.get(
+backend/routes/driver_intelligence_api.js:29:router.post(
+backend/routes/driver_intelligence_api.js:9:router.post(
+backend/routes/driver_location_api.js:21:router.post(
+backend/routes/driver_location_api.js:8:router.post(
+backend/routes/driver_online_api.js:19:router.get(
+backend/routes/driver_online_api.js:32:router.post(
+backend/routes/driver_online_api.js:67:router.post(
+backend/routes/ecosystem_tasks.js:22:router.get(
+backend/routes/ecosystem_tasks.js:35:router.patch(
+backend/routes/ecosystem_tasks.js:9:router.post(
+backend/routes/gps.js:23:router.get(
+backend/routes/gps.js:7:router.post(
+backend/routes/identity_api.js:11:router.get(
+backend/routes/identity_api.js:31:router.post(
+backend/routes/identity_api.js:51:router.post(
+backend/routes/live_demand_api.js:11:router.post(
+backend/routes/live_demand_api.js:31:router.post(
+backend/routes/live_demand_api.js:51:router.get(
+backend/routes/live_ride_api.js:11:router.post(
+backend/routes/live_ride_api.js:29:router.post(
+backend/routes/live_ride_api.js:50:router.post(
+backend/routes/live_ride_api.js:71:router.get(
+backend/routes/matching_api.js:11:router.post(
+backend/routes/matching_api.js:31:router.post(
+backend/routes/mobile.js:21:router.post(
+backend/routes/mobile.js:34:router.post(
+backend/routes/mobile.js:8:router.post(
+backend/routes/notification_api.js:11:router.post(
+backend/routes/notification_api.js:27:router.get(
+backend/routes/orchestrator_api.js:10:router.post(
+backend/routes/orchestrator_api.js:27:router.post(
+backend/routes/orchestrator_api.js:47:router.post(
+backend/routes/orchestrator_api.js:66:router.post(
+backend/routes/orchestrator_api.js:85:router.post(
+backend/routes/passenger_intelligence_api.js:21:router.post(
+backend/routes/passenger_intelligence_api.js:8:router.get(
+backend/routes/realtime.js:25:router.post(
+backend/routes/realtime.js:41:router.post(
+backend/routes/realtime.js:57:router.get(
+backend/routes/realtime.js:9:router.post(
+backend/routes/ride_economy_api.js:27:router.post(
+backend/routes/ride_economy_api.js:45:router.get(
+backend/routes/ride_economy_api.js:8:router.post(
+backend/routes/ride_state_api.js:17:router.post("/ride/status",(req,res)=>{
+backend/routes/ride_state_api.js:30:router.get("/ride/:id/status",(req,res)=>{
+backend/routes/ride_state_api.js:7:router.post("/ride/create",(req,res)=>{
+backend/routes/rides.js:119:router.patch(
+backend/routes/rides.js:11:router.post(
+backend/routes/rides.js:91:router.get(
+backend/routes/socket_routes.js:23:router.post(
+backend/routes/socket_routes.js:7:router.post(
+backend/routes/updates_api.js:7:router.get(
+backend/routes/users.js:31:router.get(
+backend/routes/users.js:7:router.post(
+backend/server.js:10:app.use(express.json());
+backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+backend/server.js:11:app.use(express.static(path.join(__dirname, '..')));
+backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+backend/server.js:137:app.post('/api/drivers/apply', function(req, res) {
+backend/server.js:153:app.get('/api/drivers/applications', function(req, res) {
+backend/server.js:158:app.post('/api/ratings', function(req, res) {
+backend/server.js:24:app.get('/api/health', function(req, res) {
+backend/server.js:33:app.post('/api/rides', function(req, res) {
+backend/server.js:69:app.get('/api/rides', function(req, res) {
+backend/server.js:73:app.get('/api/rides/:id', function(req, res) {
+backend/server.js:79:app.patch('/api/rides/:id', function(req, res) {
+backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+backend/server.js:9:app.use(cors({ origin: '*' }));
+backend/server/app.js:13:app.get(
+backend/server/app.js:32:app.use("/api/rides",rideRoutes);
+backend/server/app.js:34:app.use("/api/users",userRoutes);
+backend/server/app.js:6:app.use(express.json());
+
+./block12_safe_reorganisation_audit.sh: line 364: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 365: 11.: command not found
+./block12_safe_reorganisation_audit.sh: line 366: ================================================================================: command not found
+================================================================================
+11. LEGACY HTML / LAUNCHER ANALYSIS
+================================================================================
+
+----- index.html -----
+23:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+24:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+664:<script>
+1700:<script>
+1790:<script src="frontend/js/app_core.js"></script>
+1791:<script src="role.js"></script>
+1792:<script src="fix.js"></script>
+1793:<script src="fare_engine.js"></script>
+1794:<script src="frontend/js/rides/rideStateMachine.js"></script>
+1795:<script src="frontend/js/rides/passengerRideStatus.js"></script>
+1796:<script src="frontend/js/driver/driverLifecycleControls.js"></script>
+1797:<script src="frontend/js/rides/completionRewardBridge.js"></script>
+
+----- frontend/index.html -----
+13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+657:<script>
+1745:<div id="root"></div><script type="module" src="/main.jsx"></script>
+1747:<script>
+1870:<script>
+2021:<script>
+2056:<script>
+2136:<script>
+2213:<script type="module">
+2267:<script>
+2358:<script>
+2370:<script>
+
+----- dist/index.html -----
+13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+241:  <script type="module" crossorigin src="/assets/index-Cdtx3mG9.js"></script>
+658:<script>
+1623:<script>
+1746:<script>
+1891:<script>
+1926:<script>
+2006:<script>
+2089:<script>
+2101:<script>
+
+----- launcher.html -----
+9:    iframe { width:100%; height:100%; border:none; }
+13:  <iframe src="index.html" id="app"></iframe>
+15:  <script>
+19:      const iframe = document.getElementById('app');
+21:      iframe.onload = function() {
+23:          const doc = iframe.contentDocument || iframe.contentWindow.document;
+25:          // Inject fix.js
+27:          script.src = 'force-fix.js';
+30:          console.log("✅ Fixes injected into iframe");
+32:          console.log("Could not inject into iframe");
+
+./block12_safe_reorganisation_audit.sh: line 389: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 390: 12.: command not found
+./block12_safe_reorganisation_audit.sh: line 391: ================================================================================: command not found
+================================================================================
+12. REACT COMPONENT CONNECTION ANALYSIS
+================================================================================
+React components:
+frontend/components/BottomNavigation.jsx
+frontend/components/CabLinkHeader.jsx
+frontend/components/DashboardCard.jsx
+frontend/components/LegacyCabLink.jsx
+frontend/components/bstm_delivery_button.js
+frontend/components/bstm_menu.js
+frontend/components/dashboard_registry.js
+frontend/components/delivery_earnings_panel.js
+frontend/components/demand_panel.js
+frontend/components/driver_dashboard.js
+frontend/components/driver_demand_map.js
+frontend/components/driver_economy_dashboard.js
+frontend/components/driver_economy_screen.js
+frontend/components/driver_task_panel.js
+frontend/components/ecosystem_card.js
+frontend/components/live_driver_dashboard.js
+frontend/components/mobile_dashboard.js
+frontend/components/passenger_dashboard.jsx
+frontend/components/passenger_profile_card.jsx
+frontend/components/passenger_trip_status.js
+frontend/components/passenger_trip_status.jsx
+frontend/components/ride_status_card.jsx
+frontend/components/ride_timeline.jsx
+frontend/components/status_card.jsx
+frontend/components/status_panel.js
+frontend/components/thb_reward_panel.js
+frontend/components/thb_reward_panel.jsx
+frontend/components/thb_wallet_panel.js
+frontend/components/updates_center.js
+
+React component references from App.jsx:
+1:import React from "react";
+2:import LegacyCabLink from "./components/LegacyCabLink.jsx";
+
+Potential null/dead components:
+frontend/js/app_core.js:57:  return null;
+frontend/components/LegacyCabLink.jsx:4:    return null;
+
+./block12_safe_reorganisation_audit.sh: line 427: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 428: 13.: command not found
+./block12_safe_reorganisation_audit.sh: line 429: ================================================================================: command not found
+================================================================================
+13. FRONTEND JS CLASSIFICATION
+================================================================================
+frontend/js:
+frontend/js/app.js
+frontend/js/app.js.backup_1784097007863
+frontend/js/app.js.backup_booking_1784097198231
+frontend/js/app_core.js
+frontend/js/app_working_1345.bak
+frontend/js/bstm_hub_ui.js
+frontend/js/core.js
+frontend/js/core_working_1345.bak
+frontend/js/driver/applicationService.js
+frontend/js/driver/driverController.js
+frontend/js/driver/driverDispatchBridge.js
+frontend/js/driver/driverLifecycleControls.js
+frontend/js/driver/driverModeBridge.js
+frontend/js/driver/driverService.js
+frontend/js/ecosystem/README.md
+frontend/js/fare_engine.js
+frontend/js/financial_intelligence.js
+frontend/js/firebase.js
+frontend/js/fix.js
+frontend/js/gps/location_engine.js
+frontend/js/operations_core.js
+frontend/js/realtime/tracking_engine.js
+frontend/js/ride_engine.js
+frontend/js/rides/completionRewardBridge.js
+frontend/js/rides/passengerRideStatus.js
+frontend/js/rides/rideController.js
+frontend/js/rides/rideService.js
+frontend/js/rides/rideStateMachine.js
+frontend/js/role.js
+frontend/js/role_switch.js
+frontend/js/services/README.md
+frontend/js/services/api.js
+frontend/js/services/cablinkAPI.js
+frontend/js/simulation_engine.js
+
+Potential service candidates:
+frontend/js/driver/applicationService.js
+frontend/js/driver/driverService.js
+frontend/js/fare_engine.js
+frontend/js/gps/location_engine.js
+frontend/js/realtime/tracking_engine.js
+frontend/js/ride_engine.js
+frontend/js/rides/rideService.js
+frontend/js/services/api.js
+frontend/js/services/cablinkAPI.js
+frontend/js/simulation_engine.js
+
+./block12_safe_reorganisation_audit.sh: line 459: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 460: 14.: command not found
+./block12_safe_reorganisation_audit.sh: line 461: ================================================================================: command not found
+================================================================================
+14. BACKEND ROUTE MOUNT ANALYSIS
+================================================================================
+Route files:
+backend/routes/completion_api.js
+backend/routes/dispatch_api.js
+backend/routes/driver_dashboard_api.js
+backend/routes/driver_demand_api.js
+backend/routes/driver_economy.js
+backend/routes/driver_economy_api.js
+backend/routes/driver_intelligence_api.js
+backend/routes/driver_location_api.js
+backend/routes/driver_online_api.js
+backend/routes/ecosystem_tasks.js
+backend/routes/gps.js
+backend/routes/identity_api.js
+backend/routes/live_demand_api.js
+backend/routes/live_ride_api.js
+backend/routes/matching_api.js
+backend/routes/mobile.js
+backend/routes/notification_api.js
+backend/routes/orchestrator_api.js
+backend/routes/passenger_intelligence_api.js
+backend/routes/realtime.js
+backend/routes/ride_api.js.disabled
+backend/routes/ride_economy_api.js
+backend/routes/ride_state_api.js
+backend/routes/rides.js
+backend/routes/rides.js.backup
+backend/routes/rides.js.backup_truth_1784102755787
+backend/routes/socket_routes.js
+backend/routes/updates_api.js
+backend/routes/users.js
+
+Route references in canonical backend:
+9:app.use(cors({ origin: '*' }));
+10:app.use(express.json());
+11:app.use(express.static(path.join(__dirname, '..')));
+
+Potentially unmounted route files:
+UNREFERENCED CANDIDATE: completion_api.js
+UNREFERENCED CANDIDATE: dispatch_api.js
+UNREFERENCED CANDIDATE: driver_dashboard_api.js
+UNREFERENCED CANDIDATE: driver_demand_api.js
+UNREFERENCED CANDIDATE: driver_economy.js
+UNREFERENCED CANDIDATE: driver_economy_api.js
+UNREFERENCED CANDIDATE: driver_intelligence_api.js
+UNREFERENCED CANDIDATE: driver_location_api.js
+UNREFERENCED CANDIDATE: driver_online_api.js
+UNREFERENCED CANDIDATE: ecosystem_tasks.js
+UNREFERENCED CANDIDATE: gps.js
+UNREFERENCED CANDIDATE: identity_api.js
+UNREFERENCED CANDIDATE: live_demand_api.js
+UNREFERENCED CANDIDATE: live_ride_api.js
+UNREFERENCED CANDIDATE: matching_api.js
+UNREFERENCED CANDIDATE: mobile.js
+UNREFERENCED CANDIDATE: notification_api.js
+UNREFERENCED CANDIDATE: orchestrator_api.js
+UNREFERENCED CANDIDATE: passenger_intelligence_api.js
+UNREFERENCED CANDIDATE: realtime.js
+UNREFERENCED CANDIDATE: ride_economy_api.js
+UNREFERENCED CANDIDATE: ride_state_api.js
+REFERENCED/LIKELY MOUNTED: rides.js
+UNREFERENCED CANDIDATE: socket_routes.js
+UNREFERENCED CANDIDATE: updates_api.js
+UNREFERENCED CANDIDATE: users.js
+
+./block12_safe_reorganisation_audit.sh: line 518: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 519: 15.: command not found
+./block12_safe_reorganisation_audit.sh: line 520: ================================================================================: command not found
+================================================================================
+15. BACKUP / DISABLED FILES IN LIVE TREE
+================================================================================
+./backend/routes/ride_api.js.disabled
+./backend/routes/rides.js.backup
+./backend/routes/rides.js.backup_truth_1784102755787
+./backend/server.js.backup_1784096856161
+./backend/server.js.backup_route_cleanup_1784103021100
+./backend/server_before_api_layer.bak
+./backend/server_before_task_mount.bak
+./backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069
+./backend/services/ride_state_service.js.backup_create_order_1784101726427
+./backend/services/ride_state_service.js.backup_identity_1784101614431
+./backend/services/ride_state_service.js.backup_single_storage_1784102172187
+./frontend/js/app.js.backup_1784097007863
+./frontend/js/app.js.backup_booking_1784097198231
+./frontend/js/app_working_1345.bak
+./frontend/js/core_working_1345.bak
+
+./block12_safe_reorganisation_audit.sh: line 545: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 546: 16.: command not found
+./block12_safe_reorganisation_audit.sh: line 547: ================================================================================: command not found
+================================================================================
+16. BUILD CONFIGURATION
+================================================================================
+----- package.json -----
+{
+  "name": "cablink-pwa",
+  "version": "5.0.0",
+  "description": "CabLink \u2014 Blockchain-powered ride-hailing for Gaborone. BSTM Ecosystem.",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "backend": "node backend/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "cablink",
+    "bstm",
+    "botswana",
+    "blockchain",
+    "ridehailing",
+    "thobocoin"
+  ],
+  "author": "Thobo Atlang Mosanako \u2014 BSTM Ecosystem",
+  "license": "MIT"
+}
+----- vite.config.js -----
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+
+  plugins: [react()],
+
+  root: "frontend",
+
+  server: {
+    port: 5173,
+
+    proxy: {
+      "/api": {
+        target: process.env.CABLINK_API_URL || "http://localhost:3000",
+        changeOrigin: true
+      }
+    }
+  },
+
+  build: {
+    outDir: "../dist",
+    emptyOutDir: true
+  }
+
+});
+
+----- vercel.json -----
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index.js"
+    }
+  ]
+}
+./block12_safe_reorganisation_audit.sh: line 568: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 569: 17.: command not found
+./block12_safe_reorganisation_audit.sh: line 570: ================================================================================: command not found
+================================================================================
+17. CURRENT GIT STATUS
+================================================================================
+?? .block8_check.js
+?? .vercel/
+?? BLOCK9_RUNTIME_TRUTH_OUTPUT.txt
+?? CABLINK_FORENSIC_AUDIT_V2_REPORT.md
+?? CABLINK_FULL_AUDIT_REPORT.md
+?? CABLINK_RUNTIME_TRUTH_AUDIT_V3_REPORT.md
+?? archive/dead_backend_files/
+?? block10_canonical_runtime_lock.sh
+?? block11_architecture_map.sh
+?? block11_architecture_map.txt
+?? block12_live_source_inventory.txt
+?? block12_safe_reorganisation_audit.sh
+?? block12_safe_reorganisation_audit.txt
+?? block2.py
+?? block3.py
+?? block4.py
+?? block5.py
+?? block6.py
+?? block7.py
+?? block8.py
+?? block9.py
+?? block9_runtime_truth.sh
+?? cablink_forensic_audit_v2.js
+?? cablink_full_audit.js
+?? cablink_reality_doctor.js
+?? cablink_runtime_truth_audit_v3.js
+?? check_all_scripts.py
+?? finalize_check.sh
+?? fix_block7_bug.py
+?? gather_info.sh
+?? patch_driver_polling.py
+?? snapshot.sh
+?? test_loop.sh
+?? verify_flow.sh
+
+./block12_safe_reorganisation_audit.sh: line 580: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 581: 18.: command not found
+./block12_safe_reorganisation_audit.sh: line 582: ================================================================================: command not found
+================================================================================
+18. SAFE REORGANISATION DECISION MATRIX
+================================================================================
+
+[KEEP CANONICAL]
+backend/server.js
+frontend/index.html
+frontend/main.jsx
+frontend/App.jsx
+
+[DO NOT MOVE YET]
+Any file imported by the canonical React entry chain
+Any file required by backend/server.js
+Any route confirmed mounted by backend/server.js
+Any data file actively used by the canonical backend
+
+[ARCHIVE / QUARANTINE CANDIDATES — REVIEW FIRST]
+Root legacy index.html
+launcher.html
+Root role.js
+Root fix.js
+Root fare_engine.js
+Backup files in active directories
+Disabled route files
+
+[EXCLUDE FROM DUPLICATE CLEANUP]
+archive/
+migration_backup/
+node_modules/
+dist/
+.git/
+.vercel/
+
+[MISSING CANONICAL FRONTEND LAYER]
+frontend/services/api.js
+frontend/services/rideService.js
+frontend/services/driverService.js
+frontend/services/ratingService.js
+
+./block12_safe_reorganisation_audit.sh: line 625: ================================================================================: command not found
+./block12_safe_reorganisation_audit.sh: line 626: 19.: command not found
+./block12_safe_reorganisation_audit.sh: line 627: ================================================================================: command not found
+================================================================================
+19. BLOCK 12 VERDICT
+================================================================================
+
+SAFE REORGANISATION AUDIT: COMPLETE
+
+SOURCE FILES MODIFIED: NO
+SOURCE FILES MOVED: NO
+SOURCE FILES DELETED: NO
+
+NEXT STEP:
+BLOCK 13 — CANONICAL STRUCTURAL REORGANISATION
+
+BLOCK 13 MUST:
+1. Create a preservation snapshot
+2. Use the dependency map from this audit
+3. Move only proven misplaced files
+4. Keep backend/server.js canonical
+5. Keep React entry chain canonical
+6. Move legacy launchers out of active runtime paths
+7. Consolidate only confirmed duplicate implementations
+8. Preserve all archives
+9. Rebuild frontend
+10. Run backend runtime verification
+11. Run frontend/backend integration verification
+12. Stop immediately if the build or runtime regresses
+
+================================================================================
+BLOCK 12 COMPLETE
+================================================================================
+
+REPORT:
+/data/data/com.termux/files/home/CabLink-pwa/block12_safe_reorganisation_audit.txt

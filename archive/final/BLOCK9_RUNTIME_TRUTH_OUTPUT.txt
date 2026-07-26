@@ -1,0 +1,956 @@
+================================================================================
+CABLINK BLOCK 9 — ACTUAL RUNTIME CHAIN VERIFICATION
+================================================================================
+Repository: /data/data/com.termux/files/home/CabLink-pwa
+Date: Sat Jul 25 18:48:49 CAT 2026
+
+================================================================================
+1. PACKAGE SCRIPTS
+================================================================================
+{
+  "name": "cablink-pwa",
+  "version": "5.0.0",
+  "type": null,
+  "scripts": {
+    "start": "node backend/server.js",
+    "backend": "node backend/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {}
+}
+
+================================================================================
+2. VITE CONFIGURATION
+================================================================================
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+
+  plugins: [react()],
+
+  root: "frontend",
+
+  server: {
+    port: 5173,
+
+    proxy: {
+      "/api": {
+        target: process.env.CABLINK_API_URL || "http://localhost:3000",
+        changeOrigin: true
+      }
+    }
+  },
+
+  build: {
+    outDir: "../dist",
+    emptyOutDir: true
+  }
+
+});
+
+================================================================================
+3. FRONTEND ENTRY CHAIN
+================================================================================
+
+----- frontend/index.html -----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- CABLINK_BOOKRIDE_TRUTH_MIGRATION -->
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#060911"/>
+<title>CabLink · BSTM Ecosystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+<style>
+:root{
+  --ink:#060911; --surface:#0f1526; --surface2:#161e33; --surface3:#1c2540;
+  --glass:rgba(22,30,51,.62); --hair:rgba(255,255,255,.07); --hair2:rgba(255,255,255,.12);
+  --sapphire:#2e6be6; --sapphire-l:#5b8bff;
+  --gold:#f0b93a; --gold-l:#ffd873;
+  --emerald:#21c980; --coral:#ff5d5d;
+  --text:#edeff5; --muted:#8992a9; --muted2:#5b6376;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --data:'Space Mono',monospace;
+  --nav-h:78px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-font-smoothing:antialiased}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:460px;margin:0 auto;position:relative;overflow:hidden;background:var(--ink)}
+
+/* ambient bg blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;opacity:.35;z-index:0}
+.blob-1{width:260px;height:260px;background:var(--sapphire);top:-80px;left:-60px}
+.blob-2{width:220px;height:220px;background:var(--gold);top:120px;right:-80px;opacity:.18}
+
+.statusbar{position:relative;z-index:2;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;color:var(--muted);flex-shrink:0;font-family:var(--data)}
+.statusbar .time{font-weight:700;color:var(--text)}
+.statusbar .right{display:flex;gap:10px;align-items:center}
+.pip{width:7px;height:7px;border-radius:50%;background:var(--muted2);display:inline-block}
+.pip.green{background:var(--emerald);box-shadow:0 0 8px var(--emerald)}
+.pip.yellow{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.pip.red{background:var(--coral);box-shadow:0 0 8px var(--coral)}
+
+#alertStrip,#chainWarning{display:none;position:relative;z-index:2;font-size:12px;font-weight:600;padding:9px 18px;text-align:center;flex-shrink:0}
+#alertStrip{background:linear-gradient(90deg,#c98a1f,var(--gold));color:#241a04}
+#alertStrip.show{display:block}
+#alertStrip button{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#241a04;font-size:16px;cursor:pointer}
+#chainWarning{background:var(--coral);color:#2a0808;cursor:pointer}
+#chainWarning.show{display:block}
+#surgeBanner{display:none;position:relative;z-index:2;background:linear-gradient(90deg,#7a4d0a,var(--gold));color:#241a04;padding:9px 18px;text-align:center;font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+#surgeBanner.show{display:block}
+#arrivedBanner{display:none;position:relative;z-index:2;background:var(--emerald);color:#04241a;padding:9px 18px;font-weight:700;font-size:12px;text-align:center;flex-shrink:0}
+#arrivedBanner.show{display:block}
+#rideProgressBar{display:none;position:relative;z-index:2;background:var(--surface);padding:12px 18px;border-bottom:1px solid var(--hair);flex-shrink:0}
+#rideProgressBar.show{display:block}
+.rp-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px;font-family:var(--data)}
+.rp-label .rp-status{color:var(--gold-l);font-weight:700}
+.progress-track{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--sapphire),var(--gold));border-radius:2px;transition:width .5s ease;width:0%}
+
+#screens{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#screens::-webkit-scrollbar{display:none}
+.screen{display:none;padding:14px 18px calc(var(--nav-h) + 24px);animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+h1,h2,h3,.disp{font-family:var(--disp)}
+.eyebrow{font-family:var(--data);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.greeting{font-family:var(--disp);font-size:22px;font-weight:600;margin:2px 0 16px}
+.greeting span{color:var(--gold-l)}
+
+/* cards */
+.card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
+.card-title{font-family:var(--disp);font-weight:600;font-size:15px}
+.card-sub{font-size:11px;color:var(--muted);font-family:var(--data)}
+
+/* diamond wallet — signature element */
+.diamond-card{position:relative;background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid var(--hair2);border-radius:var(--r-lg);padding:22px 20px 18px;margin-bottom:14px;overflow:hidden}
+.diamond-card::before{content:'';position:absolute;top:-40%;right:-20%;width:70%;height:180%;background:linear-gradient(135deg,rgba(240,185,58,.18),transparent 60%);transform:rotate(20deg);pointer-events:none}
+.diamond-facet{width:34px;height:34px;background:linear-gradient(135deg,var(--gold-l),var(--gold) 55%,#a3760c);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 18px rgba(240,185,58,.35)}
+.wallet-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.wallet-addr{font-family:var(--data);font-size:11px;color:var(--muted)}
+.wallet-stage{font-size:10px;font-family:var(--data);letter-spacing:.08em;color:var(--gold-l);text-transform:uppercase;margin-top:2px}
+.wallet-bar{display:flex;gap:10px}
+.bal-card{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 10px;text-align:center}
+.bal-card .val{font-family:var(--data);font-size:20px;font-weight:700;color:var(--gold-l)}
+.bal-card .lbl{font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:.05em;text-transform:uppercase}
+.chainrow{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.gas-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--muted);font-family:var(--data)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:var(--r-sm);font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;border:none;transition:.2s;width:100%;letter-spacing:.01em}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 6px 20px -6px rgba(240,185,58,.5)}
+.btn-primary:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--surface3);color:var(--muted2);box-shadow:none;cursor:not-allowed}
+.btn-outline{background:rgba(255,255,255,.02);border:1px solid var(--hair2);color:var(--text)}
+.btn-outline:hover{border-color:var(--sapphire-l);color:var(--sapphire-l)}
+.btn-sapphire{background:linear-gradient(135deg,var(--sapphire-l),var(--sapphire));color:#fff}
+.btn-danger{background:var(--coral);color:#2a0808}
+.btn-green{background:var(--emerald);color:#04241a}
+.btn-sm{padding:9px 14px;font-size:12px;width:auto}
+
+/* inputs */
+.input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--body);font-size:13px;outline:none;transition:.2s}
+.input:focus{border-color:var(--sapphire-l);background:rgba(255,255,255,.05)}
+.input-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;position:relative}
+.input-icon{position:absolute;left:13px;font-size:13px;pointer-events:none;top:50%;transform:translateY(-50%);opacity:.8}
+.input.has-icon{padding-left:36px}
+.loc-line{width:2px;background:linear-gradient(var(--sapphire-l),var(--gold));height:22px;margin:1px 0 1px 17px;opacity:.5}
+
+/* ride types */
+.ride-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ride-type-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 6px;text-align:center;cursor:pointer;transition:.2s}
+.ride-type-card.active{border-color:var(--gold);background:rgba(240,185,58,.08)}
+.ride-type-card .icon{font-size:20px;margin-bottom:5px}
+.ride-type-card .name{font-size:10.5px;font-weight:700}
+.ride-type-card .price{font-size:10px;color:var(--muted);font-family:var(--data)}
+
+.fare-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--hair);font-size:12px;font-family:var(--data)}
+.fare-row:last-child{border:none;font-weight:700;color:var(--gold-l);font-size:13px}
+
+/* map */
+.map-container{position:relative;background:var(--surface2);border-radius:var(--r-md);overflow:hidden;height:230px;margin-bottom:14px;border:1px solid var(--hair)}
+#leafletMap{width:100%;height:100%;filter:saturate(1.15)}
+.map-badge{position:absolute;top:10px;left:10px;z-index:400;background:rgba(6,9,17,.75);backdrop-filter:blur(6px);border:1px solid var(--hair);border-radius:20px;padding:5px 12px;font-size:10px;font-family:var(--data);display:flex;align-items:center;gap:6px}
+.map-recenter{position:absolute;bottom:10px;right:10px;z-index:400;background:rgba(6,9,17,.8);border:1px solid var(--hair2);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
+
+/* chips / status */
+.chip{padding:6px 12px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid var(--hair);background:rgba(255,255,255,.02);color:var(--muted);display:inline-block}
+.chip.active{border-color:var(--gold);background:rgba(240,185,58,.08);color:var(--gold-l)}
+
+/* chat */
+.chat-box{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-md);padding:12px;height:150px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none}
+.msg{max-width:75%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.4}
+.msg.me{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;align-self:flex-end;border-bottom-right-radius:3px;font-weight:600}
+.msg.them{background:var(--surface3);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px}
+.msg .sender{font-size:9px;margin-bottom:2px;opacity:.6;font-family:var(--data)}
+
+/* toast */
+#toastContainer{position:fixed;top:56px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;width:calc(100% - 36px);max-width:424px;pointer-events:none}
+.toast{background:var(--surface2);border:1px solid var(--hair2);border-radius:var(--r-sm);padding:12px 16px;font-size:12px;display:flex;align-items:center;gap:10px;animation:slideDown .3s ease;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.toast.success{border-color:var(--emerald)}
+.toast.error{border-color:var(--coral)}
+.toast.warning{border-color:var(--gold)}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(3,5,10,.78);backdrop-filter:blur(2px);z-index:500;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--surface2);border:1px solid var(--hair2);border-radius:22px 22px 0 0;padding:24px;width:100%;max-width:460px;max-height:82dvh;overflow-y:auto;animation:slideUp .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-family:var(--disp);font-size:17px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
+
+/* onboarding */
+#onboarding{display:none;position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,#0f1c3d,var(--ink) 60%);z-index:99999;flex-direction:column;align-items:center;justify-content:center;padding:32px 26px;text-align:center}
+#onboarding.show{display:flex}
+.ob-slide{display:none}.ob-slide.active{display:block;animation:fadeUp .4s ease}
+.ob-emoji{font-size:60px;margin-bottom:22px}
+.ob-title{font-family:var(--disp);font-size:26px;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,var(--gold-l),var(--sapphire-l));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ob-text{font-size:13.5px;color:var(--muted);line-height:1.65;max-width:290px}
+.ob-dots{display:flex;gap:7px;margin:26px 0}
+.ob-dot{width:7px;height:7px;border-radius:50%;background:var(--hair2)}
+.ob-dot.active{background:var(--gold);width:22px;border-radius:4px}
+.ob-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:270px}
+
+/* rating */
+.stars{display:flex;gap:8px;font-size:28px;cursor:pointer;justify-content:center;margin:16px 0}
+.star{color:var(--hair2);transition:.2s}.star.lit{color:var(--gold)}
+
+/* leaderboard */
+.lb-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--hair)}
+.lb-rank{font-family:var(--disp);font-weight:700;font-size:17px;width:26px;color:var(--muted2)}
+.lb-rank.gold{color:#ffd700}.lb-rank.silver{color:#c9d3e0}.lb-rank.bronze{color:#cd8a4f}
+.lb-info{flex:1}.lb-name{font-weight:600;font-size:13px}.lb-rides{font-size:10.5px;color:var(--muted);font-family:var(--data)}
+.lb-thb{font-family:var(--data);font-weight:700;color:var(--gold-l)}
+.lb-you{background:rgba(240,185,58,.05);margin:0 -18px;padding:11px 18px;border-radius:10px}
+
+#confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:800;display:none}
+
+.tx-row{display:flex;align-items:center;gap:10px;padding:11px;background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);margin-bottom:8px}
+.tx-status{font-size:17px}
+.tx-info{flex:1;font-size:12px}.tx-hash{font-size:10px;color:var(--muted);font-family:var(--data)}
+
+.faq-item{border-bottom:1px solid var(--hair);padding:13px 0}
+.faq-q{display:flex;justify-content:space-between;cursor:pointer;font-weight:600;font-size:13px;user-select:none}
+.faq-a{font-size:12px;color:var(--muted);line-height:1.6;padding-top:10px;display:none}
+.faq-a.open{display:block}
+
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.badge-item{text-align:center;padding:11px 4px;background:rgba(255,255,255,.02);border-radius:var(--r-sm);border:1px solid var(--hair)}
+.badge-item .b-icon{font-size:22px;margin-bottom:4px;display:block}
+.badge-item .b-name{font-size:9.5px;color:var(--muted)}
+.badge-item.unlocked{border-color:var(--gold);background:rgba(240,185,58,.06)}
+.badge-item.unlocked .b-name{color:var(--gold-l)}
+
+.ride-id-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border:1px solid var(--hair2);border-radius:10px;padding:7px 13px;font-size:11px;font-family:var(--data);cursor:pointer}
+
+.request-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-md);padding:14px;margin-bottom:10px}
+.request-card.pending{border-color:var(--gold)}
+
+.scroll-hint{text-align:center;color:var(--muted2);font-size:10.5px;padding:8px 0 0}
+
+#thankYouOverlay{display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#132043,var(--ink) 65%);z-index:700;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+#thankYouOverlay.show{display:flex}
+.ty-emoji{font-size:72px;animation:bounceIn .6s ease}
+@keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+.stop-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.stop-row .rm-btn{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer}
+.share-link{background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:8px;padding:11px 12px;font-size:11px;font-family:var(--data);word-break:break-all;color:var(--sapphire-l);cursor:pointer}
+.nego-card{background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px;margin-bottom:8px}
+.nego-offer{font-family:var(--disp);font-size:21px;font-weight:700;color:var(--gold-l);margin:8px 0}
+.schedule-section{display:none;margin-top:10px}
+.schedule-section.show{display:block}
+.wallet-connect-btn{display:flex;align-items:center;gap:10px;background:rgba(240,185,58,.08);border:1px solid var(--gold);border-radius:var(--r-sm);padding:12px 16px;cursor:pointer;width:100%;color:var(--gold-l);font-family:var(--body);font-weight:700;font-size:13px}
+
+/* profile identity */
+.avatar-ring{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--sapphire-l),var(--gold));display:flex;align-items:center;justify-content:center;margin:0 auto 10px;padding:3px}
+.avatar-ring .inner{width:100%;height:100%;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:26px}
+
+/* ecosystem grid */
+.eco-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.eco-item{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:13px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:6px;transition:.2s}
+.eco-item:hover{border-color:var(--sapphire-l);background:rgba(46,107,230,.06)}
+.eco-icon{font-size:18px}
+.eco-name{font-size:12px;font-weight:700}
+.eco-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.eco-item.wide{grid-column:1/-1;flex-direction:row;align-items:center}
+
+/* nav */
+#nav{position:fixed;bottom:14px;left:14px;right:14px;max-width:432px;margin:0 auto;z-index:9999;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--hair2);border-radius:24px;display:flex;padding:8px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;cursor:pointer;color:var(--muted);transition:.2s;border:none;background:none;font-family:var(--data);font-size:9.5px;min-width:0;border-radius:16px}
+.nav-btn.active{color:var(--gold-l);background:rgba(240,185,58,.08)}
+.nav-btn .icon{font-size:18px}
+.nav-btn.center-btn{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;border-radius:50%;width:52px;height:52px;margin-top:-24px;padding:0;flex:none;align-self:flex-start;font-size:21px;box-shadow:0 6px 22px -4px rgba(240,185,58,.6);font-weight:700;min-width:52px}
+
+@media(max-height:700px){.screen{padding-bottom:calc(var(--nav-h) + 12px)}}
+</style>
+
+----- frontend/main.jsx -----
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import App from "./App.jsx";
+
+ReactDOM.createRoot(
+  document.getElementById("root")
+).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+----- frontend/App.jsx -----
+import React from "react";
+import LegacyCabLink from "./components/LegacyCabLink.jsx";
+
+export default function App(){
+
+return (
+<LegacyCabLink/>
+);
+
+}
+
+----- frontend/components/LegacyCabLink.jsx -----
+import React from "react";
+
+export default function LegacyCabLink(){
+    return null;
+}
+
+================================================================================
+4. BACKEND STARTUP CHAIN
+================================================================================
+
+----- backend/server.js -----
+'use strict';
+const express = require('express');
+const cors    = require('cors');
+const path    = require('path');
+
+const app  = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors({ origin: '*' }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '..')));
+
+// ── IN-MEMORY STORES ─────────────────────────────────────
+var rides   = [];
+var drivers = {};  // driverId -> driver object
+var ratings = [];
+
+// ── RIDE LIFECYCLE STATES ─────────────────────────────────
+// REQUESTED -> MATCHING -> DRIVER_ASSIGNED -> ACCEPTED
+// -> ARRIVED -> IN_PROGRESS -> COMPLETED -> REWARD_PENDING -> REWARD_CLAIMED
+// CANCELLED (any stage before IN_PROGRESS)
+
+// ── HEALTH ────────────────────────────────────────────────
+app.get('/api/health', function(req, res) {
+  res.json({
+    status: 'ok', version: '5.0.0',
+    ecosystem: 'BSTM CabLink', timestamp: new Date().toISOString(),
+    ridesCount: rides.length, driversOnline: Object.keys(drivers).length
+  });
+});
+
+// ── RIDES ─────────────────────────────────────────────────
+app.post('/api/rides', function(req, res) {
+  var b = req.body || {};
+  if (!b.pickup || !b.dropoff)
+    return res.status(400).json({error:'pickup and dropoff required'});
+
+  var ride = {
+    id:         'CL-' + Date.now().toString(36).toUpperCase(),
+    pickup:     b.pickup,
+    dropoff:    b.dropoff,
+    vehicle:    b.vehicle    || 'standard',
+    fare:       b.fare       || 20,
+    distanceKm: b.distanceKm || 5,
+    wallet:     b.wallet     || null,
+    notes:      b.notes      || '',
+    status:     'REQUESTED',
+    driverId:   null, driverName: null,
+    rating:     null, comment: null,
+    createdAt:  new Date().toISOString(),
+    updatedAt:  new Date().toISOString(),
+  };
+  rides.unshift(ride);
+  if (rides.length > 200) rides = rides.slice(0,200);
+
+  // Auto-match to an online driver if one available
+  var available = Object.values(drivers).filter(function(d){ return d.status==='online'; });
+  if (available.length > 0) {
+    ride.status   = 'MATCHING';
+    ride.updatedAt = new Date().toISOString();
+    // In Phase 2: real matching algorithm (nearest driver)
+    // For now: notify all online drivers (they see it via polling)
+  }
+
+  console.log('New ride:', ride.id, ride.pickup, '->', ride.dropoff, ride.fare+'BWP');
+  res.json({success:true, ride:ride});
+});
+
+app.get('/api/rides', function(req, res) {
+  res.json({rides: rides.slice(0,50)});
+});
+
+app.get('/api/rides/:id', function(req, res) {
+  var ride = rides.find(function(r){ return r.id===req.params.id; });
+  if (!ride) return res.status(404).json({error:'Ride not found'});
+  res.json({ride:ride});
+});
+
+app.patch('/api/rides/:id', function(req, res) {
+  var ride = rides.find(function(r){ return r.id===req.params.id; });
+  if (!ride) return res.status(404).json({error:'Ride not found'});
+  var allowed = ['status','driverId','driverName','rating','comment','lat','lng'];
+  allowed.forEach(function(k){ if (req.body[k] !== undefined) ride[k] = req.body[k]; });
+  ride.updatedAt = new Date().toISOString();
+  // If COMPLETED -> REWARD_PENDING
+  if (ride.status === 'COMPLETED' && !ride.rewardReady) {
+    ride.status = 'REWARD_PENDING';
+    ride.rewardReady = true;
+  }
+  console.log('Ride updated:', ride.id, '->', ride.status);
+  res.json({success:true, ride:ride});
+});
+
+// ── DRIVERS ───────────────────────────────────────────────
+app.post('/api/drivers/online', function(req, res) {
+  var b = req.body || {};
+  var id = b.driverId || b.wallet || ('drv-' + Date.now());
+  drivers[id] = {
+    id:          id,
+    vehicle:     b.vehicle || 'standard',
+    lat:         b.lat     || -24.6541 + (Math.random()-0.5)*0.05,
+    lng:         b.lng     || 25.9087  + (Math.random()-0.5)*0.05,
+    status:      'online',
+    wallet:      b.wallet  || null,
+    onlineSince: new Date().toISOString(),
+  };
+  var pending = rides.filter(function(r){ return r.status==='REQUESTED'||r.status==='MATCHING'; });
+  console.log('Driver online:', id, '| pending rides:', pending.length);
+  res.json({success:true, driverId:id, status:'online', pendingRides:pending.length});
+});
+
+app.post('/api/drivers/offline', function(req, res) {
+  var b = req.body || {};
+  var id = b.driverId || b.wallet;
+  if (id && drivers[id]) delete drivers[id];
+  else {
+    // Delete any matching wallet
+    Object.keys(drivers).forEach(function(k){
+      if (drivers[k].wallet === id) delete drivers[k];
+    });
+  }
+  res.json({success:true, status:'offline'});
+});
+
+app.get('/api/drivers/online', function(req, res) {
+  var list = Object.values(drivers);
+  // Slowly drift driver positions (simulate movement)
+  list.forEach(function(d){
+    d.lat += (Math.random()-0.5)*0.001;
+    d.lng += (Math.random()-0.5)*0.001;
+  });
+  res.json({count:list.length, drivers:list});
+});
+
+// ── DRIVER APPLICATIONS ───────────────────────────────────
+var applications = [];
+app.post('/api/drivers/apply', function(req, res) {
+  var b = req.body || {};
+  if (!b.name||!b.phone||!b.license||!b.vehicle)
+    return res.status(400).json({error:'All fields required'});
+  var rec = {
+    id:        'DRV-' + Date.now().toString(36).toUpperCase(),
+    name:      b.name, phone: b.phone,
+    license:   b.license, vehicle: b.vehicle,
+    wallet:    b.wallet || null, status: 'pending',
+    appliedAt: new Date().toISOString()
+  };
+  applications.push(rec);
+  console.log('Driver application:', rec.id, rec.name);
+  res.json({success:true, id:rec.id, message:'Application received. We will contact you within 24 hours.'});
+});
+
+app.get('/api/drivers/applications', function(req, res) {
+  res.json({count:applications.length, applications:applications});
+});
+
+// ── RATINGS ───────────────────────────────────────────────
+app.post('/api/ratings', function(req, res) {
+  var b = req.body||{};
+  var rating = {id:Date.now(), rideId:b.rideId, stars:b.stars, comment:b.comment, date:new Date().toISOString()};
+  ratings.push(rating);
+  res.json({success:true, rating:rating});
+});
+
+// catch-all removed — Vercel filesystem serves static files
+// ── START ─────────────────────────────────────────────────
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, function() {
+    console.log('CabLink backend: http://localhost:' + PORT);
+    console.log('Routes: /api/health | /api/rides | /api/drivers/online | /api/drivers/apply');
+  });
+}
+module.exports = app;
+
+----- backend/server/app.js -----
+
+const express=require("express");
+
+const app=express();
+
+app.use(express.json());
+
+
+const rideRoutes=require("../routes/rides");
+const userRoutes=require("../routes/users");
+
+
+app.get(
+"/health",
+(req,res)=>{
+
+res.json({
+
+system:"CabLink API",
+
+status:"ONLINE",
+
+time:new Date().toISOString()
+
+});
+
+}
+
+);
+
+
+app.use("/api/rides",rideRoutes);
+
+app.use("/api/users",userRoutes);
+
+
+module.exports=app;
+
+
+----- backend/server/index.js -----
+
+const app=require("./app");
+
+
+const PORT=
+process.env.PORT || 3000;
+
+
+app.listen(
+PORT,
+()=>{
+
+console.log({
+
+system:"CabLink Backend",
+
+port:PORT,
+
+status:"RUNNING"
+
+});
+
+}
+
+);
+
+
+================================================================================
+5. BACKEND ROUTE MOUNTS
+================================================================================
+----- backend/server.js app.use / app.get / app.post / app.patch -----
+9:app.use(cors({ origin: '*' }));
+10:app.use(express.json());
+11:app.use(express.static(path.join(__dirname, '..')));
+24:app.get('/api/health', function(req, res) {
+33:app.post('/api/rides', function(req, res) {
+69:app.get('/api/rides', function(req, res) {
+73:app.get('/api/rides/:id', function(req, res) {
+79:app.patch('/api/rides/:id', function(req, res) {
+95:app.post('/api/drivers/online', function(req, res) {
+112:app.post('/api/drivers/offline', function(req, res) {
+125:app.get('/api/drivers/online', function(req, res) {
+137:app.post('/api/drivers/apply', function(req, res) {
+153:app.get('/api/drivers/applications', function(req, res) {
+158:app.post('/api/ratings', function(req, res) {
+
+----- backend/server/app.js app.use / app.get / app.post / app.patch -----
+6:app.use(express.json());
+13:app.get(
+32:app.use("/api/rides",rideRoutes);
+34:app.use("/api/users",userRoutes);
+
+----- backend/server/index.js app.use / app.get / app.post / app.patch -----
+
+================================================================================
+6. ROUTE FILE INVENTORY
+================================================================================
+backend/routes/completion_api.js
+backend/routes/dispatch_api.js
+backend/routes/driver_dashboard_api.js
+backend/routes/driver_demand_api.js
+backend/routes/driver_economy.js
+backend/routes/driver_economy_api.js
+backend/routes/driver_intelligence_api.js
+backend/routes/driver_location_api.js
+backend/routes/driver_online_api.js
+backend/routes/ecosystem_tasks.js
+backend/routes/gps.js
+backend/routes/identity_api.js
+backend/routes/live_demand_api.js
+backend/routes/live_ride_api.js
+backend/routes/matching_api.js
+backend/routes/mobile.js
+backend/routes/notification_api.js
+backend/routes/orchestrator_api.js
+backend/routes/passenger_intelligence_api.js
+backend/routes/realtime.js
+backend/routes/ride_api.js.disabled
+backend/routes/ride_economy_api.js
+backend/routes/ride_state_api.js
+backend/routes/rides.js
+backend/routes/rides.js.backup
+backend/routes/rides.js.backup_truth_1784102755787
+backend/routes/socket_routes.js
+backend/routes/updates_api.js
+backend/routes/users.js
+
+================================================================================
+7. CRITICAL RIDE CONTRACTS
+================================================================================
+----- FRONTEND RIDE FETCHES -----
+frontend/js/driver/applicationService.js:4:const r = await fetch('/api/drivers/apply',{
+frontend/js/driver/driverDispatchBridge.js:44:fetch("/api/dispatch/requests")
+frontend/js/driver/driverDispatchBridge.js:127:fetch("/api/dispatch/accept",{
+frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+frontend/js/driver/driverService.js:18:const r=await fetch('/api/rides');
+frontend/js/rides/rideService.js:5:const response=await fetch('/api/rides',{
+frontend/js/app_core.js:262:  fetch('/api/drivers/online')
+frontend/js/app_core.js:340:  fetch('/api/rides', {
+frontend/js/app_core.js:378:  fetch('/api/rides/' + rideId, {
+frontend/js/app_core.js:400:        fetch('/api/drivers/online', {
+frontend/js/app_core.js:418:          fetch('/api/drivers/online', {
+frontend/js/app_core.js:425:        fetch('/api/drivers/online', {
+frontend/js/app_core.js:436:      fetch('/api/rides')
+frontend/js/app_core.js:451:    fetch('/api/drivers/offline', {
+frontend/js/app_core.js:512:  fetch('/api/rides/' + rideId, {
+frontend/components/passenger_dashboard.jsx:16:fetch("/api/ride/"+id+"/status")
+frontend/components/passenger_dashboard.jsx:21:fetch("/api/ride/"+id+"/timeline")
+
+----- BACKEND RIDE ROUTES -----
+backend/routes/rides.js:11:router.post(
+backend/routes/rides.js:91:router.get(
+backend/routes/rides.js:119:router.patch(
+backend/routes/users.js:7:router.post(
+backend/routes/users.js:31:router.get(
+backend/routes/realtime.js:9:router.post(
+backend/routes/realtime.js:25:router.post(
+backend/routes/realtime.js:41:router.post(
+backend/routes/realtime.js:57:router.get(
+backend/routes/socket_routes.js:7:router.post(
+backend/routes/socket_routes.js:23:router.post(
+backend/routes/mobile.js:8:router.post(
+backend/routes/mobile.js:21:router.post(
+backend/routes/mobile.js:34:router.post(
+backend/routes/gps.js:7:router.post(
+backend/routes/gps.js:23:router.get(
+backend/routes/completion_api.js:8:router.post(
+backend/routes/dispatch_api.js:11:router.post(
+backend/routes/dispatch_api.js:31:router.post(
+backend/routes/dispatch_api.js:52:router.post(
+backend/routes/dispatch_api.js:73:router.get(
+backend/routes/driver_dashboard_api.js:9:router.get(
+backend/routes/driver_demand_api.js:8:router.get(
+backend/routes/driver_economy.js:9:router.get(
+backend/routes/driver_economy_api.js:8:router.get(
+backend/routes/driver_intelligence_api.js:9:router.post(
+backend/routes/driver_intelligence_api.js:29:router.post(
+backend/routes/driver_location_api.js:8:router.post(
+backend/routes/driver_location_api.js:21:router.post(
+backend/routes/driver_online_api.js:19:router.get(
+backend/routes/driver_online_api.js:32:router.post(
+backend/routes/driver_online_api.js:67:router.post(
+backend/routes/ecosystem_tasks.js:9:router.post(
+backend/routes/ecosystem_tasks.js:22:router.get(
+backend/routes/ecosystem_tasks.js:35:router.patch(
+backend/routes/identity_api.js:11:router.get(
+backend/routes/identity_api.js:31:router.post(
+backend/routes/identity_api.js:51:router.post(
+backend/routes/live_demand_api.js:11:router.post(
+backend/routes/live_demand_api.js:31:router.post(
+backend/routes/live_demand_api.js:51:router.get(
+backend/routes/live_ride_api.js:11:router.post(
+backend/routes/live_ride_api.js:29:router.post(
+backend/routes/live_ride_api.js:50:router.post(
+backend/routes/live_ride_api.js:71:router.get(
+backend/routes/matching_api.js:11:router.post(
+backend/routes/matching_api.js:31:router.post(
+backend/routes/notification_api.js:11:router.post(
+backend/routes/notification_api.js:27:router.get(
+backend/routes/orchestrator_api.js:10:router.post(
+backend/routes/orchestrator_api.js:27:router.post(
+backend/routes/orchestrator_api.js:47:router.post(
+backend/routes/orchestrator_api.js:66:router.post(
+backend/routes/orchestrator_api.js:85:router.post(
+backend/routes/passenger_intelligence_api.js:8:router.get(
+backend/routes/passenger_intelligence_api.js:21:router.post(
+backend/routes/ride_api.js.disabled:13:router.post(
+backend/routes/ride_api.js.disabled:70:router.get(
+backend/routes/ride_economy_api.js:8:router.post(
+backend/routes/ride_economy_api.js:27:router.post(
+backend/routes/ride_economy_api.js:45:router.get(
+backend/routes/ride_state_api.js:7:router.post("/ride/create",(req,res)=>{
+backend/routes/ride_state_api.js:17:router.post("/ride/status",(req,res)=>{
+backend/routes/ride_state_api.js:30:router.get("/ride/:id/status",(req,res)=>{
+backend/routes/rides.js.backup:7:router.post(
+backend/routes/rides.js.backup:33:router.get(
+backend/routes/rides.js.backup:46:router.patch(
+backend/routes/rides.js.backup_truth_1784102755787:11:router.post(
+backend/routes/rides.js.backup_truth_1784102755787:90:router.get(
+backend/routes/rides.js.backup_truth_1784102755787:104:router.patch(
+backend/routes/updates_api.js:7:router.get(
+backend/server.js:24:app.get('/api/health', function(req, res) {
+backend/server.js:33:app.post('/api/rides', function(req, res) {
+backend/server.js:69:app.get('/api/rides', function(req, res) {
+backend/server.js:73:app.get('/api/rides/:id', function(req, res) {
+backend/server.js:79:app.patch('/api/rides/:id', function(req, res) {
+backend/server.js:95:app.post('/api/drivers/online', function(req, res) {
+backend/server.js:112:app.post('/api/drivers/offline', function(req, res) {
+backend/server.js:125:app.get('/api/drivers/online', function(req, res) {
+backend/server.js:137:app.post('/api/drivers/apply', function(req, res) {
+backend/server.js:153:app.get('/api/drivers/applications', function(req, res) {
+backend/server.js:158:app.post('/api/ratings', function(req, res) {
+backend/server/app.js:13:app.get(
+
+================================================================================
+8. CRITICAL FRONTEND RUNTIME DEPENDENCIES
+================================================================================
+----- frontend/App.jsx -----
+import React from "react";
+import LegacyCabLink from "./components/LegacyCabLink.jsx";
+
+export default function App(){
+
+return (
+<LegacyCabLink/>
+);
+
+}
+
+----- frontend/components/LegacyCabLink.jsx -----
+import React from "react";
+
+export default function LegacyCabLink(){
+    return null;
+}
+
+----- dashboard registry -----
+
+import PassengerDashboard from "./passenger_dashboard";
+
+export {
+PassengerDashboard
+};
+
+================================================================================
+9. VITE BUILD TOOL AVAILABILITY
+================================================================================
+LOCAL VITE: PRESENT
+vite/5.4.21 android-arm64 node-v26.4.0
+LOCAL ESBUILD: PRESENT
+
+================================================================================
+10. NODE_MODULES STATUS
+================================================================================
+node_modules: PRESENT
+node_modules package count:
+178
+
+================================================================================
+11. STATIC PRODUCTION BUILD CHECK
+================================================================================
+dist/: PRESENT
+dist/index.html:
+PRESENT
+dist/assets:
+dist/assets/index-Cdtx3mG9.js
+
+================================================================================
+12. BACKEND LIVE START TEST
+================================================================================
+Started backend candidate: backend/server.js
+PID: 1174
+./block9_runtime_truth.sh: line 211: /tmp/cablink_backend_block9.log: No such file or directory
+BACKEND PROCESS: FAILED
+
+----- BACKEND START LOG -----
+cat: /tmp/cablink_backend_block9.log: No such file or directory
+
+================================================================================
+13. LIVE API HEALTH
+================================================================================
+curl: (7) Failed to connect to localhost:3000 after 2 ms: Could not connect to server
+
+================================================================================
+14. LIVE RIDE API
+================================================================================
+GET /api/rides
+curl: (7) Failed to connect to localhost:3000 after 2 ms: Could not connect to server
+
+================================================================================
+15. LIVE DRIVER API
+================================================================================
+GET /api/drivers/online
+curl: (7) Failed to connect to localhost:3000 after 1 ms: Could not connect to server
+
+================================================================================
+16. LIVE DRIVER APPLICATION API
+================================================================================
+POST /api/drivers/apply
+curl: (7) Failed to connect to localhost:3000 after 1 ms: Could not connect to server
+
+================================================================================
+17. UNMOUNTED ROUTE DETECTION
+================================================================================
+Checking route files referenced by backend/server.js...
+NOT REFERENCED BY server.js: backend/routes/completion_api.js
+NOT REFERENCED BY server.js: backend/routes/dispatch_api.js
+NOT REFERENCED BY server.js: backend/routes/driver_dashboard_api.js
+NOT REFERENCED BY server.js: backend/routes/driver_demand_api.js
+NOT REFERENCED BY server.js: backend/routes/driver_economy.js
+NOT REFERENCED BY server.js: backend/routes/driver_economy_api.js
+NOT REFERENCED BY server.js: backend/routes/driver_intelligence_api.js
+NOT REFERENCED BY server.js: backend/routes/driver_location_api.js
+NOT REFERENCED BY server.js: backend/routes/driver_online_api.js
+NOT REFERENCED BY server.js: backend/routes/ecosystem_tasks.js
+NOT REFERENCED BY server.js: backend/routes/gps.js
+NOT REFERENCED BY server.js: backend/routes/identity_api.js
+NOT REFERENCED BY server.js: backend/routes/live_demand_api.js
+NOT REFERENCED BY server.js: backend/routes/live_ride_api.js
+NOT REFERENCED BY server.js: backend/routes/matching_api.js
+NOT REFERENCED BY server.js: backend/routes/mobile.js
+NOT REFERENCED BY server.js: backend/routes/notification_api.js
+NOT REFERENCED BY server.js: backend/routes/orchestrator_api.js
+NOT REFERENCED BY server.js: backend/routes/passenger_intelligence_api.js
+NOT REFERENCED BY server.js: backend/routes/realtime.js
+NOT REFERENCED BY server.js: backend/routes/ride_economy_api.js
+NOT REFERENCED BY server.js: backend/routes/ride_state_api.js
+LIKELY MOUNTED: backend/routes/rides.js
+NOT REFERENCED BY server.js: backend/routes/socket_routes.js
+NOT REFERENCED BY server.js: backend/routes/updates_api.js
+NOT REFERENCED BY server.js: backend/routes/users.js
+
+================================================================================
+18. FRONTEND HTML SERVERING TEST
+================================================================================
+GET /
+curl: (7) Failed to connect to localhost:3000 after 2 ms: Could not connect to server
+
+GET /frontend/
+curl: (7) Failed to connect to localhost:3000 after 1 ms: Could not connect to server
+
+GET /dist/
+curl: (7) Failed to connect to localhost:3000 after 1 ms: Could not connect to server
+
+================================================================================
+19. FRONTEND ENTRY SIGNATURES
+================================================================================
+
+----- index.html -----
+23:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+24:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+664:<script>
+1700:<script>
+1790:<script src="frontend/js/app_core.js"></script>
+1791:<script src="role.js"></script>
+1792:<script src="fix.js"></script>
+1793:<script src="fare_engine.js"></script>
+1794:<script src="frontend/js/rides/rideStateMachine.js"></script>
+1795:<script src="frontend/js/rides/passengerRideStatus.js"></script>
+1796:<script src="frontend/js/driver/driverLifecycleControls.js"></script>
+1797:<script src="frontend/js/rides/completionRewardBridge.js"></script>
+
+----- frontend/index.html -----
+13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+657:<script>
+1745:<div id="root"></div><script type="module" src="/main.jsx"></script>
+1747:<script>
+1870:<script>
+2021:<script>
+2056:<script>
+2136:<script>
+2213:<script type="module">
+2267:<script>
+2358:<script>
+2370:<script>
+
+----- dist/index.html -----
+13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+241:  <script type="module" crossorigin src="/assets/index-Cdtx3mG9.js"></script>
+658:<script>
+1623:<script>
+1746:<script>
+1891:<script>
+1926:<script>
+2006:<script>
+2089:<script>
+2101:<script>
+
+----- launcher.html -----
+13:  <iframe src="index.html" id="app"></iframe>
+15:  <script>
+
+================================================================================
+20. PROCESS CLEANUP
+================================================================================
+Backend process already stopped.
+
+================================================================================
+BLOCK 9 CONCLUSION
+================================================================================
+This block did NOT modify source files.
+This block did NOT delete files.
+This block did NOT migrate architecture.
+
+It tested:
+1. Package scripts
+2. Vite configuration
+3. React entry chain
+4. Backend startup candidates
+5. Backend route registration
+6. Live backend health
+7. Live ride API
+8. Live driver API
+9. Frontend serving paths
+10. Production dist presence
+
+Copy the COMPLETE output back here.
+The next step is to select the SINGLE CANONICAL RUNTIME CHAIN.
+================================================================================
