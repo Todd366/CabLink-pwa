@@ -2,24 +2,21 @@ const express = require("express");
 
 const app = express();
 
+app.use(cors({origin:'*'}));
 app.use(express.json());
 
-const db =
-    require(
-        "../backend/production/database_adapter"
-    );
+const engine =
+    require("../backend/canonical/ride_engine");
 
 const repository =
-    require(
-        "../backend/canonical/ride_repository_firestore_test"
-    );
+    require("../backend/canonical/ride_repository");
 
 console.log(
     "============================================================"
 );
 
 console.log(
-    "CABLINK TEST O.3: CANONICAL RIDE FIRESTORE LIFECYCLE"
+    "CABLINK — CANONICAL RIDE API"
 );
 
 console.log(
@@ -28,7 +25,462 @@ console.log(
 
 
 // ============================================================
-// CANONICAL RIDE FIRESTORE LIFECYCLE TEST
+// HELPERS
+// ============================================================
+
+function httpError(
+    res,
+    status,
+    error,
+    details = {}
+) {
+
+    return res
+        .status(status)
+        .json({
+
+            success:
+                false,
+
+            error,
+
+            ...details
+
+        });
+
+}
+
+
+// ============================================================
+// HEALTH
+// ============================================================
+
+app.get(
+    "/api/health",
+    (req, res) => {
+
+        res.json({
+
+            success:
+                true,
+
+            system:
+                "CabLink API",
+
+            status:
+                "ONLINE",
+
+            architecture:
+                "CANONICAL_RIDE_ENGINE",
+
+            persistence:
+                repository.status(),
+
+            time:
+                new Date().toISOString()
+
+        });
+
+    }
+);
+
+
+// ============================================================
+// CREATE RIDE
+// ============================================================
+
+app.post(
+    "/api/rides",
+    async (req, res) => {
+
+        try {
+
+            const ride =
+                await engine.createRide(
+                    req.body || {}
+                );
+
+            return res
+                .status(201)
+                .json({
+
+                    success:
+                        true,
+
+                    ride
+
+                });
+
+        } catch (error) {
+
+            console.error(
+                "CREATE RIDE ERROR:",
+                error
+            );
+
+            return httpError(
+                res,
+                500,
+                "Failed to create ride",
+                {
+                    message:
+                        error.message
+                }
+            );
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// GET ALL RIDES
+// ============================================================
+
+app.get(
+    "/api/rides",
+    async (req, res) => {
+
+        try {
+
+            const rides =
+                await engine.getAllRides();
+
+            return res.json({
+
+                success:
+                    true,
+
+                count:
+                    rides.length,
+
+                rides
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "GET RIDES ERROR:",
+                error
+            );
+
+            return httpError(
+                res,
+                500,
+                "Failed to retrieve rides",
+                {
+                    message:
+                        error.message
+                }
+            );
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// GET SINGLE RIDE
+// ============================================================
+
+app.get(
+    "/api/rides/:id",
+    async (req, res) => {
+
+        try {
+
+            const ride =
+                await engine.getRide(
+                    req.params.id
+                );
+
+            if (!ride) {
+
+                return httpError(
+                    res,
+                    404,
+                    "Ride not found"
+                );
+
+            }
+
+            return res.json({
+
+                success:
+                    true,
+
+                ride
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "GET RIDE ERROR:",
+                error
+            );
+
+            return httpError(
+                res,
+                500,
+                "Failed to retrieve ride",
+                {
+                    message:
+                        error.message
+                }
+            );
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// TRANSITION RIDE
+// ============================================================
+//
+// PATCH /api/rides/:id/status
+//
+// Body:
+// {
+//     "status": "MATCHING"
+// }
+//
+// Optional metadata:
+// {
+//     "status": "DRIVER_ARRIVED",
+//     "driverId": "...",
+//     "driverName": "...",
+//     "rating": 5,
+//     "comment": "..."
+// }
+//
+// ============================================================
+
+app.patch(
+    "/api/rides/:id/status",
+    async (req, res) => {
+
+        try {
+
+            const {
+                status,
+                driverId,
+                driverName,
+                rating,
+                comment
+            } = req.body || {};
+
+            if (!status) {
+
+                return httpError(
+                    res,
+                    400,
+                    "Ride status is required"
+                );
+
+            }
+
+            const result =
+                await engine.transition(
+
+                    req.params.id,
+
+                    status,
+
+                    {
+
+                        driverId,
+
+                        driverName,
+
+                        rating,
+
+                        comment
+
+                    }
+
+                );
+
+            if (
+                !result.success
+            ) {
+
+                if (
+                    result.error ===
+                    "Ride not found"
+                ) {
+
+                    return httpError(
+                        res,
+                        404,
+                        result.error
+                    );
+
+                }
+
+                return httpError(
+                    res,
+                    409,
+                    result.error
+                );
+
+            }
+
+            return res.json(
+                result
+            );
+
+        } catch (error) {
+
+            console.error(
+                "TRANSITION RIDE ERROR:",
+                error
+            );
+
+            return httpError(
+                res,
+                500,
+                "Failed to transition ride",
+                {
+                    message:
+                        error.message
+                }
+            );
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// DRIVER ACCEPT RIDE
+// ============================================================
+//
+// POST /api/rides/:id/accept
+//
+// Body:
+// {
+//     "driverId": "DRIVER-001",
+//     "driverName": "Driver One"
+// }
+//
+// ============================================================
+
+app.post(
+    "/api/rides/:id/accept",
+    async (req, res) => {
+
+        try {
+
+            const {
+                driverId,
+                driverName
+            } = req.body || {};
+
+            if (!driverId) {
+
+                return httpError(
+                    res,
+                    400,
+                    "Driver ID is required"
+                );
+
+            }
+
+            const result =
+                await engine.acceptRide(
+
+                    req.params.id,
+
+                    driverId,
+
+                    driverName
+
+                );
+
+            if (
+                !result.success
+            ) {
+
+                if (
+                    result.code ===
+                    "NOT_FOUND"
+                ) {
+
+                    return httpError(
+                        res,
+                        404,
+                        result.error,
+                        {
+                            code:
+                                result.code
+                        }
+                    );
+
+                }
+
+                return res
+                    .status(409)
+                    .json(
+                        result
+                    );
+
+            }
+
+            return res.json(
+                result
+            );
+
+        } catch (error) {
+
+            console.error(
+                "ACCEPT RIDE ERROR:",
+                error
+            );
+
+            return httpError(
+                res,
+                500,
+                "Failed to accept ride",
+                {
+                    message:
+                        error.message
+                }
+            );
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// CANONICAL FIRESTORE LIFECYCLE TEST
+// ============================================================
+//
+// This route is a diagnostic verification of the canonical
+// application architecture.
+//
+// It intentionally requires FIRESTORE mode.
+//
+// The test path is:
+//
+// HTTP
+//   ↓
+// canonical engine
+//   ↓
+// canonical repository
+//   ↓
+// canonical persistence
+//   ↓
+// Firestore
+//
 // ============================================================
 
 app.get(
@@ -46,33 +498,46 @@ app.get(
             timestamp:
                 new Date().toISOString(),
 
+            architecture:
+                "HTTP -> ENGINE -> REPOSITORY -> PERSISTENCE -> FIRESTORE",
+
             steps: {}
 
         };
 
 
         // ====================================================
-        // STEP 1 — VERIFY FIRESTORE PROVIDER
+        // STEP 1 — VERIFY PERSISTENCE MODE
         // ====================================================
 
         try {
 
-            const provider =
-                db.provider();
+            const persistence =
+                repository.status();
 
             result.steps.provider = {
 
                 success:
-                    provider.type ===
-                        "FIRESTORE" &&
+                    persistence.mode ===
+                    "FIRESTORE",
 
-                    provider.configured ===
-                        true,
-
-                provider:
-                    provider
+                persistence
 
             };
+
+            if (
+                persistence.mode !==
+                "FIRESTORE"
+            ) {
+
+                result.error =
+                    "Canonical persistence mode is not FIRESTORE";
+
+                return res
+                    .status(400)
+                    .json(result);
+
+            }
 
         } catch (error) {
 
@@ -94,84 +559,68 @@ app.get(
 
 
         // ====================================================
-        // STEP 2 — CREATE CANONICAL RIDE
+        // STEP 2 — CREATE
         // ====================================================
 
         const rideId =
             "O3-CANONICAL-TEST-" +
             Date.now();
 
-        const originalRide = {
-
-            id:
-                rideId,
-
-            pickup:
-                "BSTM HQ",
-
-            dropoff:
-                "Game City Mall",
-
-            vehicle:
-                "standard",
-
-            fare:
-                20,
-
-            distanceKm:
-                5.2,
-
-            wallet:
-                null,
-
-            passenger:
-                "O3-TEST-PASSENGER",
-
-            driverId:
-                null,
-
-            driverName:
-                null,
-
-            status:
-                "REQUESTED",
-
-            createdAt:
-                new Date().toISOString(),
-
-            updatedAt:
-                new Date().toISOString()
-
-        };
-
-
-        result.document = {
-
-            collection:
-                repository.COLLECTION,
-
-            id:
-                rideId
-
-        };
-
-
         try {
 
             const created =
-                await repository.create(
-                    originalRide
-                );
+                await engine.createRide({
+
+                    id:
+                        rideId,
+
+                    pickup:
+                        "BSTM HQ",
+
+                    dropoff:
+                        "Game City Mall",
+
+                    vehicle:
+                        "standard",
+
+                    fare:
+                        20,
+
+                    distanceKm:
+                        5.2,
+
+                    wallet:
+                        null,
+
+                    passenger:
+                        "O3-TEST-PASSENGER"
+
+                });
+
+            result.document = {
+
+                id:
+                    rideId,
+
+                collection:
+                    repository.status()
+                        .collection
+
+            };
 
             result.steps.create = {
 
                 success:
                     Boolean(
+
                         created &&
+
                         created.id ===
-                            rideId &&
+                        rideId &&
+
                         created.status ===
-                            "REQUESTED"
+                        "REQUESTED"
+
                     ),
 
                 ride:
@@ -211,82 +660,42 @@ app.get(
         // STEP 3 — READ AFTER CREATE
         // ====================================================
 
-        let afterCreate;
-
         try {
 
-            afterCreate =
-                await repository.findById(
+            const ride =
+                await engine.getRide(
                     rideId
                 );
-
-            const readMatches =
-                afterCreate !== null &&
-
-                afterCreate.id ===
-                    rideId &&
-
-                afterCreate.pickup ===
-                    "BSTM HQ" &&
-
-                afterCreate.dropoff ===
-                    "Game City Mall" &&
-
-                Number(
-                    afterCreate.fare
-                ) === 20 &&
-
-                afterCreate.passenger ===
-                    "O3-TEST-PASSENGER" &&
-
-                afterCreate.status ===
-                    "REQUESTED";
 
             result.steps.readAfterCreate = {
 
                 success:
-                    readMatches,
+                    Boolean(
 
-                fieldChecks: {
+                        ride &&
 
-                    exists:
-                        afterCreate !== null,
+                        ride.id ===
+                        rideId &&
 
-                    id:
-                        afterCreate &&
-                        afterCreate.id ===
-                            rideId,
+                        ride.pickup ===
+                        "BSTM HQ" &&
 
-                    pickup:
-                        afterCreate &&
-                        afterCreate.pickup ===
-                            "BSTM HQ",
+                        ride.dropoff ===
+                        "Game City Mall" &&
 
-                    dropoff:
-                        afterCreate &&
-                        afterCreate.dropoff ===
-                            "Game City Mall",
-
-                    fare:
-                        afterCreate &&
                         Number(
-                            afterCreate.fare
-                        ) === 20,
+                            ride.fare
+                        ) === 20 &&
 
-                    passenger:
-                        afterCreate &&
-                        afterCreate.passenger ===
-                            "O3-TEST-PASSENGER",
+                        ride.passenger ===
+                        "O3-TEST-PASSENGER" &&
 
-                    status:
-                        afterCreate &&
-                        afterCreate.status ===
-                            "REQUESTED"
+                        ride.status ===
+                        "REQUESTED"
 
-                },
+                    ),
 
-                ride:
-                    afterCreate
+                ride
 
             };
 
@@ -297,17 +706,8 @@ app.get(
                 success:
                     false,
 
-                name:
-                    error.name,
-
-                code:
-                    error.code,
-
-                message:
-                    error.message,
-
-                stack:
-                    error.stack
+                error:
+                    error.message
 
             };
 
@@ -322,31 +722,35 @@ app.get(
         // STEP 4 — REQUESTED -> MATCHING
         // ====================================================
 
-        let matching;
-
         try {
 
-            matching =
-                await repository.update(
+            const matching =
+                await engine.transition(
+
                     rideId,
-                    {
-                        status:
-                            "MATCHING"
-                    }
+
+                    engine.STATES.MATCHING
+
                 );
 
             result.steps.transitionToMatching = {
 
                 success:
                     Boolean(
+
                         matching &&
-                        matching.id ===
-                            rideId &&
-                        matching.status ===
-                            "MATCHING"
+
+                        matching.success ===
+                        true &&
+
+                        matching.ride &&
+
+                        matching.ride.status ===
+                        "MATCHING"
+
                     ),
 
-                ride:
+                result:
                     matching
 
             };
@@ -358,17 +762,8 @@ app.get(
                 success:
                     false,
 
-                name:
-                    error.name,
-
-                code:
-                    error.code,
-
-                message:
-                    error.message,
-
-                stack:
-                    error.stack
+                error:
+                    error.message
 
             };
 
@@ -383,12 +778,10 @@ app.get(
         // STEP 5 — PERSISTENT MATCHING READ
         // ====================================================
 
-        let beforeAccept;
-
         try {
 
-            beforeAccept =
-                await repository.findById(
+            const ride =
+                await engine.getRide(
                     rideId
                 );
 
@@ -396,15 +789,18 @@ app.get(
 
                 success:
                     Boolean(
-                        beforeAccept &&
-                        beforeAccept.id ===
-                            rideId &&
-                        beforeAccept.status ===
-                            "MATCHING"
+
+                        ride &&
+
+                        ride.id ===
+                        rideId &&
+
+                        ride.status ===
+                        "MATCHING"
+
                     ),
 
-                ride:
-                    beforeAccept
+                ride
 
             };
 
@@ -431,39 +827,44 @@ app.get(
         // STEP 6 — FIRST DRIVER ACCEPTS
         // ====================================================
 
-        let firstAccept;
-
         try {
 
-            firstAccept =
-                await repository.accept(
+            const accepted =
+                await engine.acceptRide(
+
                     rideId,
+
                     "DRIVER-O3-001",
+
                     "O3 Test Driver One"
+
                 );
 
             result.steps.firstDriverAccept = {
 
                 success:
                     Boolean(
-                        firstAccept &&
-                        firstAccept.success ===
-                            true &&
 
-                        firstAccept.code ===
-                            "ACCEPTED" &&
+                        accepted &&
 
-                        firstAccept.ride &&
+                        accepted.success ===
+                        true &&
 
-                        firstAccept.ride.driverId ===
-                            "DRIVER-O3-001" &&
+                        accepted.code ===
+                        "ACCEPTED" &&
 
-                        firstAccept.ride.status ===
-                            "DRIVER_ASSIGNED"
+                        accepted.ride &&
+
+                        accepted.ride.driverId ===
+                        "DRIVER-O3-001" &&
+
+                        accepted.ride.status ===
+                        "DRIVER_ASSIGNED"
+
                     ),
 
                 result:
-                    firstAccept
+                    accepted
 
             };
 
@@ -474,17 +875,8 @@ app.get(
                 success:
                     false,
 
-                name:
-                    error.name,
-
-                code:
-                    error.code,
-
-                message:
-                    error.message,
-
-                stack:
-                    error.stack
+                error:
+                    error.message
 
             };
 
@@ -496,15 +888,13 @@ app.get(
 
 
         // ====================================================
-        // STEP 7 — READ PERSISTENT ASSIGNMENT
+        // STEP 7 — PERSISTENT ASSIGNMENT
         // ====================================================
-
-        let afterFirstAccept;
 
         try {
 
-            afterFirstAccept =
-                await repository.findById(
+            const ride =
+                await engine.getRide(
                     rideId
                 );
 
@@ -512,43 +902,21 @@ app.get(
 
                 success:
                     Boolean(
-                        afterFirstAccept &&
 
-                        afterFirstAccept.driverId ===
-                            "DRIVER-O3-001" &&
+                        ride &&
 
-                        afterFirstAccept.driverName ===
-                            "O3 Test Driver One" &&
+                        ride.driverId ===
+                        "DRIVER-O3-001" &&
 
-                        afterFirstAccept.status ===
-                            "DRIVER_ASSIGNED"
+                        ride.driverName ===
+                        "O3 Test Driver One" &&
+
+                        ride.status ===
+                        "DRIVER_ASSIGNED"
+
                     ),
 
-                fieldChecks: {
-
-                    exists:
-                        afterFirstAccept !==
-                            null,
-
-                    driverId:
-                        afterFirstAccept &&
-                        afterFirstAccept.driverId ===
-                            "DRIVER-O3-001",
-
-                    driverName:
-                        afterFirstAccept &&
-                        afterFirstAccept.driverName ===
-                            "O3 Test Driver One",
-
-                    status:
-                        afterFirstAccept &&
-                        afterFirstAccept.status ===
-                            "DRIVER_ASSIGNED"
-
-                },
-
-                ride:
-                    afterFirstAccept
+                ride
 
             };
 
@@ -572,34 +940,39 @@ app.get(
 
 
         // ====================================================
-        // STEP 8 — SECOND DRIVER ATTEMPTS ACCEPTANCE
+        // STEP 8 — SECOND DRIVER
         // ====================================================
-
-        let secondAccept;
 
         try {
 
-            secondAccept =
-                await repository.accept(
+            const second =
+                await engine.acceptRide(
+
                     rideId,
+
                     "DRIVER-O3-002",
+
                     "O3 Test Driver Two"
+
                 );
 
             result.steps.secondDriverAttempt = {
 
                 success:
                     Boolean(
-                        secondAccept &&
-                        secondAccept.success ===
-                            false &&
 
-                        secondAccept.code ===
-                            "ALREADY_ACCEPTED"
+                        second &&
+
+                        second.success ===
+                        false &&
+
+                        second.code ===
+                        "ALREADY_ACCEPTED"
+
                     ),
 
                 result:
-                    secondAccept
+                    second
 
             };
 
@@ -610,17 +983,8 @@ app.get(
                 success:
                     false,
 
-                name:
-                    error.name,
-
-                code:
-                    error.code,
-
-                message:
-                    error.message,
-
-                stack:
-                    error.stack
+                error:
+                    error.message
 
             };
 
@@ -632,15 +996,13 @@ app.get(
 
 
         // ====================================================
-        // STEP 9 — FINAL PERSISTENT READ
+        // STEP 9 — FINAL PERSISTENCE
         // ====================================================
-
-        let finalRide;
 
         try {
 
-            finalRide =
-                await repository.findById(
+            const ride =
+                await engine.getRide(
                     rideId
                 );
 
@@ -648,20 +1010,21 @@ app.get(
 
                 success:
                     Boolean(
-                        finalRide &&
 
-                        finalRide.driverId ===
-                            "DRIVER-O3-001" &&
+                        ride &&
 
-                        finalRide.driverName ===
-                            "O3 Test Driver One" &&
+                        ride.driverId ===
+                        "DRIVER-O3-001" &&
 
-                        finalRide.status ===
-                            "DRIVER_ASSIGNED"
+                        ride.driverName ===
+                        "O3 Test Driver One" &&
+
+                        ride.status ===
+                        "DRIVER_ASSIGNED"
+
                     ),
 
-                ride:
-                    finalRide
+                ride
 
             };
 
@@ -685,21 +1048,17 @@ app.get(
 
 
         // ====================================================
-        // FINAL VERIFICATION
+        // FINAL
         // ====================================================
-
-        const allSteps =
-            Object.values(
-                result.steps
-            );
 
         result.success =
-            allSteps.every(
+            Object.values(
+                result.steps
+            ).every(
                 step =>
                     step.success ===
-                        true
+                    true
             );
-
 
         result.overall = {
 
@@ -735,44 +1094,22 @@ app.get(
 
         };
 
-
-        /*
-         * IMPORTANT:
-         *
-         * This test intentionally does NOT delete the test ride.
-         *
-         * Current adapter exposes only:
-         *
-         * write()
-         * read()
-         *
-         * No delete() operation exists.
-         *
-         * Test rides are isolated using:
-         *
-         * O3-CANONICAL-TEST-
-         *
-         * inside:
-         *
-         * cablink_test_rides
-         */
-
         result.cleanup = {
 
             attempted:
                 false,
 
             reason:
-                "DELETE_OPERATION_NOT_EXPOSED_BY_CURRENT_ADAPTER",
+                "DELETE_OPERATION_NOT_IMPLEMENTED",
 
             collection:
-                repository.COLLECTION,
+                repository.status()
+                    .collection,
 
             documentId:
                 rideId
 
         };
-
 
         return res
             .status(
@@ -787,32 +1124,8 @@ app.get(
 
 
 // ============================================================
-// HEALTH
+// EXPORT
 // ============================================================
-
-app.get(
-    "/api/health",
-    (req, res) => {
-
-        res.json({
-
-            system:
-                "CabLink API",
-
-            status:
-                "ONLINE",
-
-            test:
-                "CANONICAL_RIDE_FIRESTORE_LIFECYCLE",
-
-            time:
-                new Date().toISOString()
-
-        });
-
-    }
-);
-
 
 module.exports =
     app;

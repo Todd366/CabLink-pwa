@@ -1,0 +1,395 @@
+const express =
+    require("express");
+
+const db =
+    require(
+        "../production/database_adapter"
+    );
+
+const repository =
+    require(
+        "../backend/canonical/ride_repository_firestore_test"
+    );
+
+const app =
+    express();
+
+app.use(
+    express.json()
+);
+
+console.log(
+    "CABLINK TEST O: Canonical Ride Firestore Migration"
+);
+
+app.get(
+    "/api/health",
+    (req, res) => {
+
+        res.json({
+
+            system:
+                "CabLink API",
+
+            status:
+                "ONLINE",
+
+            test:
+                "CANONICAL_RIDE_FIRESTORE_MIGRATION",
+
+            time:
+                new Date().toISOString()
+
+        });
+
+    }
+);
+
+app.get(
+    "/api/canonical-firestore-provider",
+    (req, res) => {
+
+        try {
+
+            res.json({
+
+                success:
+                    true,
+
+                provider:
+                    db.provider(),
+
+                collection:
+                    repository.COLLECTION
+
+            });
+
+        } catch (error) {
+
+            res
+                .status(500)
+                .json({
+
+                    success:
+                        false,
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+    }
+);
+
+app.post(
+    "/api/canonical-ride-firestore-test",
+    async (req, res) => {
+
+        const id =
+            "RIDE-FS-TEST-" +
+            Date.now();
+
+        const ride = {
+
+            id,
+
+            pickup:
+                req.body.pickup ||
+                "BSTM HQ",
+
+            dropoff:
+                req.body.dropoff ||
+                "Game City Mall",
+
+            vehicle:
+                req.body.vehicle ||
+                "standard",
+
+            fare:
+                Number(
+                    req.body.fare
+                ) ||
+                20,
+
+            distanceKm:
+                Number(
+                    req.body.distanceKm
+                ) ||
+                0,
+
+            wallet:
+                req.body.wallet ||
+                null,
+
+            passenger:
+                req.body.passenger ||
+                "TEST-PASSENGER",
+
+            driverId:
+                null,
+
+            driverName:
+                null,
+
+            status:
+                "REQUESTED",
+
+            createdAt:
+                new Date().toISOString(),
+
+            updatedAt:
+                new Date().toISOString()
+
+        };
+
+        try {
+
+            /*
+             * STEP 1
+             * Create ride in Firestore.
+             */
+
+            const created =
+                await repository.create(
+                    ride
+                );
+
+            /*
+             * STEP 2
+             * Read ride back from Firestore.
+             */
+
+            const afterCreate =
+                await repository.findById(
+                    id
+                );
+
+            /*
+             * STEP 3
+             * Move REQUESTED -> MATCHING.
+             */
+
+            const matching =
+                await repository.update(
+                    id,
+                    {
+                        status:
+                            "MATCHING"
+                    }
+                );
+
+            /*
+             * STEP 4
+             * Read MATCHING ride.
+             */
+
+            const beforeAccept =
+                await repository.findById(
+                    id
+                );
+
+            /*
+             * STEP 5
+             * First driver accepts.
+             */
+
+            const firstAccept =
+                await repository.accept(
+                    id,
+                    "DRIVER-TEST-001",
+                    "Test Driver One"
+                );
+
+            /*
+             * STEP 6
+             * Read after first acceptance.
+             */
+
+            const afterFirstAccept =
+                await repository.findById(
+                    id
+                );
+
+            /*
+             * STEP 7
+             * Second driver attempts acceptance.
+             */
+
+            const secondAccept =
+                await repository.accept(
+                    id,
+                    "DRIVER-TEST-002",
+                    "Test Driver Two"
+                );
+
+            /*
+             * STEP 8
+             * Final persistent read.
+             */
+
+            const finalRide =
+                await repository.findById(
+                    id
+                );
+
+            const persistenceVerified =
+                afterCreate !== null &&
+                beforeAccept !== null &&
+                afterFirstAccept !== null &&
+                finalRide !== null;
+
+            const lifecycleVerified =
+                created.status ===
+                    "REQUESTED" &&
+
+                matching.status ===
+                    "MATCHING" &&
+
+                firstAccept.success ===
+                    true &&
+
+                afterFirstAccept.status ===
+                    "DRIVER_ASSIGNED";
+
+            const concurrencyRuleVerified =
+                secondAccept.success ===
+                    false &&
+
+                secondAccept.code ===
+                    "ALREADY_ACCEPTED" &&
+
+                finalRide.driverId ===
+                    "DRIVER-TEST-001";
+
+            res.json({
+
+                success:
+                    persistenceVerified &&
+                    lifecycleVerified &&
+                    concurrencyRuleVerified,
+
+                test:
+                    "CANONICAL_RIDE_FIRESTORE_MIGRATION",
+
+                provider:
+                    db.provider(),
+
+                collection:
+                    repository.COLLECTION,
+
+                rideId:
+                    id,
+
+                stages: {
+
+                    create:
+                        created,
+
+                    readAfterCreate:
+                        afterCreate,
+
+                    matching:
+                        matching,
+
+                    beforeAccept:
+                        beforeAccept,
+
+                    firstAccept:
+                        firstAccept,
+
+                    afterFirstAccept:
+                        afterFirstAccept,
+
+                    secondAccept:
+                        secondAccept,
+
+                    finalRide:
+                        finalRide
+
+                },
+
+                verification: {
+
+                    persistence:
+                        persistenceVerified,
+
+                    lifecycle:
+                        lifecycleVerified,
+
+                    firstDriverWon:
+                        firstAccept.success ===
+                        true,
+
+                    secondDriverRejected:
+                        secondAccept.success ===
+                            false,
+
+                    secondDriverCode:
+                        secondAccept.code,
+
+                    finalStatus:
+                        finalRide.status,
+
+                    finalDriver:
+                        finalRide.driverId,
+
+                    concurrencyRule:
+                        concurrencyRuleVerified
+
+                },
+
+                overall:
+                    persistenceVerified &&
+                    lifecycleVerified &&
+                    concurrencyRuleVerified
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "TEST O DATABASE FAILURE"
+            );
+
+            console.error(
+                error.stack ||
+                error
+            );
+
+            res
+                .status(500)
+                .json({
+
+                    success:
+                        false,
+
+                    test:
+                        "CANONICAL_RIDE_FIRESTORE_MIGRATION",
+
+                    error: {
+
+                        name:
+                            error.name,
+
+                        code:
+                            error.code,
+
+                        message:
+                            error.message,
+
+                        stack:
+                            error.stack
+
+                    }
+
+                });
+
+        }
+
+    }
+);
+
+module.exports =
+    app;

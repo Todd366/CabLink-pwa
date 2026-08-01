@@ -1,0 +1,10 @@
+Lifecycle scripts included in cablink-pwa@5.0.0:
+  start
+    node backend/server.js
+available via `npm run`:
+  backend
+    node backend/server.js
+  dev
+    vite
+  preview
+    vite preview

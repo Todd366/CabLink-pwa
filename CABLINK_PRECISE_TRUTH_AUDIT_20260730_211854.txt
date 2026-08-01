@@ -1,0 +1,2645 @@
+======================================================================
+CABLINK — PRECISE SOURCE → RUNTIME → FIRESTORE TRUTH AUDIT
+======================================================================
+TIME   : 2026-07-30T21:18:54+02:00
+REPORT : CABLINK_PRECISE_TRUTH_AUDIT_20260730_211854.txt
+MODE   : READ-ONLY
+ACTION : NO FILE MODIFICATIONS
+ACTION : NO COMMIT
+ACTION : NO PUSH
+ACTION : NO DEPLOYMENT
+======================================================================
+
+======================================================================
+1. GIT TRUTH
+======================================================================
+BRANCH       : main
+LOCAL HEAD   : 105b977e042b961ec7b2cad4ea8e8461a75674f2
+ORIGIN/MAIN  : 9ced63c4c24deba4e70f276a4b1db6a482782011
+⚠️ WARN: Local HEAD differs from origin/main
+
+--- WORKING TREE ---
+ M .vercel/project.json
+ M backend/canonical/ride_engine.js
+ M backend/canonical/ride_repository.js
+ M backend/data/economy_ledger.json
+ M backend/data/rides.json
+ M backend/database/ride_repository.js
+ M backend/production/database_adapter.js
+ M backend/rides/ride_engine.js
+ M backend/rides/ride_state_engine.js
+ M backend/routes/completion_api.js
+ M backend/routes/dispatch_api.js
+ M backend/routes/rides.js
+ M backend/server/app.js
+ M backend/services/economy_ledger_service.js
+ M backend/services/live_ride_service.js
+ M backend/services/rideService.js
+ M backend/services/ride_completion_service.js
+ M backend/services/ride_economy_service.js
+ M backend/services/ride_orchestrator_service.js
+ M backend/services/ride_service.js
+ M backend/services/ride_state_service.js
+ M backend/status/ride_status.js
+ M backend/storage/cablink_db.json
+ M backend/storage/database.js
+ M cablink_full_audit.js
+ M frontend/App.jsx
+ M frontend/components/LegacyCabLink.jsx
+ M frontend/index.html
+ M frontend/js/app_core.js
+ M frontend/js/driver/driverDispatchBridge.js
+ M frontend/js/driver/driverLifecycleControls.js
+ M frontend/js/operations_core.js
+ M frontend/js/ride_engine.js
+ M frontend/js/rides/rideStateMachine.js
+ M frontend/js/simulation_engine.js
+ M package-lock.json
+ M package.json
+?? .vercel/.env.production.local
+?? 00_FORENSIC_DISCOVERY.sh
+?? 00_cablink_inventory.sh
+?? CABLINK_FULL_AUDIT_REPORT.md
+?? CABLINK_PRECISE_TRUTH_AUDIT_20260730_211854.txt
+?? CABLINK_SOURCE_TO_RUNTIME_TRUTH_20260730_211533.txt
+?? SITREP.txt
+?? api/index.firebase-forensics-backup.js
+?? api/index.firebase-readiness-working.js
+?? api/index.js.backup
+?? api/index.js.before-adapter-test
+?? api/index.js.before-canonical-firestore-test
+?? api/index.js.before-firestore-boot-diagnostic
+?? api/index.js.before-firestore-canonical-lifecycle
+?? api/index.js.before-firestore-operation-diagnostic
+?? api/index.minimal-test.js
+?? api/index.ride-routes-working.js
+?? api/index.storage-test-backup.js
+?? api/index.storage-test-working.js
+?? api/index.users-route-failing.js
+?? api/index.users-test-working.js
+?? api/index.write-forensics-working.js
+?? backend/canonical/ride_engine.js.before-firestore-test
+?? backend/canonical/ride_engine.js.pre_o6
+?? backend/canonical/ride_repository.js.before-firestore-test
+?? backend/canonical/ride_repository.js.pre_o6
+?? backend/canonical/ride_repository_firestore_test.js
+?? backend/firebase/firestore_adapter.js
+?? backend/production/database_adapter.js.before-firestore
+?? backend/routes/rides.js.before-firestore-test
+?? backend/routes/rides.js.pre_o6
+?? backend/storage/database.js.backup_relative_path
+?? backups/o820/
+?? backups/o820_auto/
+?? backups/o821_auto/
+?? backups/o822_auto/
+?? backups/o823_auto/
+?? backups/o824_auto/
+?? backups/o834_auto/
+?? backups/o837_completion_fix/
+?? backups/o839_completion_route/
+?? backups/o839_completion_service/
+?? backups/o843_automated_restart_survival_gate.js
+?? block9_canonical_repair.sh
+?? block9_restore_and_verify.sh
+?? cablink_current_app_inventory.js
+?? cablink_forensic_evidence_20260730_203031/
+?? cablink_live_truth_probe.sh
+?? cablink_live_truth_probe_20260730_210502.txt
+?? cablink_precise_truth_audit.sh
+?? cablink_runtime_truth_trace.js
+?? cablink_runtime_truth_trace_output.txt
+?? cablink_source_to_runtime_truth_audit.sh
+?? frontend/index.html.pre_o6
+?? frontend/js/app_core.js.pre_o6
+?? frontend/js/rides/activeRideRegistry.js
+?? independent_audit.py
+?? o820_canonical_cleanup.js
+?? o821_legacy_cleanup.js
+?? o822_backend_canonical_cleanup.js
+?? o823_service_canonical_cleanup.js
+?? o824_finalize_service_wrappers.js
+?? o825_event_flow_audit.js
+?? o826_live_ride_simulation.js
+?? o827_reward_pipeline_test.js
+?? o828_driver_race_test.js
+?? o829_full_economy_ride_test.js
+?? o830_api_integration_test.js
+?? o831_api_contract_audit.js
+?? o832_real_api_flow_test.js
+?? o834_canonical_completion_migration.js
+?? o835_state_authority_audit.js
+?? o836_live_service_inspect.js
+?? o837_completion_canonical_fix.js
+?? o838_completion_path_audit.js
+?? o839_canonical_completion_bridge.js
+?? o840_full_canonical_lifecycle_test.js
+?? o841_canonical_integrity_gate.js
+?? o842_persistence_restart_integrity_test.js
+?? o843_automated_restart_survival_gate.js
+?? o844_restart_persistence_survival_test.js
+?? o845_deterministic_restart_survival_test.js
+?? o846_clean_owned_restart_survival_test.js
+?? o847_deterministic_restart_survival_test.js
+?? o848_canonical_state_authority_audit.js
+?? o849_canonical_writer_classification_audit.js
+?? o850_runtime_ride_authority_trace.js
+?? o851_runtime_authority_trace.js
+?? o852_active_runtime_dependency_classification.js
+?? o852_real_api_contract_audit.js
+?? o853_real_end_to_end_canonical_test.js
+?? o853_runtime_ride_write_authority_trace.js
+?? o854_cross_service_caller_ownership_trace.js
+?? o854_frontend_canonical_bridge_audit.js
+?? o855_runtime_reachability_dual_repository_trace.js
+?? o856_runtime_route_registration_trace.js
+?? o857_legacy_live_ride_conflict_trace.js
+?? o858_database_repository_orchestrator_trace.js
+?? o859_active_ride_path_authority_trace.js
+?? runtime_truth_scan.sh
+?? runtime_truth_scan.txt
+
+--- LAST 10 COMMITS ---
+105b977 fix: add frontend/js static routes + fix api/index.js deps
+9ced63c fix: require app.js not server.js — removes app.listen from serverless
+87b4f8d fix: set outputDirectory so Vercel serves static JS files correctly
+011b903 fix: stabilize Vercel static deployment and API entrypoint
+51505ad Restore static Vercel deployment path
+d2d3e5a Fix Vercel Vite React production build
+5ee45bd Fix driver map count and GPS markers
+9953f43 fix: use api/ folder pattern — static files served natively by Vercel
+e8f7815 fix: filesystem handler must be first route in vercel.json
+0be3745 fix: remove Express catch-all so Vercel can serve static JS files
+
+======================================================================
+2. VERCEL DEPLOYMENT ENTRYPOINT
+======================================================================
+--- vercel.json ---
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "fix.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "role.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "fare_engine.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "sw.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "frontend/js/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "manifest.json",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/fix.js",
+      "dest": "/fix.js"
+    },
+    {
+      "src": "/role.js",
+      "dest": "/role.js"
+    },
+    {
+      "src": "/fare_engine.js",
+      "dest": "/fare_engine.js"
+    },
+    {
+      "src": "/sw.js",
+      "dest": "/sw.js"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "/frontend/js/(.*)",
+      "dest": "/frontend/js/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
+--- Vercel build targets ---
+BUILD 1
+  src : api/index.js
+  use : @vercel/node
+BUILD 2
+  src : index.html
+  use : @vercel/static
+BUILD 3
+  src : fix.js
+  use : @vercel/static
+BUILD 4
+  src : role.js
+  use : @vercel/static
+BUILD 5
+  src : fare_engine.js
+  use : @vercel/static
+BUILD 6
+  src : sw.js
+  use : @vercel/static
+BUILD 7
+  src : frontend/js/**
+  use : @vercel/static
+BUILD 8
+  src : manifest.json
+  use : @vercel/static
+
+ROUTES
+ROUTE 1
+  src  : /api/(.*)
+  dest : /api/index.js
+ROUTE 2
+  src  : /fix.js
+  dest : /fix.js
+ROUTE 3
+  src  : /role.js
+  dest : /role.js
+ROUTE 4
+  src  : /fare_engine.js
+  dest : /fare_engine.js
+ROUTE 5
+  src  : /sw.js
+  dest : /sw.js
+ROUTE 6
+  src  : /manifest.json
+  dest : /manifest.json
+ROUTE 7
+  src  : /frontend/js/(.*)
+  dest : /frontend/js/$1
+ROUTE 8
+  src  : /(.*)
+  dest : /index.html
+✅ PASS: Vercel explicitly deploys api/index.js
+✅ PASS: Vercel API traffic routes to api/index.js
+
+======================================================================
+3. API ENTRYPOINT ROUTE INVENTORY
+======================================================================
+--- api/index.js ---
+34:app.get(
+793:app.get(
+
+--- api/index.js imports ---
+1:const express = require("express");
+8:    require(
+13:    require(
+
+--- api/index.js ride references ---
+9:        "../backend/production/database_adapter"
+12:const repository =
+14:        "../backend/canonical/ride_repository_firestore_test"
+22:    "CABLINK TEST O.3: CANONICAL RIDE FIRESTORE LIFECYCLE"
+31:// CANONICAL RIDE FIRESTORE LIFECYCLE TEST
+35:    "/api/canonical-firestore-lifecycle",
+44:                "CANONICAL_RIDE_FIRESTORE_LIFECYCLE",
+55:        // STEP 1 — VERIFY FIRESTORE PROVIDER
+67:                        "FIRESTORE" &&
+97:        // STEP 2 — CREATE CANONICAL RIDE
+100:        const rideId =
+101:            "O3-CANONICAL-TEST-" +
+104:        const originalRide = {
+107:                rideId,
+151:                repository.COLLECTION,
+154:                rideId
+162:                await repository.create(
+163:                    originalRide
+172:                            rideId &&
+177:                ride:
+219:                await repository.findById(
+220:                    rideId
+227:                    rideId &&
+258:                            rideId,
+288:                ride:
+330:                await repository.update(
+331:                    rideId,
+344:                            rideId &&
+349:                ride:
+391:                await repository.findById(
+392:                    rideId
+401:                            rideId &&
+406:                ride:
+439:                await repository.accept(
+440:                    rideId,
+456:                        firstAccept.ride &&
+458:                        firstAccept.ride.driverId ===
+461:                        firstAccept.ride.status ===
+507:                await repository.findById(
+508:                    rideId
+550:                ride:
+583:                await repository.accept(
+584:                    rideId,
+638:        let finalRide;
+642:            finalRide =
+643:                await repository.findById(
+644:                    rideId
+651:                        finalRide &&
+653:                        finalRide.driverId ===
+656:                        finalRide.driverName ===
+659:                        finalRide.status ===
+663:                ride:
+664:                    finalRide
+742:         * This test intentionally does NOT delete the test ride.
+744:         * Current adapter exposes only:
+751:         * Test rides are isolated using:
+753:         * O3-CANONICAL-TEST-
+757:         * cablink_test_rides
+766:                "DELETE_OPERATION_NOT_EXPOSED_BY_CURRENT_ADAPTER",
+769:                repository.COLLECTION,
+772:                rideId
+806:                "CANONICAL_RIDE_FIRESTORE_LIFECYCLE",
+
+======================================================================
+4. FULL BACKEND ENTRYPOINT
+======================================================================
+--- backend/server.js ---
+// ============================================================
+// CABLINK CANONICAL BACKEND SERVER ENTRY
+// ============================================================
+//
+// This file is intentionally kept as the single package.json
+// backend entry point.
+//
+// Canonical request flow:
+//
+// HTTP
+//   ↓
+// backend/server/app.js
+//   ↓
+// backend/routes/rides.js
+//   ↓
+// backend/canonical/ride_engine.js
+//   ↓
+// backend/canonical/ride_repository.js
+//   ↓
+// backend/data/rides.json
+//
+// Legacy ride systems are NOT deleted by this alignment.
+// ============================================================
+
+const app = require("./server/app");
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(
+        `🚕 CabLink backend running on port ${PORT}`
+    );
+});
+
+--- backend/server/app.js imports ---
+const express = require("express");
+
+const app = express();
+
+app.use(express.json());
+
+
+// ============================================================
+// ROUTES
+// ============================================================
+
+const rideRoutes =
+    require("../routes/rides");
+
+const userRoutes =
+    require("../routes/users");
+
+const canonicalRewardRoutes =
+    require("../routes/canonical_reward_api");
+
+const completionRoutes =
+    require("../routes/completion_api");
+
+const dispatchRoutes =
+    require("../routes/dispatch_api");
+
+const driverOnlineRoutes =
+    require("../routes/driver_online_api");
+
+
+// ============================================================
+// HEALTH
+// ============================================================
+
+function healthResponse(req, res) {
+
+    res.json({
+
+        system: "CabLink API",
+
+        status: "ONLINE",
+
+        time: new Date().toISOString()
+
+    });
+
+}
+
+
+app.get(
+    "/health",
+    healthResponse
+);
+
+
+app.get(
+    "/api/health",
+    healthResponse
+);
+
+
+// ============================================================
+// CANONICAL RIDE API
+//
+// PRIMARY RIDE SYSTEM
+//
+// POST  /api/rides
+// GET   /api/rides
+// GET   /api/rides/:id
+// PATCH /api/rides/:id
+// PATCH /api/rides/:id/accept
+// PATCH /api/rides/:id/complete
+// ============================================================
+
+app.use(
+    "/api/rides",
+    rideRoutes
+);
+
+
+// ============================================================
+// USERS
+// ============================================================
+
+app.use(
+    "/api/users",
+    userRoutes
+);
+
+
+// ============================================================
+// REWARDS
+// ============================================================
+
+app.use(
+    "/api/rewards",
+    canonicalRewardRoutes
+);
+
+
+// ============================================================
+// RIDE COMPLETION
+//
+// Legacy-compatible endpoint:
+//
+// POST /api/ride/complete
+//
+// Canonical endpoint:
+//
+// PATCH /api/rides/:id/complete
+// ============================================================
+
+app.use(
+    "/api",
+    completionRoutes
+);
+
+
+// ============================================================
+// DISPATCH
+//
+// Dispatch is now mounted.
+//
+// Canonical driver polling endpoint:
+//
+// GET /api/dispatch/requests
+//
+// Passenger request:
+//
+// POST /api/dispatch/request
+//
+// Driver acceptance:
+//
+// POST /api/dispatch/accept
+// ============================================================
+
+app.use(
+    "/api",
+    dispatchRoutes
+);
+
+
+// ============================================================
+// DRIVER ONLINE REGISTRY
+// ============================================================
+
+app.use(
+    "/api",
+    driverOnlineRoutes
+);
+
+
+// ============================================================
+// EXPORT
+// ============================================================
+
+module.exports = app;
+
+--- backend/server/app.js route mounting ---
+5:app.use(express.json());
+50:app.get(
+56:app.get(
+75:app.use(
+85:app.use(
+95:app.use(
+113:app.use(
+137:app.use(
+147:app.use(
+
+======================================================================
+5. RIDE ROUTE AUTHORITY
+======================================================================
+--- backend/routes/rides.js ---
+const router = require("express").Router();
+
+const rideEngine =
+    require("../canonical/ride_engine");
+
+const {
+    STATES
+} = rideEngine;
+
+
+// ============================================================
+// POST /api/rides
+// Create new ride
+// ============================================================
+
+router.post("/", (req, res) => {
+
+    try {
+
+        const {
+            pickup,
+            dropoff,
+            vehicle,
+            fare,
+            distanceKm,
+            wallet,
+            notes,
+            passenger
+        } = req.body || {};
+
+        if (!pickup) {
+            return res.status(400).json({
+                success: false,
+                error: "Pickup location is required"
+            });
+        }
+
+        if (!dropoff) {
+            return res.status(400).json({
+                success: false,
+                error: "Drop-off location is required"
+            });
+        }
+
+        const ride =
+            rideEngine.createRide({
+                pickup,
+                dropoff,
+                vehicle,
+                fare,
+                distanceKm,
+                wallet,
+                notes,
+                passenger
+            });
+
+        // Move ride into matching state.
+        const matching =
+            rideEngine.transition(
+                ride.id,
+                STATES.MATCHING
+            );
+
+        res.status(201).json({
+            success: true,
+            ride:
+                matching.success
+                    ? matching.ride
+                    : ride
+        });
+
+    } catch (error) {
+
+        console.error(
+            "❌ Ride creation error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to create ride"
+        });
+
+    }
+
+});
+
+
+// ============================================================
+// PATCH /api/rides/:id/accept
+//
+// Canonical driver acceptance endpoint.
+//
+// Only the first valid acceptance of a MATCHING ride wins.
+// A second acceptance returns HTTP 409.
+// ============================================================
+
+router.patch("/:id/accept", async (req, res) => {
+
+    try {
+
+        const {
+            driverId,
+            driverName
+        } = req.body || {};
+
+        if (!driverId) {
+
+            return res.status(400).json({
+                success: false,
+                error: "Driver ID is required"
+            });
+        }
+
+        const result =
+            await rideEngine.acceptRide(
+                req.params.id,
+                driverId,
+                driverName
+            );
+
+        if (!result.success) {
+
+            if (result.code === "NOT_FOUND") {
+
+                return res.status(404).json(
+                    result
+                );
+            }
+
+            if (
+                result.code ===
+                "ALREADY_ACCEPTED"
+            ) {
+
+                return res.status(409).json(
+                    result
+                );
+            }
+
+            return res.status(400).json(
+                result
+            );
+        }
+
+        return res.status(200).json(
+            result
+        );
+
+    } catch (error) {
+
+        console.error(
+            "❌ Ride acceptance error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            error: "Failed to accept ride"
+        });
+    }
+});
+
+
+// ============================================================
+// GET /api/rides
+// Get all rides
+// ============================================================
+
+router.get("/", (req, res) => {
+
+    try {
+
+        const rides =
+            rideEngine.getAllRides();
+
+        res.json({
+            success: true,
+            count: rides.length,
+            rides
+        });
+
+    } catch (error) {
+
+        console.error(
+            "❌ Ride list error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to load rides"
+        });
+
+    }
+
+});
+
+
+// ============================================================
+// GET /api/rides/:id
+// Get one ride
+// ============================================================
+
+router.get("/:id", (req, res) => {
+
+    const ride =
+        rideEngine.getRide(
+            req.params.id
+        );
+
+    if (!ride) {
+
+        return res.status(404).json({
+            success: false,
+            error: "Ride not found"
+        });
+
+    }
+
+    res.json({
+        success: true,
+        ride
+    });
+
+});
+
+
+// ============================================================
+// PATCH /api/rides/:id
+// Change ride state / update metadata
+// ============================================================
+
+router.patch("/:id", (req, res) => {
+
+    try {
+
+        const {
+            status,
+            driverId,
+            driverName,
+            rating,
+            comment
+        } = req.body || {};
+
+        if (!status) {
+
+            return res.status(400).json({
+                success: false,
+                error: "Ride status is required"
+            });
+
+        }
+
+        const result =
+            rideEngine.transition(
+                req.params.id,
+                status,
+                {
+                    driverId,
+                    driverName,
+                    rating,
+                    comment
+                }
+            );
+
+        if (!result.success) {
+
+            return res.status(400).json(
+                result
+            );
+
+        }
+
+        res.json(result);
+
+    } catch (error) {
+
+        console.error(
+            "❌ Ride update error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to update ride"
+        });
+
+    }
+
+});
+
+
+// ============================================================
+// EXPORT
+// ============================================================
+
+module.exports = router;
+
+--- backend/ride_api_patch.js ---
+const store=require("./ride_store");
+
+
+module.exports=function(app){
+
+
+app.post("/api/rides",(req,res)=>{
+
+    try{
+
+        const ride=store.createRide(req.body);
+
+        console.log(
+        "🚕 NEW RIDE:",
+        ride.id
+        );
+
+        res.json({
+            success:true,
+            ride
+        });
+
+    }catch(e){
+
+        res.status(500)
+        .json({
+            error:e.message
+        });
+
+    }
+
+});
+
+
+
+app.get("/api/rides",(req,res)=>{
+
+    res.json(
+        store.getRides()
+    );
+
+});
+
+
+
+app.get("/api/rides/:id",(req,res)=>{
+
+    const ride=
+    store.getRide(req.params.id);
+
+
+    if(!ride)
+        return res.status(404)
+        .json({
+            error:"Ride not found"
+        });
+
+
+    res.json(ride);
+
+});
+
+
+
+app.patch("/api/rides/:id",(req,res)=>{
+
+    const ride=
+    store.updateRide(
+        req.params.id,
+        req.body
+    );
+
+
+    if(!ride)
+        return res.status(404)
+        .json({
+            error:"Ride not found"
+        });
+
+
+    res.json(ride);
+
+});
+
+
+};
+
+--- all /api/rides registrations ---
+api/index.ride-routes-working.js:26:    "/api/rides",
+backend/routes/rides.js:12:// POST /api/rides
+backend/routes/rides.js:16:router.post("/", (req, res) => {
+backend/routes/rides.js:90:// PATCH /api/rides/:id/accept
+backend/routes/rides.js:98:router.patch("/:id/accept", async (req, res) => {
+backend/routes/rides.js:166:// GET /api/rides
+backend/routes/rides.js:170:router.get("/", (req, res) => {
+backend/routes/rides.js:201:// GET /api/rides/:id
+backend/routes/rides.js:205:router.get("/:id", (req, res) => {
+backend/routes/rides.js:230:// PATCH /api/rides/:id
+backend/routes/rides.js:234:router.patch("/:id", (req, res) => {
+backend/routes/completion_api.js:10:// PATCH /api/rides/:id/complete
+backend/routes/ride_state_api.js:7:router.post("/ride/create",(req,res)=>{
+backend/routes/ride_state_api.js:17:router.post("/ride/status",(req,res)=>{
+backend/routes/ride_state_api.js:30:router.get("/ride/:id/status",(req,res)=>{
+backend/server/app.js:67:// POST  /api/rides
+backend/server/app.js:68:// GET   /api/rides
+backend/server/app.js:69:// GET   /api/rides/:id
+backend/server/app.js:70:// PATCH /api/rides/:id
+backend/server/app.js:71:// PATCH /api/rides/:id/accept
+backend/server/app.js:72:// PATCH /api/rides/:id/complete
+backend/server/app.js:76:    "/api/rides",
+backend/server/app.js:110:// PATCH /api/rides/:id/complete
+backend/ride_api_patch.js:7:app.post("/api/rides",(req,res)=>{
+backend/ride_api_patch.js:36:app.get("/api/rides",(req,res)=>{
+backend/ride_api_patch.js:46:app.get("/api/rides/:id",(req,res)=>{
+backend/ride_api_patch.js:65:app.patch("/api/rides/:id",(req,res)=>{
+
+======================================================================
+6. CANONICAL RIDE ENGINE
+======================================================================
+
+######################################################################
+FILE: backend/canonical/ride_engine.js
+######################################################################
+const repository = require("./ride_repository");
+
+const STATES = Object.freeze({
+    REQUESTED: "REQUESTED",
+    MATCHING: "MATCHING",
+    DRIVER_ASSIGNED: "DRIVER_ASSIGNED",
+    DRIVER_ARRIVED: "DRIVER_ARRIVED",
+    PICKED_UP: "PICKED_UP",
+    STARTED: "STARTED",
+    COMPLETED: "COMPLETED",
+    CANCELLED: "CANCELLED"
+});
+
+const TRANSITIONS = {
+    REQUESTED: [
+        "MATCHING",
+        "CANCELLED"
+    ],
+
+    MATCHING: [
+        "DRIVER_ASSIGNED",
+        "CANCELLED"
+    ],
+
+    DRIVER_ASSIGNED: [
+        "DRIVER_ARRIVED",
+        "CANCELLED"
+    ],
+
+    DRIVER_ARRIVED: [
+        "PICKED_UP",
+        "CANCELLED"
+    ],
+
+    PICKED_UP: [
+        "STARTED"
+    ],
+
+    STARTED: [
+        "COMPLETED"
+    ],
+
+    COMPLETED: [],
+
+    CANCELLED: []
+};
+
+function createRide(data) {
+
+    const ride = {
+        id: "RIDE-" + Date.now(),
+
+        pickup: data.pickup || "",
+
+        dropoff:
+            data.dropoff ||
+            data.destination ||
+            "",
+
+        vehicle:
+            data.vehicle ||
+            "standard",
+
+        fare:
+            Number(data.fare) ||
+            20,
+
+        distanceKm:
+            Number(data.distanceKm) ||
+            0,
+
+        wallet:
+            data.wallet ||
+            null,
+
+        notes:
+            data.notes ||
+            "",
+
+        passenger:
+            data.passenger ||
+            null,
+
+        driverId: null,
+
+        driverName: null,
+
+        status: STATES.REQUESTED,
+
+        createdAt:
+            new Date().toISOString(),
+
+        updatedAt:
+            new Date().toISOString()
+    };
+
+    return repository.create(ride);
+}
+
+function getRide(id) {
+    return repository.findById(id);
+}
+
+function getAllRides() {
+    return repository.all();
+}
+
+function canTransition(from, to) {
+    if (!STATES[to]) {
+        return false;
+    }
+
+    return (
+        TRANSITIONS[from] &&
+        TRANSITIONS[from].includes(to)
+    );
+}
+
+
+// ============================================================
+// ACCEPT RIDE
+//
+// Canonical driver acceptance operation.
+//
+// This is intentionally separate from generic transition().
+// Acceptance has a concurrency-sensitive business rule:
+// only one driver may claim a MATCHING ride.
+//
+// The repository owns the serialized state check + write.
+// ============================================================
+
+async function acceptRide(
+    id,
+    driverId,
+    driverName
+) {
+
+    return repository.accept(
+        id,
+        driverId,
+        driverName
+    );
+}
+
+function transition(id, nextState, metadata = {}) {
+
+    const ride = repository.findById(id);
+
+    if (!ride) {
+        return {
+            success: false,
+            error: "Ride not found"
+        };
+    }
+
+    if (!canTransition(
+        ride.status,
+        nextState
+    )) {
+        return {
+            success: false,
+            error:
+                "Invalid ride transition: " +
+                ride.status +
+                " → " +
+                nextState
+        };
+    }
+
+    const changes = {
+        status: nextState
+    };
+
+    if (
+        metadata.driverId !== undefined
+    ) {
+        changes.driverId =
+            metadata.driverId;
+    }
+
+    if (
+        metadata.driverName !== undefined
+    ) {
+        changes.driverName =
+            metadata.driverName;
+    }
+
+    if (
+        metadata.rating !== undefined
+    ) {
+        changes.rating =
+            metadata.rating;
+    }
+
+    if (
+        metadata.comment !== undefined
+    ) {
+        changes.comment =
+            metadata.comment;
+    }
+
+    if (
+        nextState === STATES.COMPLETED
+    ) {
+        changes.completedAt =
+            new Date().toISOString();
+    }
+
+    return {
+        success: true,
+        ride: repository.update(
+            id,
+            changes
+        )
+    };
+}
+
+module.exports = {
+    STATES,
+    TRANSITIONS,
+    createRide,
+    getRide,
+    getAllRides,
+    transition,
+    canTransition,
+    acceptRide
+};
+
+######################################################################
+FILE: backend/canonical/ride_repository.js
+######################################################################
+const fs = require("fs");
+const path = require("path");
+
+const DATA_DIR = path.join(__dirname, "..", "data");
+const FILE = path.join(DATA_DIR, "rides.json");
+
+// In-process write lock for single-process runtime
+let writeLock = Promise.resolve();
+
+function withWriteLock(operation) {
+    const run = writeLock.then(operation);
+    writeLock = run.catch(() => {});
+    return run;
+}
+
+function ensureStore() {
+    try { require("fs").mkdirSync(DATA_DIR, { recursive: true }); } catch(_e) {}
+    if (!fs.existsSync(FILE)) {
+        try { fs.writeFileSync(FILE, "[]", "utf8"); } catch(_e) {}
+    }
+}
+
+function load() {
+    ensureStore();
+    try {
+        const raw = fs.readFileSync(FILE, "utf8");
+        const data = JSON.parse(raw);
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.error("Ride database read error:", error);
+        return [];
+    }
+}
+
+function save(rides) {
+    ensureStore();
+    try {
+        fs.writeFileSync(FILE, JSON.stringify(rides, null, 2), "utf8");
+    } catch(_e) {
+        /* Vercel read-only FS — in-memory only */
+    }
+}
+
+function create(ride) {
+    const rides = load();
+    rides.push(ride);
+    save(rides);
+    return ride;
+}
+
+function findById(id) {
+    return load().find(ride => ride.id === String(id)) || null;
+}
+
+function all() {
+    return load();
+}
+
+function update(id, changes) {
+    const rides = load();
+    const index = rides.findIndex(ride => ride.id === String(id));
+    if (index === -1) return null;
+    rides[index] = {
+        ...rides[index],
+        ...changes,
+        updatedAt: new Date().toISOString()
+    };
+    save(rides);
+    return rides[index];
+}
+
+async function accept(id, driverId, driverName) {
+    return withWriteLock(async () => {
+        const rides = load();
+        const index = rides.findIndex(ride => ride.id === String(id));
+
+        if (index === -1) {
+            return { success: false, code: "NOT_FOUND", error: "Ride not found" };
+        }
+
+        const ride = rides[index];
+
+        if (ride.status !== "MATCHING") {
+            return {
+                success: false,
+                code: "ALREADY_ACCEPTED",
+                error: "Ride is no longer available for acceptance",
+                currentStatus: ride.status,
+                ride
+            };
+        }
+
+        if (!driverId) {
+            return { success: false, code: "DRIVER_ID_REQUIRED", error: "Driver ID is required" };
+        }
+
+        rides[index] = {
+            ...ride,
+            driverId: String(driverId),
+            driverName: driverName || ride.driverName || null,
+            status: "DRIVER_ASSIGNED",
+            acceptedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        save(rides);
+
+        return { success: true, code: "ACCEPTED", ride: rides[index] };
+    });
+}
+
+module.exports = { create, findById, all, update, accept };
+
+######################################################################
+FILE: backend/canonical/ride_repository_firestore_test.js
+######################################################################
+const db =
+    require("../production/database_adapter");
+
+const COLLECTION =
+    "cablink_test_rides";
+
+async function create(ride) {
+
+    return db.write(
+        COLLECTION,
+        ride.id,
+        ride
+    ).then(() => ride);
+
+}
+
+async function findById(id) {
+
+    const result =
+        await db.read(
+            COLLECTION,
+            String(id)
+        );
+
+    return result.exists
+        ? result.data
+        : null;
+
+}
+
+async function all() {
+
+    /*
+     * The current production adapter intentionally exposes
+     * document-level read/write operations only.
+     *
+     * Therefore this isolated migration test verifies
+     * canonical create/read/transition/accept persistence
+     * through individual Firestore documents.
+     *
+     * Collection listing is intentionally not implemented
+     * in this surgical test.
+     */
+
+    throw new Error(
+        "COLLECTION_LIST_NOT_IMPLEMENTED_IN_TEST_ADAPTER"
+    );
+
+}
+
+async function update(
+    id,
+    changes
+) {
+
+    const existing =
+        await findById(id);
+
+    if (!existing) {
+        return null;
+    }
+
+    const updated = {
+
+        ...existing,
+
+        ...changes,
+
+        updatedAt:
+            new Date().toISOString()
+
+    };
+
+    await db.write(
+        COLLECTION,
+        String(id),
+        updated
+    );
+
+    return updated;
+
+}
+
+async function accept(
+    id,
+    driverId,
+    driverName
+) {
+
+    if (!driverId) {
+
+        return {
+
+            success: false,
+
+            code:
+                "DRIVER_ID_REQUIRED",
+
+            error:
+                "Driver ID is required"
+
+        };
+
+    }
+
+    const ride =
+        await findById(id);
+
+    if (!ride) {
+
+        return {
+
+            success: false,
+
+            code:
+                "NOT_FOUND",
+
+            error:
+                "Ride not found"
+
+        };
+
+    }
+
+    if (
+        ride.status !==
+        "MATCHING"
+    ) {
+
+        return {
+
+            success: false,
+
+            code:
+                "ALREADY_ACCEPTED",
+
+            error:
+                "Ride is no longer available for acceptance",
+
+            currentStatus:
+                ride.status,
+
+            ride
+
+        };
+
+    }
+
+    const updated = {
+
+        ...ride,
+
+        driverId:
+            String(driverId),
+
+        driverName:
+            driverName ||
+            ride.driverName ||
+            null,
+
+        status:
+            "DRIVER_ASSIGNED",
+
+        acceptedAt:
+            new Date().toISOString(),
+
+        updatedAt:
+            new Date().toISOString()
+
+    };
+
+    await db.write(
+        COLLECTION,
+        String(id),
+        updated
+    );
+
+    return {
+
+        success:
+            true,
+
+        code:
+            "ACCEPTED",
+
+        ride:
+            updated
+
+    };
+
+}
+
+module.exports = {
+
+    COLLECTION,
+
+    create,
+
+    findById,
+
+    all,
+
+    update,
+
+    accept
+
+};
+
+======================================================================
+7. DATABASE / FIRESTORE CHAIN
+======================================================================
+
+######################################################################
+FILE: backend/production/database_adapter.js
+######################################################################
+require("dotenv").config();
+
+const firestore =
+    require("../firebase/firestore_adapter");
+
+function provider() {
+
+    return {
+
+        type:
+            "FIRESTORE",
+
+        configured:
+            firestore.status().configured,
+
+        project:
+            firestore.status().project,
+
+        timestamp:
+            new Date().toISOString()
+
+    };
+
+}
+
+async function write(
+    collection,
+    id,
+    data
+) {
+
+    return firestore.write(
+        collection,
+        id,
+        data
+    );
+
+}
+
+async function read(
+    collection,
+    id
+) {
+
+    return firestore.read(
+        collection,
+        id
+    );
+
+}
+
+module.exports = {
+
+    provider,
+
+    write,
+
+    read
+
+};
+
+######################################################################
+FILE: backend/firebase/firestore_adapter.js
+######################################################################
+const admin = require("firebase-admin");
+const { getFirestore } = require("firebase-admin/firestore");
+
+let initialized = false;
+
+function getCredentials() {
+
+    const projectId =
+        process.env.FIREBASE_PROJECT_ID;
+
+    const clientEmail =
+        process.env.FIREBASE_CLIENT_EMAIL;
+
+    const privateKey =
+        process.env.FIREBASE_PRIVATE_KEY
+            ? process.env.FIREBASE_PRIVATE_KEY
+                .replace(/\\n/g, "\n")
+            : null;
+
+    const missing = [];
+
+    if (!projectId)
+        missing.push("FIREBASE_PROJECT_ID");
+
+    if (!clientEmail)
+        missing.push("FIREBASE_CLIENT_EMAIL");
+
+    if (!privateKey)
+        missing.push("FIREBASE_PRIVATE_KEY");
+
+    if (missing.length > 0) {
+
+        throw new Error(
+            "Missing Firebase Admin credentials: " +
+            missing.join(", ")
+        );
+
+    }
+
+    return {
+        projectId,
+        clientEmail,
+        privateKey
+    };
+
+}
+
+function initialize() {
+
+    if (initialized) {
+
+        return admin.getApp();
+
+    }
+
+    const existingApps =
+        admin.getApps();
+
+    if (
+        existingApps.length > 0
+    ) {
+
+        initialized = true;
+
+        return existingApps[0];
+
+    }
+
+    const credentials =
+        getCredentials();
+
+    const app =
+        admin.initializeApp({
+
+            credential:
+                admin.cert(
+                    credentials
+                ),
+
+            projectId:
+                credentials.projectId
+
+        });
+
+    initialized = true;
+
+    return app;
+
+}
+
+function db() {
+
+    initialize();
+
+    return getFirestore();
+
+}
+
+async function write(
+    collection,
+    id,
+    data
+) {
+
+    if (
+        !collection ||
+        !id
+    ) {
+
+        throw new Error(
+            "Firestore collection and document ID are required"
+        );
+
+    }
+
+    const firestore =
+        db();
+
+    await firestore
+        .collection(collection)
+        .doc(id)
+        .set(
+            data,
+            {
+                merge: true
+            }
+        );
+
+    return {
+
+        success:
+            true,
+
+        collection,
+
+        id,
+
+        status:
+            "FIRESTORE_WRITE_SUCCESS"
+
+    };
+
+}
+
+async function read(
+    collection,
+    id
+) {
+
+    if (
+        !collection ||
+        !id
+    ) {
+
+        throw new Error(
+            "Firestore collection and document ID are required"
+        );
+
+    }
+
+    const firestore =
+        db();
+
+    const snapshot =
+        await firestore
+            .collection(collection)
+            .doc(id)
+            .get();
+
+    return {
+
+        exists:
+            snapshot.exists,
+
+        data:
+            snapshot.exists
+                ? snapshot.data()
+                : null
+
+    };
+
+}
+
+function status() {
+
+    return {
+
+        provider:
+            "FIRESTORE",
+
+        configured:
+            Boolean(
+                process.env.FIREBASE_PROJECT_ID &&
+                process.env.FIREBASE_CLIENT_EMAIL &&
+                process.env.FIREBASE_PRIVATE_KEY
+            ),
+
+        project:
+            process.env.FIREBASE_PROJECT_ID
+                || null
+
+    };
+
+}
+
+module.exports = {
+
+    initialize,
+
+    write,
+
+    read,
+
+    status
+
+};
+
+######################################################################
+FILE: backend/storage/database.js
+######################################################################
+const fs = require("fs");
+const path = require("path");
+
+const DATA_DIR = __dirname;
+const FILE = path.join(DATA_DIR, "cablink_db.json");
+
+console.log("CABLINK DATABASE FILE:", FILE);
+
+function ensureStore() {
+    try {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+    } catch (_e) {
+        // Directory may already exist or filesystem may be read-only
+    }
+
+    if (!fs.existsSync(FILE)) {
+        try {
+            fs.writeFileSync(
+                FILE,
+                JSON.stringify(
+                    {
+                        users: [],
+                        rides: []
+                    },
+                    null,
+                    2
+                ),
+                "utf8"
+            );
+        } catch (_e) {
+            // Vercel/serverless filesystem may be read-only
+        }
+    }
+}
+
+function read() {
+    ensureStore();
+
+    try {
+        const raw = fs.readFileSync(FILE, "utf8");
+        return JSON.parse(raw);
+    } catch (error) {
+        console.error("❌ CabLink database read error:", error);
+
+        return {
+            users: [],
+            rides: []
+        };
+    }
+}
+
+function write(data) {
+    ensureStore();
+
+    try {
+        fs.writeFileSync(
+            FILE,
+            JSON.stringify(data, null, 2),
+            "utf8"
+        );
+
+        return true;
+    } catch (error) {
+        console.error("❌ CabLink database write error:", error);
+
+        return false;
+    }
+}
+
+module.exports = {
+    read,
+    write
+};
+
+######################################################################
+FILE: backend/storage/cablink_db.json
+######################################################################
+{
+  "users": [
+    {
+      "id": "WRITE-TEST-1785142339829",
+      "name": "CabLink Serverless Write Test",
+      "test": true,
+      "created": "2026-07-27T08:52:19.829Z"
+    }
+  ],
+  "rides": [
+    {
+      "id": "RIDE-1784100848290",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:34:08.291Z"
+    },
+    {
+      "id": "RIDE-1784101257089",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:40:57.089Z"
+    },
+    {
+      "id": "RIDE-1784101513116",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:45:13.117Z"
+    },
+    {
+      "id": "RIDE-1784101631715",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:47:11.715Z"
+    },
+    {
+      "id": "RIDE-1784101774519",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:49:34.519Z"
+    },
+    {
+      "id": "RIDE-1784101895961",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:51:35.961Z"
+    },
+    {
+      "id": "RIDE-1784102075114",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:54:35.114Z"
+    },
+    {
+      "id": "RIDE-1784102189540",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T07:56:29.540Z"
+    },
+    {
+      "id": "RIDE-1784102603741",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City",
+      "fare": 32,
+      "rideType": "Standard",
+      "location": {
+        "lat": -24.6282,
+        "lng": 25.9231
+      },
+      "status": "REQUESTED",
+      "created": "2026-07-15T08:03:23.741Z"
+    }
+  ]
+}
+######################################################################
+FILE: backend/database/ride_repository.js
+######################################################################
+
+const db=require("../storage/database");
+
+
+function create(ride){
+
+let data=db.read();
+
+data.rides.push(ride);
+
+db.write(data);
+
+return ride;
+
+}
+
+
+function all(){
+
+return db.read().rides;
+
+}
+
+
+function update(id,status){
+
+let data=db.read();
+
+let ride=
+data.rides.find(
+r=>r.id===id
+);
+
+
+if(ride){
+
+console.warn("[CABLINK] Legacy status mutation blocked");
+
+db.write(data);
+
+}
+
+
+return ride;
+
+}
+
+
+module.exports={
+create,
+all,
+update
+};
+
+
+--- FIREBASE / FIRESTORE REFERENCES ---
+backend/config/environment_validator.js:8:firebase:
+backend/config/environment_validator.js:9:!!process.env.FIREBASE_PROJECT_ID &&
+backend/config/environment_validator.js:10:!!process.env.FIREBASE_API_KEY,
+backend/routes/rides.js:170:router.get("/", (req, res) => {
+backend/routes/rides.js:205:router.get("/:id", (req, res) => {
+backend/routes/users.js:31:router.get(
+backend/routes/realtime.js:14:driver.update(
+backend/routes/realtime.js:30:gps.update(
+backend/routes/realtime.js:57:router.get(
+backend/routes/socket_routes.js:28:channel.sendUpdate(
+backend/routes/gps.js:12:gps.update(
+backend/routes/gps.js:23:router.get(
+backend/routes/gps.js:28:gps.get(req.params.device)
+backend/routes/dispatch_api.js:63:router.get(
+backend/routes/dispatch_api.js:108:router.get(
+backend/routes/driver_dashboard_api.js:9:router.get(
+backend/routes/driver_demand_api.js:8:router.get(
+backend/routes/driver_economy.js:9:router.get(
+backend/routes/driver_economy_api.js:8:router.get(
+backend/routes/driver_location_api.js:15:location.update(req.body)
+backend/routes/driver_online_api.js:19:router.get(
+backend/routes/ecosystem_tasks.js:22:router.get(
+backend/routes/identity_api.js:11:router.get(
+backend/routes/live_demand_api.js:51:router.get(
+backend/routes/live_ride_api.js:38:rides.update(
+backend/routes/live_ride_api.js:71:router.get(
+backend/routes/live_ride_api.js:76:rides.get(
+backend/routes/notification_api.js:27:router.get(
+backend/routes/passenger_intelligence_api.js:8:router.get(
+backend/routes/ride_economy_api.js:45:router.get(
+backend/routes/ride_state_api.js:21:ride:state.update(
+backend/routes/ride_state_api.js:30:router.get("/ride/:id/status",(req,res)=>{
+backend/routes/ride_state_api.js:33:ride:state.get(req.params.id)
+backend/routes/updates_api.js:7:router.get(
+backend/services/driver_location_service.js:24:function update(driver){
+backend/services/live_ride_service.js:60:function update(id,status){
+backend/services/live_ride_service.js:110:function get(id){
+backend/services/notification_service.js:8:return events.add({
+backend/services/ride_completion_service.js:229:            wallet.add(
+backend/services/ride_event_service.js:26:function add(event){
+backend/services/ride_orchestrator_service.js:27:state.get(id);
+backend/services/ride_orchestrator_service.js:47:state.update(
+backend/services/ride_orchestrator_service.js:76:state.update(
+backend/services/ride_orchestrator_service.js:106:state.update(
+backend/services/ride_orchestrator_service.js:136:state.get(id);
+backend/services/ride_state_service.js:19:function update(id,status){
+backend/services/ride_state_service.js:37:function get(id){
+backend/rides/ride_lifecycle.js:31:function update(id,status){
+backend/rewards/thb_claim_engine.js:8:store.get("rewards");
+backend/rewards/auto_reward_trigger.js:26:history.add(reward);
+backend/rewards/reward_history.js:6:function add(record){
+backend/rewards/canonical_wallet_resolver.js:11:const PLACEHOLDER_WALLETS = new Set([
+backend/users/user_account_engine.js:38:.get("users")
+backend/location/gps_event_engine.js:36:.get("locations")
+backend/location/location_service.js:5:function update(driver,data){
+backend/location/location_service.js:27:function get(driver){
+backend/drivers/driver_state.js:4:function update(id,data){
+backend/drivers/driver_state.js:17:function get(id){
+backend/security/security_audit.js:8:"WAITING_FIREBASE_AUTH",
+backend/realtime/ride_channel.js:25:function sendUpdate(ride,data){
+backend/cloud/cloud_adapter.js:9:provider:"FIREBASE_SUPABASE_READY",
+backend/tracking/location_session.js:5:function update(driver,position){
+backend/tracking/location_session.js:20:function get(driver){
+backend/tracking/location_tracker.js:5:function update(driver,data){
+backend/tracking/location_tracker.js:27:function get(driver){
+backend/production/database_adapter.js:3:const firestore =
+backend/production/database_adapter.js:4:    require("../firebase/firestore_adapter");
+backend/production/database_adapter.js:11:            "FIRESTORE",
+backend/production/database_adapter.js:14:            firestore.status().configured,
+backend/production/database_adapter.js:17:            firestore.status().project,
+backend/production/database_adapter.js:32:    return firestore.write(
+backend/production/database_adapter.js:45:    return firestore.read(
+backend/firebase/firebase_adapter.js:9:provider:"FIREBASE",
+backend/firebase/firebase_adapter.js:12:!!process.env.FIREBASE_PROJECT_ID &&
+backend/firebase/firebase_adapter.js:13:!!process.env.FIREBASE_API_KEY,
+backend/firebase/firebase_adapter.js:16:process.env.FIREBASE_PROJECT_ID || null
+backend/firebase/firebase_adapter.js:31:status:"FIREBASE_WRITE_READY",
+backend/firebase/firestore_adapter.js:1:const admin = require("firebase-admin");
+backend/firebase/firestore_adapter.js:2:const { getFirestore } = require("firebase-admin/firestore");
+backend/firebase/firestore_adapter.js:9:        process.env.FIREBASE_PROJECT_ID;
+backend/firebase/firestore_adapter.js:12:        process.env.FIREBASE_CLIENT_EMAIL;
+backend/firebase/firestore_adapter.js:15:        process.env.FIREBASE_PRIVATE_KEY
+backend/firebase/firestore_adapter.js:16:            ? process.env.FIREBASE_PRIVATE_KEY
+backend/firebase/firestore_adapter.js:23:        missing.push("FIREBASE_PROJECT_ID");
+backend/firebase/firestore_adapter.js:26:        missing.push("FIREBASE_CLIENT_EMAIL");
+backend/firebase/firestore_adapter.js:29:        missing.push("FIREBASE_PRIVATE_KEY");
+backend/firebase/firestore_adapter.js:34:            "Missing Firebase Admin credentials: " +
+backend/firebase/firestore_adapter.js:95:    return getFirestore();
+backend/firebase/firestore_adapter.js:111:            "Firestore collection and document ID are required"
+backend/firebase/firestore_adapter.js:116:    const firestore =
+backend/firebase/firestore_adapter.js:119:    await firestore
+backend/firebase/firestore_adapter.js:120:        .collection(collection)
+backend/firebase/firestore_adapter.js:121:        .doc(id)
+backend/firebase/firestore_adapter.js:122:        .set(
+backend/firebase/firestore_adapter.js:139:            "FIRESTORE_WRITE_SUCCESS"
+backend/firebase/firestore_adapter.js:156:            "Firestore collection and document ID are required"
+backend/firebase/firestore_adapter.js:161:    const firestore =
+backend/firebase/firestore_adapter.js:165:        await firestore
+backend/firebase/firestore_adapter.js:166:            .collection(collection)
+backend/firebase/firestore_adapter.js:167:            .doc(id)
+backend/firebase/firestore_adapter.js:168:            .get();
+backend/firebase/firestore_adapter.js:189:            "FIRESTORE",
+backend/firebase/firestore_adapter.js:193:                process.env.FIREBASE_PROJECT_ID &&
+backend/firebase/firestore_adapter.js:194:                process.env.FIREBASE_CLIENT_EMAIL &&
+backend/firebase/firestore_adapter.js:195:                process.env.FIREBASE_PRIVATE_KEY
+backend/firebase/firestore_adapter.js:199:            process.env.FIREBASE_PROJECT_ID
+backend/broadcast/ride_broadcast.js:2:const firebase=require("../firebase/firebase_adapter");
+backend/broadcast/ride_broadcast.js:7:return firebase.write(
+backend/environment/readiness_check.js:2:const firebase=require("../firebase/firebase_adapter");
+backend/environment/readiness_check.js:10:firebase:
+backend/environment/readiness_check.js:11:firebase.status(),
+backend/environment/readiness_check.js:17:firebase.status().configured,
+backend/testing/pilot_activation_test.js:21:gps.update(
+backend/testing/phase32_dashboard_api_test.js:5:http.get(
+backend/testing/phase37_dashboard_test.js:6:http.get(
+backend/testing/phase40_demand_test.js:72:http.get(
+backend/testing/phase49_notification_test.js:54:let req=http.get(
+backend/testing/reward_wallet_test.js:7:history.add({
+backend/testing/reward_wallet_test.js:20:history.add({
+backend/database/ride_repository.js:25:function update(id,status){
+backend/database/rideRepository.js:51:update(id,data){
+backend/server/app.js:50:app.get(
+backend/server/app.js:56:app.get(
+backend/trips/trip_manager.js:31:function update(id,status){
+backend/gps/gps_service.js:5:function update(device,data){
+backend/gps/gps_service.js:29:function get(device){
+backend/gps/location_stream.js:7:return gps.update(
+backend/ride_api_patch.js:36:app.get("/api/rides",(req,res)=>{
+backend/ride_api_patch.js:46:app.get("/api/rides/:id",(req,res)=>{
+backend/canonical/ride_repository.js:59:function update(id, changes) {
+backend/canonical/ride_engine.js:211:        ride: repository.update(
+backend/canonical/ride_repository_firestore_test.js:39:     * through individual Firestore documents.
+backend/canonical/ride_repository_firestore_test.js:51:async function update(
+api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+api/index.js:22:    "CABLINK TEST O.3: CANONICAL RIDE FIRESTORE LIFECYCLE"
+api/index.js:31:// CANONICAL RIDE FIRESTORE LIFECYCLE TEST
+api/index.js:34:app.get(
+api/index.js:35:    "/api/canonical-firestore-lifecycle",
+api/index.js:44:                "CANONICAL_RIDE_FIRESTORE_LIFECYCLE",
+api/index.js:55:        // STEP 1 — VERIFY FIRESTORE PROVIDER
+api/index.js:67:                        "FIRESTORE" &&
+api/index.js:330:                await repository.update(
+api/index.js:793:app.get(
+api/index.js:806:                "CANONICAL_RIDE_FIRESTORE_LIFECYCLE",
+api/index.minimal-test.js:7:app.get("/", (req, res) => {
+api/index.minimal-test.js:16:app.get("/health", (req, res) => {
+api/index.minimal-test.js:25:app.get("/api/health", (req, res) => {
+api/index.ride-routes-working.js:14:app.get("/api/health", (req, res) => {
+api/index.users-route-failing.js:14:app.get("/api/health", (req, res) => {
+api/index.storage-test-backup.js:14:app.get("/api/health", (req, res) => {
+api/index.storage-test-working.js:14:app.get("/api/health", (req, res) => {
+api/index.storage-test-working.js:25:app.get("/api/storage-test", (req, res) => {
+api/index.users-test-working.js:14:app.get("/api/health", (req, res) => {
+api/index.write-forensics-working.js:23:app.get("/api/health", (req, res) => {
+api/index.write-forensics-working.js:34:app.get("/api/write-test", (req, res) => {
+api/index.firebase-forensics-backup.js:23:app.get("/api/health", (req, res) => {
+api/index.firebase-forensics-backup.js:34:app.get("/api/write-test", (req, res) => {
+api/index.firebase-readiness-working.js:7:    "CABLINK TEST K: Firebase production readiness"
+api/index.firebase-readiness-working.js:18:app.get("/api/health", (req, res) => {
+api/index.firebase-readiness-working.js:29:            "FIREBASE_PRODUCTION_READINESS",
+api/index.firebase-readiness-working.js:38:app.get("/api/firebase-readiness", async (req, res) => {
+api/index.firebase-readiness-working.js:46:            "FIREBASE_PRODUCTION_READINESS",
+api/index.firebase-readiness-working.js:68:            firebaseProjectId:
+api/index.firebase-readiness-working.js:70:                    "FIREBASE_PROJECT_ID"
+api/index.firebase-readiness-working.js:73:            firebaseClientEmail:
+api/index.firebase-readiness-working.js:75:                    "FIREBASE_CLIENT_EMAIL"
+api/index.firebase-readiness-working.js:78:            firebasePrivateKey:
+api/index.firebase-readiness-working.js:80:                    "FIREBASE_PRIVATE_KEY"
+api/index.firebase-readiness-working.js:83:            firebaseApiKey:
+api/index.firebase-readiness-working.js:85:                    "FIREBASE_API_KEY"
+api/index.firebase-readiness-working.js:110:                    "firebase-admin"
+api/index.firebase-readiness-working.js:113:            result.sdk.firebaseAdmin =
+api/index.firebase-readiness-working.js:116:            result.sdk.firebaseAdminVersion =
+api/index.firebase-readiness-working.js:118:                    "firebase-admin/package.json"
+api/index.firebase-readiness-working.js:123:            result.sdk.firebaseAdmin =
+api/index.firebase-readiness-working.js:126:            result.sdk.firebaseAdminError = {
+api/index.firebase-readiness-working.js:140:            const firebase =
+api/index.firebase-readiness-working.js:142:                    "../backend/firebase/firebase_adapter"
+api/index.firebase-readiness-working.js:150:                    firebase
+api/index.firebase-readiness-working.js:154:                typeof firebase.status ===
+api/index.firebase-readiness-working.js:159:                    firebase.status();
+
+======================================================================
+8. PACKAGE DEPENDENCIES
+======================================================================
+--- package.json ---
+{
+  "name": "cablink-pwa",
+  "version": "5.0.0",
+  "description": "CabLink — Blockchain-powered ride-hailing for Gaborone. BSTM Ecosystem.",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "backend": "node backend/server.js",
+    "dev": "vite",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "ethers": "^6.17.0",
+    "express": "^4.18.2",
+    "firebase-admin": "^14.2.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "cablink",
+    "bstm",
+    "botswana",
+    "blockchain",
+    "ridehailing",
+    "thobocoin"
+  ],
+  "author": "Thobo Atlang Mosanako — BSTM Ecosystem",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.4",
+    "vite": "^7.1.7"
+  }
+}
+
+--- Firebase packages ---
+cablink-pwa@5.0.0 /data/data/com.termux/files/home/CabLink-pwa
+└─┬ firebase-admin@14.2.0
+  └── @google-cloud/firestore@8.7.0
+
+
+======================================================================
+9. FIRESTORE ENVIRONMENT READINESS
+======================================================================
+Environment variable NAMES ONLY — VALUES NEVER PRINTED
+UNSET  : FIREBASE_PROJECT_ID
+UNSET  : FIREBASE_CLIENT_EMAIL
+UNSET  : FIREBASE_PRIVATE_KEY
+UNSET  : GOOGLE_APPLICATION_CREDENTIALS
+UNSET  : FIREBASE_CONFIG
+
+--- Local environment files ---
+./.env.example
+./.env
+./.vercel/.env.production.local
+
+======================================================================
+10. CANONICAL REPOSITORY IMPORT GRAPH
+======================================================================
+--- Files importing canonical ride_repository.js ---
+./backend/services/canonical_reward_service.js:6:    require("../canonical/ride_repository");
+./backend/server.js:18:// backend/canonical/ride_repository.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:6:    require("../canonical/ride_repository");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js:18:// backend/canonical/ride_repository.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+./api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+./backups/stage4g4_20260725_235846/backend/services/canonical_reward_service.js:5:    require("../canonical/ride_repository");
+./backups/stage4g4_20260726_000412/backend/services/canonical_reward_service.js:5:    require("../canonical/ride_repository");
+./backups/o843_automated_restart_survival_gate.js:115:            "./backend/canonical/ride_repository"
+./stage3_canonical_ride_verification.js:89:        "backend/canonical/ride_repository.js",
+./cablink_step7_runtime_alignment_audit.js:273:  "backend/canonical/ride_repository.js",
+./cablink_step7_runtime_alignment_audit.js:435:  "backend/canonical/ride_repository.js",
+./cablink_step8_1_runtime_truth_correction.js:673:  "backend/canonical/ride_repository.js"
+./o843_automated_restart_survival_gate.js:115:            "./backend/canonical/ride_repository"
+./o856_runtime_route_registration_trace.js:466:    "backend/canonical/ride_repository.js",
+./o857_legacy_live_ride_conflict_trace.js:67:    "backend/canonical/ride_repository.js",
+./o858_database_repository_orchestrator_trace.js:25:"backend/canonical/ride_repository.js",
+./o858_database_repository_orchestrator_trace.js:609:11. Does it overlap with canonical/ride_repository.js?
+./cablink_step8_runtime_truth_audit.js:582:  "backend/canonical/ride_repository.js",
+./cablink_step8_runtime_truth_audit.js:602:  "backend/canonical/ride_repository.js",
+./cablink_step8_runtime_truth_audit.js:808:  "backend/canonical/ride_repository.js",
+./o835_state_authority_audit.js:2:require("./backend/canonical/ride_repository");
+./o841_canonical_integrity_gate.js:46:"backend/canonical/ride_repository.js",
+./o841_canonical_integrity_gate.js:455:"backend/canonical/ride_repository.js",
+./o841_canonical_integrity_gate.js:508:"./backend/canonical/ride_repository"
+./o842_persistence_restart_integrity_test.js:84:        require.resolve("./backend/canonical/ride_repository")
+./o842_persistence_restart_integrity_test.js:88:        "./backend/canonical/ride_repository"
+./o852_active_runtime_dependency_classification.js:33:    "backend/canonical/ride_repository.js"
+./o852_active_runtime_dependency_classification.js:173:                    "backend/canonical/ride_repository.js"
+./o853_runtime_ride_write_authority_trace.js:27:  "backend/canonical/ride_repository.js"
+./o853_runtime_ride_write_authority_trace.js:204:const repo = "backend/canonical/ride_repository.js";
+./o853_runtime_ride_write_authority_trace.js:284:  "backend/canonical/ride_repository.js",
+./o855_runtime_reachability_dual_repository_trace.js:246:  "backend/canonical/ride_repository.js",
+./o855_runtime_reachability_dual_repository_trace.js:312:  "canonical/ride_repository",
+./o859_active_ride_path_authority_trace.js:17:  "backend/canonical/ride_repository.js",
+./o859_active_ride_path_authority_trace.js:173:showFile("backend/canonical/ride_repository.js");
+./o859_active_ride_path_authority_trace.js:526:      "backend/canonical/ride_repository.js"
+./o859_active_ride_path_authority_trace.js:568:2. If active routes reach canonical/ride_repository.js,
+./o859_active_ride_path_authority_trace.js:629:17. Is canonical/ride_repository.js actually on the active
+./cablink_current_app_inventory.js:99:    "backend/canonical/ride_repository.js",
+./cablink_runtime_truth_trace.js:348:    "backend/canonical/ride_repository.js";
+./cablink_runtime_truth_trace.js:423:    "backend/canonical/ride_repository.js",
+
+--- Files importing ride_repository_firestore_test.js ---
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+./api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+
+======================================================================
+11. PRODUCTION DATABASE ADAPTER IMPORT GRAPH
+======================================================================
+./backend/canonical/ride_repository_firestore_test.js:2:    require("../production/database_adapter");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_repository_firestore_test.js:2:    require("../production/database_adapter");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:9:        "../backend/production/database_adapter"
+./api/index.js:9:        "../backend/production/database_adapter"
+./archive/phase_scripts/cablink_reality_bridge_phase1_install.js:21:"backend/production/database_adapter.js",
+./archive/phase_scripts/cablink_reality_bridge_phase1_install.js:257:const db=require("./backend/production/database_adapter");
+./archive/phase_scripts/cablink_reality_bridge_test.js:2:const db=require("./backend/production/database_adapter");
+
+--- database adapter references ---
+api/index.js:9:        "../backend/production/database_adapter"
+backend/production/database_adapter.js:4:    require("../firebase/firestore_adapter");
+backend/canonical/ride_repository_firestore_test.js:2:    require("../production/database_adapter");
+
+======================================================================
+12. FRONTEND → API TARGETS
+======================================================================
+frontend/js/app.js:83:const response=await fetch(
+frontend/js/app.js:84:"/api/rides",
+frontend/js/services/api.js:4:rides:'/api/rides',
+frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+frontend/js/services/api.js:6:health:'/api/health'
+frontend/js/services/cablinkAPI.js:3:const response = await fetch(url,{
+frontend/js/driver/applicationService.js:4:const r = await fetch('/api/drivers/apply',{
+frontend/js/driver/driverController.js:1:import {api} from "../services/cablinkAPI.js";
+frontend/js/driver/driverController.js:6:return await api("/api/rides");
+frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+frontend/js/driver/driverDispatchBridge.js:44:fetch("/api/dispatch/requests")
+frontend/js/driver/driverDispatchBridge.js:127:fetch("/api/dispatch/accept",{
+frontend/js/driver/driverLifecycleControls.js:14:   *   PATCH /api/rides/:id
+frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+frontend/js/driver/driverService.js:18:const r=await fetch('/api/rides');
+frontend/js/rides/rideController.js:1:import {api} from "../services/cablinkAPI.js";
+frontend/js/rides/rideController.js:8:const ride=await api("/api/rides",{
+frontend/js/rides/rideController.js:39:await api("/api/rides/"+id);
+frontend/js/rides/rideService.js:5:const response=await fetch('/api/rides',{
+frontend/js/app_core.js:263:  fetch('/api/drivers/online')
+frontend/js/app_core.js:372:  fetch('/api/rides', {
+frontend/js/app_core.js:410:  fetch('/api/rides/' + rideId, {
+frontend/js/app_core.js:488:    var response = await fetch('/api/rides/' + encodeURIComponent(rideId) + '/accept', {
+frontend/js/app_core.js:632:// backend PATCH /api/rides/:id endpoint.
+frontend/js/app_core.js:676:    var response = await fetch(
+frontend/js/app_core.js:677:      '/api/rides/' + encodeURIComponent(rideId),
+frontend/api/cablink_api.js:15:await fetch(
+frontend/api/task_api.js:13:const response=await fetch(
+frontend/api/task_api.js:14:BASE_URL + "/api/ecosystem/tasks"
+frontend/api/task_api.js:25:const response=await fetch(
+frontend/api/task_api.js:26:BASE_URL + "/api/ecosystem/tasks/"+id,
+frontend/services/user_service.js:3:const api=require("../api/cablink_api");
+frontend/services/user_service.js:9:"/api/users/register",
+frontend/services/user_service.js:22:"/api/users"
+frontend/services/ride_service.js:3:const api=require("../api/cablink_api");
+frontend/services/ride_service.js:9:"/api/rides/request",
+frontend/services/ride_service.js:22:"/api/rides"
+frontend/services/demand_api.js:5:const r=await fetch(
+frontend/services/demand_api.js:6:"/api/driver/demand"
+frontend/services/driver_dashboard_api.js:4:const r=await fetch(
+frontend/services/driver_dashboard_api.js:5:"/api/driver/"+id+"/economy"
+frontend/services/driver_dashboard_api.js:15:const r=await fetch(
+frontend/services/driver_dashboard_api.js:16:"/api/driver/hotspots"
+frontend/services/driver_dashboard_api.js:26:const r=await fetch(
+frontend/services/driver_dashboard_api.js:27:"/api/updates"
+frontend/services/driver_dashboard_live.js:3:const taskApi=require("../api/task_api");
+frontend/services/economy_dashboard_api.js:14:await fetch(
+frontend/services/economy_dashboard_api.js:16:"/api/driver/" +
+frontend/services/identity_api.js:6:await fetch(
+frontend/services/identity_api.js:7:"/api/user/"+id
+frontend/services/live_driver_economy.js:3:const taskApi=require("../api/task_api");
+frontend/services/live_ride_api.js:6:await fetch(
+frontend/services/live_ride_api.js:7:"/api/ride/"+id
+frontend/services/live_ride_api.js:18:await fetch(
+frontend/services/live_ride_api.js:19:"/api/ride/status",
+frontend/services/notification_api.js:4:const r=await fetch(
+frontend/services/notification_api.js:5:"/api/ride/"+id+"/timeline"
+frontend/services/passenger_dashboard_api.js:5:await fetch(
+frontend/services/passenger_dashboard_api.js:6:"/api/ride/"+id+"/status"
+frontend/services/passenger_dashboard_api.js:10:await fetch(
+frontend/services/passenger_dashboard_api.js:11:"/api/ride/"+id+"/timeline"
+frontend/services/updates_api.js:5:const r=await fetch(
+frontend/services/updates_api.js:6:"/api/updates"
+frontend/components/LegacyCabLink.jsx:59:            <strong> /api/rides</strong>
+frontend/components/passenger_dashboard.jsx:16:fetch("/api/ride/"+id+"/status")
+frontend/components/passenger_dashboard.jsx:21:fetch("/api/ride/"+id+"/timeline")
+frontend/App.jsx:10:    fetch("/api/health")
+frontend/index.html:916:  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+frontend/index.html:1026:      const res = await fetch('/api/rides/' + rideId);
+frontend/index.html:1355:    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+frontend/index.html:1366:    await fetch(endpoint, {
+frontend/index.html:1385:      const res = await fetch('/api/rides');
+frontend/index.html:1420:    const res = await fetch('/api/rides/' + rideId + '/complete', { method: 'PATCH' });
+frontend/index.html:1745:let r=await fetch("/api/drivers/online");
+frontend/index.html:1782:let r=await fetch(
+frontend/index.html:1783:"/api/rides",
+frontend/index.html:1908:let r=await fetch(
+frontend/index.html:1909:"/api/drivers/online",
+frontend/index.html:1961:fetch(
+frontend/index.html:1962:"/api/drivers/offline",
+frontend/index.html:2048:await fetch('/api/drivers/online');
+frontend/index.html:2142:await fetch('/api/drivers/apply',{
+frontend/index.html:2217:} from "./js/rides/rideController.js";
+frontend/index.html:2246:<!-- CABLINK ROLE GATING + DRIVER APPLICATION (real, wired to /api/drivers/apply) -->
+frontend/index.html:2313:      const res = await fetch('/api/drivers/apply', {
+frontend/pages/DriverDashboard.jsx:14:fetch("/api/driver/DRIVER001/economy")
+frontend/pages/DriverDashboard.jsx:19:fetch("/api/driver/hotspots")
+frontend/pages/PassengerRide.jsx:25:await fetch(
+frontend/pages/PassengerRide.jsx:26:"/api/dispatch/request",
+frontend/pages/UpdatesCenter.jsx:13:fetch("/api/updates")
+
+======================================================================
+13. LIVE DEPLOYMENT IDENTITY
+======================================================================
+BASE: https://cab-link-pwa.vercel.app
+
+--- Root ---
+
+Root size:
+
+--- API health ---
+{"system":"CabLink API","status":"ONLINE","test":"CANONICAL_RIDE_FIRESTORE_LIFECYCLE","time":"2026-07-30T19:19:04.661Z"}
+HTTP_CODE=200
+
+--- Canonical Firestore lifecycle route ---
+{"success":true,"test":"CANONICAL_RIDE_FIRESTORE_LIFECYCLE","timestamp":"2026-07-30T19:19:05.313Z","steps":{"provider":{"success":true,"provider":{"type":"FIRESTORE","configured":true,"project":"gen-lang-client-0007945213","timestamp":"2026-07-30T19:19:05.313Z"}},"create":{"success":true,"ride":{"id":"O3-CANONICAL-TEST-1785439145313","pickup":"BSTM HQ","dropoff":"Game City Mall","vehicle":"standard","fare":20,"distanceKm":5.2,"wallet":null,"passenger":"O3-TEST-PASSENGER","driverId":null,"driverName":null,"status":"REQUESTED","createdAt":"2026-07-30T19:19:05.313Z","updatedAt":"2026-07-30T19:19:05.313Z"}},"readAfterCreate":{"success":true,"fieldChecks":{"exists":true,"id":true,"pickup":true,"dropoff":true,"fare":true,"passenger":true,"status":true},"ride":{"fare":20,"wallet":null,"dropoff":"Game City Mall","distanceKm":5.2,"pickup":"BSTM HQ","vehicle":"standard","createdAt":"2026-07-30T19:19:05.313Z","driverId":null,"passenger":"O3-TEST-PASSENGER","driverName":null,"id":"O3-CANONICAL-TEST-1785439145313","status":"REQUESTED","updatedAt":"2026-07-30T19:19:05.313Z"}},"transitionToMatching":{"success":true,"ride":{"fare":20,"wallet":null,"dropoff":"Game City Mall","distanceKm":5.2,"pickup":"BSTM HQ","vehicle":"standard","createdAt":"2026-07-30T19:19:05.313Z","driverId":null,"passenger":"O3-TEST-PASSENGER","driverName":null,"id":"O3-CANONICAL-TEST-1785439145313","status":"MATCHING","updatedAt":"2026-07-30T19:19:08.505Z"}},"persistentMatching":{"success":true,"ride":{"fare":20,"wallet":null,"dropoff":"Game City Mall","distanceKm":5.2,"pickup":"BSTM HQ","vehicle":"standard","createdAt":"2026-07-30T19:19:05.313Z","driverId":null,"passenger":"O3-TEST-PASSENGER","driverName":null,"id":"O3-CANONICAL-TEST-1785439145313","status":"MATCHING","updatedAt":"2026-07-30T19:19:08.505Z"}},"firstDriverAccept":{"success":true,"result":{"success":true,"code":"ACCEPTED","ride":{"fare":20,"wallet":null,"dropoff":"Game City Mall","distanceKm":5.2,"pickup":"BSTM HQ","vehicle":"standard","createdAt":"2026-07-30T19:19:05.313Z","driverId":"DRIVER-O3-001","passenger":"O3-TEST-PASSENGER","driverName":"O3 Test Driver One","id":"O3-CANONICAL-TEST-1785439145313","status":"DRIVER_ASSIGNED","updatedAt":"2026-07-30T19:19:09.959Z","acceptedAt":"2026-07-30T19:19:09.959Z"}}},"persistentAssignment":{"success":true,"fieldChecks":{"exists":true,"driverId":true,"driverName":true,"status":true},"ride":{"fare":20,"wallet":null,"dropoff":"Game City Mall","distanceKm":5.2,"pickup":"BSTM HQ","vehicle":"standard","createdAt":"2026-07-30T19:19:05.313Z","passenger":"O3-TEST-PASSENGER","id":"O3-CANONICAL-TEST-1785439145313","driverId":"DRIVER-O3-001","driverName":"O3 Test Driver One","acceptedAt":"2026-07-30T19:19:09.959Z","status":"DRIVER_ASSIGNED","updatedAt":"2026-07-30T19:19:09.959Z"}},"secondDriverAttempt":{"success":true,"result":{"success":false,"code":"ALREADY_ACCEPTED","error":"Ride is no longer available for acceptance","currentStatus":"DRIVER_ASSIGNED","ride":{"fare":20,"wallet":null,"dropoff":"Game City Mall","distanceKm":5.2,"pickup":"BSTM HQ","vehicle":"standard","createdAt":"2026-07-30T19:19:05.313Z","passenger":"O3-TEST-PASSENGER","id":"O3-CANONICAL-TEST-1785439145313","driverId":"DRIVER-O3-001","driverName":"O3 Test Driver One","acceptedAt":"2026-07-30T19:19:09.959Z","status":"DRIVER_ASSIGNED","updatedAt":"2026-07-30T19:19:09.959Z"}}},"finalPersistence":{"success":true,"ride":{"fare":20,"wallet":null,"dropoff":"Game City Mall","distanceKm":5.2,"pickup":"BSTM HQ","vehicle":"standard","createdAt":"2026-07-30T19:19:05.313Z","passenger":"O3-TEST-PASSENGER","id":"O3-CANONICAL-TEST-1785439145313","driverId":"DRIVER-O3-001","driverName":"O3 Test Driver One","acceptedAt":"2026-07-30T19:19:09.959Z","status":"DRIVER_ASSIGNED","updatedAt":"2026-07-30T19:19:09.959Z"}}},"document":{"collection":"cablink_test_rides","id":"O3-CANONICAL-TEST-1785439145313"},"overall":{"provider":true,"create":true,"readAfterCreate":true,"requestedToMatching":true,"matchingPersistence":true,"firstDriverAccepted":true,"assignmentPersistence":true,"secondDriverRejected":true,"finalPersistence":true,"final":true},"cleanup":{"attempted":false,"reason":"DELETE_OPERATION_NOT_EXPOSED_BY_CURRENT_ADAPTER","collection":"cablink_test_rides","documentId":"O3-CANONICAL-TEST-1785439145313"}}
+HTTP_CODE=200
+
+======================================================================
+14. LIVE API ROUTE TESTS
+======================================================================
+
+GET /api/health
+
+
+GET /api/rides
+
+
+GET /api/drivers/online
+
+
+GET /api/canonical-firestore-lifecycle
+
+
+======================================================================
+15. LOCAL SOURCE VS LIVE RESPONSE FINGERPRINT
+======================================================================
+--- Local api/index.js SHA256 ---
+./cablink_precise_truth_audit.sh: line 431: sha256sum: command not found
+
+--- Local vercel.json SHA256 ---
+./cablink_precise_truth_audit.sh: line 435: sha256sum: command not found
+
+--- Local source file modification times ---
+
+======================================================================
+16. VERCEL PROJECT METADATA
+======================================================================
+./cablink_precise_truth_audit.sh: line 456: cat: command not found
+
+--- Vercel CLI ---
+
+======================================================================
+17. LOCAL NODE MODULE LOAD TEST
+======================================================================
+./cablink_precise_truth_audit.sh: line 471: node: command not found
+
+======================================================================
+18. RUNTIME DEPENDENCY CLASSIFICATION
+======================================================================
+./cablink_precise_truth_audit.sh: line 502: python3: command not found
+
+======================================================================
+19. SOURCE → RUNTIME VERDICT
+======================================================================
+The following questions are answered from the evidence above:
+
+Q1. What does Vercel deploy?
+    api/index.js
+
+Q2. Does api/index.js expose /api/rides?
+    Determined from route inventory above.
+
+Q3. Does api/index.js import backend/server/app.js?
+    Determined from import graph above.
+
+Q4. Does the full backend expose /api/rides?
+    Determined from backend/server/app.js and routes/rides.js.
+
+Q5. Does the canonical repository use Firestore?
+    Determined from canonical repository source.
+
+Q6. Does production database_adapter use Firestore?
+    Determined from adapter source.
+
+Q7. Is the canonical repository reachable from the Vercel entrypoint?
+    Determined from import chain.
+
+Q8. Is the live deployment serving the current local api/index.js?
+    Must be confirmed by deployment identity and route behavior.
+
+Q9. Does the live API expose /api/rides?
+    Determined by live HTTP test.
+
+Q10. Does the live canonical Firestore lifecycle endpoint execute?
+     Determined by live HTTP test.
+
+======================================================================
+20. FINAL SUMMARY
+======================================================================
+PASS : 2
+FAIL : 0
+WARN : 1
+
+======================================================================
+IMPORTANT — THIS AUDIT DID NOT:
+======================================================================
+• Modify source files
+• Modify configuration
+• Commit changes
+• Push to GitHub
+• Deploy to Vercel
+• Create or mutate rides
+• Write to Firestore
+
+The only output created is this audit report:
+CABLINK_PRECISE_TRUTH_AUDIT_20260730_211854.txt
+======================================================================

@@ -464,21 +464,158 @@ window.showDriverRequest = function(ride) {
   if (typeof haptic === 'function') haptic();
 };
 
-window.acceptRideRequest = function(rideId, fare) {
+window.acceptRideRequest = async function(rideId, fare) {
   var card = document.getElementById('req_' + rideId);
-  if (card) card.remove();
-  fetch('/api/rides/' + rideId, {
-    method: 'PATCH',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      status: 'DRIVER_ASSIGNED',
-      driverId: window.STATE && window.STATE.wallet || 'driver-anon',
-      driverName: 'Driver'
-    })
-  }).then(function(){ toast('Ride accepted! Head to pickup ✓', 'success'); })
-  .catch(function(){ toast('Accepted (offline)', 'success'); });
-  if (window.STATE) { window.STATE.driverAccepted = (window.STATE.driverAccepted||0)+1; window.STATE.driverThb = (window.STATE.driverThb||0)+1; }
-  if (typeof updateDriverUI === 'function') updateDriverUI();
+
+  var driverId =
+    (window.STATE && window.STATE.driverId) ||
+    (window.STATE && window.STATE.wallet) ||
+    localStorage.getItem('cablink_driver_id') ||
+    localStorage.getItem('cl6_driverId') ||
+    'driver-anon';
+
+  var driverName =
+    (window.STATE && window.STATE.driverName) ||
+    localStorage.getItem('cablink_driver_name') ||
+    'Driver';
+
+  if (!rideId) {
+    toast('Invalid ride request', 'error');
+    return;
+  }
+
+  try {
+    var response = await fetch('/api/rides/' + encodeURIComponent(rideId) + '/accept', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        driverId: driverId,
+        driverName: driverName
+      })
+    });
+
+    var data = {};
+    try {
+      data = await response.json();
+    } catch (e) {}
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.error ||
+        ('Ride acceptance failed with HTTP ' + response.status)
+      );
+    }
+
+    if (card) card.remove();
+
+    /*
+     * ============================================================
+     * CABLINK O.8.1 — ACTIVE RIDE REGISTRY HANDOFF
+     *
+     * The acceptance response from the backend is authoritative.
+     *
+     * Active ride identity synchronization is delegated to:
+     *
+     *      CABLINK_ACTIVE_RIDE
+     *
+     * This registry owns:
+     *
+     *  - STATE.activeRide
+     *  - STATE.activeRideId
+     *  - CABLINK_RIDE
+     *  - CABLINK_REAL_RIDE
+     *  - CABLINK_RUNTIME.ride
+     *  - localStorage recovery
+     *  - active ride events
+     *
+     * ============================================================
+     */
+
+    var acceptedRide =
+      data.ride || data;
+
+
+    if(
+      window.CABLINK_ACTIVE_RIDE &&
+      typeof window.CABLINK_ACTIVE_RIDE.set === "function"
+    ){
+
+      window.CABLINK_ACTIVE_RIDE.set(
+        acceptedRide
+      );
+
+    }else{
+
+      console.warn(
+        "[CABLINK O.8.1] Active ride registry unavailable"
+      );
+
+    }
+
+
+
+    /*
+     * Driver counters update only after canonical
+     * acceptance has succeeded.
+     */
+
+    if (window.STATE) {
+
+      window.STATE.driverAccepted =
+        (window.STATE.driverAccepted || 0) + 1;
+
+      window.STATE.driverThb =
+        (window.STATE.driverThb || 0) + 1;
+
+    }
+
+
+    if (typeof updateDriverUI === 'function') {
+
+      updateDriverUI();
+
+    }
+
+
+    toast(
+      'Ride accepted! Head to pickup ✓',
+      'success'
+    );
+
+
+    console.log(
+      '[CABLINK O.7] Canonical active ride established:',
+      {
+        rideId:
+          String(canonicalRideId),
+
+        status:
+          acceptedRide.status,
+
+        ride:
+          acceptedRide
+      }
+    );
+
+
+    return acceptedRide;
+
+  } catch (error) {
+
+    console.error(
+      '[CABLINK] Canonical ride acceptance failed:',
+      error
+    );
+
+    toast(
+      'Could not accept ride: ' + error.message,
+      'error'
+    );
+
+    return null;
+  }
 };
 
 window.declineRideRequest = function(rideId) {

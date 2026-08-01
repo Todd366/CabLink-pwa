@@ -56,7 +56,7 @@ if(match.success){
 
 window.CABLINK_RIDE.update(
 ride,
-"DRIVER_ACCEPTED"
+"DRIVER_ASSIGNED"
 );
 
 }

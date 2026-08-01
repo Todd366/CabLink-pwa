@@ -1,0 +1,577 @@
+=== GIT STATE ===
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .vercel/project.json
+	modified:   api/index.js
+	modified:   backend/canonical/ride_engine.js
+	modified:   backend/canonical/ride_repository.js
+	modified:   backend/data/economy_ledger.json
+	modified:   backend/data/rides.json
+	modified:   backend/database/ride_repository.js
+	modified:   backend/production/database_adapter.js
+	modified:   backend/rides/ride_engine.js
+	modified:   backend/rides/ride_state_engine.js
+	modified:   backend/routes/completion_api.js
+	modified:   backend/routes/dispatch_api.js
+	modified:   backend/routes/rides.js
+	modified:   backend/server/app.js
+	modified:   backend/services/economy_ledger_service.js
+	modified:   backend/services/live_ride_service.js
+	modified:   backend/services/rideService.js
+	modified:   backend/services/ride_completion_service.js
+	modified:   backend/services/ride_economy_service.js
+	modified:   backend/services/ride_orchestrator_service.js
+	modified:   backend/services/ride_service.js
+	modified:   backend/services/ride_state_service.js
+	modified:   backend/status/ride_status.js
+	modified:   backend/storage/cablink_db.json
+	modified:   backend/storage/database.js
+	modified:   cablink_full_audit.js
+	modified:   frontend/App.jsx
+	modified:   frontend/components/LegacyCabLink.jsx
+	modified:   frontend/index.html
+	modified:   frontend/js/app_core.js
+	modified:   frontend/js/driver/driverDispatchBridge.js
+	modified:   frontend/js/driver/driverLifecycleControls.js
+	modified:   frontend/js/operations_core.js
+	modified:   frontend/js/ride_engine.js
+	modified:   frontend/js/rides/rideStateMachine.js
+	modified:   frontend/js/simulation_engine.js
+	modified:   package-lock.json
+	modified:   package.json
+	modified:   vercel.json
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.vercel/.env.production.local
+	CABLINK_FULL_AUDIT_REPORT.md
+	SITREP.txt
+	api/index.firebase-forensics-backup.js
+	api/index.firebase-readiness-working.js
+	api/index.js.backup
+	api/index.js.before-adapter-test
+	api/index.js.before-canonical-firestore-test
+	api/index.js.before-firestore-boot-diagnostic
+	api/index.js.before-firestore-canonical-lifecycle
+	api/index.js.before-firestore-operation-diagnostic
+	api/index.minimal-test.js
+	api/index.ride-routes-working.js
+	api/index.storage-test-backup.js
+	api/index.storage-test-working.js
+	api/index.users-route-failing.js
+	api/index.users-test-working.js
+	api/index.write-forensics-working.js
+	backend/canonical/ride_engine.js.before-firestore-test
+	backend/canonical/ride_engine.js.pre_o6
+	backend/canonical/ride_repository.js.before-firestore-test
+	backend/canonical/ride_repository.js.pre_o6
+	backend/canonical/ride_repository_firestore_test.js
+	backend/firebase/firestore_adapter.js
+	backend/production/database_adapter.js.before-firestore
+	backend/routes/rides.js.before-firestore-test
+	backend/routes/rides.js.pre_o6
+	backend/storage/database.js.backup_relative_path
+	backups/o820/
+	backups/o820_auto/
+	backups/o821_auto/
+	backups/o822_auto/
+	backups/o823_auto/
+	backups/o824_auto/
+	backups/o834_auto/
+	backups/o837_completion_fix/
+	backups/o839_completion_route/
+	backups/o839_completion_service/
+	backups/o843_automated_restart_survival_gate.js
+	block9_canonical_repair.sh
+	block9_restore_and_verify.sh
+	cablink_current_app_inventory.js
+	cablink_runtime_truth_trace.js
+	cablink_runtime_truth_trace_output.txt
+	frontend/index.html.pre_o6
+	frontend/js/app_core.js.pre_o6
+	frontend/js/rides/activeRideRegistry.js
+	independent_audit.py
+	o820_canonical_cleanup.js
+	o821_legacy_cleanup.js
+	o822_backend_canonical_cleanup.js
+	o823_service_canonical_cleanup.js
+	o824_finalize_service_wrappers.js
+	o825_event_flow_audit.js
+	o826_live_ride_simulation.js
+	o827_reward_pipeline_test.js
+	o828_driver_race_test.js
+	o829_full_economy_ride_test.js
+	o830_api_integration_test.js
+	o831_api_contract_audit.js
+	o832_real_api_flow_test.js
+	o834_canonical_completion_migration.js
+	o835_state_authority_audit.js
+	o836_live_service_inspect.js
+	o837_completion_canonical_fix.js
+	o838_completion_path_audit.js
+	o839_canonical_completion_bridge.js
+	o840_full_canonical_lifecycle_test.js
+	o841_canonical_integrity_gate.js
+	o842_persistence_restart_integrity_test.js
+	o843_automated_restart_survival_gate.js
+	o844_restart_persistence_survival_test.js
+	o845_deterministic_restart_survival_test.js
+	o846_clean_owned_restart_survival_test.js
+	o847_deterministic_restart_survival_test.js
+	o848_canonical_state_authority_audit.js
+	o849_canonical_writer_classification_audit.js
+	o850_runtime_ride_authority_trace.js
+	o851_runtime_authority_trace.js
+	o852_active_runtime_dependency_classification.js
+	o852_real_api_contract_audit.js
+	o853_real_end_to_end_canonical_test.js
+	o853_runtime_ride_write_authority_trace.js
+	o854_cross_service_caller_ownership_trace.js
+	o854_frontend_canonical_bridge_audit.js
+	o855_runtime_reachability_dual_repository_trace.js
+	o856_runtime_route_registration_trace.js
+	o857_legacy_live_ride_conflict_trace.js
+	o858_database_repository_orchestrator_trace.js
+	o859_active_ride_path_authority_trace.js
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+9ced63c fix: require app.js not server.js — removes app.listen from serverless
+87b4f8d fix: set outputDirectory so Vercel serves static JS files correctly
+011b903 fix: stabilize Vercel static deployment and API entrypoint
+51505ad Restore static Vercel deployment path
+d2d3e5a Fix Vercel Vite React production build
+5ee45bd Fix driver map count and GPS markers
+9953f43 fix: use api/ folder pattern — static files served natively by Vercel
+e8f7815 fix: filesystem handler must be first route in vercel.json
+0be3745 fix: remove Express catch-all so Vercel can serve static JS files
+4f2a5fe fix: vercel filesystem handler — JS files no longer return index.html
+81a0089 fix: remove Vite build from vercel.json — serve static + API only
+a986048 fix: restore full UI from git + precise patches only
+057bd1e feat: complete hailing engine — GPS, autocomplete, Leaflet map, driver matching, notifications
+9d80a4b Merge branch 'feature/bstm-hub'
+03f0823 fix: inline critical CSS, kill role popup, hide fake banners, wire fare engine
+=== SCRIPT INVENTORY BY PREFIX ===
+42
+o820_canonical_cleanup.js
+o821_legacy_cleanup.js
+o822_backend_canonical_cleanup.js
+o823_service_canonical_cleanup.js
+o824_finalize_service_wrappers.js
+o825_event_flow_audit.js
+o826_live_ride_simulation.js
+o827_reward_pipeline_test.js
+o828_driver_race_test.js
+o829_full_economy_ride_test.js
+o830_api_integration_test.js
+o831_api_contract_audit.js
+o832_real_api_flow_test.js
+o834_canonical_completion_migration.js
+o835_state_authority_audit.js
+o836_live_service_inspect.js
+o837_completion_canonical_fix.js
+o838_completion_path_audit.js
+o839_canonical_completion_bridge.js
+o840_full_canonical_lifecycle_test.js
+o841_canonical_integrity_gate.js
+o842_persistence_restart_integrity_test.js
+o843_automated_restart_survival_gate.js
+o844_restart_persistence_survival_test.js
+o845_deterministic_restart_survival_test.js
+o846_clean_owned_restart_survival_test.js
+o847_deterministic_restart_survival_test.js
+o848_canonical_state_authority_audit.js
+o849_canonical_writer_classification_audit.js
+o850_runtime_ride_authority_trace.js
+o851_runtime_authority_trace.js
+o852_active_runtime_dependency_classification.js
+o852_real_api_contract_audit.js
+o853_real_end_to_end_canonical_test.js
+o853_runtime_ride_write_authority_trace.js
+o854_cross_service_caller_ownership_trace.js
+o854_frontend_canonical_bridge_audit.js
+o855_runtime_reachability_dual_repository_trace.js
+o856_runtime_route_registration_trace.js
+o857_legacy_live_ride_conflict_trace.js
+o858_database_repository_orchestrator_trace.js
+o859_active_ride_path_authority_trace.js
+---stage---
+24
+stage3_active_route_proof.js
+stage3_canonical_ride_verification.js
+stage4_backend_reward_audit.py
+stage4_backend_reward_trace.py
+stage4_lifecycle_audit.py
+stage4_lifecycle_wiring_trace.py
+stage4_reward_bridge_patch.py
+stage4d_runtime_reward_proof.py
+stage4e_thb_settlement_trace.py
+stage4f_blockchain_preflight.py
+stage4g10_runtime_wiring_audit.js
+stage4g10_settlement_integration_audit.js
+stage4g10_ui_health_audit.js
+stage4g1_recipient_flow_audit.py
+stage4g2_driver_wallet_trace.py
+stage4g3_wallet_source_discovery.py
+stage4g4_wallet_resolution_report.txt
+stage4g5_wallet_resolver_install.js
+stage4g6_blockchain_reward_preflight.js
+stage4g6_execution_path_inspector.js
+stage4g7_canonical_reward_blockchain_audit.js
+stage4g8_bsc_testnet_settlement_preflight.js
+stage4g9_token_metadata_settlement_design_audit.js
+stage4g_settlement_config_preflight.py
+---block---
+block10_backend.log
+block10_canonical_runtime_lock.sh
+block13b_runtime_proof.sh
+block13b_runtime_proof.txt
+block2.py
+block3.py
+block4.py
+block5.py
+block6.py
+block7.py
+block8.py
+block9.py
+block9_canonical_repair.sh
+block9_restore_and_verify.sh
+block9_runtime_truth.sh
+---cablink_---
+cablink_architecture_health_audit.js
+cablink_bracket_finder.js
+cablink_current_app_inventory.js
+cablink_driver_consolidate.sh
+cablink_forensic_audit_v2.js
+cablink_full_audit.js
+cablink_full_runtime_audit.sh
+cablink_reality_doctor.js
+cablink_remove_appcore_toggle.sh
+cablink_ride_backup_20260725_221547
+cablink_runtime_fix.sh
+cablink_runtime_fix2.sh
+cablink_runtime_truth_audit_v3.js
+cablink_runtime_truth_trace.js
+cablink_runtime_truth_trace_output.txt
+cablink_step7_runtime_alignment_audit.js
+cablink_step8_1_runtime_truth_correction.js
+cablink_step8_runtime_truth_audit.js
+=== INDEX.HTML BACKUP COPIES ===
+-rw-------. 1 u0_a173 u0_a173 104469 Jul 26 10:19 index.html
+-rw-------. 1 u0_a173 u0_a173 105254 Jul 25 21:36 index.html.backup.20260725_213658
+-rw-------. 1 u0_a173 u0_a173 105405 Jul 26 10:05 index.html.before_driver_role_restore_20260726_100519.bak
+-rw-------. 1 u0_a173 u0_a173 105391 Jul 26 10:08 index.html.before_duplicate_driver_id_fix_20260726_100813.bak
+-rw-------. 1 u0_a173 u0_a173 105268 Jul 26 09:26 index.html.before_showArrived_fix_20260726_092646.bak
+-rw-------. 1 u0_a173 u0_a173 105405 Jul 26 10:08 index.html.step1_acceptance_backup_20260726_101659
+=== VERCEL CONFIG DIFF (current vs backup) ===
+3,19c3,7
+<   "builds": [
+<     { "src": "api/index.js", "use": "@vercel/node" },
+<     { "src": "index.html", "use": "@vercel/static" },
+<     { "src": "fix.js", "use": "@vercel/static" },
+<     { "src": "role.js", "use": "@vercel/static" },
+<     { "src": "fare_engine.js", "use": "@vercel/static" },
+<     { "src": "sw.js", "use": "@vercel/static" },
+<     { "src": "manifest.json", "use": "@vercel/static" }
+<   ],
+<   "routes": [
+<     { "src": "/api/(.*)", "dest": "/api/index.js" },
+<     { "src": "/fix.js", "dest": "/fix.js" },
+<     { "src": "/role.js", "dest": "/role.js" },
+<     { "src": "/fare_engine.js", "dest": "/fare_engine.js" },
+<     { "src": "/sw.js", "dest": "/sw.js" },
+<     { "src": "/manifest.json", "dest": "/manifest.json" },
+<     { "src": "/(.*)", "dest": "/index.html" }
+---
+>   "rewrites": [
+>     {
+>       "source": "/api/:path*",
+>       "destination": "/api/index.js"
+>     }
+21c9
+< }
+---
+> }
+\ No newline at end of file
+=== PACKAGE.JSON ===
+{
+  "name": "cablink-pwa",
+  "version": "5.0.0",
+  "description": "CabLink — Blockchain-powered ride-hailing for Gaborone. BSTM Ecosystem.",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "backend": "node backend/server.js",
+    "dev": "vite",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "ethers": "^6.17.0",
+    "express": "^4.18.2",
+    "firebase-admin": "^14.2.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "cablink",
+    "bstm",
+    "botswana",
+    "blockchain",
+    "ridehailing",
+    "thobocoin"
+  ],
+  "author": "Thobo Atlang Mosanako — BSTM Ecosystem",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.4",
+    "vite": "^7.1.7"
+  }
+}
+=== ENTRYPOINT CHAIN ===
+// ============================================================
+// CABLINK CANONICAL BACKEND SERVER ENTRY
+// ============================================================
+//
+// This file is intentionally kept as the single package.json
+// backend entry point.
+//
+// Canonical request flow:
+//
+// HTTP
+//   ↓
+// backend/server/app.js
+//   ↓
+// backend/routes/rides.js
+//   ↓
+// backend/canonical/ride_engine.js
+//   ↓
+// backend/canonical/ride_repository.js
+//   ↓
+// backend/data/rides.json
+//
+// Legacy ride systems are NOT deleted by this alignment.
+// ============================================================
+
+const app = require("./server/app");
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(
+        `🚕 CabLink backend running on port ${PORT}`
+    );
+});
+---
+const express = require("express");
+
+const app = express();
+
+app.use(express.json());
+
+
+// ============================================================
+// ROUTES
+// ============================================================
+
+const rideRoutes =
+    require("../routes/rides");
+
+const userRoutes =
+    require("../routes/users");
+
+const canonicalRewardRoutes =
+    require("../routes/canonical_reward_api");
+
+const completionRoutes =
+    require("../routes/completion_api");
+
+const dispatchRoutes =
+    require("../routes/dispatch_api");
+
+const driverOnlineRoutes =
+    require("../routes/driver_online_api");
+
+
+// ============================================================
+// HEALTH
+// ============================================================
+
+function healthResponse(req, res) {
+
+    res.json({
+
+        system: "CabLink API",
+
+        status: "ONLINE",
+
+        time: new Date().toISOString()
+
+    });
+
+}
+
+
+app.get(
+    "/health",
+    healthResponse
+);
+
+
+app.get(
+    "/api/health",
+    healthResponse
+);
+
+
+// ============================================================
+// CANONICAL RIDE API
+//
+// PRIMARY RIDE SYSTEM
+//
+// POST  /api/rides
+// GET   /api/rides
+// GET   /api/rides/:id
+// PATCH /api/rides/:id
+// PATCH /api/rides/:id/accept
+// PATCH /api/rides/:id/complete
+// ============================================================
+
+app.use(
+    "/api/rides",
+    rideRoutes
+);
+
+
+// ============================================================
+// USERS
+// ============================================================
+
+app.use(
+    "/api/users",
+    userRoutes
+);
+
+
+// ============================================================
+// REWARDS
+// ============================================================
+
+app.use(
+    "/api/rewards",
+    canonicalRewardRoutes
+);
+
+
+// ============================================================
+// RIDE COMPLETION
+//
+// Legacy-compatible endpoint:
+//
+// POST /api/ride/complete
+//
+// Canonical endpoint:
+//
+// PATCH /api/rides/:id/complete
+// ============================================================
+
+app.use(
+    "/api",
+    completionRoutes
+);
+
+
+// ============================================================
+// DISPATCH
+//
+// Dispatch is now mounted.
+//
+// Canonical driver polling endpoint:
+//
+// GET /api/dispatch/requests
+//
+// Passenger request:
+//
+// POST /api/dispatch/request
+//
+// Driver acceptance:
+//
+// POST /api/dispatch/accept
+// ============================================================
+
+app.use(
+    "/api",
+    dispatchRoutes
+);
+
+
+// ============================================================
+// DRIVER ONLINE REGISTRY
+// ============================================================
+
+app.use(
+    "/api",
+    driverOnlineRoutes
+);
+
+
+// ============================================================
+// EXPORT
+// ============================================================
+
+module.exports = app;
+=== TOP-LEVEL DIR SIZES ===
+152M	node_modules/
+14M	archive/
+3.2M	_audit_backups/
+2.6M	backups/
+1.5M	frontend/
+1.4M	scripts/
+1.3M	backend/
+589K	migration_backup/
+307K	dist/
+304K	beta/
+116K	api/
+69K	pilot/
+66K	database/
+49K	cablink_ride_backup_20260725_221547/
+44K	deployment/
+23K	docs/
+7.5K	future/
+7.5K	config/
+7.5K	admin/
+3.5K	logs/
+=== ROOT-LEVEL LOOSE FILE COUNT ===
+148
+=== ROUTES ACTUALLY MOUNTED ===
+5:app.use(express.json());
+75:app.use(
+85:app.use(
+95:app.use(
+113:app.use(
+137:app.use(
+147:app.use(
+=== ALL app.js/app.jsx/App.jsx CANDIDATES ===
+./backend/server/app.js
+./frontend/js/app.js
+./frontend/App.jsx
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/App.jsx
+./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/app.js
+./backups/phase3-runtime-consolidation-20260725-215339/frontend/App.jsx
+./backups/phase3-runtime-consolidation-20260725-215339/backend/server/app.js
+./migration_backup/frontend/js/app.js
+./migration_backup/frontend/App.jsx
+./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/frontend/js/app.js
+./archive/before_architecture_cleanup/backend_1784127601/server/app.js
+./archive/before_architecture_cleanup/frontend_1784127601/App.jsx
+./archive/before_architecture_cleanup/frontend_1784127601/js/app.js

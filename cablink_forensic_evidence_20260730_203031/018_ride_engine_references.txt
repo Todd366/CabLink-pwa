@@ -1,0 +1,615 @@
+./backend/routes/rides.js:3:const rideEngine =
+./backend/routes/rides.js:4:    require("../canonical/ride_engine");
+./backend/routes/rides.js:8:} = rideEngine;
+./backend/routes/rides.js:46:            rideEngine.createRide({
+./backend/routes/rides.js:59:            rideEngine.transition(
+./backend/routes/rides.js:116:            await rideEngine.acceptRide(
+./backend/routes/rides.js:175:            rideEngine.getAllRides();
+./backend/routes/rides.js:208:        rideEngine.getRide(
+./backend/routes/rides.js:256:            rideEngine.transition(
+./backend/routes/completion_api.js:79:// Internally it resolves the canonical ride.
+./backend/routes/ride_state_api.js:4:const state=require("../services/ride_state_service");
+./backend/routes/canonical_reward_api.js:5:    require("../services/canonical_reward_service");
+./backend/routes/canonical_reward_api.js:126:                        "Failed to process canonical ride reward"
+./backend/services/rideService.js:7: backend/canonical/ride_engine.js
+./backend/services/rideService.js:14: canonical:
+./backend/services/rideService.js:15: "backend/canonical/ride_engine.js",
+./backend/services/ride_completion_service.js:2:    require("../canonical/ride_engine");
+./backend/services/ride_completion_service.js:5:    require("./canonical_reward_service");
+./backend/services/ride_completion_service.js:17:// The canonical lifecycle requires:
+./backend/services/ride_completion_service.js:137:    // Complete canonical ride
+./backend/services/ride_economy_service.js:7: backend/canonical/ride_engine.js
+./backend/services/ride_economy_service.js:14: canonical:
+./backend/services/ride_economy_service.js:15: "backend/canonical/ride_engine.js",
+./backend/services/ride_orchestrator_service.js:4:require("./ride_state_service");
+./backend/services/canonical_reward_service.js:1:const canonicalWalletResolver = require("../rewards/canonical_wallet_resolver");
+./backend/services/canonical_reward_service.js:6:    require("../canonical/ride_repository");
+./backend/services/canonical_reward_service.js:125:    const canonicalRideId =
+./backend/services/canonical_reward_service.js:130:     * Load canonical ride.
+./backend/services/canonical_reward_service.js:135:            canonicalRideId
+./backend/services/canonical_reward_service.js:148:                canonicalRideId
+./backend/services/canonical_reward_service.js:158:     * Only a canonical COMPLETED ride
+./backend/services/canonical_reward_service.js:173:                canonicalRideId,
+./backend/services/canonical_reward_service.js:190:     * Search by canonical ride ID.
+./backend/services/canonical_reward_service.js:201:            canonicalRideId
+./backend/services/canonical_reward_service.js:219:                canonicalRideId,
+./backend/services/canonical_reward_service.js:250:     * rideId is the canonical backend ride ID.
+./backend/services/canonical_reward_service.js:263:            canonicalRideId,
+./backend/services/canonical_reward_service.js:269:        wallet: canonicalWalletResolver.resolveWallet(
+./backend/services/canonical_reward_service.js:302:            canonicalRideId,
+./backend/server.js:16:// backend/canonical/ride_engine.js
+./backend/server.js:18:// backend/canonical/ride_repository.js
+./backend/rides/ride_engine.js:7: backend/canonical/ride_engine.js
+./backend/rides/ride_engine.js:17: canonical:
+./backend/rides/ride_engine.js:18: "backend/canonical/ride_engine.js"
+./backend/rides/ride_state_engine.js:7: backend/canonical/ride_engine.js
+./backend/rides/ride_state_engine.js:17: canonical:
+./backend/rides/ride_state_engine.js:18: "backend/canonical/ride_engine.js"
+./backend/rewards/canonical_wallet_resolver.js:153: * Identity -> linked wallet -> validation -> canonical address
+./backend/server/app.js:18:const canonicalRewardRoutes =
+./backend/server/app.js:19:    require("../routes/canonical_reward_api");
+./backend/server/app.js:97:    canonicalRewardRoutes
+./backend/status/ride_status.js:7: backend/canonical/ride_engine.js
+./backend/status/ride_status.js:17: canonical:
+./backend/status/ride_status.js:18: "backend/canonical/ride_engine.js"
+./backend/canonical/ride_repository_firestore_test.js:38:     * canonical create/read/transition/accept persistence
+./frontend/js/app.js:14:"rideState",
+./frontend/js/ride_engine.js:6: Backend canonical engine:
+./frontend/js/ride_engine.js:7: backend/canonical/ride_engine.js
+./frontend/js/ride_engine.js:15: "Backend canonical lifecycle is authoritative"
+./frontend/js/driver/driverDispatchBridge.js:161:"[CABLINK] Driver assignment confirmed by canonical backend"
+./frontend/js/driver/driverLifecycleControls.js:16:   *   canonical ride_engine
+./frontend/js/driver/driverLifecycleControls.js:18:   *   canonical ride_repository
+./frontend/js/driver/driverLifecycleControls.js:48:        "— missing canonical ride ID"
+./frontend/js/rides/completionRewardBridge.js:33:       * Resolve canonical ride ID.
+./frontend/js/rides/completionRewardBridge.js:97:       * Never create a reward without a canonical ride ID.
+./frontend/js/rides/completionRewardBridge.js:162:       * The canonical backend ride ID is now
+./frontend/js/rides/completionRewardBridge.js:186:       * Persist canonical completed ride.
+./frontend/js/rides/completionRewardBridge.js:238:       * Reward record uses the SAME canonical
+./frontend/js/rides/completionRewardBridge.js:284:       * Mark the canonical ride as reward-completed
+./frontend/js/rides/rideStateMachine.js:7:"cablink_ride_state"
+./frontend/js/rides/rideStateMachine.js:18:"cablink_ride_state",
+./frontend/js/app_core.js:560:     * Driver counters update only after canonical
+./frontend/js/app_core.js:592:          String(canonicalRideId),
+./frontend/js/app_core.js:630:// Frontend never mutates canonical ride status directly.
+./frontend/js/app_core.js:631:// Every lifecycle transition goes through the canonical
+./frontend/js/app_core.js:775:// These all route through the same canonical lifecycle helper.
+./frontend/js/app_core.js:816:// It delegates all state changes to the canonical lifecycle
+./frontend/components/LegacyCabLink.jsx:11: * canonical ride/API layers remain connected to the existing
+./CABLINK_REALITY_GRAPH.json:664:        "file": "backend/routes/ride_state_api.js",
+./CABLINK_REALITY_GRAPH.json:670:        "file": "backend/routes/ride_state_api.js",
+./CABLINK_REALITY_GRAPH.json:676:        "file": "backend/routes/ride_state_api.js",
+./CABLINK_REALITY_GRAPH.json:1466:        "file": "backend/rides/ride_engine.js",
+./clear_cablink_state.js:10:"rideState",
+./runtime_dependency_graph.json:695:        "backend/rides/ride_engine.js",
+./runtime_dependency_graph.json:705:        "cablink_phase46_live_ride_state.js",
+./runtime_dependency_graph.json:1319:        "cablink_phase46_live_ride_state.js",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:3:const rideEngine =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:4:    require("../canonical/ride_engine");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:8:} = rideEngine;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:46:            rideEngine.createRide({
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:59:            rideEngine.transition(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:116:            await rideEngine.acceptRide(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:175:            rideEngine.getAllRides();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:208:        rideEngine.getRide(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:256:            rideEngine.transition(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ride_state_api.js:4:const state=require("../services/ride_state_service");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/canonical_reward_api.js:5:    require("../services/canonical_reward_service");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/canonical_reward_api.js:126:                        "Failed to process canonical ride reward"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/rideService.js:7: backend/canonical/ride_engine.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/rideService.js:14: canonical:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/rideService.js:15: "backend/canonical/ride_engine.js",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_completion_service.js:6:require("../canonical/ride_engine");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_completion_service.js:9:require("./canonical_reward_service");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_completion_service.js:16:const canonicalRide =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_completion_service.js:19:if(canonicalRide){
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_completion_service.js:89:const canonicalReward =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_completion_service.js:108:canonicalReward
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_economy_service.js:7: backend/canonical/ride_engine.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_economy_service.js:14: canonical:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_economy_service.js:15: "backend/canonical/ride_engine.js",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_orchestrator_service.js:4:require("./ride_state_service");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:1:const canonicalWalletResolver = require("../rewards/canonical_wallet_resolver");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:6:    require("../canonical/ride_repository");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:125:    const canonicalRideId =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:130:     * Load canonical ride.
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:135:            canonicalRideId
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:148:                canonicalRideId
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:158:     * Only a canonical COMPLETED ride
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:173:                canonicalRideId,
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:190:     * Search by canonical ride ID.
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:201:            canonicalRideId
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:219:                canonicalRideId,
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:250:     * rideId is the canonical backend ride ID.
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:263:            canonicalRideId,
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:269:        wallet: canonicalWalletResolver.resolveWallet(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:302:            canonicalRideId,
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js:16:// backend/canonical/ride_engine.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js:18:// backend/canonical/ride_repository.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_engine.js:7: backend/canonical/ride_engine.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_engine.js:17: canonical:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_engine.js:18: "backend/canonical/ride_engine.js"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_state_engine.js:7: backend/canonical/ride_engine.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_state_engine.js:17: canonical:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_state_engine.js:18: "backend/canonical/ride_engine.js"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/canonical_wallet_resolver.js:153: * Identity -> linked wallet -> validation -> canonical address
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:11:const canonicalRewardRoutes = require("../routes/canonical_reward_api");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:61:app.use("/api/rewards",canonicalRewardRoutes);
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/status/ride_status.js:7: backend/canonical/ride_engine.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/status/ride_status.js:17: canonical:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/status/ride_status.js:18: "backend/canonical/ride_engine.js"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_repository_firestore_test.js:38:     * canonical create/read/transition/accept persistence
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app.js:14:"rideState",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/ride_engine.js:6: Backend canonical engine:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/ride_engine.js:7: backend/canonical/ride_engine.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/ride_engine.js:15: "Backend canonical lifecycle is authoritative"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverDispatchBridge.js:161:"[CABLINK] Driver assignment confirmed by canonical backend"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverLifecycleControls.js:16:   *   canonical ride_engine
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverLifecycleControls.js:18:   *   canonical ride_repository
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverLifecycleControls.js:48:        "— missing canonical ride ID"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js:33:       * Resolve canonical ride ID.
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js:97:       * Never create a reward without a canonical ride ID.
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js:162:       * The canonical backend ride ID is now
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js:186:       * Persist canonical completed ride.
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js:238:       * Reward record uses the SAME canonical
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js:284:       * Mark the canonical ride as reward-completed
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/rideStateMachine.js:7:"cablink_ride_state"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/rideStateMachine.js:18:"cablink_ride_state",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:560:     * Driver counters update only after canonical
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:592:          String(canonicalRideId),
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:630:// Frontend never mutates canonical ride status directly.
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:631:// Every lifecycle transition goes through the canonical
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:775:// These all route through the same canonical lifecycle helper.
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:816:// It delegates all state changes to the canonical lifecycle
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:35:    "/api/canonical-firestore-lifecycle",
+./api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+./api/index.js:35:    "/api/canonical-firestore-lifecycle",
+./cablink_full_audit.js:417:  lines.push('_Note: with a single canonical entry file (no bundler ambiguity), the LAST definition in document/load order generally wins if names collide via `window.X =` reassignment. Plain `function X(){}` redeclarations follow normal JS scoping (later one wins if in the same scope)._');
+./cablink_forensic_audit_v2.js:986:function rideStateAnalysis(files) {
+./cablink_forensic_audit_v2.js:1461:    L.push('- 🟠 **HIGH:** Multiple possible application entry points exist. Determine the single canonical production entry.');
+./cablink_forensic_audit_v2.js:1758:  L.push('### Recommended passenger canonical flow');
+./cablink_forensic_audit_v2.js:1809:  L.push('### Recommended driver canonical flow');
+./cablink_forensic_audit_v2.js:1894:  if (!data.rideStates.length) {
+./cablink_forensic_audit_v2.js:1902:    data.rideStates.forEach(x => {
+./cablink_forensic_audit_v2.js:2200:      `${priority++}. 🔴 Establish ONE canonical production entry point.`
+./cablink_forensic_audit_v2.js:2223:      `${priority++}. 🟠 Create or integrate a canonical road-routing/distance service.`
+./cablink_forensic_audit_v2.js:2232:      `${priority++}. 🟠 Create a canonical ETA calculation service.`
+./cablink_forensic_audit_v2.js:2259:    `${priority++}. 🟠 Create a canonical location service for passenger and driver GPS.`
+./cablink_forensic_audit_v2.js:2263:    `${priority++}. 🟠 Create a canonical fare engine on the backend; frontend should only display estimates.`
+./cablink_forensic_audit_v2.js:2355:    'Before modifying CabLink again, identify the canonical frontend entry point, canonical backend entry point, canonical database, canonical ride state machine, canonical location service, canonical routing service, and canonical fare engine.'
+./cablink_forensic_audit_v2.js:2361:    'Any implementation outside those canonical paths should be classified as active, deprecated, experimental, archived, or dead. This prevents another partial merge from causing the application-wide failure you experienced.'
+./cablink_forensic_audit_v2.js:2440:  const rideStates =
+./cablink_forensic_audit_v2.js:2441:    rideStateAnalysis(files);
+./cablink_forensic_audit_v2.js:2490:      rideStates,
+./cablink_runtime_truth_audit_v3.js:49:  canonicalCandidates: {},
+./cablink_runtime_truth_audit_v3.js:203:results.canonicalCandidates.frontend = frontendCandidates
+./cablink_runtime_truth_audit_v3.js:363:const rideStateWords = [
+./cablink_runtime_truth_audit_v3.js:387:  const states = rideStateWords.filter(state =>
+./cablink_runtime_truth_audit_v3.js:401:    /state|lifecycle|ride_engine|rideService|orchestrator/i.test(x.file)
+./cablink_runtime_truth_audit_v3.js:501:  if (found) results.canonicalCandidates[system] = "DETECTED";
+./cablink_runtime_truth_audit_v3.js:686:const frontendCandidatesScored = results.canonicalCandidates.frontend
+./cablink_runtime_truth_audit_v3.js:699:results.canonicalCandidates.backend = backendCandidates;
+./cablink_runtime_truth_audit_v3.js:700:results.canonicalCandidates.frontendRanked = frontendCandidatesScored;
+./cablink_runtime_truth_audit_v3.js:703:  results.canonicalCandidates.backendTop = backendCandidates[0];
+./cablink_runtime_truth_audit_v3.js:707:  results.canonicalCandidates.frontendTop = frontendCandidatesScored[0];
+./cablink_runtime_truth_audit_v3.js:782:report += `> This audit attempts to determine what CabLink actually runs, what connects, and where canonical ownership is unresolved. It does not modify application source files.\n`;
+./cablink_runtime_truth_audit_v3.js:809:if (results.canonicalCandidates.frontendTop) {
+./cablink_runtime_truth_audit_v3.js:810:  report += `\n**Highest-scoring frontend candidate:** ${results.canonicalCandidates.frontendTop.file}\n`;
+./cablink_runtime_truth_audit_v3.js:819:if (results.canonicalCandidates.backendTop) {
+./cablink_runtime_truth_audit_v3.js:820:  report += `\n**Highest-scoring backend candidate:** ${results.canonicalCandidates.backendTop.file}\n`;
+./cablink_runtime_truth_audit_v3.js:928:1. Which frontend is actually canonical?
+./cablink_runtime_truth_audit_v3.js:929:2. Which backend server is actually canonical?
+./o820_canonical_cleanup.js:49:"[CABLINK] Driver assignment confirmed by canonical backend"
+./o820_canonical_cleanup.js:58:if(fs.existsSync("frontend/js/ride_engine.js")){
+./o820_canonical_cleanup.js:60:backup("frontend/js/ride_engine.js");
+./o820_canonical_cleanup.js:63:"frontend/js/ride_engine.js",
+./o820_canonical_cleanup.js:70: Backend canonical engine:
+./o820_canonical_cleanup.js:71: backend/canonical/ride_engine.js
+./o820_canonical_cleanup.js:79: "Backend canonical lifecycle is authoritative"
+./o820_canonical_cleanup.js:85:"DISABLED: frontend/js/ride_engine.js"
+./o821_legacy_cleanup.js:96:            data.includes("rides/ride_engine") ||
+./o821_legacy_cleanup.js:97:            data.includes("ride_state_engine") ||
+./o822_backend_canonical_cleanup.js:40: backend/canonical/ride_engine.js
+./o822_backend_canonical_cleanup.js:50: canonical:
+./o822_backend_canonical_cleanup.js:51: "backend/canonical/ride_engine.js"
+./o822_backend_canonical_cleanup.js:61:["backend/rides/ride_engine.js",
+./o822_backend_canonical_cleanup.js:64:["backend/rides/ride_state_engine.js",
+./o822_backend_canonical_cleanup.js:102:"backend/services/ride_state_service.js",
+./o825_event_flow_audit.js:20:"backend/canonical/ride_engine.js",
+./o825_event_flow_audit.js:29:"backend/services/canonical_reward_service.js",
+./o824_finalize_service_wrappers.js:32: backend/canonical/ride_engine.js
+./o824_finalize_service_wrappers.js:39: canonical:
+./o824_finalize_service_wrappers.js:40: "backend/canonical/ride_engine.js",
+./o826_live_ride_simulation.js:2:require("./backend/canonical/ride_engine");
+./o827_reward_pipeline_test.js:12:"backend/services/canonical_reward_service.js",
+./o827_reward_pipeline_test.js:21:"backend/routes/canonical_reward_api.js",
+./o828_driver_race_test.js:2:require("./backend/canonical/ride_engine");
+./o829_full_economy_ride_test.js:2:require("./backend/canonical/ride_engine");
+./o829_full_economy_ride_test.js:5:require("./backend/services/canonical_reward_service");
+./cablink_ride_backup_20260725_221547/backend/services/ride_orchestrator_service.js:4:require("./ride_state_service");
+./stage3_canonical_ride_verification.js:5:const engine = require("./backend/canonical/ride_engine");
+./stage3_canonical_ride_verification.js:89:        "backend/canonical/ride_repository.js",
+./stage3_canonical_ride_verification.js:90:        "backend/canonical/ride_engine.js",
+./stage3_canonical_ride_verification.js:758:The canonical ride system has successfully passed:
+./stage3_active_route_proof.js:118:    const canonical =
+./stage3_active_route_proof.js:127:    if (canonical) {
+./stage4g5_wallet_resolver_install.js:14:  "canonical_wallet_resolver.js"
+./stage4g5_wallet_resolver_install.js:21:  "canonical_reward_service.js"
+./stage4g5_wallet_resolver_install.js:26:    "BLOCKED: backend/services/canonical_reward_service.js was not found."
+./stage4g5_wallet_resolver_install.js:188: * Identity -> linked wallet -> validation -> canonical address
+./stage4g5_wallet_resolver_install.js:219:console.log("  backend/rewards/canonical_wallet_resolver.js");
+./stage4g5_wallet_resolver_install.js:246:  'const canonicalWalletResolver = require("../rewards/canonical_wallet_resolver");';
+./stage4g5_wallet_resolver_install.js:256: * Replace only the direct canonical reward wallet assignment.
+./stage4g5_wallet_resolver_install.js:262: *   wallet: canonical resolver result
+./stage4g5_wallet_resolver_install.js:274:    `wallet: canonicalWalletResolver.resolveWallet(
+./stage4g5_wallet_resolver_install.js:284:    "  Resolver file was created, but canonical reward service was NOT modified."
+./stage4g5_wallet_resolver_install.js:393:    'require("../rewards/canonical_wallet_resolver")'
+./stage4g6_blockchain_reward_preflight.js:17:    "canonical_reward_service.js"
+./stage4g6_blockchain_reward_preflight.js:23:    "canonical_wallet_resolver.js"
+./stage4g6_blockchain_reward_preflight.js:148:    'require("../rewards/canonical_wallet_resolver")'
+./stage4g6_blockchain_reward_preflight.js:191:The reward service and canonical wallet resolver are loadable.
+./stage4g6_execution_path_inspector.js:13:  "backend/services/canonical_reward_service.js",
+./stage4g6_execution_path_inspector.js:14:  "backend/rewards/canonical_wallet_resolver.js",
+./stage4g6_execution_path_inspector.js:163:  "backend/services/canonical_reward_service.js"
+./stage4g6_execution_path_inspector.js:170:    "canonical_reward_service exports:",
+./stage4g7_canonical_reward_blockchain_audit.js:18:  canonicalRoute: path.join(
+./stage4g7_canonical_reward_blockchain_audit.js:20:    "backend/routes/canonical_reward_api.js"
+./stage4g7_canonical_reward_blockchain_audit.js:23:  canonicalService: path.join(
+./stage4g7_canonical_reward_blockchain_audit.js:25:    "backend/services/canonical_reward_service.js"
+./stage4g7_canonical_reward_blockchain_audit.js:122:let canonicalService = null;
+./stage4g7_canonical_reward_blockchain_audit.js:123:let canonicalRoute = null;
+./stage4g7_canonical_reward_blockchain_audit.js:129:  canonicalService =
+./stage4g7_canonical_reward_blockchain_audit.js:130:    require(files.canonicalService);
+./stage4g7_canonical_reward_blockchain_audit.js:133:    "✓ canonical_reward_service loaded"
+./stage4g7_canonical_reward_blockchain_audit.js:138:    Object.keys(canonicalService)
+./stage4g7_canonical_reward_blockchain_audit.js:142:    "✗ canonical_reward_service failed:",
+./stage4g7_canonical_reward_blockchain_audit.js:150:  canonicalRoute =
+./stage4g7_canonical_reward_blockchain_audit.js:151:    require(files.canonicalRoute);
+./stage4g7_canonical_reward_blockchain_audit.js:154:    "✓ canonical_reward_api loaded"
+./stage4g7_canonical_reward_blockchain_audit.js:159:    typeof canonicalRoute
+./stage4g7_canonical_reward_blockchain_audit.js:163:    "✗ canonical_reward_api failed:",
+./stage4g7_canonical_reward_blockchain_audit.js:241:const canonicalServiceSource =
+./stage4g7_canonical_reward_blockchain_audit.js:242:  loadSource(files.canonicalService) || "";
+./stage4g7_canonical_reward_blockchain_audit.js:246:  typeof canonicalService.createRewardForCompletedRide === "function"
+./stage4g7_canonical_reward_blockchain_audit.js:251:  canonicalServiceSource.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:252:    'require("../rewards/canonical_wallet_resolver")'
+./stage4g7_canonical_reward_blockchain_audit.js:258:  canonicalServiceSource.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:259:    "canonicalWalletResolver.resolveWallet"
+./stage4g7_canonical_reward_blockchain_audit.js:265:  !canonicalServiceSource.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:272:  !canonicalServiceSource.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:280:    canonicalServiceSource
+./stage4g7_canonical_reward_blockchain_audit.js:287:    canonicalServiceSource
+./stage4g7_canonical_reward_blockchain_audit.js:295:    ${canonicalServiceSource.includes("thb_real_executor")}
+./stage4g7_canonical_reward_blockchain_audit.js:298:    ${canonicalServiceSource.includes("reward_engine")}
+./stage4g7_canonical_reward_blockchain_audit.js:301:    ${/executeTransfer\s*\(/.test(canonicalServiceSource)}
+./stage4g7_canonical_reward_blockchain_audit.js:304:    ${/\.transfer\s*\(/.test(canonicalServiceSource)}
+./stage4g7_canonical_reward_blockchain_audit.js:315:const canonicalRouteSource =
+./stage4g7_canonical_reward_blockchain_audit.js:316:  loadSource(files.canonicalRoute) || "";
+./stage4g7_canonical_reward_blockchain_audit.js:319:  "Canonical route imports canonical reward service",
+./stage4g7_canonical_reward_blockchain_audit.js:320:  canonicalRouteSource.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:321:    'require("../services/canonical_reward_service")'
+./stage4g7_canonical_reward_blockchain_audit.js:327:  canonicalRouteSource.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:335:    canonicalRouteSource
+./stage4g7_canonical_reward_blockchain_audit.js:342:    canonicalRouteSource
+./stage4g7_canonical_reward_blockchain_audit.js:349:  Calls canonical reward service:
+./stage4g7_canonical_reward_blockchain_audit.js:350:    ${canonicalRouteSource.includes(".createRewardForCompletedRide(")}
+./stage4g7_canonical_reward_blockchain_audit.js:353:    ${/executeTransfer\s*\(/.test(canonicalRouteSource)}
+./stage4g7_canonical_reward_blockchain_audit.js:356:    ${/\.transfer\s*\(/.test(canonicalRouteSource)}
+./stage4g7_canonical_reward_blockchain_audit.js:573:const canonicalToExecutor =
+./stage4g7_canonical_reward_blockchain_audit.js:574:  allSources.canonicalService.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:577:  allSources.canonicalRoute.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:581:const canonicalToRewardEngine =
+./stage4g7_canonical_reward_blockchain_audit.js:582:  allSources.canonicalService.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:585:  allSources.canonicalRoute.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:602:canonical_reward_api.js
+./stage4g7_canonical_reward_blockchain_audit.js:606:canonical_reward_service.js
+./stage4g7_canonical_reward_blockchain_audit.js:608:canonical_wallet_resolver.resolveWallet()
+./stage4g7_canonical_reward_blockchain_audit.js:613:  ${canonicalToExecutor ? "DETECTED" : "NOT DETECTED"}
+./stage4g7_canonical_reward_blockchain_audit.js:616:  ${canonicalToRewardEngine ? "DETECTED" : "NOT DETECTED"}
+./stage4g7_canonical_reward_blockchain_audit.js:712:    'app.use("/api/rewards",canonicalRewardRoutes)'
+./stage4g7_canonical_reward_blockchain_audit.js:722:  ${serverSource.includes('app.use("/api/rewards",canonicalRewardRoutes)')}
+./stage4g7_canonical_reward_blockchain_audit.js:733:const canonicalRewardCreationConfirmed =
+./stage4g7_canonical_reward_blockchain_audit.js:734:  canonicalRouteSource.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:737:  canonicalServiceSource.includes(
+./stage4g7_canonical_reward_blockchain_audit.js:738:    "canonicalWalletResolver.resolveWallet"
+./stage4g7_canonical_reward_blockchain_audit.js:741:const canonicalBlockchainTransferConfirmed =
+./stage4g7_canonical_reward_blockchain_audit.js:742:  canonicalToExecutor ||
+./stage4g7_canonical_reward_blockchain_audit.js:743:  canonicalToRewardEngine;
+./stage4g7_canonical_reward_blockchain_audit.js:750:  ${canonicalRewardCreationConfirmed
+./stage4g7_canonical_reward_blockchain_audit.js:755:  ${canonicalBlockchainTransferConfirmed
+./stage4g7_canonical_reward_blockchain_audit.js:766:  canonicalRewardCreationConfirmed &&
+./stage4g7_canonical_reward_blockchain_audit.js:767:  !canonicalBlockchainTransferConfirmed &&
+./stage4g7_canonical_reward_blockchain_audit.js:775:The canonical reward system successfully creates the reward record and
+./stage4g7_canonical_reward_blockchain_audit.js:778:However, the canonical reward creation path does NOT directly invoke the
+./stage4g7_canonical_reward_blockchain_audit.js:804:Design and implement a single canonical settlement bridge that connects the
+./stage4g7_canonical_reward_blockchain_audit.js:805:canonical reward record to the blockchain executor while preserving:
+./stage4g7_canonical_reward_blockchain_audit.js:807:  ✓ canonical wallet resolver
+./stage4g7_canonical_reward_blockchain_audit.js:822:  canonicalRewardCreationConfirmed &&
+./stage4g7_canonical_reward_blockchain_audit.js:823:  canonicalBlockchainTransferConfirmed
+./stage4g7_canonical_reward_blockchain_audit.js:830:The canonical reward path appears to have a direct blockchain execution
+./stage4g7_canonical_reward_blockchain_audit.js:854:The expected canonical reward path could not be fully established from the
+./stage4g8_bsc_testnet_settlement_preflight.js:16:  Validate the environment, canonical reward path, wallet resolution,
+./stage4g8_bsc_testnet_settlement_preflight.js:18:  before implementing the canonical settlement bridge.
+./stage4g8_bsc_testnet_settlement_preflight.js:31:  canonicalService: path.join(
+./stage4g8_bsc_testnet_settlement_preflight.js:33:    "backend/services/canonical_reward_service.js"
+./stage4g8_bsc_testnet_settlement_preflight.js:36:  canonicalRoute: path.join(
+./stage4g8_bsc_testnet_settlement_preflight.js:38:    "backend/routes/canonical_reward_api.js"
+./stage4g8_bsc_testnet_settlement_preflight.js:43:    "backend/rewards/canonical_wallet_resolver.js"
+./stage4g8_bsc_testnet_settlement_preflight.js:309:let canonicalService = null;
+./stage4g8_bsc_testnet_settlement_preflight.js:312:  canonicalService =
+./stage4g8_bsc_testnet_settlement_preflight.js:313:    require(files.canonicalService);
+./stage4g8_bsc_testnet_settlement_preflight.js:316:    "canonical_reward_service loads successfully"
+./stage4g8_bsc_testnet_settlement_preflight.js:320:    typeof canonicalService
+./stage4g8_bsc_testnet_settlement_preflight.js:334:    "canonical_reward_service loads successfully",
+./stage4g8_bsc_testnet_settlement_preflight.js:354:    "canonical_wallet_resolver loads successfully"
+./stage4g8_bsc_testnet_settlement_preflight.js:389:    "canonical_wallet_resolver loads successfully",
+./stage4g8_bsc_testnet_settlement_preflight.js:802:const canonicalServiceSource =
+./stage4g8_bsc_testnet_settlement_preflight.js:803:  source(files.canonicalService);
+./stage4g8_bsc_testnet_settlement_preflight.js:805:const canonicalRouteSource =
+./stage4g8_bsc_testnet_settlement_preflight.js:806:  source(files.canonicalRoute);
+./stage4g8_bsc_testnet_settlement_preflight.js:815:  canonicalRouteSource.includes(
+./stage4g8_bsc_testnet_settlement_preflight.js:820:    "Canonical API invokes canonical reward creation"
+./stage4g8_bsc_testnet_settlement_preflight.js:824:    "Canonical API invokes canonical reward creation"
+./stage4g8_bsc_testnet_settlement_preflight.js:829:  canonicalServiceSource.includes(
+./stage4g8_bsc_testnet_settlement_preflight.js:830:    "canonicalWalletResolver.resolveWallet"
+./stage4g8_bsc_testnet_settlement_preflight.js:834:    "Canonical service resolves recipient through canonical wallet resolver"
+./stage4g8_bsc_testnet_settlement_preflight.js:838:    "Canonical service resolves recipient through canonical wallet resolver"
+./stage4g8_bsc_testnet_settlement_preflight.js:843:  canonicalServiceSource.includes(
+./stage4g8_bsc_testnet_settlement_preflight.js:904:Implement the canonical settlement bridge with:
+./stage4g8_bsc_testnet_settlement_preflight.js:928:canonical blockchain settlement path.
+./stage4g9_token_metadata_settlement_design_audit.js:20:  5. Inspect canonical reward data model
+./stage4g9_token_metadata_settlement_design_audit.js:23:     canonical settlement bridge
+./stage4g9_token_metadata_settlement_design_audit.js:50:  canonicalService: path.join(
+./stage4g9_token_metadata_settlement_design_audit.js:52:    "backend/services/canonical_reward_service.js"
+./stage4g9_token_metadata_settlement_design_audit.js:55:  canonicalRoute: path.join(
+./stage4g9_token_metadata_settlement_design_audit.js:57:    "backend/routes/canonical_reward_api.js"
+./stage4g9_token_metadata_settlement_design_audit.js:62:    "backend/rewards/canonical_wallet_resolver.js"
+./stage4g9_token_metadata_settlement_design_audit.js:716:const canonicalServiceSource =
+./stage4g9_token_metadata_settlement_design_audit.js:717:  source(files.canonicalService);
+./stage4g9_token_metadata_settlement_design_audit.js:719:const canonicalRouteSource =
+./stage4g9_token_metadata_settlement_design_audit.js:720:  source(files.canonicalRoute);
+./stage4g9_token_metadata_settlement_design_audit.js:726:  canonicalRouteSource.includes(
+./stage4g9_token_metadata_settlement_design_audit.js:740:  canonicalServiceSource.includes(
+./stage4g9_token_metadata_settlement_design_audit.js:741:    "canonicalWalletResolver.resolveWallet"
+./stage4g9_token_metadata_settlement_design_audit.js:745:    "Canonical service resolves canonical wallet"
+./stage4g9_token_metadata_settlement_design_audit.js:749:    "Canonical service resolves canonical wallet"
+./stage4g9_token_metadata_settlement_design_audit.js:754:  canonicalServiceSource.includes(
+./stage4g9_token_metadata_settlement_design_audit.js:856:  "Reward ID is the canonical settlement idempotency key",
+./stage4g9_token_metadata_settlement_design_audit.js:860:  "Recipient wallet is resolved through canonical wallet resolver",
+./stage4g9_token_metadata_settlement_design_audit.js:964:proceed to implementation of the canonical settlement bridge.
+./stage4g9_token_metadata_settlement_design_audit.js:987:  backend/services/canonical_settlement_service.js
+./stage4g10_settlement_integration_audit.js:17:  1. Map the canonical reward architecture
+./stage4g10_settlement_integration_audit.js:35:  canonicalService:
+./stage4g10_settlement_integration_audit.js:36:    "backend/services/canonical_reward_service.js",
+./stage4g10_settlement_integration_audit.js:38:  canonicalRoute:
+./stage4g10_settlement_integration_audit.js:39:    "backend/routes/canonical_reward_api.js",
+./stage4g10_settlement_integration_audit.js:42:    "backend/rewards/canonical_wallet_resolver.js",
+./stage4g10_settlement_integration_audit.js:164:  "canonicalService",
+./stage4g10_settlement_integration_audit.js:165:  "canonicalRoute",
+./stage4g10_settlement_integration_audit.js:227:const canonicalService =
+./stage4g10_settlement_integration_audit.js:228:  source(files.canonicalService);
+./stage4g10_settlement_integration_audit.js:243:    canonicalService.includes(fn)
+./stage4g10_settlement_integration_audit.js:352:  "canonicalService",
+./stage4g10_settlement_integration_audit.js:455:    "Stage 4G.10 must establish ONE canonical settlement execution path."
+./stage4g10_settlement_integration_audit.js:729:  backend/services/canonical_settlement_service.js
+./stage4g10_settlement_integration_audit.js:816:Implement the canonical settlement bridge against the ACTUAL interfaces
+./o831_api_contract_audit.js:13:"backend/routes/canonical_reward_api.js",
+./beta/hailing_tests/hailing_test.js:3:const ride=require("../../backend/rides/ride_engine");
+./cablink_step7_runtime_alignment_audit.js:15:  canonicalReferences: [],
+./cablink_step7_runtime_alignment_audit.js:271:const canonicalFiles = [
+./cablink_step7_runtime_alignment_audit.js:272:  "backend/canonical/ride_engine.js",
+./cablink_step7_runtime_alignment_audit.js:273:  "backend/canonical/ride_repository.js",
+./cablink_step7_runtime_alignment_audit.js:279:for (const file of canonicalFiles) {
+./cablink_step7_runtime_alignment_audit.js:283:  results.canonicalReferences.push(file);
+./cablink_step7_runtime_alignment_audit.js:337:const canonicalEndpoints = new Set([
+./cablink_step7_runtime_alignment_audit.js:434:  "backend/canonical/ride_engine.js",
+./cablink_step7_runtime_alignment_audit.js:435:  "backend/canonical/ride_repository.js",
+./cablink_step7_runtime_alignment_audit.js:437:  "frontend/js/ride_engine.js",
+./cablink_step7_runtime_alignment_audit.js:442:  "frontend/js/rides/rideStateMachine.js"
+./cablink_step7_runtime_alignment_audit.js:534:${results.canonicalReferences.map(x =>
+./cablink_step7_runtime_alignment_audit.js:583:7. Whether frontend calls match the canonical backend API.
+./cablink_step7_runtime_alignment_audit.js:587:This report is evidence for the next canonical runtime alignment phase.
+./cablink_step8_1_runtime_truth_correction.js:20:  canonicalPath: [],
+./cablink_step8_1_runtime_truth_correction.js:668:const canonicalTargets = [
+./cablink_step8_1_runtime_truth_correction.js:672:  "backend/canonical/ride_engine.js",
+./cablink_step8_1_runtime_truth_correction.js:673:  "backend/canonical/ride_repository.js"
+./cablink_step8_1_runtime_truth_correction.js:676:const canonicalReachable =
+./cablink_step8_1_runtime_truth_correction.js:683:  if (canonicalReachable.has(file)) {
+./cablink_step8_1_runtime_truth_correction.js:687:  canonicalReachable.add(file);
+./cablink_step8_1_runtime_truth_correction.js:710:for (const file of canonicalTargets) {
+./cablink_step8_1_runtime_truth_correction.js:713:    canonicalReachable.has(file)
+./cablink_step8_1_runtime_truth_correction.js:717:  results.canonicalPath.push({
+./cablink_step8_1_runtime_truth_correction.js:1116:const canonicalReachableCount =
+./cablink_step8_1_runtime_truth_correction.js:1117:  results.canonicalPath.filter(
+./cablink_step8_1_runtime_truth_correction.js:1155:- Canonical components proven reachable from backend entrypoint: ${canonicalReachableCount}/${canonicalTargets.length}
+./cablink_step8_1_runtime_truth_correction.js:1222:${results.canonicalPath.map(x =>
+./cablink_step8_1_runtime_truth_correction.js:1366:${canonicalReachableCount}/${canonicalTargets.length}
+./o838_completion_path_audit.js:12:"backend/canonical/ride_engine.js"
+./o843_automated_restart_survival_gate.js:115:            "./backend/canonical/ride_repository"
+./o843_automated_restart_survival_gate.js:171:        "No supported canonical repository read API found"
+./o843_automated_restart_survival_gate.js:580:                "Pre-restart canonical persistence",
+./o843_automated_restart_survival_gate.js:587:                "Pre-restart canonical persistence",
+./o848_canonical_state_authority_audit.js:15:    "backend/canonical"
+./o851_runtime_authority_trace.js:16:    "backend/canonical",
+./o851_runtime_authority_trace.js:115:        regex: /require\s*\(\s*["'][^"']*canonical\/ride_engine["']\s*\)/g
+./o851_runtime_authority_trace.js:125:        regex: /require\s*\(\s*["'][^"']*canonical\/ride_repository["']\s*\)/g
+./o854_cross_service_caller_ownership_trace.js:16:  "backend/services/canonical_reward_service.js",
+./o854_cross_service_caller_ownership_trace.js:191:  /(?:require\(["'][^"']*canonical\/ride_engine["']\)|require\(["'][^"']*ride_engine["']\))/;
+./o854_cross_service_caller_ownership_trace.js:309:const reward = "backend/services/canonical_reward_service.js";
+./o854_cross_service_caller_ownership_trace.js:343:${/ride_engine/.test(content) ? "YES" : "NO"}
+./o854_cross_service_caller_ownership_trace.js:360:      /ride_engine/.test(line)
+./o856_runtime_route_registration_trace.js:412:    "canonical_reward",
+./o856_runtime_route_registration_trace.js:414:    "ride_engine",
+./o856_runtime_route_registration_trace.js:466:    "backend/canonical/ride_repository.js",
+./o856_runtime_route_registration_trace.js:570:    "backend/canonical/ride_engine.js";
+./o856_runtime_route_registration_trace.js:583:        "ride_engine.js: NOT REACHED FROM STARTUP IMPORT GRAPH"
+./o857_legacy_live_ride_conflict_trace.js:65:    "backend/canonical/ride_engine.js",
+./o857_legacy_live_ride_conflict_trace.js:67:    "backend/canonical/ride_repository.js",
+./o857_legacy_live_ride_conflict_trace.js:75:    "backend/services/canonical_reward_service.js",
+./o857_legacy_live_ride_conflict_trace.js:107:    "backend/canonical/ride_engine.js"
+./o857_legacy_live_ride_conflict_trace.js:126:    "backend/services/canonical_reward_service.js"
+./o857_legacy_live_ride_conflict_trace.js:269:const canonicalPatterns = [
+./o857_legacy_live_ride_conflict_trace.js:271:    "ride_engine",
+./o857_legacy_live_ride_conflict_trace.js:313:                canonicalPatterns.filter(
+./o857_legacy_live_ride_conflict_trace.js:348:   overlap with canonical ride IDs?
+./o857_legacy_live_ride_conflict_trace.js:354:   modify canonical ride state?
+./o858_database_repository_orchestrator_trace.js:24:"backend/services/ride_state_service.js",
+./o858_database_repository_orchestrator_trace.js:25:"backend/canonical/ride_repository.js",
+./o858_database_repository_orchestrator_trace.js:26:"backend/canonical/ride_engine.js"
+./o858_database_repository_orchestrator_trace.js:82:    regex: /(?:require|import).*canonical[\/\\]ride_repository/g
+./o858_database_repository_orchestrator_trace.js:92:    regex: /(?:require|import).*ride_state_service/g
+./o858_database_repository_orchestrator_trace.js:347:"ride_state_service.js"
+./o858_database_repository_orchestrator_trace.js:601:8. Does ride_state_service.js create or mutate
+./o858_database_repository_orchestrator_trace.js:609:11. Does it overlap with canonical/ride_repository.js?
+./o858_database_repository_orchestrator_trace.js:612:    conflict with canonical IDs?
+./o853_real_end_to_end_canonical_test.js:360:                'The canonical backend may use a different driver-registration route.'
+./o853_real_end_to_end_canonical_test.js:759:It records exactly which parts of the canonical
+./o853_real_end_to_end_canonical_test.js:771:Do NOT replace the canonical repository.
+./o834_canonical_completion_migration.js:26:if(!d.includes('require("../canonical/ride_engine")')){
+./o834_canonical_completion_migration.js:33:require("../canonical/ride_engine");
+./o834_canonical_completion_migration.js:36:require("./canonical_reward_service");`
+./o834_canonical_completion_migration.js:55:const canonicalRide =
+./o834_canonical_completion_migration.js:58:if(canonicalRide){
+./cablink_step8_runtime_truth_audit.js:19:  canonicalComponents: [],
+./cablink_step8_runtime_truth_audit.js:20:  canonicalLinks: [],
+./cablink_step8_runtime_truth_audit.js:580:const canonicalFiles = [
+./cablink_step8_runtime_truth_audit.js:581:  "backend/canonical/ride_engine.js",
+./cablink_step8_runtime_truth_audit.js:582:  "backend/canonical/ride_repository.js",
+./cablink_step8_runtime_truth_audit.js:588:for (const file of canonicalFiles) {
+./cablink_step8_runtime_truth_audit.js:592:  results.canonicalComponents.push(file);
+./cablink_step8_runtime_truth_audit.js:601:  "backend/canonical/ride_engine.js",
+./cablink_step8_runtime_truth_audit.js:602:  "backend/canonical/ride_repository.js",
+./cablink_step8_runtime_truth_audit.js:615:    results.canonicalLinks.push({
+./cablink_step8_runtime_truth_audit.js:793:  "frontend/js/ride_engine.js",
+./cablink_step8_runtime_truth_audit.js:799:  "frontend/js/rides/rideStateMachine.js",
+./cablink_step8_runtime_truth_audit.js:800:  "backend/rides/ride_engine.js",
+./cablink_step8_runtime_truth_audit.js:801:  "backend/rides/ride_state_engine.js",
+./cablink_step8_runtime_truth_audit.js:805:  "backend/services/ride_state_service.js",
+./cablink_step8_runtime_truth_audit.js:807:  "backend/canonical/ride_engine.js",
+./cablink_step8_runtime_truth_audit.js:808:  "backend/canonical/ride_repository.js",
+./cablink_step8_runtime_truth_audit.js:973:${results.canonicalComponents.map(x =>
+./cablink_step8_runtime_truth_audit.js:981:${results.canonicalLinks.map(x =>
+./cablink_step8_runtime_truth_audit.js:983:).join("\n") || "- No canonical links detected"}
+./cablink_step8_runtime_truth_audit.js:1043:7. Trace the canonical ride engine and repository.
+./o835_state_authority_audit.js:2:require("./backend/canonical/ride_repository");
+./o837_completion_canonical_fix.js:48:`let canonicalRide =
+./o837_completion_canonical_fix.js:50:`let canonicalRide =
+./o837_completion_canonical_fix.js:55:if(!canonicalRide){
+./o839_canonical_completion_bridge.js:80:// add canonical reward import
+./o839_canonical_completion_bridge.js:82:if(!s.includes("canonical_reward_service")){
+./o839_canonical_completion_bridge.js:89:require("./canonical_reward_service");`
+./o839_canonical_completion_bridge.js:101:`const canonicalReward =
+./o839_canonical_completion_bridge.js:108:// include canonical reward response
+./o839_canonical_completion_bridge.js:115:canonicalReward
+./o841_canonical_integrity_gate.js:45:"backend/canonical/ride_engine.js",
+./o841_canonical_integrity_gate.js:46:"backend/canonical/ride_repository.js",
+./o841_canonical_integrity_gate.js:48:"backend/services/canonical_reward_service.js",
+./o841_canonical_integrity_gate.js:50:"backend/routes/canonical_reward_api.js",
+./o841_canonical_integrity_gate.js:83:"backend/canonical/ride_engine.js";
+./o841_canonical_integrity_gate.js:126:"ride_engine.transition()"
+./o841_canonical_integrity_gate.js:172:"Completion uses canonical engine"
+./o841_canonical_integrity_gate.js:178:"Completion uses canonical engine"
+./o841_canonical_integrity_gate.js:190:"Completion uses canonical reward service"
+./o841_canonical_integrity_gate.js:196:"Completion uses canonical reward service"
+./o841_canonical_integrity_gate.js:355:"Completion API receives canonical identity"
+./o841_canonical_integrity_gate.js:361:"Completion API canonical identity"
+./o841_canonical_integrity_gate.js:378:"backend/services/canonical_reward_service.js";
+./o841_canonical_integrity_gate.js:454:"backend/canonical/ride_engine.js",
+./o841_canonical_integrity_gate.js:455:"backend/canonical/ride_repository.js",
+./o841_canonical_integrity_gate.js:457:"backend/services/canonical_reward_service.js",
+./o841_canonical_integrity_gate.js:459:"backend/routes/canonical_reward_api.js",
+./o841_canonical_integrity_gate.js:508:"./backend/canonical/ride_repository"
+./o841_canonical_integrity_gate.js:585:"./backend/services/canonical_reward_service"
+./o842_persistence_restart_integrity_test.js:84:        require.resolve("./backend/canonical/ride_repository")
+./o842_persistence_restart_integrity_test.js:88:        "./backend/canonical/ride_repository"
+./o849_canonical_writer_classification_audit.js:15:    "backend/canonical"
+./o849_canonical_writer_classification_audit.js:68:        regex: /ride_engine|engine\.transition|engine\.create/g
+./o849_canonical_writer_classification_audit.js:303:const canonicalFiles =
+./o849_canonical_writer_classification_audit.js:331:    canonicalFiles.length
+./o849_canonical_writer_classification_audit.js:374:The canonical ride system must be isolated
+./o850_runtime_ride_authority_trace.js:173:const canonicalRepository =
+./o850_runtime_ride_authority_trace.js:175:        /canonical\/ride_repository|canonical\/ride_engine|rideRepository/g
+./o850_runtime_ride_authority_trace.js:180:    canonicalRepository
+./o850_runtime_ride_authority_trace.js:209:        /require\s*\(\s*["'][^"']*canonical\/ride_engine|engine\.(createRide|transition|getRide|find|update)/g
+./o850_runtime_ride_authority_trace.js:287:            /ride|completion|economy|reward|orchestrator|canonical|live/i.test(
+./o850_runtime_ride_authority_trace.js:321:const rideStateMutations =
+./o850_runtime_ride_authority_trace.js:328:    rideStateMutations
+./o850_runtime_ride_authority_trace.js:361:const canonicalFiles =
+./o850_runtime_ride_authority_trace.js:364:            canonicalRepository.map(
+./o850_runtime_ride_authority_trace.js:391:            rideStateMutations.map(
+./o850_runtime_ride_authority_trace.js:399:    canonicalFiles.length
+./o850_runtime_ride_authority_trace.js:459:    canonicalFiles.length > 0
+./o850_runtime_ride_authority_trace.js:482:    canonicalFiles.length > 0 &&
+./o850_runtime_ride_authority_trace.js:512:${canonicalFiles.length > 0
+./o852_active_runtime_dependency_classification.js:21:    "backend/services/canonical_reward_service.js",
+./o852_active_runtime_dependency_classification.js:32:    "backend/canonical/ride_engine.js",
+./o852_active_runtime_dependency_classification.js:33:    "backend/canonical/ride_repository.js"
+./o852_active_runtime_dependency_classification.js:158:                    "backend/canonical/ride_engine.js"
+./o852_active_runtime_dependency_classification.js:173:                    "backend/canonical/ride_repository.js"
+./o852_active_runtime_dependency_classification.js:288:                    "Writes through canonical repository"
+./o852_active_runtime_dependency_classification.js:310:                    "Ride lifecycle transition through canonical engine"
+./o852_active_runtime_dependency_classification.js:829:Proceed to end-to-end canonical lifecycle verification.
+./o852_active_runtime_dependency_classification.js:846:   backend/canonical/ride_engine.js.
+./o853_runtime_ride_write_authority_trace.js:21:  "backend/services/canonical_reward_service.js",
+./o853_runtime_ride_write_authority_trace.js:26:  "backend/canonical/ride_engine.js",
+./o853_runtime_ride_write_authority_trace.js:27:  "backend/canonical/ride_repository.js"
+./o853_runtime_ride_write_authority_trace.js:69:    "Requests enter canonical ride API"
+./o853_runtime_ride_write_authority_trace.js:99:const engineLines = lines("backend/canonical/ride_engine.js");
+./o853_runtime_ride_write_authority_trace.js:107:      "backend/canonical/ride_engine.js",
+./o853_runtime_ride_write_authority_trace.js:111:      "Ride lifecycle or persistence operation occurs through canonical engine"
+./o853_runtime_ride_write_authority_trace.js:128:  "backend/services/canonical_reward_service.js"
+./o853_runtime_ride_write_authority_trace.js:204:const repo = "backend/canonical/ride_repository.js";
+./o853_runtime_ride_write_authority_trace.js:235:  "backend/services/canonical_reward_service.js",
+./o853_runtime_ride_write_authority_trace.js:245:    content.includes("ride_engine") ||
+./o853_runtime_ride_write_authority_trace.js:279:  "backend/canonical/ride_engine.js",
+./o853_runtime_ride_write_authority_trace.js:284:  "backend/canonical/ride_repository.js",
+./o853_runtime_ride_write_authority_trace.js:336:4. MIGRATE DISPATCH STATE TRANSITIONS INTO ride_engine.js.
+./o855_runtime_reachability_dual_repository_trace.js:88:  "canonical_reward_service",
+./o855_runtime_reachability_dual_repository_trace.js:91:  "ride_engine",
+./o855_runtime_reachability_dual_repository_trace.js:246:  "backend/canonical/ride_repository.js",
+./o855_runtime_reachability_dual_repository_trace.js:308:  "canonical_reward_service",
+./o855_runtime_reachability_dual_repository_trace.js:311:  "canonical/ride_engine",
+./o855_runtime_reachability_dual_repository_trace.js:312:  "canonical/ride_repository",
+./o859_active_ride_path_authority_trace.js:17:  "backend/canonical/ride_repository.js",
+./o859_active_ride_path_authority_trace.js:18:  "backend/canonical/ride_engine.js",
+./o859_active_ride_path_authority_trace.js:20:  "backend/services/ride_state_service.js",
+./o859_active_ride_path_authority_trace.js:173:showFile("backend/canonical/ride_repository.js");
+./o859_active_ride_path_authority_trace.js:181:showFile("backend/canonical/ride_engine.js");
+./o859_active_ride_path_authority_trace.js:197:showFile("backend/services/ride_state_service.js");
+./o859_active_ride_path_authority_trace.js:238:      /require\s*\(\s*["'][^"']*canonical[\/\\]ride_repository["']\s*\)/,
+./o859_active_ride_path_authority_trace.js:239:      /from\s+["'][^"']*canonical[\/\\]ride_repository["']/
+./o859_active_ride_path_authority_trace.js:424:const canonicalRepoConsumers = [];
+./o859_active_ride_path_authority_trace.js:441:    /canonical[\/\\]ride_repository/.test(text)
+./o859_active_ride_path_authority_trace.js:443:    canonicalRepoConsumers.push(file);
+./o859_active_ride_path_authority_trace.js:453:    /ride_state_service/.test(text)
+./o859_active_ride_path_authority_trace.js:476:canonicalRepoConsumers.forEach(
+./o859_active_ride_path_authority_trace.js:480:if (canonicalRepoConsumers.length === 0) {
+./o859_active_ride_path_authority_trace.js:522:const canonicalRepoExists =
+./o859_active_ride_path_authority_trace.js:526:      "backend/canonical/ride_repository.js"
+./o859_active_ride_path_authority_trace.js:542:      "backend/services/ride_state_service.js"
+./o859_active_ride_path_authority_trace.js:551:  `CANONICAL REPOSITORY EXISTS: ${canonicalRepoExists}`
+./o859_active_ride_path_authority_trace.js:568:2. If active routes reach canonical/ride_repository.js,
+./o859_active_ride_path_authority_trace.js:604:5. Does the canonical repository participate in creation?
+./o859_active_ride_path_authority_trace.js:610:8. Does ride_state_service.js participate in creation?
+./o859_active_ride_path_authority_trace.js:629:17. Is canonical/ride_repository.js actually on the active
+./o859_active_ride_path_authority_trace.js:638:20. Is ride_state_service.js actually on the active
+./cablink_current_app_inventory.js:98:    "backend/canonical/ride_engine.js",
+./cablink_current_app_inventory.js:99:    "backend/canonical/ride_repository.js",
+./cablink_current_app_inventory.js:270:    "ride_engine",
+./cablink_current_app_inventory.js:274:    "canonical",
+./cablink_runtime_truth_trace.js:266:                    /route|ride|canonical|server|app|reward|repository/i
+./cablink_runtime_truth_trace.js:344:const canonicalEngine =
+./cablink_runtime_truth_trace.js:345:    "backend/canonical/ride_engine.js";
+./cablink_runtime_truth_trace.js:347:const canonicalRepository =
+./cablink_runtime_truth_trace.js:348:    "backend/canonical/ride_repository.js";
+./cablink_runtime_truth_trace.js:351:    exists(canonicalEngine)
+./cablink_runtime_truth_trace.js:352:        ? "[FOUND] " + canonicalEngine
+./cablink_runtime_truth_trace.js:353:        : "[MISSING] " + canonicalEngine
+./cablink_runtime_truth_trace.js:357:    exists(canonicalRepository)
+./cablink_runtime_truth_trace.js:358:        ? "[FOUND] " + canonicalRepository
+./cablink_runtime_truth_trace.js:359:        : "[MISSING] " + canonicalRepository
+./cablink_runtime_truth_trace.js:362:if (exists(canonicalEngine)) {
+./cablink_runtime_truth_trace.js:365:        canonicalEngine
+./cablink_runtime_truth_trace.js:423:    "backend/canonical/ride_repository.js",
+./cablink_runtime_truth_trace.js:658:                /ride_engine|ride_repository|live_ride_service|live_rides|canonical/i

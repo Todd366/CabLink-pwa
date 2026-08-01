@@ -215,3 +215,132 @@ window.submitDriverApplication = window.submitDriverForm || function() {
     document.querySelectorAll('.cl-dm,.driver-modal').forEach(m=>m.remove());
   });
 };
+
+// ── MISSING ONCLICK STUBS ──
+window.acceptSurge = function(){
+  window.closeModal('surgeModal');
+  window.bookRide&&window.bookRide();
+};
+window.addStop = function(){
+  if(window.STATE&&window.STATE.stops&&window.STATE.stops.length>=3){toast('Max 3 stops','warning');return;}
+  if(!window.STATE)window.STATE={};
+  if(!window.STATE.stops)window.STATE.stops=[];
+  window.STATE.stops.push('');
+  if(typeof window.renderStops==='function')window.renderStops();
+  toast('Stop added','success');
+};
+window.clearHistory = function(){
+  if(!confirm('Clear ride history?'))return;
+  if(window.STATE){window.STATE.rideHistory=[];window.STATE.totalRides=0;}
+  try{var s=JSON.parse(localStorage.getItem('cl5_state')||'{}');s.rideHistory=[];s.totalRides=0;localStorage.setItem('cl5_state',JSON.stringify(s));}catch(e){}
+  var el=document.getElementById('rideHistory');if(el)el.innerHTML='<div class="empty"><div class="empty-icon">🚕</div><div class="empty-text">No rides yet</div></div>';
+  toast('History cleared','success');
+};
+window.copyRef = function(){
+  var code = document.getElementById('refCode');
+  if(!code)return;
+  navigator.clipboard&&navigator.clipboard.writeText(code.textContent).then(function(){toast('Referral code copied!','success');});
+};
+window.deleteMyData = function(){
+  if(!confirm('Delete ALL your data? Cannot be undone.'))return;
+  try{localStorage.clear();}catch(e){}
+  toast('All data deleted. Refreshing...','success');
+  setTimeout(function(){location.reload();},1500);
+};
+window.exportCSV = function(){
+  var STATE = window.STATE||{};
+  var history = STATE.rideHistory||[];
+  if(!history.length){toast('No rides to export','warning');return;}
+  var rows=['ID,From,To,Vehicle,Fare,THB,Date'];
+  history.forEach(function(r){rows.push([r.id,r.from,r.to,r.vehicle,r.fare,r.thb,r.date].join(','));});
+  var blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='cablink_rides.csv';a.click();
+  toast('CSV exported','success');
+};
+window.finishOnboarding = function(){
+  var el=document.getElementById('onboarding');if(el)el.classList.remove('show');
+  try{localStorage.setItem('cl5_ob','1');}catch(e){}
+};
+window.obNext = function(){
+  if(typeof window.obStep==='undefined')window.obStep=0;
+  window.obStep++;
+  var track=document.getElementById('obTrack');
+  if(track)track.style.transform='translateX(-'+(window.obStep*100)+'%)';
+  document.querySelectorAll('.ob-dot').forEach(function(d,i){d.classList.toggle('active',i===window.obStep);});
+  var btn=document.querySelector('#onboarding .ob-actions button');
+  if(window.obStep>=3&&btn)btn.textContent="Let's Go 🚀";
+  if(window.obStep>=4)window.finishOnboarding();
+};
+window.openRating = function(){
+  var el=document.getElementById('ratingModal');
+  if(el){el.classList.add('show');}
+};
+window.saveFav = function(){
+  var from=(document.getElementById('pickup')||{}).value||'';
+  var to=(document.getElementById('dropoff')||{}).value||'';
+  if(!from||!to){toast('Enter locations first','warning');return;}
+  if(!window.STATE)window.STATE={};
+  if(!window.STATE.favourites)window.STATE.favourites=[];
+  var key=from+'→'+to;
+  if(!window.STATE.favourites.find(function(f){return f.key===key;})){
+    window.STATE.favourites.unshift({key:key,from:from,to:to,count:1});
+    if(typeof window.renderFavourites==='function')window.renderFavourites();
+    toast('Route saved','success');
+  } else {toast('Already saved','success');}
+};
+window.sendOffer = function(){
+  var val=parseFloat((document.getElementById('offerAmount')||{}).value||0);
+  if(!val||val<5){toast('Enter a valid offer (min 5 BWP)','warning');return;}
+  var counter=Math.round(val*(1.1+Math.random()*0.3));
+  var ns=document.getElementById('negoStatus');
+  if(ns)ns.textContent='Driver countered: '+counter+' BWP';
+  if(window.STATE)window.STATE.negoCounter=counter;
+  toast('Driver countered at '+counter+' BWP','warning');
+};
+window.setRating = function(val){
+  window._ratingVal=val;
+  ['ratingStars','modalStars'].forEach(function(id){
+    var c=document.getElementById(id);if(!c)return;
+    c.querySelectorAll('.star').forEach(function(s,i){s.classList.toggle('lit',i<val);});
+  });
+};
+window.shareLocation = function(){
+  if(!navigator.geolocation){toast('Geolocation not available','error');return;}
+  navigator.geolocation.getCurrentPosition(function(p){
+    var url='https://maps.google.com/?q='+p.coords.latitude+','+p.coords.longitude;
+    navigator.clipboard&&navigator.clipboard.writeText(url).then(function(){toast('Location link copied','success');});
+  },function(){toast('Could not get location','error');});
+};
+window.showChangeLog = function(){toast("CabLink v5.0 — Real fares, GPS, BSC Testnet THB rewards, driver matching","success");};
+window.showOnboarding = function(){
+  var el=document.getElementById('onboarding');
+  if(el){el.classList.add('show');if(typeof window.obStep!=='undefined')window.obStep=0;if(typeof window.renderObSlide==='function')window.renderObSlide();}
+};
+window.submitRating = function(){
+  var val=window._ratingVal||0;
+  if(!val){toast('Please select a rating','warning');return;}
+  if(window.STATE&&window.STATE.rideHistory&&window.STATE.rideHistory.length){
+    window.STATE.rideHistory[0].rating=val;
+  }
+  window.closeModal('ratingModal');
+  var rc=document.getElementById('rateCard');if(rc)rc.style.display='none';
+  toast('Rating submitted. Thank you!','success');
+  window._ratingVal=0;
+};
+window.swapLocations = function(){
+  var p=document.getElementById('pickup'),d=document.getElementById('dropoff');
+  if(!p||!d)return; var t=p.value; p.value=d.value; d.value=t;
+  toast('Locations swapped','success');
+};
+window.switchToBSC = function(){ console.log("switchToBSC called"); };
+window.syncOfflineQueue = function(){
+  if(!navigator.onLine){toast('Still offline','warning');return;}
+  if(window.STATE&&window.STATE.offlineQueue&&window.STATE.offlineQueue.length){
+    toast('Syncing '+window.STATE.offlineQueue.length+' queued rides...','success');
+    window.STATE.offlineQueue=[];
+  } else {toast('Nothing to sync','success');}
+};
+window.toggleSchedule = function(){
+  var sec=document.getElementById('scheduleSection');
+  if(sec)sec.classList.toggle('show');
+};

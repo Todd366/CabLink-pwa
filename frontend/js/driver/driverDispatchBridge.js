@@ -157,8 +157,8 @@ data.id
 
 if(window.CABLINK_RIDE_STATE){
 
-window.CABLINK_RIDE_STATE.set(
-"ACCEPTED"
+console.log(
+"[CABLINK] Driver assignment confirmed by canonical backend"
 );
 
 }

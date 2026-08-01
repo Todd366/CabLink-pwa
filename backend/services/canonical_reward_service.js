@@ -97,7 +97,7 @@ function findExistingReward(
 
 }
 
-function createRewardForCompletedRide(
+async function createRewardForCompletedRide(
     rideId
 ) {
 
@@ -131,7 +131,7 @@ function createRewardForCompletedRide(
      */
 
     const ride =
-        rideRepository.findById(
+        await rideRepository.findById(
             canonicalRideId
         );
 

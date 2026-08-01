@@ -1,0 +1,1330 @@
+./fix.js:33:  if(typeof firebase!=='undefined'&&firebase.firestore){initFB();return;}
+./fix.js:35:  a.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
+./fix.js:38:    f.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
+./fix.js:45:  if(typeof firebase==='undefined')return;
+./fix.js:46:  if(!firebase.apps.length)firebase.initializeApp({
+./fix.js:48:    authDomain:'gen-lang-client-0007945213.firebaseapp.com',
+./fix.js:50:    storageBucket:'gen-lang-client-0007945213.firebasestorage.app',
+./fix.js:54:  window.db=firebase.firestore();
+./fix.js:69:  fetch('/api/rides',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+./fix.js:94:    fetch('/api/drivers/online',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+./fix.js:100:      fetch('/api/rides').then(function(r){return r.json();})
+./fix.js:114:    fetch('/api/drivers/offline',{method:'POST',headers:{'Content-Type':'application/json'},
+./fix.js:149:    var r=await fetch('/api/drivers/apply',{method:'POST',
+./fix.js:204:  fetch('/api/drivers/apply',{method:'POST',
+./backend/config/env_check.js:27:module.exports={validate};
+./backend/config/provider_config.js:5:module.exports={
+./backend/config/environment_validator.js:8:firebase:
+./backend/config/environment_validator.js:43:module.exports={
+./backend/routes/rides.js:1:const router = require("express").Router();
+./backend/routes/rides.js:12:// POST /api/rides
+./backend/routes/rides.js:90:// PATCH /api/rides/:id/accept
+./backend/routes/rides.js:166:// GET /api/rides
+./backend/routes/rides.js:201:// GET /api/rides/:id
+./backend/routes/rides.js:230:// PATCH /api/rides/:id
+./backend/routes/rides.js:298:module.exports = router;
+./backend/routes/users.js:2:const router=require("express").Router();
+./backend/routes/users.js:44:module.exports=router;
+./backend/routes/realtime.js:2:const router=require("express").Router();
+./backend/routes/realtime.js:70:module.exports=router;
+./backend/routes/socket_routes.js:2:const router=require("express").Router();
+./backend/routes/socket_routes.js:39:module.exports=router;
+./backend/routes/mobile.js:2:const router=require("express").Router();
+./backend/routes/mobile.js:47:module.exports=router;
+./backend/routes/gps.js:2:const router=require("express").Router();
+./backend/routes/gps.js:36:module.exports=router;
+./backend/routes/completion_api.js:1:const router = require("express").Router();
+./backend/routes/completion_api.js:10:// PATCH /api/rides/:id/complete
+./backend/routes/completion_api.js:76:// POST /api/ride/complete
+./backend/routes/completion_api.js:166:module.exports = router;
+./backend/routes/dispatch_api.js:2:    require("express").Router();
+./backend/routes/dispatch_api.js:11:// POST /api/dispatch/request
+./backend/routes/dispatch_api.js:58:// GET /api/dispatch/requests
+./backend/routes/dispatch_api.js:105:// GET /api/dispatch/list
+./backend/routes/dispatch_api.js:138:// POST /api/dispatch/match
+./backend/routes/dispatch_api.js:200:// POST /api/dispatch/accept
+./backend/routes/dispatch_api.js:290:module.exports = router;
+./backend/routes/driver_dashboard_api.js:3:const router=require("express").Router();
+./backend/routes/driver_dashboard_api.js:35:module.exports=router;
+./backend/routes/driver_demand_api.js:3:const router=require("express").Router();
+./backend/routes/driver_demand_api.js:19:module.exports=router;
+./backend/routes/driver_economy.js:3:const router=require("express").Router();
+./backend/routes/driver_economy.js:32:module.exports=router;
+./backend/routes/driver_economy_api.js:3:const router=require("express").Router();
+./backend/routes/driver_economy_api.js:21:module.exports=router;
+./backend/routes/driver_intelligence_api.js:3:const router=require("express").Router();
+./backend/routes/driver_intelligence_api.js:47:module.exports=router;
+./backend/routes/driver_location_api.js:2:const router=require("express").Router();
+./backend/routes/driver_location_api.js:37:module.exports=router;
+./backend/routes/driver_online_api.js:6:const express=require("express");
+./backend/routes/driver_online_api.js:8:const router=express.Router();
+./backend/routes/driver_online_api.js:91:module.exports=router;
+./backend/routes/ecosystem_tasks.js:3:const router=require("express").Router();
+./backend/routes/ecosystem_tasks.js:51:module.exports=router;
+./backend/routes/identity_api.js:3:const router=require("express").Router();
+./backend/routes/identity_api.js:70:module.exports=router;
+./backend/routes/live_demand_api.js:3:const router=require("express").Router();
+./backend/routes/live_demand_api.js:65:module.exports=router;
+./backend/routes/live_ride_api.js:3:const router=require("express").Router();
+./backend/routes/live_ride_api.js:84:module.exports=router;
+./backend/routes/matching_api.js:3:const router=require("express").Router();
+./backend/routes/matching_api.js:47:module.exports=router;
+./backend/routes/notification_api.js:2:const router=require("express").Router();
+./backend/routes/notification_api.js:43:module.exports=router;
+./backend/routes/orchestrator_api.js:3:const router=require("express").Router();
+./backend/routes/orchestrator_api.js:104:module.exports=router;
+./backend/routes/passenger_intelligence_api.js:2:const router=require("express").Router();
+./backend/routes/passenger_intelligence_api.js:38:module.exports=router;
+./backend/routes/ride_economy_api.js:3:const router=require("express").Router();
+./backend/routes/ride_economy_api.js:60:module.exports=router;
+./backend/routes/ride_state_api.js:2:const router=require("express").Router();
+./backend/routes/ride_state_api.js:39:module.exports=router;
+./backend/routes/updates_api.js:3:const router=require("express").Router();
+./backend/routes/updates_api.js:23:module.exports=router;
+./backend/routes/canonical_reward_api.js:2:    require("express").Router();
+./backend/routes/canonical_reward_api.js:9: * POST /api/rewards/ride/:rideId
+./backend/routes/canonical_reward_api.js:137:module.exports =
+./backend/services/ride_service.js:5:module.exports={
+./backend/services/driver_service.js:5:module.exports={
+./backend/services/payment_service.js:3:module.exports={
+./backend/services/reward_service.js:3:module.exports={
+./backend/services/location/location_service.js:6:module.exports={
+./backend/services/realtime/realtime_service.js:3:module.exports={
+./backend/services/notifications/notification_service.js:3:module.exports={
+./backend/services/demand_service.js:17:module.exports={
+./backend/services/dispatch_service.js:122:module.exports={
+./backend/services/driver_intelligence_service.js:79:module.exports={
+./backend/services/driver_location_service.js:97:module.exports={
+./backend/services/driver_matching_service.js:106:module.exports={
+./backend/services/economy_ledger_service.js:150:module.exports={
+./backend/services/identity_service.js:70:module.exports={
+./backend/services/live_demand_service.js:125:module.exports={
+./backend/services/live_ride_service.js:121:module.exports={
+./backend/services/notification_service.js:25:module.exports={
+./backend/services/passenger_intelligence_service.js:54:module.exports={
+./backend/services/rideService.js:12:module.exports={
+./backend/services/ride_completion_service.js:320:module.exports = {
+./backend/services/ride_dispatch_bridge.js:57:module.exports={
+./backend/services/ride_economy_service.js:12:module.exports={
+./backend/services/ride_event_service.js:61:module.exports={
+./backend/services/ride_orchestrator_service.js:169:module.exports={
+./backend/services/ride_state_service.js:46:module.exports={
+./backend/services/canonical_reward_service.js:311:module.exports = {
+./backend/middleware/error_handler.js:2:module.exports=function(err,req,res,next){
+./backend/server.js:14:// backend/routes/rides.js
+./backend/server.js:29:app.listen(PORT, () => {
+./backend/api/reward_api.js:43:module.exports={
+./backend/api/cablink_gateway.js:37:module.exports={
+./backend/economy/delivery_fare_engine.js:42:module.exports={
+./backend/auth/auth_engine.js:33:module.exports={
+./backend/auth/phone_verification_engine.js:46:module.exports={
+./backend/auth/auth_connector.js:36:module.exports={
+./backend/auth/otp_service.js:36:module.exports={
+./backend/payments/payment_engine.js:18:module.exports={
+./backend/payments/payment_adapter.js:20:module.exports={createPayment};
+./backend/payments/transaction_recorder.js:18:module.exports={recordPayment};
+./backend/payments/payment_transaction_layer.js:29:module.exports={createTransaction};
+./backend/payments/payment_provider_adapter.js:34:module.exports={
+./backend/rides/ride_engine.js:15:module.exports={
+./backend/rides/ride_persistence.js:16:module.exports={saveRide};
+./backend/rides/settlement_engine.js:30:module.exports={settle};
+./backend/rides/ride_state_engine.js:15:module.exports={
+./backend/rides/ride_lifecycle.js:51:module.exports={
+./backend/matching/matching_engine.js:14:module.exports={
+./backend/matching/driver_matching_engine.js:19:module.exports={
+./backend/matching/driver_matcher.js:31:module.exports={
+./backend/fare/fare_engine.js:13:module.exports={
+./backend/rewards/reward_engine.js:93:module.exports={
+./backend/rewards/blockchain_reward_adapter.js:20:module.exports={createReward};
+./backend/rewards/thb_contract_adapter.js:20:module.exports={prepareTransfer};
+./backend/rewards/thb_transaction_layer.js:22:module.exports={createTHBTransaction};
+./backend/rewards/thb_service.js:22:module.exports={
+./backend/rewards/reward_claim_engine.js:21:module.exports={
+./backend/rewards/thb_transfer_queue.js:35:module.exports={
+./backend/rewards/thb_claim_engine.js:85:module.exports={
+./backend/rewards/auto_reward_trigger.js:40:module.exports={
+./backend/rewards/delivery_completion.js:15:module.exports={
+./backend/rewards/delivery_reward_engine.js:35:module.exports={
+./backend/rewards/delivery_reward_service.js:16:module.exports={
+./backend/rewards/reward_history.js:37:module.exports={
+./backend/rewards/wallet_service.js:34:module.exports={
+./backend/rewards/canonical_wallet_resolver.js:173:module.exports = {
+./backend/users/wallet_manager.js:17:module.exports={attachWallet};
+./backend/users/user_account_engine.js:44:module.exports={
+./backend/trust/trust_engine.js:37:module.exports={
+./backend/location/radar_engine.js:12:module.exports={
+./backend/location/gps_event_engine.js:42:module.exports={
+./backend/location/location_service.js:34:module.exports={
+./backend/location/location_stream.js:30:module.exports={
+./backend/notifications/notification_engine.js:20:module.exports={
+./backend/notifications/notification_center.js:27:module.exports={
+./backend/notifications/push_bridge.js:35:module.exports={
+./backend/drivers/heartbeat_engine.js:44:module.exports={
+./backend/drivers/driver_state.js:31:module.exports={
+./backend/safety/safety_engine.js:35:module.exports={
+./backend/safety/emergency_engine.js:25:module.exports={
+./backend/safety/incident_report.js:20:module.exports={
+./backend/admin/admin_monitor.js:21:module.exports={
+./backend/admin/operator_dashboard.js:25:module.exports={
+./backend/onboarding/onboarding_engine.js:37:module.exports={
+./backend/analytics/pilot_analytics.js:23:module.exports={
+./backend/analytics/pilot_failure_tracker.js:20:module.exports={
+./backend/security/device_registry.js:33:module.exports={
+./backend/security/fraud_engine.js:33:module.exports={
+./backend/security/security_engine.js:47:module.exports={
+./backend/security/security_audit.js:27:module.exports={
+./backend/blockchain/thb_config.js:5:module.exports={
+./backend/blockchain/thb_transfer_worker.js:46:module.exports={
+./backend/blockchain/wallet_validator.js:9:module.exports={
+./backend/blockchain/chain_health.js:26:module.exports={
+./backend/blockchain/thb_transfer_service.js:48:module.exports={
+./backend/blockchain/thb_transaction_engine.js:73:module.exports={
+./backend/blockchain/thb_real_executor.js:69:module.exports={
+./backend/realtime/presence_engine.js:40:module.exports={
+./backend/realtime/channel_manager.js:32:module.exports={
+./backend/realtime/realtime_bridge.js:42:module.exports={
+./backend/realtime/event_bus.js:32:module.exports={
+./backend/realtime/ride_channel.js:35:module.exports={
+./backend/events/ride_event_bus.js:37:module.exports={
+./backend/cloud/cloud_adapter.js:22:module.exports={
+./backend/cloud/production_adapter.js:20:module.exports={
+./backend/push/push_engine.js:19:module.exports={
+./backend/sync/live_sync_engine.js:15:module.exports={
+./backend/validation/input_validator.js:23:module.exports={
+./backend/logs/system_logger.js:33:module.exports={
+./backend/monitoring/system_health.js:23:module.exports={
+./backend/providers/cloud_provider.js:22:module.exports={
+./backend/providers/cloud_database_connector.js:33:module.exports={
+./backend/providers/maps_connector.js:35:module.exports={
+./backend/sessions/session_engine.js:34:module.exports={
+./backend/maps/gps_engine.js:32:module.exports={
+./backend/maps/map_provider.js:33:module.exports={
+./backend/sms/sms_engine.js:20:module.exports={
+./backend/tracking/location_session.js:27:module.exports={
+./backend/tracking/location_tracker.js:34:module.exports={
+./backend/extensions/extension_registry.js:25:module.exports={
+./backend/audit/production_audit.js:25:module.exports={
+./backend/production/database_adapter.js:3:const firestore =
+./backend/production/database_adapter.js:4:    require("../firebase/firestore_adapter");
+./backend/production/database_adapter.js:14:            firestore.status().configured,
+./backend/production/database_adapter.js:17:            firestore.status().project,
+./backend/production/database_adapter.js:32:    return firestore.write(
+./backend/production/database_adapter.js:45:    return firestore.read(
+./backend/production/database_adapter.js:52:module.exports = {
+./backend/dispatch/dispatch_engine.js:43:module.exports={
+./backend/firebase/firebase_adapter.js:40:module.exports={
+./backend/firebase/firestore_adapter.js:1:const admin = require("firebase-admin");
+./backend/firebase/firestore_adapter.js:2:const { getFirestore } = require("firebase-admin/firestore");
+./backend/firebase/firestore_adapter.js:116:    const firestore =
+./backend/firebase/firestore_adapter.js:119:    await firestore
+./backend/firebase/firestore_adapter.js:161:    const firestore =
+./backend/firebase/firestore_adapter.js:165:        await firestore
+./backend/firebase/firestore_adapter.js:206:module.exports = {
+./backend/devices/device_registry.js:34:module.exports={
+./backend/broadcast/ride_broadcast.js:2:const firebase=require("../firebase/firebase_adapter");
+./backend/broadcast/ride_broadcast.js:7:return firebase.write(
+./backend/broadcast/ride_broadcast.js:15:module.exports={
+./backend/environment/readiness_check.js:2:const firebase=require("../firebase/firebase_adapter");
+./backend/environment/readiness_check.js:10:firebase:
+./backend/environment/readiness_check.js:11:firebase.status(),
+./backend/environment/readiness_check.js:17:firebase.status().configured,
+./backend/environment/readiness_check.js:26:module.exports={
+./backend/testing/two_phone_pilot.js:42:module.exports={
+./backend/testing/phase32_dashboard_api_test.js:6:"http://localhost:3000/api/driver/DRIVER001/dashboard",
+./backend/testing/phase34_economy_test.js:41:"/api/economy/ride/accept",
+./backend/testing/phase34_economy_test.js:57:"/api/economy/ride/complete",
+./backend/testing/phase37_dashboard_test.js:7:"http://localhost:3000/api/driver/DRIVER001/economy",
+./backend/testing/phase40_demand_test.js:44:"/api/demand/request",
+./backend/testing/phase40_demand_test.js:54:"/api/demand/request",
+./backend/testing/phase40_demand_test.js:64:"/api/demand/request",
+./backend/testing/phase40_demand_test.js:73:"http://localhost:3000/api/driver/hotspots",
+./backend/testing/phase41_matching_test.js:43:"/api/driver/location",
+./backend/testing/phase41_matching_test.js:58:"/api/matching/drivers",
+./backend/testing/phase42_dispatch_test.js:43:"/api/dispatch/request",
+./backend/testing/phase42_dispatch_test.js:58:"/api/dispatch/match",
+./backend/testing/phase42_dispatch_test.js:77:"/api/dispatch/accept",
+./backend/testing/phase46_live_test.js:43:"/api/ride/create",
+./backend/testing/phase46_live_test.js:58:"/api/ride/assign",
+./backend/testing/phase46_live_test.js:73:"/api/ride/status",
+./backend/testing/phase47_eta_test.js:42:"/api/driver/location/update",
+./backend/testing/phase47_eta_test.js:56:"/api/ride/tracking",
+./backend/testing/phase48_completion_test.js:43:"/api/ride/complete",
+./backend/testing/phase49_notification_test.js:42:"/api/notifications/create",
+./backend/testing/phase49_notification_test.js:55:"http://localhost:3000/api/ride/RIDE-001/timeline",
+./backend/testing/phase50_state_test.js:39:"/api/ride/create",
+./backend/testing/phase50_state_test.js:53:"/api/ride/status",
+./backend/testing/phase50_state_test.js:64:"/api/ride/status",
+./backend/testing/phase51_orchestrator_test.js:45:"/api/orchestrator/create",
+./backend/testing/phase51_orchestrator_test.js:65:"/api/orchestrator/assign",
+./backend/testing/phase51_orchestrator_test.js:77:"/api/orchestrator/arrived",
+./backend/testing/phase51_orchestrator_test.js:86:"/api/orchestrator/start",
+./backend/testing/phase51_orchestrator_test.js:95:"/api/orchestrator/finish",
+./backend/mobile/device_registry.js:52:module.exports={
+./backend/fraud/ride_validation.js:19:module.exports={
+./backend/fraud/reward_guard.js:20:module.exports={
+./backend/support/ticket_system.js:24:module.exports={
+./backend/database/production_schema.js:42:module.exports={
+./backend/database/migration_engine.js:17:module.exports={
+./backend/database/user_repository.js:25:module.exports={
+./backend/database/ride_repository.js:49:module.exports={
+./backend/database/rideRepository.js:29:module.exports={
+./backend/pricing/fare_calculator.js:25:module.exports={
+./backend/transactions/transaction_record.js:33:module.exports={
+./backend/server/app.js:1:const express = require("express");
+./backend/server/app.js:3:const app = express();
+./backend/server/app.js:5:app.use(express.json());
+./backend/server/app.js:13:    require("../routes/rides");
+./backend/server/app.js:16:    require("../routes/users");
+./backend/server/app.js:19:    require("../routes/canonical_reward_api");
+./backend/server/app.js:22:    require("../routes/completion_api");
+./backend/server/app.js:25:    require("../routes/dispatch_api");
+./backend/server/app.js:28:    require("../routes/driver_online_api");
+./backend/server/app.js:57:    "/api/health",
+./backend/server/app.js:67:// POST  /api/rides
+./backend/server/app.js:68:// GET   /api/rides
+./backend/server/app.js:69:// GET   /api/rides/:id
+./backend/server/app.js:70:// PATCH /api/rides/:id
+./backend/server/app.js:71:// PATCH /api/rides/:id/accept
+./backend/server/app.js:72:// PATCH /api/rides/:id/complete
+./backend/server/app.js:76:    "/api/rides",
+./backend/server/app.js:86:    "/api/users",
+./backend/server/app.js:96:    "/api/rewards",
+./backend/server/app.js:106:// POST /api/ride/complete
+./backend/server/app.js:110:// PATCH /api/rides/:id/complete
+./backend/server/app.js:126:// GET /api/dispatch/requests
+./backend/server/app.js:130:// POST /api/dispatch/request
+./backend/server/app.js:134:// POST /api/dispatch/accept
+./backend/server/app.js:157:module.exports = app;
+./backend/server/index.js:9:app.listen(
+./backend/storage/database.js:70:module.exports = {
+./backend/socket/socket_manager.js:52:module.exports={
+./backend/socket/server_socket.js:14:module.exports={
+./backend/trips/trip_manager.js:51:module.exports={
+./backend/heartbeat/device_monitor.js:17:module.exports={
+./backend/gps/gps_service.js:36:module.exports={
+./backend/gps/location_stream.js:15:module.exports={
+./backend/status/ride_status.js:15:module.exports={
+./backend/ecosystem/marketplace_bridge.js:23:module.exports={
+./backend/ride_api_patch.js:4:module.exports=function(app){
+./backend/ride_api_patch.js:7:app.post("/api/rides",(req,res)=>{
+./backend/ride_api_patch.js:36:app.get("/api/rides",(req,res)=>{
+./backend/ride_api_patch.js:46:app.get("/api/rides/:id",(req,res)=>{
+./backend/ride_api_patch.js:65:app.patch("/api/rides/:id",(req,res)=>{
+./backend/ride_store.js:75:module.exports={
+./backend/tasks/task_manager.js:61:module.exports={
+./backend/canonical/ride_repository.js:112:module.exports = { create, findById, all, update, accept };
+./backend/canonical/ride_engine.js:218:module.exports = {
+./backend/canonical/ride_repository_firestore_test.js:193:module.exports = {
+./frontend/js/firebase.js:3:const firebaseConfig = {
+./frontend/js/firebase.js:5:  authDomain: "gen-lang-client-0007945213.firebaseapp.com",
+./frontend/js/firebase.js:7:  storageBucket: "gen-lang-client-0007945213.firebasestorage.app",
+./frontend/js/firebase.js:14:firebase.initializeApp(firebaseConfig);
+./frontend/js/firebase.js:15:const db = firebase.firestore();
+./frontend/js/app.js:83:const response=await fetch(
+./frontend/js/app.js:84:"/api/rides",
+./frontend/js/bstm_hub_ui.js:36:<a href="https://bstm-flowledger.vercel.app/" target="_blank">
+./frontend/js/bstm_hub_ui.js:42:<a href="https://thobocoin-project-frontend.vercel.app/" target="_blank">
+./frontend/js/bstm_hub_ui.js:48:<a href="https://business-hub-bstm.vercel.app/" target="_blank">
+./frontend/js/services/api.js:4:rides:'/api/rides',
+./frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+./frontend/js/services/api.js:6:health:'/api/health'
+./frontend/js/services/cablinkAPI.js:3:const response = await fetch(url,{
+./frontend/js/driver/applicationService.js:4:const r = await fetch('/api/drivers/apply',{
+./frontend/js/driver/driverController.js:6:return await api("/api/rides");
+./frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+./frontend/js/driver/driverDispatchBridge.js:44:fetch("/api/dispatch/requests")
+./frontend/js/driver/driverDispatchBridge.js:127:fetch("/api/dispatch/accept",{
+./frontend/js/driver/driverLifecycleControls.js:14:   *   PATCH /api/rides/:id
+./frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./frontend/js/driver/driverService.js:18:const r=await fetch('/api/rides');
+./frontend/js/fix.js:24:  if(typeof firebase!=='undefined'&&firebase.firestore){initFB();return;}
+./frontend/js/fix.js:26:  a.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
+./frontend/js/fix.js:29:    f.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
+./frontend/js/fix.js:36:  if(typeof firebase==='undefined')return;
+./frontend/js/fix.js:37:  if(!firebase.apps.length)firebase.initializeApp({
+./frontend/js/fix.js:39:    authDomain:'gen-lang-client-0007945213.firebaseapp.com',
+./frontend/js/fix.js:41:    storageBucket:'gen-lang-client-0007945213.firebasestorage.app',
+./frontend/js/fix.js:45:  window.db=firebase.firestore();
+./frontend/js/rides/rideController.js:8:const ride=await api("/api/rides",{
+./frontend/js/rides/rideController.js:39:await api("/api/rides/"+id);
+./frontend/js/rides/rideService.js:5:const response=await fetch('/api/rides',{
+./frontend/js/app_core.js:263:  fetch('/api/drivers/online')
+./frontend/js/app_core.js:372:  fetch('/api/rides', {
+./frontend/js/app_core.js:410:  fetch('/api/rides/' + rideId, {
+./frontend/js/app_core.js:488:    var response = await fetch('/api/rides/' + encodeURIComponent(rideId) + '/accept', {
+./frontend/js/app_core.js:632:// backend PATCH /api/rides/:id endpoint.
+./frontend/js/app_core.js:676:    var response = await fetch(
+./frontend/js/app_core.js:677:      '/api/rides/' + encodeURIComponent(rideId),
+./frontend/api/cablink_api.js:15:await fetch(
+./frontend/api/cablink_api.js:31:module.exports={
+./frontend/api/task_api.js:13:const response=await fetch(
+./frontend/api/task_api.js:14:BASE_URL + "/api/ecosystem/tasks"
+./frontend/api/task_api.js:25:const response=await fetch(
+./frontend/api/task_api.js:26:BASE_URL + "/api/ecosystem/tasks/"+id,
+./frontend/api/task_api.js:51:module.exports={
+./frontend/services/user_service.js:3:const api=require("../api/cablink_api");
+./frontend/services/user_service.js:9:"/api/users/register",
+./frontend/services/user_service.js:22:"/api/users"
+./frontend/services/user_service.js:28:module.exports={
+./frontend/services/ride_service.js:3:const api=require("../api/cablink_api");
+./frontend/services/ride_service.js:9:"/api/rides/request",
+./frontend/services/ride_service.js:22:"/api/rides"
+./frontend/services/ride_service.js:28:module.exports={
+./frontend/services/demand_api.js:5:const r=await fetch(
+./frontend/services/demand_api.js:6:"/api/driver/demand"
+./frontend/services/demand_api.js:13:module.exports={getDemand};
+./frontend/services/driver_dashboard_api.js:4:const r=await fetch(
+./frontend/services/driver_dashboard_api.js:5:"/api/driver/"+id+"/economy"
+./frontend/services/driver_dashboard_api.js:15:const r=await fetch(
+./frontend/services/driver_dashboard_api.js:16:"/api/driver/hotspots"
+./frontend/services/driver_dashboard_api.js:26:const r=await fetch(
+./frontend/services/driver_dashboard_api.js:27:"/api/updates"
+./frontend/services/driver_dashboard_api.js:35:module.exports={
+./frontend/services/driver_dashboard_live.js:3:const taskApi=require("../api/task_api");
+./frontend/services/driver_dashboard_live.js:35:module.exports={
+./frontend/services/driver_economy_screen_service.js:18:module.exports={
+./frontend/services/driver_economy_service.js:22:module.exports={
+./frontend/services/economy_dashboard_api.js:14:await fetch(
+./frontend/services/economy_dashboard_api.js:16:"/api/driver/" +
+./frontend/services/economy_dashboard_api.js:26:module.exports={
+./frontend/services/identity_api.js:6:await fetch(
+./frontend/services/identity_api.js:7:"/api/user/"+id
+./frontend/services/identity_api.js:15:module.exports={
+./frontend/services/live_driver_economy.js:3:const taskApi=require("../api/task_api");
+./frontend/services/live_driver_economy.js:31:module.exports={
+./frontend/services/live_ride_api.js:6:await fetch(
+./frontend/services/live_ride_api.js:7:"/api/ride/"+id
+./frontend/services/live_ride_api.js:18:await fetch(
+./frontend/services/live_ride_api.js:19:"/api/ride/status",
+./frontend/services/live_ride_api.js:42:module.exports={
+./frontend/services/notification_api.js:4:const r=await fetch(
+./frontend/services/notification_api.js:5:"/api/ride/"+id+"/timeline"
+./frontend/services/notification_api.js:13:module.exports={
+./frontend/services/passenger_dashboard_api.js:5:await fetch(
+./frontend/services/passenger_dashboard_api.js:6:"/api/ride/"+id+"/status"
+./frontend/services/passenger_dashboard_api.js:10:await fetch(
+./frontend/services/passenger_dashboard_api.js:11:"/api/ride/"+id+"/timeline"
+./frontend/services/passenger_dashboard_api.js:28:module.exports={
+./frontend/services/role_service.js:39:module.exports={
+./frontend/services/task_service.js:28:module.exports={
+./frontend/services/updates_api.js:5:const r=await fetch(
+./frontend/services/updates_api.js:6:"/api/updates"
+./frontend/services/updates_api.js:13:module.exports={getUpdates};
+./frontend/state/session_store.js:37:module.exports={
+./frontend/state/ride_ui_state.js:34:module.exports={
+./frontend/state/task_state.js:22:module.exports={
+./frontend/components/status_panel.js:20:module.exports={
+./frontend/components/mobile_dashboard.js:31:module.exports={
+./frontend/components/LegacyCabLink.jsx:59:            <strong> /api/rides</strong>
+./frontend/components/bstm_delivery_button.js:19:module.exports={
+./frontend/components/bstm_menu.js:18:module.exports={
+./frontend/components/delivery_earnings_panel.js:22:module.exports={
+./frontend/components/demand_panel.js:19:module.exports={
+./frontend/components/driver_dashboard.js:40:module.exports={
+./frontend/components/driver_demand_map.js:17:module.exports={render};
+./frontend/components/driver_economy_dashboard.js:38:module.exports={
+./frontend/components/driver_economy_screen.js:38:module.exports={
+./frontend/components/driver_task_panel.js:30:module.exports={
+./frontend/components/ecosystem_card.js:27:module.exports={
+./frontend/components/live_driver_dashboard.js:24:module.exports={
+./frontend/components/passenger_dashboard.jsx:16:fetch("/api/ride/"+id+"/status")
+./frontend/components/passenger_dashboard.jsx:21:fetch("/api/ride/"+id+"/timeline")
+./frontend/components/passenger_trip_status.js:21:module.exports={
+./frontend/components/thb_reward_panel.js:20:module.exports={
+./frontend/components/thb_wallet_panel.js:25:module.exports={
+./frontend/components/updates_center.js:15:module.exports={render};
+./frontend/screens/passenger_dashboard.js:29:module.exports={
+./frontend/screens/driver_dashboard.js:28:module.exports={
+./frontend/screens/passenger_ride_screen.js:38:module.exports={
+./frontend/screens/driver_control_screen.js:33:module.exports={
+./frontend/screens/ecosystem_hub_screen.js:25:module.exports={
+./frontend/monitoring/ui_health.js:24:module.exports={
+./frontend/maps/live_map_component.js:21:module.exports={
+./frontend/pwa/install_manager.js:21:module.exports={
+./frontend/mobile/mobile_entry.js:34:module.exports={
+./frontend/mobile/device_permissions.js:19:module.exports={
+./frontend/config/app_config.js:17:module.exports=config;
+./frontend/App.jsx:10:    fetch("/api/health")
+./frontend/ecosystem/bstm_links.js:20:url:"https://bstm-flowledger.vercel.app/"
+./frontend/ecosystem/bstm_links.js:26:url:"https://thobocoin-project-frontend.vercel.app/"
+./frontend/ecosystem/bstm_links.js:38:url:"https://business-hub-bstm.vercel.app/"
+./frontend/ecosystem/bstm_links.js:63:module.exports={
+./frontend/pages/DriverDashboard.jsx:14:fetch("/api/driver/DRIVER001/economy")
+./frontend/pages/DriverDashboard.jsx:19:fetch("/api/driver/hotspots")
+./frontend/pages/PassengerRide.jsx:25:await fetch(
+./frontend/pages/PassengerRide.jsx:26:"/api/dispatch/request",
+./frontend/pages/UpdatesCenter.jsx:13:fetch("/api/updates")
+./sw.js:38:  if (e.request.url.includes('/api/')) return; // never cache API calls
+./sw.js:40:    fetch(e.request).catch(function() {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/config/env_check.js:27:module.exports={validate};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/config/provider_config.js:5:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/config/environment_validator.js:8:firebase:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/config/environment_validator.js:43:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:1:const router = require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:12:// POST /api/rides
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:90:// PATCH /api/rides/:id/accept
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:166:// GET /api/rides
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:201:// GET /api/rides/:id
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:230:// PATCH /api/rides/:id
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js:298:module.exports = router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/users.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/users.js:44:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/realtime.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/realtime.js:70:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/socket_routes.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/socket_routes.js:39:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/mobile.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/mobile.js:47:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/gps.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/gps.js:36:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/completion_api.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/completion_api.js:30:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/dispatch_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/dispatch_api.js:84:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_dashboard_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_dashboard_api.js:35:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_demand_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_demand_api.js:19:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_economy.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_economy.js:32:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_economy_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_economy_api.js:21:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_intelligence_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_intelligence_api.js:47:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_location_api.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_location_api.js:37:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_online_api.js:6:const express=require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_online_api.js:8:const router=express.Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_online_api.js:91:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ecosystem_tasks.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ecosystem_tasks.js:51:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/identity_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/identity_api.js:70:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/live_demand_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/live_demand_api.js:65:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/live_ride_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/live_ride_api.js:84:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/matching_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/matching_api.js:47:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/notification_api.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/notification_api.js:43:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/orchestrator_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/orchestrator_api.js:104:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/passenger_intelligence_api.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/passenger_intelligence_api.js:38:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ride_economy_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ride_economy_api.js:60:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ride_state_api.js:2:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ride_state_api.js:39:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/updates_api.js:3:const router=require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/updates_api.js:23:module.exports=router;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/canonical_reward_api.js:2:    require("express").Router();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/canonical_reward_api.js:9: * POST /api/rewards/ride/:rideId
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/canonical_reward_api.js:137:module.exports =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_service.js:5:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/driver_service.js:5:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/payment_service.js:3:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/reward_service.js:3:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/location/location_service.js:6:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/realtime/realtime_service.js:3:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/notifications/notification_service.js:3:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/demand_service.js:17:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/dispatch_service.js:122:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/driver_intelligence_service.js:79:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/driver_location_service.js:97:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/driver_matching_service.js:106:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/economy_ledger_service.js:150:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/identity_service.js:70:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/live_demand_service.js:125:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/live_ride_service.js:121:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/notification_service.js:25:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/passenger_intelligence_service.js:54:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/rideService.js:12:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_completion_service.js:115:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_dispatch_bridge.js:57:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_economy_service.js:12:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_event_service.js:61:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_orchestrator_service.js:169:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_state_service.js:46:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:311:module.exports = {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/middleware/error_handler.js:2:module.exports=function(err,req,res,next){
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js:14:// backend/routes/rides.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js:29:app.listen(PORT, () => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/api/reward_api.js:43:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/api/cablink_gateway.js:37:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/economy/delivery_fare_engine.js:42:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/auth/auth_engine.js:33:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/auth/phone_verification_engine.js:46:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/auth/auth_connector.js:36:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/auth/otp_service.js:36:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/payment_engine.js:18:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/payment_adapter.js:20:module.exports={createPayment};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/transaction_recorder.js:18:module.exports={recordPayment};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/payment_transaction_layer.js:29:module.exports={createTransaction};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/payment_provider_adapter.js:34:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_engine.js:15:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_persistence.js:16:module.exports={saveRide};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/settlement_engine.js:30:module.exports={settle};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_state_engine.js:15:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_lifecycle.js:51:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/matching/matching_engine.js:14:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/matching/driver_matching_engine.js:19:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/matching/driver_matcher.js:31:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/fare/fare_engine.js:13:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/reward_engine.js:93:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/blockchain_reward_adapter.js:20:module.exports={createReward};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_contract_adapter.js:20:module.exports={prepareTransfer};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_transaction_layer.js:22:module.exports={createTHBTransaction};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_service.js:22:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/reward_claim_engine.js:21:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_transfer_queue.js:35:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_claim_engine.js:85:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/auto_reward_trigger.js:40:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/delivery_completion.js:15:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/delivery_reward_engine.js:35:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/delivery_reward_service.js:16:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/reward_history.js:37:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/wallet_service.js:34:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/canonical_wallet_resolver.js:173:module.exports = {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/users/wallet_manager.js:17:module.exports={attachWallet};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/users/user_account_engine.js:44:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/trust/trust_engine.js:37:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/location/radar_engine.js:12:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/location/gps_event_engine.js:42:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/location/location_service.js:34:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/location/location_stream.js:30:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/notifications/notification_engine.js:20:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/notifications/notification_center.js:27:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/notifications/push_bridge.js:35:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/drivers/heartbeat_engine.js:44:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/drivers/driver_state.js:31:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/safety/safety_engine.js:35:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/safety/emergency_engine.js:25:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/safety/incident_report.js:20:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/admin/admin_monitor.js:21:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/admin/operator_dashboard.js:25:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/onboarding/onboarding_engine.js:37:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/analytics/pilot_analytics.js:23:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/analytics/pilot_failure_tracker.js:20:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/security/device_registry.js:33:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/security/fraud_engine.js:33:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/security/security_engine.js:47:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/security/security_audit.js:27:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_config.js:5:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_transfer_worker.js:46:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/wallet_validator.js:9:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/chain_health.js:26:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_transfer_service.js:48:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_transaction_engine.js:73:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_real_executor.js:69:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/presence_engine.js:40:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/channel_manager.js:32:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/realtime_bridge.js:42:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/event_bus.js:32:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/ride_channel.js:35:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/events/ride_event_bus.js:37:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/cloud/cloud_adapter.js:22:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/cloud/production_adapter.js:20:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/push/push_engine.js:19:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/sync/live_sync_engine.js:15:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/validation/input_validator.js:23:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/logs/system_logger.js:33:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/monitoring/system_health.js:23:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/providers/cloud_provider.js:22:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/providers/cloud_database_connector.js:33:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/providers/maps_connector.js:35:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/sessions/session_engine.js:34:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/maps/gps_engine.js:32:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/maps/map_provider.js:33:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/sms/sms_engine.js:20:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/tracking/location_session.js:27:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/tracking/location_tracker.js:34:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/extensions/extension_registry.js:25:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/audit/production_audit.js:25:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/production/database_adapter.js:3:const firestore =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/production/database_adapter.js:4:    require("../firebase/firestore_adapter");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/production/database_adapter.js:14:            firestore.status().configured,
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/production/database_adapter.js:17:            firestore.status().project,
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/production/database_adapter.js:32:    return firestore.write(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/production/database_adapter.js:45:    return firestore.read(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/production/database_adapter.js:52:module.exports = {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/dispatch/dispatch_engine.js:43:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firebase_adapter.js:40:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firestore_adapter.js:1:const admin = require("firebase-admin");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firestore_adapter.js:2:const { getFirestore } = require("firebase-admin/firestore");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firestore_adapter.js:116:    const firestore =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firestore_adapter.js:119:    await firestore
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firestore_adapter.js:161:    const firestore =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firestore_adapter.js:165:        await firestore
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firestore_adapter.js:206:module.exports = {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/devices/device_registry.js:34:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/broadcast/ride_broadcast.js:2:const firebase=require("../firebase/firebase_adapter");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/broadcast/ride_broadcast.js:7:return firebase.write(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/broadcast/ride_broadcast.js:15:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/environment/readiness_check.js:2:const firebase=require("../firebase/firebase_adapter");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/environment/readiness_check.js:10:firebase:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/environment/readiness_check.js:11:firebase.status(),
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/environment/readiness_check.js:17:firebase.status().configured,
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/environment/readiness_check.js:26:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/two_phone_pilot.js:42:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase32_dashboard_api_test.js:6:"http://localhost:3000/api/driver/DRIVER001/dashboard",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase34_economy_test.js:41:"/api/economy/ride/accept",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase34_economy_test.js:57:"/api/economy/ride/complete",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase37_dashboard_test.js:7:"http://localhost:3000/api/driver/DRIVER001/economy",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase40_demand_test.js:44:"/api/demand/request",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase40_demand_test.js:54:"/api/demand/request",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase40_demand_test.js:64:"/api/demand/request",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase40_demand_test.js:73:"http://localhost:3000/api/driver/hotspots",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase41_matching_test.js:43:"/api/driver/location",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase41_matching_test.js:58:"/api/matching/drivers",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase42_dispatch_test.js:43:"/api/dispatch/request",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase42_dispatch_test.js:58:"/api/dispatch/match",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase42_dispatch_test.js:77:"/api/dispatch/accept",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase46_live_test.js:43:"/api/ride/create",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase46_live_test.js:58:"/api/ride/assign",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase46_live_test.js:73:"/api/ride/status",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase47_eta_test.js:42:"/api/driver/location/update",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase47_eta_test.js:56:"/api/ride/tracking",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase48_completion_test.js:43:"/api/ride/complete",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase49_notification_test.js:42:"/api/notifications/create",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase49_notification_test.js:55:"http://localhost:3000/api/ride/RIDE-001/timeline",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase50_state_test.js:39:"/api/ride/create",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase50_state_test.js:53:"/api/ride/status",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase50_state_test.js:64:"/api/ride/status",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase51_orchestrator_test.js:45:"/api/orchestrator/create",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase51_orchestrator_test.js:65:"/api/orchestrator/assign",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase51_orchestrator_test.js:77:"/api/orchestrator/arrived",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase51_orchestrator_test.js:86:"/api/orchestrator/start",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase51_orchestrator_test.js:95:"/api/orchestrator/finish",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/mobile/device_registry.js:52:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/fraud/ride_validation.js:19:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/fraud/reward_guard.js:20:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/support/ticket_system.js:24:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/production_schema.js:42:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/migration_engine.js:17:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/user_repository.js:25:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/ride_repository.js:49:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/rideRepository.js:29:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/pricing/fare_calculator.js:25:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/transactions/transaction_record.js:33:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:2:const express=require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:4:const app=express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:6:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:9:const rideRoutes=require("../routes/rides");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:10:const userRoutes=require("../routes/users");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:11:const canonicalRewardRoutes = require("../routes/canonical_reward_api");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:12:const completionRoutes = require("../routes/completion_api");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:13:const liveRideRoutes = require("../routes/live_ride_api");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:41:"/api/health",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:58:app.use("/api/rides",rideRoutes);
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:60:app.use("/api/users",userRoutes);
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:61:app.use("/api/rewards",canonicalRewardRoutes);
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js:68:module.exports=app;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/index.js:9:app.listen(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/storage/database.js:70:module.exports = {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/socket/socket_manager.js:52:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/socket/server_socket.js:14:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/trips/trip_manager.js:51:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/heartbeat/device_monitor.js:17:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/gps/gps_service.js:36:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/gps/location_stream.js:15:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/status/ride_status.js:15:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ecosystem/marketplace_bridge.js:23:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_api_patch.js:4:module.exports=function(app){
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_api_patch.js:7:app.post("/api/rides",(req,res)=>{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_api_patch.js:36:app.get("/api/rides",(req,res)=>{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_api_patch.js:46:app.get("/api/rides/:id",(req,res)=>{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_api_patch.js:65:app.patch("/api/rides/:id",(req,res)=>{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_store.js:75:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/tasks/task_manager.js:61:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_repository.js:112:module.exports = { create, findById, all, update, accept };
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_engine.js:218:module.exports = {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_repository_firestore_test.js:193:module.exports = {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/firebase.js:3:const firebaseConfig = {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/firebase.js:5:  authDomain: "gen-lang-client-0007945213.firebaseapp.com",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/firebase.js:7:  storageBucket: "gen-lang-client-0007945213.firebasestorage.app",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/firebase.js:14:firebase.initializeApp(firebaseConfig);
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/firebase.js:15:const db = firebase.firestore();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app.js:83:const response=await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app.js:84:"/api/rides",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/bstm_hub_ui.js:36:<a href="https://bstm-flowledger.vercel.app/" target="_blank">
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/bstm_hub_ui.js:42:<a href="https://thobocoin-project-frontend.vercel.app/" target="_blank">
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/bstm_hub_ui.js:48:<a href="https://business-hub-bstm.vercel.app/" target="_blank">
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/services/api.js:4:rides:'/api/rides',
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/services/api.js:5:drivers:'/api/drivers/online',
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/services/api.js:6:health:'/api/health'
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/services/cablinkAPI.js:3:const response = await fetch(url,{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/applicationService.js:4:const r = await fetch('/api/drivers/apply',{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverController.js:6:return await api("/api/rides");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverController.js:13:return await api("/api/drivers/online",{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverDispatchBridge.js:44:fetch("/api/dispatch/requests")
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverDispatchBridge.js:127:fetch("/api/dispatch/accept",{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverLifecycleControls.js:14:   *   PATCH /api/rides/:id
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverModeBridge.js:21:fetch("/api/drivers/online",{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverModeBridge.js:52:fetch("/api/drivers/offline",{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverService.js:5:return fetch('/api/drivers/online',{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverService.js:18:const r=await fetch('/api/rides');
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js:24:  if(typeof firebase!=='undefined'&&firebase.firestore){initFB();return;}
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js:26:  a.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js:29:    f.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js:36:  if(typeof firebase==='undefined')return;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js:37:  if(!firebase.apps.length)firebase.initializeApp({
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js:39:    authDomain:'gen-lang-client-0007945213.firebaseapp.com',
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js:41:    storageBucket:'gen-lang-client-0007945213.firebasestorage.app',
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js:45:  window.db=firebase.firestore();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/rideController.js:8:const ride=await api("/api/rides",{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/rideController.js:39:await api("/api/rides/"+id);
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/rideService.js:5:const response=await fetch('/api/rides',{
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:263:  fetch('/api/drivers/online')
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:372:  fetch('/api/rides', {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:410:  fetch('/api/rides/' + rideId, {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:488:    var response = await fetch('/api/rides/' + encodeURIComponent(rideId) + '/accept', {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:632:// backend PATCH /api/rides/:id endpoint.
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:676:    var response = await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js:677:      '/api/rides/' + encodeURIComponent(rideId),
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/cablink_api.js:15:await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/cablink_api.js:31:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/task_api.js:13:const response=await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/task_api.js:14:BASE_URL + "/api/ecosystem/tasks"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/task_api.js:25:const response=await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/task_api.js:26:BASE_URL + "/api/ecosystem/tasks/"+id,
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/task_api.js:51:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/user_service.js:3:const api=require("../api/cablink_api");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/user_service.js:9:"/api/users/register",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/user_service.js:22:"/api/users"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/user_service.js:28:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/ride_service.js:3:const api=require("../api/cablink_api");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/ride_service.js:9:"/api/rides/request",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/ride_service.js:22:"/api/rides"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/ride_service.js:28:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/demand_api.js:5:const r=await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/demand_api.js:6:"/api/driver/demand"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/demand_api.js:13:module.exports={getDemand};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_api.js:4:const r=await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_api.js:5:"/api/driver/"+id+"/economy"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_api.js:15:const r=await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_api.js:16:"/api/driver/hotspots"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_api.js:26:const r=await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_api.js:27:"/api/updates"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_api.js:35:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_live.js:3:const taskApi=require("../api/task_api");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_live.js:35:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_economy_screen_service.js:18:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_economy_service.js:22:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/economy_dashboard_api.js:14:await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/economy_dashboard_api.js:16:"/api/driver/" +
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/economy_dashboard_api.js:26:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/identity_api.js:6:await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/identity_api.js:7:"/api/user/"+id
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/identity_api.js:15:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/live_driver_economy.js:3:const taskApi=require("../api/task_api");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/live_driver_economy.js:31:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/live_ride_api.js:6:await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/live_ride_api.js:7:"/api/ride/"+id
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/live_ride_api.js:18:await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/live_ride_api.js:19:"/api/ride/status",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/live_ride_api.js:42:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/notification_api.js:4:const r=await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/notification_api.js:5:"/api/ride/"+id+"/timeline"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/notification_api.js:13:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/passenger_dashboard_api.js:5:await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/passenger_dashboard_api.js:6:"/api/ride/"+id+"/status"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/passenger_dashboard_api.js:10:await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/passenger_dashboard_api.js:11:"/api/ride/"+id+"/timeline"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/passenger_dashboard_api.js:28:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/role_service.js:39:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/task_service.js:28:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/updates_api.js:5:const r=await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/updates_api.js:6:"/api/updates"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/updates_api.js:13:module.exports={getUpdates};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/state/session_store.js:37:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/state/ride_ui_state.js:34:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/state/task_state.js:22:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/status_panel.js:20:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/mobile_dashboard.js:31:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/bstm_delivery_button.js:19:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/bstm_menu.js:18:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/delivery_earnings_panel.js:22:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/demand_panel.js:19:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_dashboard.js:40:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_demand_map.js:17:module.exports={render};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_economy_dashboard.js:38:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_economy_screen.js:38:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_task_panel.js:30:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/ecosystem_card.js:27:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/live_driver_dashboard.js:24:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/passenger_dashboard.jsx:16:fetch("/api/ride/"+id+"/status")
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/passenger_dashboard.jsx:21:fetch("/api/ride/"+id+"/timeline")
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/passenger_trip_status.js:21:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/thb_reward_panel.js:20:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/thb_wallet_panel.js:25:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/updates_center.js:15:module.exports={render};
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/passenger_dashboard.js:29:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/driver_dashboard.js:28:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/passenger_ride_screen.js:38:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/driver_control_screen.js:33:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/ecosystem_hub_screen.js:25:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/monitoring/ui_health.js:24:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/maps/live_map_component.js:21:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pwa/install_manager.js:21:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/mobile/mobile_entry.js:34:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/mobile/device_permissions.js:19:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/config/app_config.js:17:module.exports=config;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/ecosystem/bstm_links.js:20:url:"https://bstm-flowledger.vercel.app/"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/ecosystem/bstm_links.js:26:url:"https://thobocoin-project-frontend.vercel.app/"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/ecosystem/bstm_links.js:38:url:"https://business-hub-bstm.vercel.app/"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/ecosystem/bstm_links.js:63:module.exports={
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pages/DriverDashboard.jsx:14:fetch("/api/driver/DRIVER001/economy")
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pages/DriverDashboard.jsx:19:fetch("/api/driver/hotspots")
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pages/PassengerRide.jsx:25:await fetch(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pages/PassengerRide.jsx:26:"/api/dispatch/request",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pages/UpdatesCenter.jsx:13:fetch("/api/updates")
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:3:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:5:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:35:    "/api/canonical-firestore-lifecycle",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:794:    "/api/health",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:817:module.exports =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.minimal-test.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.minimal-test.js:3:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.minimal-test.js:5:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.minimal-test.js:25:app.get("/api/health", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.minimal-test.js:34:module.exports = app;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.ride-routes-working.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.ride-routes-working.js:3:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.ride-routes-working.js:5:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.ride-routes-working.js:10:    require("../backend/routes/rides");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.ride-routes-working.js:14:app.get("/api/health", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.ride-routes-working.js:26:    "/api/rides",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.ride-routes-working.js:30:module.exports = app;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-route-failing.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-route-failing.js:3:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-route-failing.js:5:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-route-failing.js:10:    require("../backend/routes/users");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-route-failing.js:14:app.get("/api/health", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-route-failing.js:26:    "/api/users",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-route-failing.js:30:module.exports = app;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-backup.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-backup.js:3:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-backup.js:5:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-backup.js:10:    require("../backend/routes/users");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-backup.js:14:app.get("/api/health", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-backup.js:26:    "/api/users",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-backup.js:30:module.exports = app;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-working.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-working.js:3:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-working.js:5:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-working.js:14:app.get("/api/health", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-working.js:25:app.get("/api/storage-test", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-working.js:59:module.exports = app;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-test-working.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-test-working.js:3:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-test-working.js:5:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-test-working.js:10:    require("../backend/routes/users");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-test-working.js:14:app.get("/api/health", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-test-working.js:26:    "/api/users",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-test-working.js:30:module.exports = app;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.write-forensics-working.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.write-forensics-working.js:5:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.write-forensics-working.js:7:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.write-forensics-working.js:23:app.get("/api/health", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.write-forensics-working.js:34:app.get("/api/write-test", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.write-forensics-working.js:246:module.exports = app;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-forensics-backup.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-forensics-backup.js:5:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-forensics-backup.js:7:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-forensics-backup.js:23:app.get("/api/health", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-forensics-backup.js:34:app.get("/api/write-test", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-forensics-backup.js:246:module.exports = app;
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:1:const express = require("express");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:2:const app = express();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:4:app.use(express.json());
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:18:app.get("/api/health", (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:38:app.get("/api/firebase-readiness", async (req, res) => {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:59:            vercel:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:68:            firebaseProjectId:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:73:            firebaseClientEmail:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:78:            firebasePrivateKey:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:83:            firebaseApiKey:
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:110:                    "firebase-admin"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:113:            result.sdk.firebaseAdmin =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:116:            result.sdk.firebaseAdminVersion =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:118:                    "firebase-admin/package.json"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:123:            result.sdk.firebaseAdmin =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:126:            result.sdk.firebaseAdminError = {
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:140:            const firebase =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:142:                    "../backend/firebase/firebase_adapter"
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:150:                    firebase
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:154:                typeof firebase.status ===
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:159:                    firebase.status();
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js:219:module.exports = app;
+./cablink_reality_doctor.js:66:  { method: 'GET', p: '/api/health' },
+./cablink_reality_doctor.js:67:  { method: 'POST', p: '/api/rides' },
+./cablink_reality_doctor.js:68:  { method: 'GET', p: '/api/rides' },
+./cablink_reality_doctor.js:69:  { method: 'POST', p: '/api/drivers/online' },
+./cablink_reality_doctor.js:70:  { method: 'POST', p: '/api/drivers/offline' },
+./cablink_reality_doctor.js:71:  { method: 'GET', p: '/api/drivers/online' }
+./cablink_reality_doctor.js:399:    if (!relFile.startsWith('backend/') && !relFile.includes('/routes/') && relFile !== 'backend/server.js') {
+./cablink_reality_doctor.js:503:      if (!urlShape || !urlShape.includes('/api/')) continue;
+./cablink_reality_doctor.js:539:    { step: 'bookRide() -> POST /api/rides', fn: 'bookRide', method: 'POST', p: '/api/rides' },
+./cablink_reality_doctor.js:540:    { step: 'createRide() -> POST /api/rides', fn: 'createRide', method: 'POST', p: '/api/rides' },
+./cablink_reality_doctor.js:541:    { step: 'toggleDriverMode() -> POST /api/drivers/online', fn: 'toggleDriverMode', method: 'POST', p: '/api/drivers/online' },
+./cablink_reality_doctor.js:542:    { step: 'pollForRideRequests() -> GET /api/rides', fn: 'pollForRideRequests', method: 'GET', p: '/api/rides' }
+./cablink_reality_doctor.js:657:    { method: 'GET', p: '/api/health' },
+./cablink_reality_doctor.js:658:    { method: 'GET', p: '/api/rides' },
+./cablink_reality_doctor.js:659:    { method: 'GET', p: '/api/drivers/online' }
+./cablink_reality_doctor.js:734:    else lines.push('   - frontend: no matching fetch() call found');
+./api/index.js:1:const express = require("express");
+./api/index.js:3:const app = express();
+./api/index.js:5:app.use(express.json());
+./api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+./api/index.js:35:    "/api/canonical-firestore-lifecycle",
+./api/index.js:794:    "/api/health",
+./api/index.js:817:module.exports =
+./api/index.minimal-test.js:1:const express = require("express");
+./api/index.minimal-test.js:3:const app = express();
+./api/index.minimal-test.js:5:app.use(express.json());
+./api/index.minimal-test.js:25:app.get("/api/health", (req, res) => {
+./api/index.minimal-test.js:34:module.exports = app;
+./api/index.ride-routes-working.js:1:const express = require("express");
+./api/index.ride-routes-working.js:3:const app = express();
+./api/index.ride-routes-working.js:5:app.use(express.json());
+./api/index.ride-routes-working.js:10:    require("../backend/routes/rides");
+./api/index.ride-routes-working.js:14:app.get("/api/health", (req, res) => {
+./api/index.ride-routes-working.js:26:    "/api/rides",
+./api/index.ride-routes-working.js:30:module.exports = app;
+./api/index.users-route-failing.js:1:const express = require("express");
+./api/index.users-route-failing.js:3:const app = express();
+./api/index.users-route-failing.js:5:app.use(express.json());
+./api/index.users-route-failing.js:10:    require("../backend/routes/users");
+./api/index.users-route-failing.js:14:app.get("/api/health", (req, res) => {
+./api/index.users-route-failing.js:26:    "/api/users",
+./api/index.users-route-failing.js:30:module.exports = app;
+./api/index.storage-test-backup.js:1:const express = require("express");
+./api/index.storage-test-backup.js:3:const app = express();
+./api/index.storage-test-backup.js:5:app.use(express.json());
+./api/index.storage-test-backup.js:10:    require("../backend/routes/users");
+./api/index.storage-test-backup.js:14:app.get("/api/health", (req, res) => {
+./api/index.storage-test-backup.js:26:    "/api/users",
+./api/index.storage-test-backup.js:30:module.exports = app;
+./api/index.storage-test-working.js:1:const express = require("express");
+./api/index.storage-test-working.js:3:const app = express();
+./api/index.storage-test-working.js:5:app.use(express.json());
+./api/index.storage-test-working.js:14:app.get("/api/health", (req, res) => {
+./api/index.storage-test-working.js:25:app.get("/api/storage-test", (req, res) => {
+./api/index.storage-test-working.js:59:module.exports = app;
+./api/index.users-test-working.js:1:const express = require("express");
+./api/index.users-test-working.js:3:const app = express();
+./api/index.users-test-working.js:5:app.use(express.json());
+./api/index.users-test-working.js:10:    require("../backend/routes/users");
+./api/index.users-test-working.js:14:app.get("/api/health", (req, res) => {
+./api/index.users-test-working.js:26:    "/api/users",
+./api/index.users-test-working.js:30:module.exports = app;
+./api/index.write-forensics-working.js:1:const express = require("express");
+./api/index.write-forensics-working.js:5:const app = express();
+./api/index.write-forensics-working.js:7:app.use(express.json());
+./api/index.write-forensics-working.js:23:app.get("/api/health", (req, res) => {
+./api/index.write-forensics-working.js:34:app.get("/api/write-test", (req, res) => {
+./api/index.write-forensics-working.js:246:module.exports = app;
+./api/index.firebase-forensics-backup.js:1:const express = require("express");
+./api/index.firebase-forensics-backup.js:5:const app = express();
+./api/index.firebase-forensics-backup.js:7:app.use(express.json());
+./api/index.firebase-forensics-backup.js:23:app.get("/api/health", (req, res) => {
+./api/index.firebase-forensics-backup.js:34:app.get("/api/write-test", (req, res) => {
+./api/index.firebase-forensics-backup.js:246:module.exports = app;
+./api/index.firebase-readiness-working.js:1:const express = require("express");
+./api/index.firebase-readiness-working.js:2:const app = express();
+./api/index.firebase-readiness-working.js:4:app.use(express.json());
+./api/index.firebase-readiness-working.js:18:app.get("/api/health", (req, res) => {
+./api/index.firebase-readiness-working.js:38:app.get("/api/firebase-readiness", async (req, res) => {
+./api/index.firebase-readiness-working.js:59:            vercel:
+./api/index.firebase-readiness-working.js:68:            firebaseProjectId:
+./api/index.firebase-readiness-working.js:73:            firebaseClientEmail:
+./api/index.firebase-readiness-working.js:78:            firebasePrivateKey:
+./api/index.firebase-readiness-working.js:83:            firebaseApiKey:
+./api/index.firebase-readiness-working.js:110:                    "firebase-admin"
+./api/index.firebase-readiness-working.js:113:            result.sdk.firebaseAdmin =
+./api/index.firebase-readiness-working.js:116:            result.sdk.firebaseAdminVersion =
+./api/index.firebase-readiness-working.js:118:                    "firebase-admin/package.json"
+./api/index.firebase-readiness-working.js:123:            result.sdk.firebaseAdmin =
+./api/index.firebase-readiness-working.js:126:            result.sdk.firebaseAdminError = {
+./api/index.firebase-readiness-working.js:140:            const firebase =
+./api/index.firebase-readiness-working.js:142:                    "../backend/firebase/firebase_adapter"
+./api/index.firebase-readiness-working.js:150:                    firebase
+./api/index.firebase-readiness-working.js:154:                typeof firebase.status ===
+./api/index.firebase-readiness-working.js:159:                    firebase.status();
+./api/index.firebase-readiness-working.js:219:module.exports = app;
+./cablink_full_audit.js:472:    lines.push(`${n++}. **No admin/manager surface exists at all.** Recommend creating a minimal admin view: list of all rides with status/fare/driver, list of online drivers, list of pending driver applications (the \`/api/drivers/applications\` data currently has no UI consuming it), and basic revenue/THB-issued totals.`);
+./pilot/cablink_human_pilot_test.js:2:const gateway=require("../backend/api/cablink_gateway");
+./pilot/dashboard/pilot_status.js:48:module.exports={
+./pilot/operations/pilot_metrics.js:60:module.exports={
+./pilot/trials/trial_recorder.js:52:module.exports={
+./pilot/devices/device_registry.js:38:module.exports={
+./cablink_forensic_audit_v2.js:536:    /axios\.(get|post|put|patch|delete)\s*\(\s*["'`]([^"'`]+)["'`]/g,
+./cablink_forensic_audit_v2.js:537:    /axios\s*\(\s*["'`]([^"'`]+)["'`]/g
+./cablink_forensic_audit_v2.js:562:            regex.source.includes('axios') &&
+./cablink_forensic_audit_v2.js:591:      !r.startsWith('api/')
+./cablink_forensic_audit_v2.js:695:      /firebase.*firestore/i,
+./cablink_forensic_audit_v2.js:696:      /firestore/i
+./cablink_forensic_audit_v2.js:699:    firebase: [
+./cablink_forensic_audit_v2.js:700:      /firebase/i,
+./cablink_forensic_audit_v2.js:704:      /firebaseConfig/i
+./cablink_forensic_audit_v2.js:1229:    'firebase.json',
+./cablink_forensic_audit_v2.js:1230:    'firestore.rules',
+./cablink_forensic_audit_v2.js:1231:    'firestore.indexes.json',
+./cablink_forensic_audit_v2.js:1232:    'vercel.json',
+./cablink_forensic_audit_v2.js:1285:      /vercel/i.test(r) ||
+./cablink_forensic_audit_v2.js:1287:      /firebase/i.test(r)
+./cablink_runtime_truth_audit_v3.js:11:  ".vercel",
+./cablink_runtime_truth_audit_v3.js:135:  vercelConfig: exists("vercel.json")
+./cablink_runtime_truth_audit_v3.js:224:    /createServer\s*\(/i.test(content);
+./cablink_runtime_truth_audit_v3.js:227:    /express\s*\(/i.test(content) ||
+./cablink_runtime_truth_audit_v3.js:228:    /require\s*\(\s*["']express["']\s*\)/i.test(content) ||
+./cablink_runtime_truth_audit_v3.js:229:    /from\s+["']express["']/i.test(content);
+./cablink_runtime_truth_audit_v3.js:280:    /axios\.(get|post|put|patch|delete)\s*\(\s*["'`]([^"'`]+)["'`]/gi
+./cablink_runtime_truth_audit_v3.js:336:      call.endpoint.replace(/^\/api/, ""),
+./cablink_runtime_truth_audit_v3.js:455:  /firebase/i,
+./cablink_runtime_truth_audit_v3.js:456:  /firestore/i,
+./cablink_runtime_truth_audit_v3.js:678:      "express",
+./o822_backend_canonical_cleanup.js:48:module.exports={
+./o825_event_flow_audit.js:11:"backend/routes/rides.js",
+./o824_finalize_service_wrappers.js:37:module.exports={
+./deployment/service_readiness_check.js:73:module.exports={
+./deployment/go_live_audit.js:45:module.exports={
+./o827_reward_pipeline_test.js:21:"backend/routes/canonical_reward_api.js",
+./.cablink_backups/driver_consolidation_20260725_213935/app_core.js:262:  fetch('/api/drivers/online')
+./.cablink_backups/driver_consolidation_20260725_213935/app_core.js:340:  fetch('/api/rides', {
+./.cablink_backups/driver_consolidation_20260725_213935/app_core.js:378:  fetch('/api/rides/' + rideId, {
+./.cablink_backups/driver_consolidation_20260725_213935/app_core.js:400:        fetch('/api/drivers/online', {
+./.cablink_backups/driver_consolidation_20260725_213935/app_core.js:418:          fetch('/api/drivers/online', {
+./.cablink_backups/driver_consolidation_20260725_213935/app_core.js:425:        fetch('/api/drivers/online', {
+./.cablink_backups/driver_consolidation_20260725_213935/app_core.js:436:      fetch('/api/rides')
+./.cablink_backups/driver_consolidation_20260725_213935/app_core.js:451:    fetch('/api/drivers/offline', {
+./.cablink_backups/driver_consolidation_20260725_213935/app_core.js:512:  fetch('/api/rides/' + rideId, {
+./.cablink_backups/driver_consolidation_20260725_213935/fix.js:24:  if(typeof firebase!=='undefined'&&firebase.firestore){initFB();return;}
+./.cablink_backups/driver_consolidation_20260725_213935/fix.js:26:  a.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
+./.cablink_backups/driver_consolidation_20260725_213935/fix.js:29:    f.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
+./.cablink_backups/driver_consolidation_20260725_213935/fix.js:36:  if(typeof firebase==='undefined')return;
+./.cablink_backups/driver_consolidation_20260725_213935/fix.js:37:  if(!firebase.apps.length)firebase.initializeApp({
+./.cablink_backups/driver_consolidation_20260725_213935/fix.js:39:    authDomain:'gen-lang-client-0007945213.firebaseapp.com',
+./.cablink_backups/driver_consolidation_20260725_213935/fix.js:41:    storageBucket:'gen-lang-client-0007945213.firebasestorage.app',
+./.cablink_backups/driver_consolidation_20260725_213935/fix.js:45:  window.db=firebase.firestore();
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:262:  fetch('/api/drivers/online')
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:340:  fetch('/api/rides', {
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:378:  fetch('/api/rides/' + rideId, {
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:393:POST /api/drivers/online
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:394:POST /api/drivers/offline
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:395:GET  /api/drivers/online
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:415:        fetch('/api/drivers/online', {
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:433:          fetch('/api/drivers/online', {
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:440:        fetch('/api/drivers/online', {
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:451:      fetch('/api/rides')
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:466:    fetch('/api/drivers/offline', {
+./.cablink_backups/appcore_toggle_removal_20260725_214056/app_core.js:527:  fetch('/api/rides/' + rideId, {
+./cablink_ride_backup_20260725_221547/backend/routes/rides.js:1:const router=require("express").Router();
+./cablink_ride_backup_20260725_221547/backend/routes/rides.js:136:module.exports=router;
+./cablink_ride_backup_20260725_221547/backend/database/ride_repository.js:49:module.exports={
+./cablink_ride_backup_20260725_221547/backend/database/rideRepository.js:29:module.exports={
+./cablink_ride_backup_20260725_221547/backend/ride_store.js:75:module.exports={
+./cablink_ride_backup_20260725_221547/backend/services/rideService.js:55:module.exports={
+./cablink_ride_backup_20260725_221547/backend/services/ride_orchestrator_service.js:169:module.exports={
+./cablink_ride_backup_20260725_221547/backend/rides/ride_engine.js:52:module.exports={
+./o830_api_integration_test.js:82:"/api/rides",
+./o830_api_integration_test.js:120:"/api/rides/"+rideId+"/accept",
+./o830_api_integration_test.js:140:"/api/rides/"+rideId+"/complete",
+./o830_api_integration_test.js:159:"/api/rewards/create",
+./stage3_canonical_ride_verification.js:92:        "backend/routes/rides.js",
+./stage3_canonical_ride_verification.js:268:    section("5. VERIFY LIVE /api/rides API");
+./stage3_canonical_ride_verification.js:277:                "/api/rides"
+./stage3_canonical_ride_verification.js:293:                "GET /api/rides is working"
+./stage3_canonical_ride_verification.js:304:                "GET /api/rides returned unexpected response"
+./stage3_canonical_ride_verification.js:336:        section("6. VERIFY POST /api/rides");
+./stage3_canonical_ride_verification.js:343:                    "/api/rides",
+./stage3_canonical_ride_verification.js:372:                    "POST /api/rides created ride"
+./stage3_canonical_ride_verification.js:400:                    "POST /api/rides failed"
+./stage3_canonical_ride_verification.js:412:                "POST /api/rides crashed: " +
+./stage3_canonical_ride_verification.js:427:        section("7. VERIFY GET /api/rides/:id");
+./stage3_canonical_ride_verification.js:434:                    "/api/rides/" +
+./stage3_canonical_ride_verification.js:447:                    "GET /api/rides/:id returned correct ride"
+./stage3_canonical_ride_verification.js:453:                    "GET /api/rides/:id failed"
+./stage3_canonical_ride_verification.js:524:                        "/api/rides/" +
+./stage3_canonical_ride_verification.js:590:                    "/api/rides/" +
+./stage3_canonical_ride_verification.js:675:            "fetch('/api/rides'"
+./stage3_canonical_ride_verification.js:680:            "Frontend creates rides through /api/rides"
+./stage3_canonical_ride_verification.js:686:            "Frontend /api/rides POST integration not detected"
+./stage3_canonical_ride_verification.js:696:            "/api/rides/"
+./stage3_canonical_ride_verification.js:701:            "Frontend has /api/rides/:id PATCH integration"
+./stage3_canonical_ride_verification.js:765:✓ POST /api/rides
+./stage3_canonical_ride_verification.js:766:✓ GET /api/rides/:id
+./stage3_active_route_proof.js:92:        "GET /api/rides"
+./stage3_active_route_proof.js:98:            "/api/rides"
+./database/production/store_engine.js:58:module.exports={
+./database/production/database_health.js:43:module.exports={
+./stage4g5_wallet_resolver_install.js:208:module.exports = {
+./stage4g7_canonical_reward_blockchain_audit.js:20:    "backend/routes/canonical_reward_api.js"
+./stage4g7_canonical_reward_blockchain_audit.js:40:    "backend/api/reward_api.js"
+./stage4g7_canonical_reward_blockchain_audit.js:600:POST /api/rewards/ride/:rideId
+./stage4g7_canonical_reward_blockchain_audit.js:712:    'app.use("/api/rewards",canonicalRewardRoutes)'
+./stage4g7_canonical_reward_blockchain_audit.js:719:  /api/rewards/*
+./stage4g7_canonical_reward_blockchain_audit.js:722:  ${serverSource.includes('app.use("/api/rewards",canonicalRewardRoutes)')}
+./stage4g8_bsc_testnet_settlement_preflight.js:38:    "backend/routes/canonical_reward_api.js"
+./stage4g9_token_metadata_settlement_design_audit.js:57:    "backend/routes/canonical_reward_api.js"
+./stage4g10_settlement_integration_audit.js:39:    "backend/routes/canonical_reward_api.js",
+./stage4g10_settlement_integration_audit.js:201:    exports.push(item);
+./stage4g10_settlement_integration_audit.js:210:    exports.push(...matches);
+./cablink_bracket_finder.js:184:// (proper ${...} template-expression tracking via returnMode), so
+./o831_api_contract_audit.js:10:"backend/routes/rides.js",
+./o831_api_contract_audit.js:11:"backend/routes/completion_api.js",
+./o831_api_contract_audit.js:12:"backend/routes/live_ride_api.js",
+./o831_api_contract_audit.js:13:"backend/routes/canonical_reward_api.js",
+./beta/health/production_health.js:67:module.exports=health;
+./beta/onboarding/driver_system.js:79:module.exports={
+./beta/onboarding/passenger_system.js:45:module.exports={
+./beta/dashboard/dashboard_data.js:3:module.exports={
+./beta/pilot/users/registry.js:39:module.exports={
+./beta/pilot/rides/ride_registry.js:32:module.exports={save};
+./beta/pilot/issues/issue_tracker.js:37:module.exports={report};
+./beta/operations/event_logger.js:57:module.exports={
+./beta/operations/session_engine.js:51:module.exports={
+./beta/human_pilot/participants/registry.js:34:module.exports={add,load};
+./beta/human_pilot/rides/test_framework.js:52:module.exports={
+./beta/human_pilot/feedback/feedback_engine.js:42:module.exports={add,all};
+./beta/geo/geo_engine.js:62:module.exports={
+./beta/live_gps/live_location_engine.js:61:module.exports={
+./beta/pilot_mission/pilot_session.js:88:module.exports={
+./cablink_step7_runtime_alignment_audit.js:147:  /fetch\s*\(|axios|\/api\/rides/,
+./cablink_step7_runtime_alignment_audit.js:157:      /(?:fetch|axios\.(?:get|post|patch|put|delete))\s*\(\s*['"`]([^'"`]+)['"`]/g
+./cablink_step7_runtime_alignment_audit.js:274:  "backend/routes/rides.js",
+./cablink_step7_runtime_alignment_audit.js:338:  "POST /api/rides",
+./cablink_step7_runtime_alignment_audit.js:339:  "GET /api/rides",
+./cablink_step7_runtime_alignment_audit.js:340:  "GET /api/rides/:id",
+./cablink_step7_runtime_alignment_audit.js:341:  "PATCH /api/rides/:id"
+./cablink_step7_runtime_alignment_audit.js:345:  "/api/rides/request",
+./cablink_step7_runtime_alignment_audit.js:346:  "/api/rides/:id/accept",
+./cablink_step7_runtime_alignment_audit.js:347:  "/api/rides/:id/complete"
+./cablink_step7_runtime_alignment_audit.js:433:  "backend/routes/rides.js",
+./cablink_step8_1_runtime_truth_correction.js:144:    /axios\.(get|post|put|patch|delete)\s*\(\s*[`'"]([^`'"]+)[`'"]/gi,
+./cablink_step8_1_runtime_truth_correction.js:145:    /axios\s*\(\s*\{[\s\S]*?url\s*:\s*[`'"]([^`'"]+)[`'"]/gi
+./cablink_step8_1_runtime_truth_correction.js:671:  "backend/routes/rides.js",
+./o832_real_api_flow_test.js:74:"/api/rides",
+./o832_real_api_flow_test.js:104:"/api/rides/"+rideId+"/accept",
+./o832_real_api_flow_test.js:125:"/api/ride/complete",
+./o832_real_api_flow_test.js:146:"/api/rewards/ride/"+rideId
+./o838_completion_path_audit.js:10:"backend/routes/completion_api.js",
+./o840_full_canonical_lifecycle_test.js:60:"/api/rides",
+./o840_full_canonical_lifecycle_test.js:80:"/api/rides/"+id+"/accept",
+./o840_full_canonical_lifecycle_test.js:105:"/api/rides/"+id,
+./o840_full_canonical_lifecycle_test.js:123:"/api/ride/complete",
+./o840_full_canonical_lifecycle_test.js:140:"/api/rewards/ride/"+id
+./o843_automated_restart_survival_gate.js:370:                "/api/rides",
+./o843_automated_restart_survival_gate.js:411:                "/api/rides/"+rideId+"/accept",
+./o843_automated_restart_survival_gate.js:458:                    "/api/rides/"+rideId,
+./o843_automated_restart_survival_gate.js:491:                "/api/ride/complete",
+./o843_automated_restart_survival_gate.js:525:                "/api/rewards/ride/"+rideId
+./o843_automated_restart_survival_gate.js:740:                "/api/rewards/ride/"+rideId
+./o845_deterministic_restart_survival_test.js:269:                "/api/rides",
+./o845_deterministic_restart_survival_test.js:311:                `/api/rides/${rideId}/accept`,
+./o845_deterministic_restart_survival_test.js:349:                    `/api/rides/${rideId}`,
+./o845_deterministic_restart_survival_test.js:386:                "/api/ride/complete",
+./o845_deterministic_restart_survival_test.js:422:                `/api/rewards/ride/${rideId}`
+./o845_deterministic_restart_survival_test.js:502:                `/api/rides/${rideId}`
+./o845_deterministic_restart_survival_test.js:537:                `/api/rewards/ride/${rideId}`
+./o846_clean_owned_restart_survival_test.js:403:                "/api/rides",
+./o846_clean_owned_restart_survival_test.js:457:                `/api/rides/${rideId}/accept`,
+./o846_clean_owned_restart_survival_test.js:517:                    `/api/rides/${rideId}`,
+./o846_clean_owned_restart_survival_test.js:558:                "/api/ride/complete",
+./o846_clean_owned_restart_survival_test.js:601:                `/api/rewards/ride/${rideId}`
+./o846_clean_owned_restart_survival_test.js:685:                `/api/rides/${rideId}`
+./o846_clean_owned_restart_survival_test.js:724:                `/api/rewards/ride/${rideId}`
+./o847_deterministic_restart_survival_test.js:429:                "/api/rides",
+./o847_deterministic_restart_survival_test.js:489:                `/api/rides/${rideId}/accept`,
+./o847_deterministic_restart_survival_test.js:548:                    `/api/rides/${rideId}`,
+./o847_deterministic_restart_survival_test.js:589:                "/api/ride/complete",
+./o847_deterministic_restart_survival_test.js:632:                `/api/rewards/ride/${rideId}`
+./o847_deterministic_restart_survival_test.js:716:                `/api/rides/${rideId}`
+./o847_deterministic_restart_survival_test.js:755:                `/api/rewards/ride/${rideId}`
+./o856_runtime_route_registration_trace.js:406:    "/api/rides",
+./o857_legacy_live_ride_conflict_trace.js:61:    "backend/routes/live_ride_api.js",
+./o857_legacy_live_ride_conflict_trace.js:69:    "backend/routes/rides.js",
+./o857_legacy_live_ride_conflict_trace.js:71:    "backend/routes/completion_api.js",
+./o857_legacy_live_ride_conflict_trace.js:88:    "backend/routes/live_ride_api.js"
+./o857_legacy_live_ride_conflict_trace.js:103:    "backend/routes/rides.js"
+./o857_legacy_live_ride_conflict_trace.js:118:    "backend/routes/completion_api.js"
+./o853_real_end_to_end_canonical_test.js:212:                '/api/rides',
+./o853_real_end_to_end_canonical_test.js:282:                `/api/rides/${rideId}`
+./o853_real_end_to_end_canonical_test.js:318:                '/api/drivers/online',
+./o853_real_end_to_end_canonical_test.js:379:                '/api/rides'
+./o853_real_end_to_end_canonical_test.js:439:                `/api/rides/${rideId}/accept`,
+./o853_real_end_to_end_canonical_test.js:491:                `/api/rides/${rideId}`
+./o853_real_end_to_end_canonical_test.js:537:                    `/api/rides/${rideId}`,
+./o853_real_end_to_end_canonical_test.js:590:                '/api/ride/complete',
+./o853_real_end_to_end_canonical_test.js:638:                `/api/rides/${rideId}`
+./o853_real_end_to_end_canonical_test.js:669:                `/api/rewards/ride/${rideId}`
+./o853_real_end_to_end_canonical_test.js:708:                `/api/rewards/ride/${rideId}`
+./o854_frontend_canonical_bridge_audit.js:224:    /(fetch|axios\.(get|post|patch|put|delete)|api\.(get|post|patch|put|delete))\s*\(/g;
+./o854_frontend_canonical_bridge_audit.js:542:    '/api/rides/',
+./o854_frontend_canonical_bridge_audit.js:592:    '/api/ride/complete',
+./o854_frontend_canonical_bridge_audit.js:593:    '/api/rewards',
+./dist/assets/index-CQ3CRbqS.js:1:(function(){const $=document.createElement("link").relList;if($&&$.supports&&$.supports("modulepreload"))return;for(const x of document.querySelectorAll('link[rel="modulepreload"]'))r(x);new MutationObserver(x=>{for(const w of x)if(w.type==="childList")for(const dl of w.addedNodes)dl.tagName==="LINK"&&dl.rel==="modulepreload"&&r(dl)}).observe(document,{childList:!0,subtree:!0});function k(x){const w={};return x.integrity&&(w.integrity=x.integrity),x.referrerPolicy&&(w.referrerPolicy=x.referrerPolicy),x.crossOrigin==="use-credentials"?w.credentials="include":x.crossOrigin==="anonymous"?w.credentials="omit":w.credentials="same-origin",w}function r(x){if(x.ep)return;x.ep=!0;const w=k(x);fetch(x.href,w)}})();function ey(O){return O&&O.__esModule&&Object.prototype.hasOwnProperty.call(O,"default")?O.default:O}var Wc={exports:{}},oe={};/**
+./dist/assets/index-CQ3CRbqS.js:49:`).replace(k1,"")}function Ev(l,t){return t=Tv(t),Tv(l)===t}function gn(){}function ll(l,t,u,a,e,n){switch(u){case"children":typeof a=="string"?t==="body"||t==="textarea"&&a===""||Zu(l,a):(typeof a=="number"||typeof a=="bigint")&&t!=="body"&&Zu(l,""+a);break;case"className":Ae(l,"class",a);break;case"tabIndex":Ae(l,"tabindex",a);break;case"dir":case"role":case"viewBox":case"width":case"height":Ae(l,u,a);break;case"style":zi(l,a,n);break;case"data":if(t!=="object"){Ae(l,"data",a);break}case"src":case"href":if(a===""&&(t!=="a"||u!=="href")){l.removeAttribute(u);break}if(a==null||typeof a=="function"||typeof a=="symbol"||typeof a=="boolean"){l.removeAttribute(u);break}a=_e(""+a),l.setAttribute(u,a);break;case"action":case"formAction":if(typeof a=="function"){l.setAttribute(u,"javascript:throw new Error('A React form was unexpectedly submitted. If you called form.submit() manually, consider using form.requestSubmit() instead. If you\\'re trying to use event.stopPropagation() in a submit event handler, consider also calling event.preventDefault().')");break}else typeof n=="function"&&(u==="formAction"?(t!=="input"&&ll(l,t,"name",e.name,e,null),ll(l,t,"formEncType",e.formEncType,e,null),ll(l,t,"formMethod",e.formMethod,e,null),ll(l,t,"formTarget",e.formTarget,e,null)):(ll(l,t,"encType",e.encType,e,null),ll(l,t,"method",e.method,e,null),ll(l,t,"target",e.target,e,null)));if(a==null||typeof a=="symbol"||typeof a=="boolean"){l.removeAttribute(u);break}a=_e(""+a),l.setAttribute(u,a);break;case"onClick":a!=null&&(l.onclick=gn);break;case"onScroll":a!=null&&j("scroll",l);break;case"onScrollEnd":a!=null&&j("scrollend",l);break;case"dangerouslySetInnerHTML":if(a!=null){if(typeof a!="object"||!("__html"in a))throw Error(r(61));if(u=a.__html,u!=null){if(e.children!=null)throw Error(r(60));l.innerHTML=u}}break;case"multiple":l.multiple=a&&typeof a!="function"&&typeof a!="symbol";break;case"muted":l.muted=a&&typeof a!="function"&&typeof a!="symbol";break;case"suppressContentEditableWarning":case"suppressHydrationWarning":case"defaultValue":case"defaultChecked":case"innerHTML":case"ref":break;case"autoFocus":break;case"xlinkHref":if(a==null||typeof a=="function"||typeof a=="boolean"||typeof a=="symbol"){l.removeAttribute("xlink:href");break}u=_e(""+a),l.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",u);break;case"contentEditable":case"spellCheck":case"draggable":case"value":case"autoReverse":case"externalResourcesRequired":case"focusable":case"preserveAlpha":a!=null&&typeof a!="function"&&typeof a!="symbol"?l.setAttribute(u,""+a):l.removeAttribute(u);break;case"inert":case"allowFullScreen":case"async":case"autoPlay":case"controls":case"default":case"defer":case"disabled":case"disablePictureInPicture":case"disableRemotePlayback":case"formNoValidate":case"hidden":case"loop":case"noModule":case"noValidate":case"open":case"playsInline":case"readOnly":case"required":case"reversed":case"scoped":case"seamless":case"itemScope":a&&typeof a!="function"&&typeof a!="symbol"?l.setAttribute(u,""):l.removeAttribute(u);break;case"capture":case"download":a===!0?l.setAttribute(u,""):a!==!1&&a!=null&&typeof a!="function"&&typeof a!="symbol"?l.setAttribute(u,a):l.removeAttribute(u);break;case"cols":case"rows":case"size":case"span":a!=null&&typeof a!="function"&&typeof a!="symbol"&&!isNaN(a)&&1<=a?l.setAttribute(u,a):l.removeAttribute(u);break;case"rowSpan":case"start":a==null||typeof a=="function"||typeof a=="symbol"||isNaN(a)?l.removeAttribute(u):l.setAttribute(u,a);break;case"popover":j("beforetoggle",l),j("toggle",l),Ee(l,"popover",a);break;case"xlinkActuate":Ot(l,"http://www.w3.org/1999/xlink","xlink:actuate",a);break;case"xlinkArcrole":Ot(l,"http://www.w3.org/1999/xlink","xlink:arcrole",a);break;case"xlinkRole":Ot(l,"http://www.w3.org/1999/xlink","xlink:role",a);break;case"xlinkShow":Ot(l,"http://www.w3.org/1999/xlink","xlink:show",a);break;case"xlinkTitle":Ot(l,"http://www.w3.org/1999/xlink","xlink:title",a);break;case"xlinkType":Ot(l,"http://www.w3.org/1999/xlink","xlink:type",a);break;case"xmlBase":Ot(l,"http://www.w3.org/XML/1998/namespace","xml:base",a);break;case"xmlLang":Ot(l,"http://www.w3.org/XML/1998/namespace","xml:lang",a);break;case"xmlSpace":Ot(l,"http://www.w3.org/XML/1998/namespace","xml:space",a);break;case"is":Ee(l,"is",a);break;case"innerText":case"textContent":break;default:(!(2<u.length)||u[0]!=="o"&&u[0]!=="O"||u[1]!=="n"&&u[1]!=="N")&&(u=My.get(u)||u,Ee(l,u,a))}}function Nc(l,t,u,a,e,n){switch(u){case"style":zi(l,a,n);break;case"dangerouslySetInnerHTML":if(a!=null){if(typeof a!="object"||!("__html"in a))throw Error(r(61));if(u=a.__html,u!=null){if(e.children!=null)throw Error(r(60));l.innerHTML=u}}break;case"children":typeof a=="string"?Zu(l,a):(typeof a=="number"||typeof a=="bigint")&&Zu(l,""+a);break;case"onScroll":a!=null&&j("scroll",l);break;case"onScrollEnd":a!=null&&j("scrollend",l);break;case"onClick":a!=null&&(l.onclick=gn);break;case"suppressContentEditableWarning":case"suppressHydrationWarning":case"innerHTML":case"ref":break;case"innerText":case"textContent":break;default:if(!di.hasOwnProperty(u))l:{if(u[0]==="o"&&u[1]==="n"&&(e=u.endsWith("Capture"),t=u.slice(2,e?u.length-7:void 0),n=l[Xl]||null,n=n!=null?n[u]:null,typeof n=="function"&&l.removeEventListener(t,n,e),typeof a=="function")){typeof n!="function"&&n!==null&&(u in l?l[u]=null:l.hasAttribute(u)&&l.removeAttribute(u)),l.addEventListener(t,a,e);break l}u in l?l[u]=a:a===!0?l.setAttribute(u,""):Ee(l,u,a)}}}function _l(l,t,u){switch(t){case"div":case"span":case"svg":case"path":case"a":case"g":case"p":case"li":break;case"img":j("error",l),j("load",l);var a=!1,e=!1,n;for(n in u)if(u.hasOwnProperty(n)){var f=u[n];if(f!=null)switch(n){case"src":a=!0;break;case"srcSet":e=!0;break;case"children":case"dangerouslySetInnerHTML":throw Error(r(137,t));default:ll(l,t,n,f,u,null)}}e&&ll(l,t,"srcSet",u.srcSet,u,null),a&&ll(l,t,"src",u.src,u,null);return;case"input":j("invalid",l);var c=n=f=e=null,i=null,h=null;for(a in u)if(u.hasOwnProperty(a)){var S=u[a];if(S!=null)switch(a){case"name":e=S;break;case"type":f=S;break;case"checked":i=S;break;case"defaultChecked":h=S;break;case"value":n=S;break;case"defaultValue":c=S;break;case"children":case"dangerouslySetInnerHTML":if(S!=null)throw Error(r(137,t));break;default:ll(l,t,a,S,u,null)}}bi(l,n,c,i,h,f,e,!1),ze(l);return;case"select":j("invalid",l),a=f=n=null;for(e in u)if(u.hasOwnProperty(e)&&(c=u[e],c!=null))switch(e){case"value":n=c;break;case"defaultValue":f=c;break;case"multiple":a=c;default:ll(l,t,e,c,u,null)}t=n,u=f,l.multiple=!!a,t!=null?Qu(l,!!a,t,!1):u!=null&&Qu(l,!!a,u,!0);return;case"textarea":j("invalid",l),n=e=a=null;for(f in u)if(u.hasOwnProperty(f)&&(c=u[f],c!=null))switch(f){case"value":a=c;break;case"defaultValue":e=c;break;case"children":n=c;break;case"dangerouslySetInnerHTML":if(c!=null)throw Error(r(91));break;default:ll(l,t,f,c,u,null)}Ei(l,a,e,n),ze(l);return;case"option":for(i in u)if(u.hasOwnProperty(i)&&(a=u[i],a!=null))switch(i){case"selected":l.selected=a&&typeof a!="function"&&typeof a!="symbol";break;default:ll(l,t,i,a,u,null)}return;case"dialog":j("beforetoggle",l),j("toggle",l),j("cancel",l),j("close",l);break;case"iframe":case"object":j("load",l);break;case"video":case"audio":for(a=0;a<ae.length;a++)j(ae[a],l);break;case"image":j("error",l),j("load",l);break;case"details":j("toggle",l);break;case"embed":case"source":case"link":j("error",l),j("load",l);case"area":case"base":case"br":case"col":case"hr":case"keygen":case"meta":case"param":case"track":case"wbr":case"menuitem":for(h in u)if(u.hasOwnProperty(h)&&(a=u[h],a!=null))switch(h){case"children":case"dangerouslySetInnerHTML":throw Error(r(137,t));default:ll(l,t,h,a,u,null)}return;default:if(Jn(t)){for(S in u)u.hasOwnProperty(S)&&(a=u[S],a!==void 0&&Nc(l,t,S,a,u,void 0));return}}for(c in u)u.hasOwnProperty(c)&&(a=u[c],a!=null&&ll(l,t,c,a,u,null))}function F1(l,t,u,a){switch(t){case"div":case"span":case"svg":case"path":case"a":case"g":case"p":case"li":break;case"input":var e=null,n=null,f=null,c=null,i=null,h=null,S=null;for(m in u){var T=u[m];if(u.hasOwnProperty(m)&&T!=null)switch(m){case"checked":break;case"value":break;case"defaultValue":i=T;default:a.hasOwnProperty(m)||ll(l,t,m,null,a,T)}}for(var o in a){var m=a[o];if(T=u[o],a.hasOwnProperty(o)&&(m!=null||T!=null))switch(o){case"type":n=m;break;case"name":e=m;break;case"checked":h=m;break;case"defaultChecked":S=m;break;case"value":f=m;break;case"defaultValue":c=m;break;case"children":case"dangerouslySetInnerHTML":if(m!=null)throw Error(r(137,t));break;default:m!==T&&ll(l,t,o,m,a,T)}}Ln(l,f,c,i,h,S,n,e);return;case"select":m=f=c=o=null;for(n in u)if(i=u[n],u.hasOwnProperty(n)&&i!=null)switch(n){case"value":break;case"multiple":m=i;default:a.hasOwnProperty(n)||ll(l,t,n,null,a,i)}for(e in a)if(n=a[e],i=u[e],a.hasOwnProperty(e)&&(n!=null||i!=null))switch(e){case"value":o=n;break;case"defaultValue":c=n;break;case"multiple":f=n;default:n!==i&&ll(l,t,e,n,a,i)}t=c,u=f,a=m,o!=null?Qu(l,!!u,o,!1):!!a!=!!u&&(t!=null?Qu(l,!!u,t,!0):Qu(l,!!u,u?[]:"",!1));return;case"textarea":m=o=null;for(c in u)if(e=u[c],u.hasOwnProperty(c)&&e!=null&&!a.hasOwnProperty(c))switch(c){case"value":break;case"children":break;default:ll(l,t,c,null,a,e)}for(f in a)if(e=a[f],n=u[f],a.hasOwnProperty(f)&&(e!=null||n!=null))switch(f){case"value":o=e;break;case"defaultValue":m=e;break;case"children":break;case"dangerouslySetInnerHTML":if(e!=null)throw Error(r(91));break;default:e!==n&&ll(l,t,f,e,a,n)}Ti(l,o,m);return;case"option":for(var p in u)if(o=u[p],u.hasOwnProperty(p)&&o!=null&&!a.hasOwnProperty(p))switch(p){case"selected":l.selected=!1;break;default:ll(l,t,p,null,a,o)}for(i in a)if(o=a[i],m=u[i],a.hasOwnProperty(i)&&o!==m&&(o!=null||m!=null))switch(i){case"selected":l.selected=o&&typeof o!="function"&&typeof o!="symbol";break;default:ll(l,t,i,o,a,m)}return;case"img":case"link":case"area":case"base":case"br":case"col":case"embed":case"hr":case"keygen":case"meta":case"param":case"source":case"track":case"wbr":case"menuitem":for(var q in u)o=u[q],u.hasOwnProperty(q)&&o!=null&&!a.hasOwnProperty(q)&&ll(l,t,q,null,a,o);for(h in a)if(o=a[h],m=u[h],a.hasOwnProperty(h)&&o!==m&&(o!=null||m!=null))switch(h){case"children":case"dangerouslySetInnerHTML":if(o!=null)throw Error(r(137,t));break;default:ll(l,t,h,o,a,m)}return;default:if(Jn(t)){for(var tl in u)o=u[tl],u.hasOwnProperty(tl)&&o!==void 0&&!a.hasOwnProperty(tl)&&Nc(l,t,tl,void 0,a,o);for(S in a)o=a[S],m=u[S],!a.hasOwnProperty(S)||o===m||o===void 0&&m===void 0||Nc(l,t,S,o,a,m);return}}for(var y in u)o=u[y],u.hasOwnProperty(y)&&o!=null&&!a.hasOwnProperty(y)&&ll(l,t,y,null,a,o);for(T in a)o=a[T],m=u[T],!a.hasOwnProperty(T)||o===m||o==null&&m==null||ll(l,t,T,o,a,m)}var qc=null,Yc=null;function bn(l){return l.nodeType===9?l:l.ownerDocument}function Av(l){switch(l){case"http://www.w3.org/2000/svg":return 1;case"http://www.w3.org/1998/Math/MathML":return 2;default:return 0}}function zv(l,t){if(l===0)switch(t){case"svg":return 1;case"math":return 2;default:return 0}return l===1&&t==="foreignObject"?0:l}function Bc(l,t){return l==="textarea"||l==="noscript"||typeof t.children=="string"||typeof t.children=="number"||typeof t.children=="bigint"||typeof t.dangerouslySetInnerHTML=="object"&&t.dangerouslySetInnerHTML!==null&&t.dangerouslySetInnerHTML.__html!=null}var pc=null;function I1(){var l=window.event;return l&&l.type==="popstate"?l===pc?!1:(pc=l,!0):(pc=null,!1)}var Ov=typeof setTimeout=="function"?setTimeout:void 0,P1=typeof clearTimeout=="function"?clearTimeout:void 0,_v=typeof Promise=="function"?Promise:void 0,ld=typeof queueMicrotask=="function"?queueMicrotask:typeof _v<"u"?function(l){return _v.resolve(null).then(l).catch(td)}:Ov;function td(l){setTimeout(function(){throw l})}function eu(l){return l==="head"}function Mv(l,t){var u=t,a=0,e=0;do{var n=u.nextSibling;if(l.removeChild(u),n&&n.nodeType===8)if(u=n.data,u==="/$"){if(0<a&&8>a){u=a;var f=l.ownerDocument;if(u&1&&ne(f.documentElement),u&2&&ne(f.body),u&4)for(u=f.head,ne(u),f=u.firstChild;f;){var c=f.nextSibling,i=f.nodeName;f[Ta]||i==="SCRIPT"||i==="STYLE"||i==="LINK"&&f.rel.toLowerCase()==="stylesheet"||u.removeChild(f),f=c}}if(e===0){l.removeChild(n),he(t);return}e--}else u==="$"||u==="$?"||u==="$!"?e++:a=u.charCodeAt(0)-48;else a=0;u=n}while(u);he(t)}function Gc(l){var t=l.firstChild;for(t&&t.nodeType===10&&(t=t.nextSibling);t;){var u=t;switch(t=t.nextSibling,u.nodeName){case"HTML":case"HEAD":case"BODY":Gc(u),xn(u);continue;case"SCRIPT":case"STYLE":continue;case"LINK":if(u.rel.toLowerCase()==="stylesheet")continue}l.removeChild(u)}}function ud(l,t,u,a){for(;l.nodeType===1;){var e=u;if(l.nodeName.toLowerCase()!==t.toLowerCase()){if(!a&&(l.nodeName!=="INPUT"||l.type!=="hidden"))break}else if(a){if(!l[Ta])switch(t){case"meta":if(!l.hasAttribute("itemprop"))break;return l;case"link":if(n=l.getAttribute("rel"),n==="stylesheet"&&l.hasAttribute("data-precedence"))break;if(n!==e.rel||l.getAttribute("href")!==(e.href==null||e.href===""?null:e.href)||l.getAttribute("crossorigin")!==(e.crossOrigin==null?null:e.crossOrigin)||l.getAttribute("title")!==(e.title==null?null:e.title))break;return l;case"style":if(l.hasAttribute("data-precedence"))break;return l;case"script":if(n=l.getAttribute("src"),(n!==(e.src==null?null:e.src)||l.getAttribute("type")!==(e.type==null?null:e.type)||l.getAttribute("crossorigin")!==(e.crossOrigin==null?null:e.crossOrigin))&&n&&l.hasAttribute("async")&&!l.hasAttribute("itemprop"))break;return l;default:return l}}else if(t==="input"&&l.type==="hidden"){var n=e.name==null?null:""+e.name;if(e.type==="hidden"&&l.getAttribute("name")===n)return l}else return l;if(l=ot(l.nextSibling),l===null)break}return null}function ad(l,t,u){if(t==="")return null;for(;l.nodeType!==3;)if((l.nodeType!==1||l.nodeName!=="INPUT"||l.type!=="hidden")&&!u||(l=ot(l.nextSibling),l===null))return null;return l}function Xc(l){return l.data==="$!"||l.data==="$?"&&l.ownerDocument.readyState==="complete"}function ed(l,t){var u=l.ownerDocument;if(l.data!=="$?"||u.readyState==="complete")t();else{var a=function(){t(),u.removeEventListener("DOMContentLoaded",a)};u.addEventListener("DOMContentLoaded",a),l._reactRetry=a}}function ot(l){for(;l!=null;l=l.nextSibling){var t=l.nodeType;if(t===1||t===3)break;if(t===8){if(t=l.data,t==="$"||t==="$!"||t==="$?"||t==="F!"||t==="F")break;if(t==="/$")return null}}return l}var Qc=null;function Dv(l){l=l.previousSibling;for(var t=0;l;){if(l.nodeType===8){var u=l.data;if(u==="$"||u==="$!"||u==="$?"){if(t===0)return l;t--}else u==="/$"&&t++}l=l.previousSibling}return null}function Uv(l,t,u){switch(t=bn(u),l){case"html":if(l=t.documentElement,!l)throw Error(r(452));return l;case"head":if(l=t.head,!l)throw Error(r(453));return l;case"body":if(l=t.body,!l)throw Error(r(454));return l;default:throw Error(r(451))}}function ne(l){for(var t=l.attributes;t.length;)l.removeAttributeNode(t[0]);xn(l)}var st=new Map,Rv=new Set;function Tn(l){return typeof l.getRootNode=="function"?l.getRootNode():l.nodeType===9?l:l.ownerDocument}var Qt=_.d;_.d={f:nd,r:fd,D:cd,C:id,L:sd,m:vd,X:dd,S:yd,M:hd};function nd(){var l=Qt.f(),t=yn();return l||t}function fd(l){var t=Bu(l);t!==null&&t.tag===5&&t.type==="form"?$0(t):Qt.r(l)}var oa=typeof document>"u"?null:document;function Hv(l,t,u){var a=oa;if(a&&typeof t=="string"&&t){var e=ut(t);e='link[rel="'+l+'"][href="'+e+'"]',typeof u=="string"&&(e+='[crossorigin="'+u+'"]'),Rv.has(e)||(Rv.add(e),l={rel:l,crossOrigin:u,href:t},a.querySelector(e)===null&&(t=a.createElement("link"),_l(t,"link",l),bl(t),a.head.appendChild(t)))}}function cd(l){Qt.D(l),Hv("dns-prefetch",l,null)}function id(l,t){Qt.C(l,t),Hv("preconnect",l,t)}function sd(l,t,u){Qt.L(l,t,u);var a=oa;if(a&&l&&t){var e='link[rel="preload"][as="'+ut(t)+'"]';t==="image"&&u&&u.imageSrcSet?(e+='[imagesrcset="'+ut(u.imageSrcSet)+'"]',typeof u.imageSizes=="string"&&(e+='[imagesizes="'+ut(u.imageSizes)+'"]')):e+='[href="'+ut(l)+'"]';var n=e;switch(t){case"style":n=ma(l);break;case"script":n=ra(l)}st.has(n)||(l=R({rel:"preload",href:t==="image"&&u&&u.imageSrcSet?void 0:l,as:t},u),st.set(n,l),a.querySelector(e)!==null||t==="style"&&a.querySelector(fe(n))||t==="script"&&a.querySelector(ce(n))||(t=a.createElement("link"),_l(t,"link",l),bl(t),a.head.appendChild(t)))}}function vd(l,t){Qt.m(l,t);var u=oa;if(u&&l){var a=t&&typeof t.as=="string"?t.as:"script",e='link[rel="modulepreload"][as="'+ut(a)+'"][href="'+ut(l)+'"]',n=e;switch(a){case"audioworklet":case"paintworklet":case"serviceworker":case"sharedworker":case"worker":case"script":n=ra(l)}if(!st.has(n)&&(l=R({rel:"modulepreload",href:l},t),st.set(n,l),u.querySelector(e)===null)){switch(a){case"audioworklet":case"paintworklet":case"serviceworker":case"sharedworker":case"worker":case"script":if(u.querySelector(ce(n)))return}a=u.createElement("link"),_l(a,"link",l),bl(a),u.head.appendChild(a)}}}function yd(l,t,u){Qt.S(l,t,u);var a=oa;if(a&&l){var e=pu(a).hoistableStyles,n=ma(l);t=t||"default";var f=e.get(n);if(!f){var c={loading:0,preload:null};if(f=a.querySelector(fe(n)))c.loading=5;else{l=R({rel:"stylesheet",href:l,"data-precedence":t},u),(u=st.get(n))&&Zc(l,u);var i=f=a.createElement("link");bl(i),_l(i,"link",l),i._p=new Promise(function(h,S){i.onload=h,i.onerror=S}),i.addEventListener("load",function(){c.loading|=1}),i.addEventListener("error",function(){c.loading|=2}),c.loading|=4,En(f,t,a)}f={type:"stylesheet",instance:f,count:1,state:c},e.set(n,f)}}}function dd(l,t){Qt.X(l,t);var u=oa;if(u&&l){var a=pu(u).hoistableScripts,e=ra(l),n=a.get(e);n||(n=u.querySelector(ce(e)),n||(l=R({src:l,async:!0},t),(t=st.get(e))&&xc(l,t),n=u.createElement("script"),bl(n),_l(n,"link",l),u.head.appendChild(n)),n={type:"script",instance:n,count:1,state:null},a.set(e,n))}}function hd(l,t){Qt.M(l,t);var u=oa;if(u&&l){var a=pu(u).hoistableScripts,e=ra(l),n=a.get(e);n||(n=u.querySelector(ce(e)),n||(l=R({src:l,async:!0,type:"module"},t),(t=st.get(e))&&xc(l,t),n=u.createElement("script"),bl(n),_l(n,"link",l),u.head.appendChild(n)),n={type:"script",instance:n,count:1,state:null},a.set(e,n))}}function Nv(l,t,u,a){var e=(e=G.current)?Tn(e):null;if(!e)throw Error(r(446));switch(l){case"meta":case"title":return null;case"style":return typeof u.precedence=="string"&&typeof u.href=="string"?(t=ma(u.href),u=pu(e).hoistableStyles,a=u.get(t),a||(a={type:"style",instance:null,count:0,state:null},u.set(t,a)),a):{type:"void",instance:null,count:0,state:null};case"link":if(u.rel==="stylesheet"&&typeof u.href=="string"&&typeof u.precedence=="string"){l=ma(u.href);var n=pu(e).hoistableStyles,f=n.get(l);if(f||(e=e.ownerDocument||e,f={type:"stylesheet",instance:null,count:0,state:{loading:0,preload:null}},n.set(l,f),(n=e.querySelector(fe(l)))&&!n._p&&(f.instance=n,f.state.loading=5),st.has(l)||(u={rel:"preload",as:"style",href:u.href,crossOrigin:u.crossOrigin,integrity:u.integrity,media:u.media,hrefLang:u.hrefLang,referrerPolicy:u.referrerPolicy},st.set(l,u),n||od(e,l,u,f.state))),t&&a===null)throw Error(r(528,""));return f}if(t&&a!==null)throw Error(r(529,""));return null;case"script":return t=u.async,u=u.src,typeof u=="string"&&t&&typeof t!="function"&&typeof t!="symbol"?(t=ra(u),u=pu(e).hoistableScripts,a=u.get(t),a||(a={type:"script",instance:null,count:0,state:null},u.set(t,a)),a):{type:"void",instance:null,count:0,state:null};default:throw Error(r(444,l))}}function ma(l){return'href="'+ut(l)+'"'}function fe(l){return'link[rel="stylesheet"]['+l+"]"}function qv(l){return R({},l,{"data-precedence":l.precedence,precedence:null})}function od(l,t,u,a){l.querySelector('link[rel="preload"][as="style"]['+t+"]")?a.loading=1:(t=l.createElement("link"),a.preload=t,t.addEventListener("load",function(){return a.loading|=1}),t.addEventListener("error",function(){return a.loading|=2}),_l(t,"link",u),bl(t),l.head.appendChild(t))}function ra(l){return'[src="'+ut(l)+'"]'}function ce(l){return"script[async]"+l}function Yv(l,t,u){if(t.count++,t.instance===null)switch(t.type){case"style":var a=l.querySelector('style[data-href~="'+ut(u.href)+'"]');if(a)return t.instance=a,bl(a),a;var e=R({},u,{"data-href":u.href,"data-precedence":u.precedence,href:null,precedence:null});return a=(l.ownerDocument||l).createElement("style"),bl(a),_l(a,"style",e),En(a,u.precedence,l),t.instance=a;case"stylesheet":e=ma(u.href);var n=l.querySelector(fe(e));if(n)return t.state.loading|=4,t.instance=n,bl(n),n;a=qv(u),(e=st.get(e))&&Zc(a,e),n=(l.ownerDocument||l).createElement("link"),bl(n);var f=n;return f._p=new Promise(function(c,i){f.onload=c,f.onerror=i}),_l(n,"link",a),t.state.loading|=4,En(n,u.precedence,l),t.instance=n;case"script":return n=ra(u.src),(e=l.querySelector(ce(n)))?(t.instance=e,bl(e),e):(a=u,(e=st.get(n))&&(a=R({},u),xc(a,e)),l=l.ownerDocument||l,e=l.createElement("script"),bl(e),_l(e,"link",a),l.head.appendChild(e),t.instance=e);case"void":return null;default:throw Error(r(443,t.type))}else t.type==="stylesheet"&&(t.state.loading&4)===0&&(a=t.instance,t.state.loading|=4,En(a,u.precedence,l));return t.instance}function En(l,t,u){for(var a=u.querySelectorAll('link[rel="stylesheet"][data-precedence],style[data-precedence]'),e=a.length?a[a.length-1]:null,n=e,f=0;f<a.length;f++){var c=a[f];if(c.dataset.precedence===t)n=c;else if(n!==e)break}n?n.parentNode.insertBefore(l,n.nextSibling):(t=u.nodeType===9?u.head:u,t.insertBefore(l,t.firstChild))}function Zc(l,t){l.crossOrigin==null&&(l.crossOrigin=t.crossOrigin),l.referrerPolicy==null&&(l.referrerPolicy=t.referrerPolicy),l.title==null&&(l.title=t.title)}function xc(l,t){l.crossOrigin==null&&(l.crossOrigin=t.crossOrigin),l.referrerPolicy==null&&(l.referrerPolicy=t.referrerPolicy),l.integrity==null&&(l.integrity=t.integrity)}var An=null;function Bv(l,t,u){if(An===null){var a=new Map,e=An=new Map;e.set(u,a)}else e=An,a=e.get(u),a||(a=new Map,e.set(u,a));if(a.has(l))return a;for(a.set(l,null),u=u.getElementsByTagName(l),e=0;e<u.length;e++){var n=u[e];if(!(n[Ta]||n[Rl]||l==="link"&&n.getAttribute("rel")==="stylesheet")&&n.namespaceURI!=="http://www.w3.org/2000/svg"){var f=n.getAttribute(t)||"";f=l+f;var c=a.get(f);c?c.push(n):a.set(f,[n])}}return a}function pv(l,t,u){l=l.ownerDocument||l,l.head.insertBefore(u,t==="title"?l.querySelector("head > title"):null)}function md(l,t,u){if(u===1||t.itemProp!=null)return!1;switch(l){case"meta":case"title":return!0;case"style":if(typeof t.precedence!="string"||typeof t.href!="string"||t.href==="")break;return!0;case"link":if(typeof t.rel!="string"||typeof t.href!="string"||t.href===""||t.onLoad||t.onError)break;switch(t.rel){case"stylesheet":return l=t.disabled,typeof t.precedence=="string"&&l==null;default:return!0}case"script":if(t.async&&typeof t.async!="function"&&typeof t.async!="symbol"&&!t.onLoad&&!t.onError&&t.src&&typeof t.src=="string")return!0}return!1}function Gv(l){return!(l.type==="stylesheet"&&(l.state.loading&3)===0)}var ie=null;function rd(){}function Sd(l,t,u){if(ie===null)throw Error(r(475));var a=ie;if(t.type==="stylesheet"&&(typeof u.media!="string"||matchMedia(u.media).matches!==!1)&&(t.state.loading&4)===0){if(t.instance===null){var e=ma(u.href),n=l.querySelector(fe(e));if(n){l=n._p,l!==null&&typeof l=="object"&&typeof l.then=="function"&&(a.count++,a=zn.bind(a),l.then(a,a)),t.state.loading|=4,t.instance=n,bl(n);return}n=l.ownerDocument||l,u=qv(u),(e=st.get(e))&&Zc(u,e),n=n.createElement("link"),bl(n);var f=n;f._p=new Promise(function(c,i){f.onload=c,f.onerror=i}),_l(n,"link",u),t.instance=n}a.stylesheets===null&&(a.stylesheets=new Map),a.stylesheets.set(t,l),(l=t.state.preload)&&(t.state.loading&3)===0&&(a.count++,t=zn.bind(a),l.addEventListener("load",t),l.addEventListener("error",t))}}function gd(){if(ie===null)throw Error(r(475));var l=ie;return l.stylesheets&&l.count===0&&Cc(l,l.stylesheets),0<l.count?function(t){var u=setTimeout(function(){if(l.stylesheets&&Cc(l,l.stylesheets),l.unsuspend){var a=l.unsuspend;l.unsuspend=null,a()}},6e4);return l.unsuspend=t,function(){l.unsuspend=null,clearTimeout(u)}}:null}function zn(){if(this.count--,this.count===0){if(this.stylesheets)Cc(this,this.stylesheets);else if(this.unsuspend){var l=this.unsuspend;this.unsuspend=null,l()}}}var On=null;function Cc(l,t){l.stylesheets=null,l.unsuspend!==null&&(l.count++,On=new Map,t.forEach(bd,l),On=null,zn.call(l))}function bd(l,t){if(!(t.state.loading&4)){var u=On.get(l);if(u)var a=u.get(null);else{u=new Map,On.set(l,u);for(var e=l.querySelectorAll("link[data-precedence],style[data-precedence]"),n=0;n<e.length;n++){var f=e[n];(f.nodeName==="LINK"||f.getAttribute("media")!=="not all")&&(u.set(f.dataset.precedence,f),a=f)}a&&u.set(null,a)}e=t.instance,f=e.getAttribute("data-precedence"),n=u.get(f)||a,n===a&&u.set(null,e),u.set(f,e),this.count++,a=zn.bind(this),e.addEventListener("load",a),e.addEventListener("error",a),n?n.parentNode.insertBefore(e,n.nextSibling):(l=l.nodeType===9?l.head:l,l.insertBefore(e,l.firstChild)),t.state.loading|=4}}var se={$$typeof:Ml,Provider:null,Consumer:null,_currentValue:B,_currentValue2:B,_threadCount:0};function Td(l,t,u,a,e,n,f,c){this.tag=1,this.containerInfo=l,this.pingCache=this.current=this.pendingChildren=null,this.timeoutHandle=-1,this.callbackNode=this.next=this.pendingContext=this.context=this.cancelPendingCommit=null,this.callbackPriority=0,this.expirationTimes=Gn(-1),this.entangledLanes=this.shellSuspendCounter=this.errorRecoveryDisabledLanes=this.expiredLanes=this.warmLanes=this.pingedLanes=this.suspendedLanes=this.pendingLanes=0,this.entanglements=Gn(0),this.hiddenUpdates=Gn(null),this.identifierPrefix=a,this.onUncaughtError=e,this.onCaughtError=n,this.onRecoverableError=f,this.pooledCache=null,this.pooledCacheLanes=0,this.formState=c,this.incompleteTransitions=new Map}function Xv(l,t,u,a,e,n,f,c,i,h,S,T){return l=new Td(l,t,u,f,c,i,h,T),t=1,n===!0&&(t|=24),n=$l(3,null,null,t),l.current=n,n.stateNode=l,t=Af(),t.refCount++,l.pooledCache=t,t.refCount++,n.memoizedState={element:a,isDehydrated:u,cache:t},Mf(n),l}function Qv(l){return l?(l=wu,l):wu}function Zv(l,t,u,a,e,n){e=Qv(e),a.context===null?a.context=e:a.pendingContext=e,a=Kt(t),a.payload={element:u},n=n===void 0?null:n,n!==null&&(a.callback=n),u=Jt(l,a,t),u!==null&&(lt(u,l,t),Za(u,l,t))}function xv(l,t){if(l=l.memoizedState,l!==null&&l.dehydrated!==null){var u=l.retryLane;l.retryLane=u!==0&&u<t?u:t}}function jc(l,t){xv(l,t),(l=l.alternate)&&xv(l,t)}function Cv(l){if(l.tag===13){var t=Ju(l,67108864);t!==null&&lt(t,l,67108864),jc(l,67108864)}}var _n=!0;function Ed(l,t,u,a){var e=g.T;g.T=null;var n=_.p;try{_.p=2,Vc(l,t,u,a)}finally{_.p=n,g.T=e}}function Ad(l,t,u,a){var e=g.T;g.T=null;var n=_.p;try{_.p=8,Vc(l,t,u,a)}finally{_.p=n,g.T=e}}function Vc(l,t,u,a){if(_n){var e=Lc(a);if(e===null)Hc(l,t,a,Mn,u),Vv(l,a);else if(Od(e,l,t,u,a))a.stopPropagation();else if(Vv(l,a),t&4&&-1<zd.indexOf(l)){for(;e!==null;){var n=Bu(e);if(n!==null)switch(n.tag){case 3:if(n=n.stateNode,n.current.memoizedState.isDehydrated){var f=hu(n.pendingLanes);if(f!==0){var c=n;for(c.pendingLanes|=2,c.entangledLanes|=2;f;){var i=1<<31-wl(f);c.entanglements[1]|=i,f&=~i}Et(n),(F&6)===0&&(sn=rt()+500,ue(0))}}break;case 13:c=Ju(n,2),c!==null&&lt(c,n,2),yn(),jc(n,2)}if(n=Lc(a),n===null&&Hc(l,t,a,Mn,u),n===e)break;e=n}e!==null&&a.stopPropagation()}else Hc(l,t,a,null,u)}}function Lc(l){return l=Wn(l),Kc(l)}var Mn=null;function Kc(l){if(Mn=null,l=Yu(l),l!==null){var t=w(l);if(t===null)l=null;else{var u=t.tag;if(u===13){if(l=dl(t),l!==null)return l;l=null}else if(u===3){if(t.stateNode.current.memoizedState.isDehydrated)return t.tag===3?t.stateNode.containerInfo:null;l=null}else t!==l&&(l=null)}}return Mn=l,null}function jv(l){switch(l){case"beforetoggle":case"cancel":case"click":case"close":case"contextmenu":case"copy":case"cut":case"auxclick":case"dblclick":case"dragend":case"dragstart":case"drop":case"focusin":case"focusout":case"input":case"invalid":case"keydown":case"keypress":case"keyup":case"mousedown":case"mouseup":case"paste":case"pause":case"play":case"pointercancel":case"pointerdown":case"pointerup":case"ratechange":case"reset":case"resize":case"seeked":case"submit":case"toggle":case"touchcancel":case"touchend":case"touchstart":case"volumechange":case"change":case"selectionchange":case"textInput":case"compositionstart":case"compositionend":case"compositionupdate":case"beforeblur":case"afterblur":case"beforeinput":case"blur":case"fullscreenchange":case"focus":case"hashchange":case"popstate":case"select":case"selectstart":return 2;case"drag":case"dragenter":case"dragexit":case"dragleave":case"dragover":case"mousemove":case"mouseout":case"mouseover":case"pointermove":case"pointerout":case"pointerover":case"scroll":case"touchmove":case"wheel":case"mouseenter":case"mouseleave":case"pointerenter":case"pointerleave":return 8;case"message":switch(iy()){case ui:return 2;case ai:return 8;case Se:case sy:return 32;case ei:return 268435456;default:return 32}default:return 32}}var Jc=!1,nu=null,fu=null,cu=null,ve=new Map,ye=new Map,iu=[],zd="mousedown mouseup touchcancel touchend touchstart auxclick dblclick pointercancel pointerdown pointerup dragend dragstart drop compositionend compositionstart keydown keypress keyup input textInput copy cut paste click change contextmenu reset".split(" ");function Vv(l,t){switch(l){case"focusin":case"focusout":nu=null;break;case"dragenter":case"dragleave":fu=null;break;case"mouseover":case"mouseout":cu=null;break;case"pointerover":case"pointerout":ve.delete(t.pointerId);break;case"gotpointercapture":case"lostpointercapture":ye.delete(t.pointerId)}}function de(l,t,u,a,e,n){return l===null||l.nativeEvent!==n?(l={blockedOn:t,domEventName:u,eventSystemFlags:a,nativeEvent:n,targetContainers:[e]},t!==null&&(t=Bu(t),t!==null&&Cv(t)),l):(l.eventSystemFlags|=a,t=l.targetContainers,e!==null&&t.indexOf(e)===-1&&t.push(e),l)}function Od(l,t,u,a,e){switch(t){case"focusin":return nu=de(nu,l,t,u,a,e),!0;case"dragenter":return fu=de(fu,l,t,u,a,e),!0;case"mouseover":return cu=de(cu,l,t,u,a,e),!0;case"pointerover":var n=e.pointerId;return ve.set(n,de(ve.get(n)||null,l,t,u,a,e)),!0;case"gotpointercapture":return n=e.pointerId,ye.set(n,de(ye.get(n)||null,l,t,u,a,e)),!0}return!1}function Lv(l){var t=Yu(l.target);if(t!==null){var u=w(t);if(u!==null){if(t=u.tag,t===13){if(t=dl(u),t!==null){l.blockedOn=t,Sy(l.priority,function(){if(u.tag===13){var a=Pl();a=Xn(a);var e=Ju(u,a);e!==null&&lt(e,u,a),jc(u,a)}});return}}else if(t===3&&u.stateNode.current.memoizedState.isDehydrated){l.blockedOn=u.tag===3?u.stateNode.containerInfo:null;return}}}l.blockedOn=null}function Dn(l){if(l.blockedOn!==null)return!1;for(var t=l.targetContainers;0<t.length;){var u=Lc(l.nativeEvent);if(u===null){u=l.nativeEvent;var a=new u.constructor(u.type,u);wn=a,u.target.dispatchEvent(a),wn=null}else return t=Bu(u),t!==null&&Cv(t),l.blockedOn=u,!1;t.shift()}return!0}function Kv(l,t,u){Dn(l)&&u.delete(t)}function _d(){Jc=!1,nu!==null&&Dn(nu)&&(nu=null),fu!==null&&Dn(fu)&&(fu=null),cu!==null&&Dn(cu)&&(cu=null),ve.forEach(Kv),ye.forEach(Kv)}function Un(l,t){l.blockedOn===t&&(l.blockedOn=null,Jc||(Jc=!0,O.unstable_scheduleCallback(O.unstable_NormalPriority,_d)))}var Rn=null;function Jv(l){Rn!==l&&(Rn=l,O.unstable_scheduleCallback(O.unstable_NormalPriority,function(){Rn===l&&(Rn=null);for(var t=0;t<l.length;t+=3){var u=l[t],a=l[t+1],e=l[t+2];if(typeof a!="function"){if(Kc(a||u)===null)continue;break}var n=Bu(u);n!==null&&(l.splice(t,3),t-=3,Kf(n,{pending:!0,data:e,method:u.method,action:a},a,e))}}))}function he(l){function t(i){return Un(i,l)}nu!==null&&Un(nu,l),fu!==null&&Un(fu,l),cu!==null&&Un(cu,l),ve.forEach(t),ye.forEach(t);for(var u=0;u<iu.length;u++){var a=iu[u];a.blockedOn===l&&(a.blockedOn=null)}for(;0<iu.length&&(u=iu[0],u.blockedOn===null);)Lv(u),u.blockedOn===null&&iu.shift();if(u=(l.ownerDocument||l).$$reactFormReplay,u!=null)for(a=0;a<u.length;a+=3){var e=u[a],n=u[a+1],f=e[Xl]||null;if(typeof n=="function")f||Jv(u);else if(f){var c=null;if(n&&n.hasAttribute("formAction")){if(e=n,f=n[Xl]||null)c=f.formAction;else if(Kc(e)!==null)continue}else c=f.action;typeof c=="function"?u[a+1]=c:(u.splice(a,3),a-=3),Jv(u)}}}function wc(l){this._internalRoot=l}Hn.prototype.render=wc.prototype.render=function(l){var t=this._internalRoot;if(t===null)throw Error(r(409));var u=t.current,a=Pl();Zv(u,a,l,t,null,null)},Hn.prototype.unmount=wc.prototype.unmount=function(){var l=this._internalRoot;if(l!==null){this._internalRoot=null;var t=l.containerInfo;Zv(l.current,2,null,l,null,null),yn(),t[qu]=null}};function Hn(l){this._internalRoot=l}Hn.prototype.unstable_scheduleHydration=function(l){if(l){var t=si();l={blockedOn:null,target:l,priority:t};for(var u=0;u<iu.length&&t!==0&&t<iu[u].priority;u++);iu.splice(u,0,l),u===0&&Lv(l)}};var wv=$.version;if(wv!=="19.1.1")throw Error(r(527,wv,"19.1.1"));_.findDOMNode=function(l){var t=l._reactInternals;if(t===void 0)throw typeof l.render=="function"?Error(r(188)):(l=Object.keys(l).join(","),Error(r(268,l)));return l=H(t),l=l!==null?A(l):null,l=l===null?null:l.stateNode,l};var Md={bundleType:0,version:"19.1.1",rendererPackageName:"react-dom",currentDispatcherRef:g,reconcilerVersion:"19.1.1"};if(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__<"u"){var Nn=__REACT_DEVTOOLS_GLOBAL_HOOK__;if(!Nn.isDisabled&&Nn.supportsFiber)try{Sa=Nn.inject(Md),Jl=Nn}catch{}}return me.createRoot=function(l,t){if(!x(l))throw Error(r(299));var u=!1,a="",e=ss,n=vs,f=ys,c=null;return t!=null&&(t.unstable_strictMode===!0&&(u=!0),t.identifierPrefix!==void 0&&(a=t.identifierPrefix),t.onUncaughtError!==void 0&&(e=t.onUncaughtError),t.onCaughtError!==void 0&&(n=t.onCaughtError),t.onRecoverableError!==void 0&&(f=t.onRecoverableError),t.unstable_transitionCallbacks!==void 0&&(c=t.unstable_transitionCallbacks)),t=Xv(l,1,!1,null,null,u,a,e,n,f,c,null),l[qu]=t.current,Rc(l),new wc(t)},me.hydrateRoot=function(l,t,u){if(!x(l))throw Error(r(299));var a=!1,e="",n=ss,f=vs,c=ys,i=null,h=null;return u!=null&&(u.unstable_strictMode===!0&&(a=!0),u.identifierPrefix!==void 0&&(e=u.identifierPrefix),u.onUncaughtError!==void 0&&(n=u.onUncaughtError),u.onCaughtError!==void 0&&(f=u.onCaughtError),u.onRecoverableError!==void 0&&(c=u.onRecoverableError),u.unstable_transitionCallbacks!==void 0&&(i=u.unstable_transitionCallbacks),u.formState!==void 0&&(h=u.formState)),t=Xv(l,1,!0,t,u??null,a,e,n,f,c,i,h),t.context=Qv(null),u=t.current,a=Pl(),a=Xn(a),e=Kt(a),e.callback=null,Jt(u,e,a),u=a,t.current.lanes=u,ba(t,u),Et(t),l[qu]=t.current,Rc(l),new Hn(t)},me.version="19.1.1",me}var ay;function Xd(){if(ay)return kc.exports;ay=1;function O(){if(!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__>"u"||typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE!="function"))try{__REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE(O)}catch($){console.error($)}}return O(),kc.exports=Gd(),kc.exports}var Qd=Xd();const Zd=ey(Qd);function xd(){return ny.useEffect(()=>{console.log("CABLINK REACT RUNTIME BRIDGE: ACTIVE")},[]),null}function Cd(){return li.jsx(xd,{})}Zd.createRoot(document.getElementById("root")).render(li.jsx(Nd.StrictMode,{children:li.jsx(Cd,{})}));async function jd(O,$={}){return await(await fetch(O,{headers:{"Content-Type":"application/json"},...$})).json()}async function Vd(O){const $=await jd("/api/rides",{method:"POST",body:JSON.stringify(O)});return console.log("REAL RIDE CREATED",$),$}window.requestRealCabLinkRide=async function(O){console.log("Sending REAL ride request",O);const $=await Vd(O);return console.log("Backend ride:",$),$};
+./cablink_step8_runtime_truth_audit.js:158:    /axios\.(?:get|post|put|patch|delete)\s*\(\s*["'`]([^"'`]+)["'`]/g
+./cablink_step8_runtime_truth_audit.js:583:  "backend/routes/rides.js",
+./cablink_step8_runtime_truth_audit.js:603:  "backend/routes/rides.js"
+./cablink_step8_runtime_truth_audit.js:809:  "backend/routes/rides.js"
+./o835_state_authority_audit.js:39:"backend/routes/completion_api.js"
+./o839_canonical_completion_bridge.js:30:"backend/routes/completion_api.js";
+./o841_canonical_integrity_gate.js:49:"backend/routes/completion_api.js",
+./o841_canonical_integrity_gate.js:50:"backend/routes/canonical_reward_api.js",
+./o841_canonical_integrity_gate.js:231:'"/api/rides"',
+./o841_canonical_integrity_gate.js:236:'"/api/rewards"',
+./o841_canonical_integrity_gate.js:346:"backend/routes/completion_api.js"
+./o841_canonical_integrity_gate.js:458:"backend/routes/completion_api.js",
+./o841_canonical_integrity_gate.js:459:"backend/routes/canonical_reward_api.js",
+./o842_persistence_restart_integrity_test.js:113:        "/api/rides",
+./o842_persistence_restart_integrity_test.js:160:        "/api/rides/"+rideId+"/accept",
+./o842_persistence_restart_integrity_test.js:209:            "/api/rides/"+rideId,
+./o842_persistence_restart_integrity_test.js:249:        "/api/ride/complete",
+./o842_persistence_restart_integrity_test.js:291:        "/api/rewards/ride/"+rideId
+./o844_restart_persistence_survival_test.js:193:                "/api/rides",
+./o844_restart_persistence_survival_test.js:245:                "/api/rides/" +
+./o844_restart_persistence_survival_test.js:285:                    "/api/rides/" +
+./o844_restart_persistence_survival_test.js:313:                "/api/ride/complete",
+./o844_restart_persistence_survival_test.js:353:                "/api/rewards/ride/" +
+./o844_restart_persistence_survival_test.js:474:                "/api/rides/" +
+./o844_restart_persistence_survival_test.js:512:                "/api/rewards/ride/" +
+./o850_runtime_ride_authority_trace.js:243:        /live_ride_service|live_rides\.json|live_ride_api/g
+./o852_active_runtime_dependency_classification.js:15:    "backend/routes/live_ride_api.js",
+./o852_active_runtime_dependency_classification.js:16:    "backend/routes/rides.js",
+./o852_active_runtime_dependency_classification.js:17:    "backend/routes/completion_api.js",
+./o853_runtime_ride_write_authority_trace.js:14:  "backend/routes/rides.js",
+./o853_runtime_ride_write_authority_trace.js:15:  "backend/routes/completion_api.js",
+./o853_runtime_ride_write_authority_trace.js:16:  "backend/routes/live_ride_api.js",
+./o853_runtime_ride_write_authority_trace.js:62:if (app.includes('app.use("/api/rides",rideRoutes)') ||
+./o853_runtime_ride_write_authority_trace.js:63:    app.includes("app.use('/api/rides',rideRoutes)")) {
+./o853_runtime_ride_write_authority_trace.js:68:    "app.use('/api/rides', rideRoutes)",
+./o853_runtime_ride_write_authority_trace.js:274:  "backend/routes/rides.js",
+./o853_runtime_ride_write_authority_trace.js:289:  "backend/routes/live_ride_api.js",
+./o859_active_ride_path_authority_trace.js:21:  "backend/routes/rides.js",
+./o859_active_ride_path_authority_trace.js:205:showFile("backend/routes/rides.js");
+./cablink_current_app_inventory.js:57:        f.startsWith("backend/routes/") &&
+./cablink_current_app_inventory.js:224:            /axios/i.test(line) ||
+./cablink_runtime_truth_trace.js:83:        f.startsWith("backend/routes/") &&
+./cablink_runtime_truth_trace.js:237:    "api/index.js"
+./cablink_runtime_truth_trace.js:443:                        /FILE|JSON|firebase|firestore|writeFile|readFile|create|update|find|get/i
+./cablink_runtime_truth_trace.js:488:                    /fetch\s*\(|axios|\/api\//i
+./o852_real_api_contract_audit.js:345:    '/api/rides',
+./o852_real_api_contract_audit.js:347:    '/api/rides/:id',
+./o852_real_api_contract_audit.js:349:    '/api/rides/:id/accept',
+./o852_real_api_contract_audit.js:351:    '/api/drivers/online',
+./o852_real_api_contract_audit.js:353:    '/api/drivers/offline',
+./o852_real_api_contract_audit.js:355:    '/api/drivers/apply',
+./o852_real_api_contract_audit.js:357:    '/api/drivers/applications',
+./o852_real_api_contract_audit.js:359:    '/api/rewards/ride/:rideId',
+./o852_real_api_contract_audit.js:361:    '/api/ride/complete',
+./o852_real_api_contract_audit.js:363:    '/api/ecosystem-intelligence'
+./o852_real_api_contract_audit.js:437:                '/api/rides'
+./o852_real_api_contract_audit.js:440:                '/api/drivers'
+./o852_real_api_contract_audit.js:443:                '/api/rewards'

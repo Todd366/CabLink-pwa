@@ -1,18 +1,29 @@
 import React from "react";
 
-export default function BottomNavigation(){
+export default function BottomNavigation({
+  screen,
+  setScreen
+}) {
 
 return (
 
 <nav className="bottom-nav">
 
-<button>🏠 Home</button>
+<button onClick={() => setScreen("home")}>
+🏠 Home
+</button>
 
-<button>🚕 Rides</button>
+<button onClick={() => setScreen("rides")}>
+🚕 Rides
+</button>
 
-<button>🪙 Wallet</button>
+<button onClick={() => setScreen("wallet")}>
+🪙 Wallet
+</button>
 
-<button>👤 Profile</button>
+<button onClick={() => setScreen("profile")}>
+👤 Profile
+</button>
 
 </nav>
 

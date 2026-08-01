@@ -6,7 +6,7 @@ const api=require("../api/cablink_api");
 async function requestRide(data){
 
 return api.request(
-"/api/rides/request",
+"/api/rides",
 {
 method:"POST",
 body:JSON.stringify(data)

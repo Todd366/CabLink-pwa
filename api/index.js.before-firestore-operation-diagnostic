@@ -1,0 +1,418 @@
+const express = require("express");
+
+const app = express();
+
+app.use(express.json());
+
+console.log(
+    "============================================================"
+);
+
+console.log(
+    "CABLINK TEST O.1: FIRESTORE BOOT DIAGNOSTIC"
+);
+
+console.log(
+    "============================================================"
+);
+
+
+// ============================================================
+// BASIC PROCESS DIAGNOSTICS
+// ============================================================
+
+app.get(
+    "/api/firestore-boot-diagnostic",
+    async (req, res) => {
+
+        const result = {
+
+            success: true,
+
+            test:
+                "FIRESTORE_BOOT_DIAGNOSTIC",
+
+            timestamp:
+                new Date().toISOString(),
+
+            nodeVersion:
+                process.version,
+
+            steps: {}
+
+        };
+
+
+        // ====================================================
+        // STEP 1 — ENVIRONMENT VARIABLES
+        // ====================================================
+
+        try {
+
+            result.steps.environment = {
+
+                success:
+                    true,
+
+                FIREBASE_PROJECT_ID:
+                    Boolean(
+                        process.env.FIREBASE_PROJECT_ID
+                    ),
+
+                FIREBASE_CLIENT_EMAIL:
+                    Boolean(
+                        process.env.FIREBASE_CLIENT_EMAIL
+                    ),
+
+                FIREBASE_PRIVATE_KEY:
+                    Boolean(
+                        process.env.FIREBASE_PRIVATE_KEY
+                    )
+
+            };
+
+        } catch (error) {
+
+            result.steps.environment = {
+
+                success:
+                    false,
+
+                error:
+                    error.message
+
+            };
+
+        }
+
+
+        // ====================================================
+        // STEP 2 — LOAD FIREBASE ADMIN
+        // ====================================================
+
+        try {
+
+            const admin =
+                require("firebase-admin");
+
+            result.steps.firebaseAdmin = {
+
+                success:
+                    true,
+
+                sdkVersion:
+                    admin.SDK_VERSION,
+
+                initializeApp:
+                    typeof admin.initializeApp,
+
+                getApps:
+                    typeof admin.getApps,
+
+                cert:
+                    typeof admin.cert
+
+            };
+
+        } catch (error) {
+
+            result.success = false;
+
+            result.steps.firebaseAdmin = {
+
+                success:
+                    false,
+
+                name:
+                    error.name,
+
+                code:
+                    error.code,
+
+                message:
+                    error.message,
+
+                stack:
+                    error.stack
+
+            };
+
+        }
+
+
+        // ====================================================
+        // STEP 3 — LOAD FIRESTORE MODULE
+        // ====================================================
+
+        try {
+
+            const firestore =
+                require(
+                    "firebase-admin/firestore"
+                );
+
+            result.steps.firestoreModule = {
+
+                success:
+                    true,
+
+                getFirestore:
+                    typeof firestore.getFirestore
+
+            };
+
+        } catch (error) {
+
+            result.success = false;
+
+            result.steps.firestoreModule = {
+
+                success:
+                    false,
+
+                name:
+                    error.name,
+
+                code:
+                    error.code,
+
+                message:
+                    error.message,
+
+                stack:
+                    error.stack
+
+            };
+
+        }
+
+
+        // ====================================================
+        // STEP 4 — LOAD FIRESTORE ADAPTER
+        // ====================================================
+
+        try {
+
+            const adapter =
+                require(
+                    "../backend/firebase/firestore_adapter"
+                );
+
+            result.steps.firestoreAdapter = {
+
+                success:
+                    true,
+
+                exports:
+                    Object.keys(adapter),
+
+                status:
+                    adapter.status()
+
+            };
+
+        } catch (error) {
+
+            result.success = false;
+
+            result.steps.firestoreAdapter = {
+
+                success:
+                    false,
+
+                name:
+                    error.name,
+
+                code:
+                    error.code,
+
+                message:
+                    error.message,
+
+                stack:
+                    error.stack
+
+            };
+
+        }
+
+
+        // ====================================================
+        // STEP 5 — LOAD PRODUCTION DATABASE ADAPTER
+        // ====================================================
+
+        try {
+
+            const db =
+                require(
+                    "../backend/production/database_adapter"
+                );
+
+            result.steps.productionDatabaseAdapter = {
+
+                success:
+                    true,
+
+                exports:
+                    Object.keys(db),
+
+                provider:
+                    db.provider()
+
+            };
+
+        } catch (error) {
+
+            result.success = false;
+
+            result.steps.productionDatabaseAdapter = {
+
+                success:
+                    false,
+
+                name:
+                    error.name,
+
+                code:
+                    error.code,
+
+                message:
+                    error.message,
+
+                stack:
+                    error.stack
+
+            };
+
+        }
+
+
+        // ====================================================
+        // STEP 6 — LOAD FIRESTORE TEST REPOSITORY
+        // ====================================================
+
+        try {
+
+            const repository =
+                require(
+                    "../backend/canonical/ride_repository_firestore_test"
+                );
+
+            result.steps.firestoreRepository = {
+
+                success:
+                    true,
+
+                exports:
+                    Object.keys(repository),
+
+                collection:
+                    repository.COLLECTION
+
+            };
+
+        } catch (error) {
+
+            result.success = false;
+
+            result.steps.firestoreRepository = {
+
+                success:
+                    false,
+
+                name:
+                    error.name,
+
+                code:
+                    error.code,
+
+                message:
+                    error.message,
+
+                stack:
+                    error.stack
+
+            };
+
+        }
+
+
+        // ====================================================
+        // FINAL DIAGNOSTIC
+        // ====================================================
+
+        const steps =
+            Object.values(
+                result.steps
+            );
+
+        result.allModulesLoaded =
+            steps.every(
+                step =>
+                    step.success === true
+            );
+
+        if (
+            !result.allModulesLoaded
+        ) {
+
+            result.success = false;
+
+        }
+
+
+        /*
+         * IMPORTANT:
+         *
+         * This endpoint intentionally performs:
+         *
+         * NO Firestore writes
+         * NO Firestore reads
+         * NO users writes
+         * NO rides writes
+         * NO cablink_test_rides writes
+         *
+         * It only tests module loading and configuration.
+         */
+
+        return res
+            .status(
+                result.success
+                    ? 200
+                    : 500
+            )
+            .json(result);
+
+    }
+);
+
+
+// ============================================================
+// BASIC HEALTH
+// ============================================================
+
+app.get(
+    "/api/health",
+    (req, res) => {
+
+        res.json({
+
+            system:
+                "CabLink API",
+
+            status:
+                "ONLINE",
+
+            test:
+                "FIRESTORE_BOOT_DIAGNOSTIC",
+
+            time:
+                new Date().toISOString()
+
+        });
+
+    }
+);
+
+
+module.exports = app;

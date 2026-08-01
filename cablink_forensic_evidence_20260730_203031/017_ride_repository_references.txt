@@ -1,0 +1,131 @@
+./backend/services/live_ride_service.js:5:const file="backend/data/live_rides.json";
+./backend/services/ride_orchestrator_service.js:12:const rideRepository=require("../database/ride_repository");
+./backend/services/ride_state_service.js:2:const rides=require("../database/ride_repository");
+./backend/services/canonical_reward_service.js:5:const rideRepository =
+./backend/services/canonical_reward_service.js:6:    require("../canonical/ride_repository");
+./backend/services/canonical_reward_service.js:134:        rideRepository.findById(
+./backend/server.js:18:// backend/canonical/ride_repository.js
+./backend/server.js:20:// backend/data/rides.json
+./backend/database/rideRepository.js:5:const file="backend/database/rides.json";
+./backend/ride_api_patch.js:1:const store=require("./ride_store");
+./backend/ride_store.js:4:const file=path.join(__dirname,"data","rides.json");
+./backend/canonical/ride_repository.js:5:const FILE = path.join(DATA_DIR, "rides.json");
+./backend/canonical/ride_engine.js:1:const repository = require("./ride_repository");
+./frontend/js/driver/driverLifecycleControls.js:18:   *   canonical ride_repository
+./CABLINK_REALITY_GRAPH.json:1453:        "file": "backend/ride_store.js",
+./CABLINK_REALITY_GRAPH.json:1658:        "file": "backend/ride_store.js",
+./runtime_dependency_graph.json:694:        "backend/ride_store.js",
+./runtime_dependency_graph.json:704:        "backend/ride_store.js",
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/live_ride_service.js:5:const file="backend/data/live_rides.json";
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_orchestrator_service.js:12:const rideRepository=require("../database/ride_repository");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_state_service.js:2:const rides=require("../database/ride_repository");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:5:const rideRepository =
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:6:    require("../canonical/ride_repository");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js:134:        rideRepository.findById(
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js:18:// backend/canonical/ride_repository.js
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js:20:// backend/data/rides.json
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/rideRepository.js:5:const file="backend/database/rides.json";
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_api_patch.js:1:const store=require("./ride_store");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_store.js:4:const file=path.join(__dirname,"data","rides.json");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_repository.js:5:const FILE = path.join(DATA_DIR, "rides.json");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_engine.js:1:const repository = require("./ride_repository");
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverLifecycleControls.js:18:   *   canonical ride_repository
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+./api/index.js:14:        "../backend/canonical/ride_repository_firestore_test"
+./o823_service_canonical_cleanup.js:47:"backend/database/ride_repository.js"
+./cablink_ride_backup_20260725_221547/backend/routes/rides.js:3:const rides=require("../database/ride_repository");
+./cablink_ride_backup_20260725_221547/backend/database/rideRepository.js:5:const file="backend/database/rides.json";
+./cablink_ride_backup_20260725_221547/backend/ride_store.js:4:const file=path.join(__dirname,"data","rides.json");
+./cablink_ride_backup_20260725_221547/backend/services/rideService.js:3:const repo=require("../database/rideRepository");
+./cablink_ride_backup_20260725_221547/backend/services/ride_orchestrator_service.js:12:const rideRepository=require("../database/ride_repository");
+./stage3_canonical_ride_verification.js:89:        "backend/canonical/ride_repository.js",
+./stage3_canonical_ride_verification.js:91:        "backend/data/rides.json",
+./beta/pilot/rides/ride_registry.js:5:const file="beta/pilot/rides/rides.json";
+./cablink_step7_runtime_alignment_audit.js:273:  "backend/canonical/ride_repository.js",
+./cablink_step7_runtime_alignment_audit.js:386:  "backend/data/rides.json",
+./cablink_step7_runtime_alignment_audit.js:387:  "backend/database/rides.json",
+./cablink_step7_runtime_alignment_audit.js:435:  "backend/canonical/ride_repository.js",
+./cablink_step8_1_runtime_truth_correction.js:673:  "backend/canonical/ride_repository.js"
+./cablink_step8_1_runtime_truth_correction.js:734:  "backend/data/rides.json",
+./cablink_step8_1_runtime_truth_correction.js:735:  "backend/database/rides.json",
+./o843_automated_restart_survival_gate.js:115:            "./backend/canonical/ride_repository"
+./o851_runtime_authority_trace.js:22:    "backend/ride_store.js",
+./o851_runtime_authority_trace.js:125:        regex: /require\s*\(\s*["'][^"']*canonical\/ride_repository["']\s*\)/g
+./o851_runtime_authority_trace.js:140:        regex: /require\s*\(\s*["'][^"']*ride_store["']\s*\)/g
+./o854_cross_service_caller_ownership_trace.js:352:${/ride_repository/.test(content) ? "YES" : "NO"}
+./o856_runtime_route_registration_trace.js:416:    "ride_repository",
+./o856_runtime_route_registration_trace.js:466:    "backend/canonical/ride_repository.js",
+./o856_runtime_route_registration_trace.js:468:    "backend/database/ride_repository.js"
+./o857_legacy_live_ride_conflict_trace.js:67:    "backend/canonical/ride_repository.js",
+./o857_legacy_live_ride_conflict_trace.js:77:    "backend/database/ride_repository.js"
+./o857_legacy_live_ride_conflict_trace.js:137:    "backend/database/ride_repository.js"
+./o857_legacy_live_ride_conflict_trace.js:204:    "live_rides.json",
+./o857_legacy_live_ride_conflict_trace.js:273:    "ride_repository",
+./o857_legacy_live_ride_conflict_trace.js:345:2. Does live_ride_service use live_rides.json?
+./o857_legacy_live_ride_conflict_trace.js:365:10. Is backend/database/ride_repository.js
+./o858_database_repository_orchestrator_trace.js:22:"backend/database/ride_repository.js",
+./o858_database_repository_orchestrator_trace.js:25:"backend/canonical/ride_repository.js",
+./o858_database_repository_orchestrator_trace.js:77:    regex: /(?:require|import).*database[\/\\]ride_repository/g
+./o858_database_repository_orchestrator_trace.js:82:    regex: /(?:require|import).*canonical[\/\\]ride_repository/g
+./o858_database_repository_orchestrator_trace.js:250:"backend/database/ride_repository.js";
+./o858_database_repository_orchestrator_trace.js:586:1. Is backend/database/ride_repository.js active?
+./o858_database_repository_orchestrator_trace.js:609:11. Does it overlap with canonical/ride_repository.js?
+./cablink_step8_runtime_truth_audit.js:582:  "backend/canonical/ride_repository.js",
+./cablink_step8_runtime_truth_audit.js:602:  "backend/canonical/ride_repository.js",
+./cablink_step8_runtime_truth_audit.js:639:  "backend/data/rides.json",
+./cablink_step8_runtime_truth_audit.js:640:  "backend/database/rides.json",
+./cablink_step8_runtime_truth_audit.js:808:  "backend/canonical/ride_repository.js",
+./o835_state_authority_audit.js:2:require("./backend/canonical/ride_repository");
+./o841_canonical_integrity_gate.js:46:"backend/canonical/ride_repository.js",
+./o841_canonical_integrity_gate.js:455:"backend/canonical/ride_repository.js",
+./o841_canonical_integrity_gate.js:508:"./backend/canonical/ride_repository"
+./o842_persistence_restart_integrity_test.js:84:        require.resolve("./backend/canonical/ride_repository")
+./o842_persistence_restart_integrity_test.js:88:        "./backend/canonical/ride_repository"
+./o849_canonical_writer_classification_audit.js:63:        regex: /ride_repository|repository\.create|repository\.update|repository\.get|repository\.find/g
+./o850_runtime_ride_authority_trace.js:175:        /canonical\/ride_repository|canonical\/ride_engine|rideRepository/g
+./o850_runtime_ride_authority_trace.js:192:        /database\/ride_repository/g
+./o850_runtime_ride_authority_trace.js:226:        /rideRepository\.(create|update|find|findById|get|save|delete)|rides\.(create|update|find|findById|get|save|delete)/g
+./o852_active_runtime_dependency_classification.js:33:    "backend/canonical/ride_repository.js"
+./o852_active_runtime_dependency_classification.js:173:                    "backend/canonical/ride_repository.js"
+./o852_active_runtime_dependency_classification.js:188:                    "backend/database/rideRepository.js"
+./o852_active_runtime_dependency_classification.js:203:                    "backend/ride_store.js"
+./o852_active_runtime_dependency_classification.js:338:                        "live_rides.json"
+./o852_active_runtime_dependency_classification.js:354:                        "rides.json"
+./o853_runtime_ride_write_authority_trace.js:27:  "backend/canonical/ride_repository.js"
+./o853_runtime_ride_write_authority_trace.js:204:const repo = "backend/canonical/ride_repository.js";
+./o853_runtime_ride_write_authority_trace.js:284:  "backend/canonical/ride_repository.js",
+./o855_runtime_reachability_dual_repository_trace.js:92:  "ride_repository"
+./o855_runtime_reachability_dual_repository_trace.js:201:  /ride_repository\.js$/.test(rel(file))
+./o855_runtime_reachability_dual_repository_trace.js:205:  console.log("NO ride_repository.js FILES FOUND");
+./o855_runtime_reachability_dual_repository_trace.js:219:USES rides.json:
+./o855_runtime_reachability_dual_repository_trace.js:246:  "backend/canonical/ride_repository.js",
+./o855_runtime_reachability_dual_repository_trace.js:247:  "backend/database/ride_repository.js"
+./o855_runtime_reachability_dual_repository_trace.js:264:  rides.json: ${/rides\.json/.test(content) ? "YES" : "NO"}
+./o855_runtime_reachability_dual_repository_trace.js:312:  "canonical/ride_repository",
+./o855_runtime_reachability_dual_repository_trace.js:313:  "database/ride_repository"
+./o859_active_ride_path_authority_trace.js:16:  "backend/database/ride_repository.js",
+./o859_active_ride_path_authority_trace.js:17:  "backend/canonical/ride_repository.js",
+./o859_active_ride_path_authority_trace.js:165:showFile("backend/database/ride_repository.js");
+./o859_active_ride_path_authority_trace.js:173:showFile("backend/canonical/ride_repository.js");
+./o859_active_ride_path_authority_trace.js:236:      /require\s*\(\s*["'][^"']*database[\/\\]ride_repository["']\s*\)/,
+./o859_active_ride_path_authority_trace.js:237:      /from\s+["'][^"']*database[\/\\]ride_repository["']/,
+./o859_active_ride_path_authority_trace.js:238:      /require\s*\(\s*["'][^"']*canonical[\/\\]ride_repository["']\s*\)/,
+./o859_active_ride_path_authority_trace.js:239:      /from\s+["'][^"']*canonical[\/\\]ride_repository["']/
+./o859_active_ride_path_authority_trace.js:263:      /rideRepository\.create\s*\(/,
+./o859_active_ride_path_authority_trace.js:286:      /rideRepository\.update\s*\(/,
+./o859_active_ride_path_authority_trace.js:435:    /database[\/\\]ride_repository/.test(text)
+./o859_active_ride_path_authority_trace.js:441:    /canonical[\/\\]ride_repository/.test(text)
+./o859_active_ride_path_authority_trace.js:518:      "backend/database/ride_repository.js"
+./o859_active_ride_path_authority_trace.js:526:      "backend/canonical/ride_repository.js"
+./o859_active_ride_path_authority_trace.js:565:1. If active routes reach database/ride_repository.js,
+./o859_active_ride_path_authority_trace.js:568:2. If active routes reach canonical/ride_repository.js,
+./o859_active_ride_path_authority_trace.js:574:4. If services use database/ride_repository.js but no
+./o859_active_ride_path_authority_trace.js:629:17. Is canonical/ride_repository.js actually on the active
+./o859_active_ride_path_authority_trace.js:632:18. Is database/ride_repository.js actually on the active
+./cablink_current_app_inventory.js:99:    "backend/canonical/ride_repository.js",
+./cablink_current_app_inventory.js:100:    "backend/database/ride_repository.js",
+./cablink_current_app_inventory.js:271:    "ride_repository",
+./cablink_runtime_truth_trace.js:348:    "backend/canonical/ride_repository.js";
+./cablink_runtime_truth_trace.js:423:    "backend/canonical/ride_repository.js",
+./cablink_runtime_truth_trace.js:424:    "backend/database/ride_repository.js"
+./cablink_runtime_truth_trace.js:658:                /ride_engine|ride_repository|live_ride_service|live_rides|canonical/i

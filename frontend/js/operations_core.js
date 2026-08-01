@@ -38,7 +38,7 @@ createdAt:new Date().toISOString()
 
 completeRide:function(ride){
 
-ride.status="TRIP_COMPLETE";
+console.warn("[CABLINK] Legacy TRIP_COMPLETE mutation blocked");
 
 ride.completedAt=new Date().toISOString();
 

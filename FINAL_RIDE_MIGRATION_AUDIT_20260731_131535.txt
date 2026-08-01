@@ -1,0 +1,2797 @@
+============================================================
+CABLINK — FINAL CANONICAL RIDE MIGRATION AUDIT
+============================================================
+READ-ONLY — NO FILES WILL BE MODIFIED
+
+============================================================
+1. ORCHESTRATOR SERVICE — FULL SOURCE
+============================================================
+
+
+const state =
+require("./ride_state_service");
+
+const notify =
+require("./notification_service");
+
+const completion =
+require("./ride_completion_service");
+
+const rideRepository=require("../database/ride_repository");
+
+
+
+function createRide(data){
+
+return state.create(data);
+
+}
+
+
+
+function assignDriver(id,driver){
+
+let ride =
+state.get(id);
+
+
+if(!ride){
+
+console.log(
+"❌ Ride not found:",
+id
+);
+
+return null;
+
+}
+
+
+ride.driver=driver;
+
+console.warn("[CABLINK] Legacy DRIVER_FOUND mutation blocked");
+
+
+state.update(
+id,
+"DRIVER_FOUND"
+);
+
+
+notify.notify({
+
+ride:id,
+
+driver,
+
+user:ride.passenger,
+
+type:"DRIVER_ASSIGNED",
+
+message:"Driver has been assigned"
+
+});
+
+
+return ride;
+
+}
+
+
+function driverArrived(id){
+
+let ride=
+state.update(
+id,
+"DRIVER_ARRIVED"
+);
+
+
+notify.notify({
+
+ride:id,
+
+driver:ride.driver,
+
+user:ride.passenger,
+
+type:"DRIVER_ARRIVED",
+
+message:"Your driver has arrived"
+
+});
+
+
+return ride;
+
+}
+
+
+
+function startTrip(id){
+
+let ride=
+state.update(
+id,
+"TRIP_STARTED"
+);
+
+
+notify.notify({
+
+ride:id,
+
+driver:ride.driver,
+
+user:ride.passenger,
+
+type:"TRIP_STARTED",
+
+message:"Trip started"
+
+});
+
+
+return ride;
+
+}
+
+
+
+function finishTrip(id,fare){
+
+let ride=
+state.get(id);
+
+
+ride.fare=fare;
+
+
+let result=
+completion.completeRide(
+ride
+);
+
+
+notify.notify({
+
+ride:id,
+
+driver:ride.driver,
+
+user:ride.passenger,
+
+type:"TRIP_COMPLETED",
+
+message:"Ride completed successfully"
+
+});
+
+
+return result;
+
+}
+
+
+
+module.exports={
+createRide,
+assignDriver,
+driverArrived,
+startTrip,
+finishTrip
+};
+
+
+============================================================
+2. ORCHESTRATOR API — FULL SOURCE
+============================================================
+
+
+const router=require("express").Router();
+
+const engine=
+require("../services/ride_orchestrator_service");
+
+
+
+router.post(
+"/orchestrator/create",
+(req,res)=>{
+
+res.json({
+
+success:true,
+
+ride:
+engine.createRide(req.body)
+
+});
+
+});
+
+
+
+router.post(
+"/orchestrator/assign",
+(req,res)=>{
+
+res.json({
+
+success:true,
+
+ride:
+engine.assignDriver(
+req.body.id,
+req.body.driver
+)
+
+});
+
+});
+
+
+
+router.post(
+"/orchestrator/arrived",
+(req,res)=>{
+
+res.json({
+
+success:true,
+
+ride:
+engine.driverArrived(
+req.body.id
+)
+
+});
+
+});
+
+
+
+router.post(
+"/orchestrator/start",
+(req,res)=>{
+
+res.json({
+
+success:true,
+
+ride:
+engine.startTrip(
+req.body.id
+)
+
+});
+
+});
+
+
+
+router.post(
+"/orchestrator/finish",
+(req,res)=>{
+
+res.json({
+
+success:true,
+
+result:
+engine.finishTrip(
+req.body.id,
+req.body.fare
+)
+
+});
+
+});
+
+
+module.exports=router;
+
+
+============================================================
+3. DISPATCH SERVICE — FULL SOURCE
+============================================================
+
+
+const fs=require("fs");
+
+const file="backend/data/dispatch_requests.json";
+
+
+function load(){
+
+return JSON.parse(
+fs.readFileSync(file,"utf8")
+);
+
+}
+
+
+function save(data){
+
+fs.writeFileSync(
+file,
+JSON.stringify(data,null,2)
+);
+
+}
+
+
+// create passenger request
+
+function createRequest(data){
+
+const db=load();
+
+const request={
+
+id:"REQ-"+Date.now(),
+
+passenger:data.passenger || "USER001",
+
+pickup:data.pickup,
+
+destination:data.destination,
+
+status:"SEARCHING",
+
+drivers:[],
+
+created:new Date().toISOString()
+
+};
+
+
+db.requests.push(request);
+
+save(db);
+
+return request;
+
+}
+
+
+// attach matched drivers
+
+function dispatch(id,drivers){
+
+const db=load();
+
+const request=
+db.requests.find(
+r=>r.id===id
+);
+
+if(!request) return null;
+
+
+request.drivers=drivers;
+
+request.status="DRIVER_FOUND";
+
+save(db);
+
+return request;
+
+}
+
+
+// driver accepts
+
+function accept(id,driver){
+
+const db=load();
+
+const request=
+db.requests.find(
+r=>r.id===id
+);
+
+if(!request) return null;
+
+
+request.driver=driver;
+
+request.status="ACCEPTED";
+
+request.acceptedAt=
+new Date().toISOString();
+
+
+save(db);
+
+return request;
+
+}
+
+
+function list(){
+
+return load().requests;
+
+}
+
+
+module.exports={
+createRequest,
+dispatch,
+accept,
+list
+};
+
+
+============================================================
+4. DISPATCH API — FULL SOURCE
+============================================================
+const router =
+    require("express").Router();
+
+const dispatch =
+    require("../services/dispatch_service");
+
+
+// ============================================================
+// PASSENGER REQUEST
+//
+// POST /api/dispatch/request
+// ============================================================
+
+router.post(
+    "/dispatch/request",
+    (req, res) => {
+
+        try {
+
+            const request =
+                dispatch.createRequest(
+                    req.body || {}
+                );
+
+            res.status(201).json({
+
+                success: true,
+
+                request
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "❌ Dispatch request error:",
+                error
+            );
+
+            res.status(500).json({
+
+                success: false,
+
+                error:
+                    "Failed to create dispatch request"
+
+            });
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// DRIVER REQUEST POLLING
+//
+// GET /api/dispatch/requests
+//
+// Driver frontend uses this endpoint.
+// ============================================================
+
+router.get(
+    "/dispatch/requests",
+    (req, res) => {
+
+        try {
+
+            const requests =
+                dispatch.list();
+
+            res.json({
+
+                success: true,
+
+                requests
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "❌ Dispatch request polling error:",
+                error
+            );
+
+            res.status(500).json({
+
+                success: false,
+
+                error:
+                    "Failed to load dispatch requests"
+
+            });
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// LEGACY LIST ALIAS
+//
+// GET /api/dispatch/list
+// ============================================================
+
+router.get(
+    "/dispatch/list",
+    (req, res) => {
+
+        try {
+
+            res.json(
+                dispatch.list()
+            );
+
+        } catch (error) {
+
+            res.status(500).json({
+
+                success: false,
+
+                error:
+                    "Failed to load dispatch list"
+
+            });
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// MATCH DRIVERS
+//
+// POST /api/dispatch/match
+// ============================================================
+
+router.post(
+    "/dispatch/match",
+    (req, res) => {
+
+        try {
+
+            const request =
+                dispatch.dispatch(
+
+                    req.body.id,
+
+                    req.body.drivers ||
+                        []
+
+                );
+
+            if (!request) {
+
+                return res
+                    .status(404)
+                    .json({
+
+                        success: false,
+
+                        error:
+                            "Dispatch request not found"
+
+                    });
+
+            }
+
+            res.json({
+
+                success: true,
+
+                request
+
+            });
+
+        } catch (error) {
+
+            res.status(500).json({
+
+                success: false,
+
+                error:
+                    "Failed to match drivers"
+
+            });
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// DRIVER ACCEPT
+//
+// POST /api/dispatch/accept
+// ============================================================
+
+router.post(
+    "/dispatch/accept",
+    (req, res) => {
+
+        try {
+
+            const id =
+                req.body.id ||
+                req.body.rideId;
+
+            const driver =
+                req.body.driver ||
+                req.body.driverId;
+
+
+            if (!id) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        success: false,
+
+                        error:
+                            "Dispatch request ID is required"
+
+                    });
+
+            }
+
+
+            const request =
+                dispatch.accept(
+
+                    id,
+
+                    driver
+
+                );
+
+
+            if (!request) {
+
+                return res
+                    .status(404)
+                    .json({
+
+                        success: false,
+
+                        error:
+                            "Dispatch request not found"
+
+                    });
+
+            }
+
+
+            res.json({
+
+                success: true,
+
+                request
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "❌ Dispatch acceptance error:",
+                error
+            );
+
+            res.status(500).json({
+
+                success: false,
+
+                error:
+                    "Failed to accept dispatch request"
+
+            });
+
+        }
+
+    }
+);
+
+
+module.exports = router;
+
+============================================================
+5. LIVE RIDE SERVICE — FULL SOURCE
+============================================================
+
+
+const fs=require("fs");
+
+const file="backend/data/live_rides.json";
+
+
+function load(){
+
+return JSON.parse(
+fs.readFileSync(file,"utf8")
+);
+
+}
+
+
+function save(data){
+
+fs.writeFileSync(
+file,
+JSON.stringify(data,null,2)
+);
+
+}
+
+
+function create(data){
+
+const db=load();
+
+const ride={
+
+id:"RIDE-"+Date.now(),
+
+passenger:data.passenger,
+
+driver:null,
+
+pickup:data.pickup,
+
+destination:data.destination,
+
+status:"SEARCHING",
+
+created:new Date().toISOString()
+
+};
+
+
+db.rides.push(ride);
+
+save(db);
+
+return ride;
+
+}
+
+
+
+function update(id,status){
+
+const db=load();
+
+const ride=db.rides.find(
+r=>r.id===id
+);
+
+
+if(!ride) return null;
+
+
+console.warn("[CABLINK] Legacy status mutation blocked");
+
+ride.updated=
+new Date().toISOString();
+
+
+save(db);
+
+return ride;
+
+}
+
+
+
+function assignDriver(id,driver){
+
+const db=load();
+
+const ride=db.rides.find(
+r=>r.id===id
+);
+
+
+if(!ride) return null;
+
+
+ride.driver=driver;
+
+console.warn("[CABLINK] Legacy DRIVER_FOUND mutation blocked");
+
+save(db);
+
+return ride;
+
+}
+
+
+
+function get(id){
+
+const db=load();
+
+return db.rides.find(
+r=>r.id===id
+);
+
+}
+
+
+module.exports={
+create,
+update,
+assignDriver,
+get
+};
+
+
+============================================================
+6. LIVE RIDE API — FULL SOURCE
+============================================================
+
+
+const router=require("express").Router();
+
+const rides=
+require("../services/live_ride_service");
+
+
+// create passenger ride
+
+router.post(
+"/ride/create",
+(req,res)=>{
+
+res.json({
+
+success:true,
+
+ride:
+rides.create(req.body)
+
+});
+
+});
+
+
+// update state
+
+router.post(
+"/ride/status",
+(req,res)=>{
+
+res.json({
+
+success:true,
+
+ride:
+rides.update(
+req.body.id,
+req.body.status
+)
+
+});
+
+});
+
+
+// driver accepts
+
+router.post(
+"/ride/assign",
+(req,res)=>{
+
+res.json({
+
+success:true,
+
+ride:
+rides.assignDriver(
+req.body.id,
+req.body.driver
+)
+
+});
+
+});
+
+
+// get live ride
+
+router.get(
+"/ride/:id",
+(req,res)=>{
+
+res.json(
+rides.get(
+req.params.id
+)
+);
+
+});
+
+
+module.exports=router;
+
+
+============================================================
+7. RIDE STATE SERVICE — FULL SOURCE
+============================================================
+"use strict";
+
+/*
+ * CABLINK — RIDE STATE SERVICE
+ *
+ * CANONICAL ADAPTER
+ *
+ * This service intentionally owns NO ride state.
+ *
+ * Architecture:
+ *
+ *   Legacy/API callers
+ *          ↓
+ *   ride_state_service
+ *          ↓
+ *   canonical compatibility layer
+ *          ↓
+ *   canonical ride engine
+ *          ↓
+ *   canonical repository
+ *          ↓
+ *   backend/data/rides.json
+ *
+ * All ride state transitions are enforced by the
+ * canonical ride state machine.
+ */
+
+const compat =
+    require("../canonical/ride_compatibility");
+
+
+/**
+ * Create a new canonical ride.
+ *
+ * Legacy callers may continue calling:
+ *
+ *     state.create(data)
+ *
+ * The compatibility layer routes this to:
+ *
+ *     canonical ride_engine.createRide()
+ */
+function create(data) {
+
+    return compat.create(
+        data || {}
+    );
+
+}
+
+
+/**
+ * Transition a ride through the canonical state machine.
+ *
+ * Legacy callers may continue calling:
+ *
+ *     state.update(id, status)
+ *
+ * The actual state mutation is now handled by:
+ *
+ *     canonical ride_engine.transition()
+ *
+ * Invalid transitions are rejected by the canonical engine.
+ */
+function update(
+    id,
+    status,
+    metadata = {}
+) {
+
+    return compat.transition(
+        id,
+        status,
+        metadata
+    );
+
+}
+
+
+/**
+ * Retrieve one canonical ride.
+ */
+function get(id) {
+
+    return compat.findById(
+        id
+    );
+
+}
+
+
+/**
+ * Retrieve all canonical rides.
+ */
+function all() {
+
+    return compat.all();
+
+}
+
+
+module.exports = {
+    create,
+    update,
+    get,
+    all
+};
+
+============================================================
+8. RIDE COMPLETION SERVICE — FULL SOURCE
+============================================================
+const engine =
+    require("../canonical/ride_engine");
+
+const rewardService =
+    require("./canonical_reward_service");
+
+const ledger =
+    require("./economy_ledger_service");
+
+const wallet =
+    require("../rewards/wallet_service");
+
+
+// ============================================================
+// COMPLETE CANONICAL RIDE
+//
+// The canonical lifecycle requires:
+//
+// STARTED → COMPLETED
+//
+// Completion is therefore NOT allowed from:
+//
+// MATCHING
+// DRIVER_ASSIGNED
+// DRIVER_ARRIVED
+// PICKED_UP
+//
+// Those states must transition correctly first.
+// ============================================================
+
+async function completeRideById(
+    rideId,
+    metadata = {}
+) {
+
+    if (!rideId) {
+
+        return {
+
+            success: false,
+
+            code:
+                "RIDE_ID_REQUIRED",
+
+            error:
+                "Ride ID is required"
+
+        };
+
+    }
+
+
+    const ride =
+        engine.getRide(rideId);
+
+
+    if (!ride) {
+
+        return {
+
+            success: false,
+
+            code:
+                "NOT_FOUND",
+
+            error:
+                "Ride not found"
+
+        };
+
+    }
+
+
+    // --------------------------------------------------------
+    // Already completed
+    // --------------------------------------------------------
+
+    if (
+        ride.status ===
+        engine.STATES.COMPLETED
+    ) {
+
+        return {
+
+            success: true,
+
+            code:
+                "ALREADY_COMPLETED",
+
+            ride,
+
+            reward:
+                rewardService
+                    .getRewardForRide
+                    ? rewardService
+                        .getRewardForRide(
+                            ride.id
+                        )
+                    : null
+
+        };
+
+    }
+
+
+    // --------------------------------------------------------
+    // Canonical lifecycle enforcement
+    // --------------------------------------------------------
+
+    if (
+        ride.status !==
+        engine.STATES.STARTED
+    ) {
+
+        return {
+
+            success: false,
+
+            code:
+                "INVALID_COMPLETION_STATE",
+
+            error:
+                "Ride must be STARTED before it can be COMPLETED",
+
+            currentStatus:
+                ride.status,
+
+            requiredStatus:
+                engine.STATES.STARTED
+
+        };
+
+    }
+
+
+    // --------------------------------------------------------
+    // Complete canonical ride
+    // --------------------------------------------------------
+
+    const transition =
+        engine.transition(
+
+            ride.id,
+
+            engine.STATES.COMPLETED,
+
+            {
+
+                driverId:
+                    metadata.driverId !== undefined
+                        ? metadata.driverId
+                        : ride.driverId,
+
+                driverName:
+                    metadata.driverName !== undefined
+                        ? metadata.driverName
+                        : ride.driverName
+
+            }
+
+        );
+
+
+    if (!transition.success) {
+
+        return {
+
+            success: false,
+
+            code:
+                "CANONICAL_COMPLETION_FAILED",
+
+            error:
+                "Canonical completion failed",
+
+            details:
+                transition
+
+        };
+
+    }
+
+
+    const completed =
+        transition.ride;
+
+
+    // --------------------------------------------------------
+    // ECONOMY LEDGER
+    // --------------------------------------------------------
+
+    try {
+
+        if (
+            ledger &&
+            typeof ledger.recordRide ===
+                "function"
+        ) {
+
+            ledger.recordRide(
+                completed
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "⚠️ Economy ledger error:",
+            error
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // DRIVER WALLET
+    // --------------------------------------------------------
+
+    try {
+
+        if (
+            wallet &&
+            typeof wallet.add ===
+                "function" &&
+            completed.driverId
+        ) {
+
+            wallet.add(
+
+                completed.driverId,
+
+                1
+
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "⚠️ Driver wallet error:",
+            error
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // CANONICAL THB REWARD
+    // --------------------------------------------------------
+
+    let reward = null;
+
+
+    try {
+
+        reward =
+            rewardService
+                .createRewardForCompletedRide(
+                    completed.id
+                );
+
+    } catch (error) {
+
+        console.error(
+            "⚠️ THB reward creation error:",
+            error
+        );
+
+        return {
+
+            success: false,
+
+            code:
+                "REWARD_CREATION_FAILED",
+
+            error:
+                "Ride completed but reward creation failed",
+
+            ride:
+                completed
+
+        };
+
+    }
+
+
+    // --------------------------------------------------------
+    // FINAL RESPONSE
+    // --------------------------------------------------------
+
+    return {
+
+        success: true,
+
+        code:
+            "COMPLETED",
+
+        ride:
+            completed,
+
+        fare: {
+
+            amount:
+                completed.fare,
+
+            currency:
+                "BWP"
+
+        },
+
+        reward
+
+    };
+
+}
+
+
+module.exports = {
+
+============================================================
+9. COMPLETION API — FULL SOURCE
+============================================================
+const router = require("express").Router();
+
+const completion =
+    require("../services/ride_completion_service");
+
+
+// ============================================================
+// CANONICAL COMPLETION
+//
+// PATCH /api/rides/:id/complete
+//
+// This is the primary completion endpoint.
+// ============================================================
+
+router.patch(
+    "/rides/:id/complete",
+    async (req, res) => {
+
+        try {
+
+            const result =
+                await completion.completeRideById(
+                    req.params.id,
+                    req.body || {}
+                );
+
+            if (!result.success) {
+
+                if (
+                    result.code === "NOT_FOUND"
+                ) {
+
+                    return res
+                        .status(404)
+                        .json(result);
+
+                }
+
+                return res
+                    .status(400)
+                    .json(result);
+
+            }
+
+            return res
+                .status(200)
+                .json(result);
+
+        } catch (error) {
+
+            console.error(
+                "❌ Canonical ride completion error:",
+                error
+            );
+
+            return res
+                .status(500)
+                .json({
+
+                    success: false,
+
+                    error:
+                        "Failed to complete ride"
+
+                });
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// LEGACY / COMPATIBILITY COMPLETION
+//
+// POST /api/ride/complete
+//
+// Existing tests and older frontend code can still use this.
+// Internally it resolves the canonical ride.
+// ============================================================
+
+router.post(
+    "/ride/complete",
+    async (req, res) => {
+
+        try {
+
+            const {
+                id,
+                driverId,
+                driverName
+            } = req.body || {};
+
+
+            if (!id) {
+
+                return res
+                    .status(400)
+                    .json({
+
+                        success: false,
+
+                        error:
+                            "Ride ID is required"
+
+                    });
+
+            }
+
+
+            const result =
+                await completion.completeRideById(
+                    id,
+                    {
+                        driverId,
+                        driverName
+                    }
+                );
+
+
+            if (!result.success) {
+
+                if (
+                    result.code === "NOT_FOUND"
+                ) {
+
+                    return res
+                        .status(404)
+                        .json(result);
+
+                }
+
+                return res
+                    .status(400)
+                    .json(result);
+
+            }
+
+
+            return res.json(result);
+
+        } catch (error) {
+
+            console.error(
+                "❌ Legacy completion error:",
+                error
+            );
+
+            return res
+                .status(500)
+                .json({
+
+                    success: false,
+
+                    error:
+                        "Failed to complete ride"
+
+                });
+
+        }
+
+    }
+);
+
+
+module.exports = router;
+
+============================================================
+10. CANONICAL COMPATIBILITY LAYER — FULL SOURCE
+============================================================
+"use strict";
+
+/*
+ * CABLINK — CANONICAL RIDE COMPATIBILITY LAYER
+ *
+ * PURPOSE:
+ * Provide a temporary compatibility API for legacy modules
+ * while migrating the entire application to the canonical
+ * ride engine.
+ *
+ * ARCHITECTURE RULE:
+ *
+ *   Legacy module
+ *        ↓
+ *   Compatibility Layer
+ *        ↓
+ *   Canonical Ride Engine
+ *        ↓
+ *   Canonical Repository
+ *        ↓
+ *   backend/data/rides.json
+ *
+ * This module does NOT own ride state.
+ * This module does NOT maintain a second ride database.
+ * This module does NOT write ride files directly.
+ */
+
+const engine = require("./ride_engine");
+
+/**
+ * Create a canonical ride.
+ */
+function create(data) {
+    return engine.createRide(data);
+}
+
+/**
+ * Get one canonical ride.
+ */
+function findById(id) {
+    return engine.getRide(id);
+}
+
+/**
+ * Get all canonical rides.
+ */
+function all() {
+    return engine.getAllRides();
+}
+
+/**
+ * Update canonical ride through the state machine.
+ */
+function transition(id, nextState, metadata = {}) {
+    return engine.transition(
+        id,
+        nextState,
+        metadata
+    );
+}
+
+/**
+ * Accept a canonical ride.
+ */
+async function accept(
+    id,
+    driverId,
+    driverName
+) {
+    return engine.acceptRide(
+        id,
+        driverId,
+        driverName
+    );
+}
+
+module.exports = {
+    create,
+    findById,
+    all,
+    transition,
+    accept
+};
+
+============================================================
+11. CANONICAL RIDE ENGINE — FULL SOURCE
+============================================================
+const repository = require("./ride_repository");
+
+const STATES = Object.freeze({
+    REQUESTED: "REQUESTED",
+    MATCHING: "MATCHING",
+    DRIVER_ASSIGNED: "DRIVER_ASSIGNED",
+    DRIVER_ARRIVED: "DRIVER_ARRIVED",
+    PICKED_UP: "PICKED_UP",
+    STARTED: "STARTED",
+    COMPLETED: "COMPLETED",
+    CANCELLED: "CANCELLED"
+});
+
+const TRANSITIONS = {
+    REQUESTED: [
+        "MATCHING",
+        "CANCELLED"
+    ],
+
+    MATCHING: [
+        "DRIVER_ASSIGNED",
+        "CANCELLED"
+    ],
+
+    DRIVER_ASSIGNED: [
+        "DRIVER_ARRIVED",
+        "CANCELLED"
+    ],
+
+    DRIVER_ARRIVED: [
+        "PICKED_UP",
+        "CANCELLED"
+    ],
+
+    PICKED_UP: [
+        "STARTED"
+    ],
+
+    STARTED: [
+        "COMPLETED"
+    ],
+
+    COMPLETED: [],
+
+    CANCELLED: []
+};
+
+function createRide(data) {
+
+    const ride = {
+        id: "RIDE-" + Date.now(),
+
+        pickup: data.pickup || "",
+
+        dropoff:
+            data.dropoff ||
+            data.destination ||
+            "",
+
+        vehicle:
+            data.vehicle ||
+            "standard",
+
+        fare:
+            Number(data.fare) ||
+            20,
+
+        distanceKm:
+            Number(data.distanceKm) ||
+            0,
+
+        wallet:
+            data.wallet ||
+            null,
+
+        notes:
+            data.notes ||
+            "",
+
+        passenger:
+            data.passenger ||
+            null,
+
+        driverId: null,
+
+        driverName: null,
+
+        status: STATES.REQUESTED,
+
+        createdAt:
+            new Date().toISOString(),
+
+        updatedAt:
+            new Date().toISOString()
+    };
+
+    return repository.create(ride);
+}
+
+function getRide(id) {
+    return repository.findById(id);
+}
+
+function getAllRides() {
+    return repository.all();
+}
+
+function canTransition(from, to) {
+    if (!STATES[to]) {
+        return false;
+    }
+
+    return (
+        TRANSITIONS[from] &&
+        TRANSITIONS[from].includes(to)
+    );
+}
+
+
+// ============================================================
+// ACCEPT RIDE
+//
+// Canonical driver acceptance operation.
+//
+// This is intentionally separate from generic transition().
+// Acceptance has a concurrency-sensitive business rule:
+// only one driver may claim a MATCHING ride.
+//
+// The repository owns the serialized state check + write.
+// ============================================================
+
+async function acceptRide(
+    id,
+    driverId,
+    driverName
+) {
+
+    return repository.accept(
+        id,
+        driverId,
+        driverName
+    );
+}
+
+function transition(id, nextState, metadata = {}) {
+
+    const ride = repository.findById(id);
+
+    if (!ride) {
+        return {
+            success: false,
+            error: "Ride not found"
+        };
+    }
+
+    if (!canTransition(
+        ride.status,
+        nextState
+    )) {
+        return {
+            success: false,
+            error:
+                "Invalid ride transition: " +
+                ride.status +
+                " → " +
+                nextState
+        };
+    }
+
+    const changes = {
+        status: nextState
+    };
+
+    if (
+        metadata.driverId !== undefined
+    ) {
+        changes.driverId =
+            metadata.driverId;
+    }
+
+    if (
+        metadata.driverName !== undefined
+    ) {
+        changes.driverName =
+            metadata.driverName;
+    }
+
+    if (
+        metadata.rating !== undefined
+    ) {
+        changes.rating =
+            metadata.rating;
+    }
+
+    if (
+        metadata.comment !== undefined
+    ) {
+        changes.comment =
+            metadata.comment;
+    }
+
+    if (
+        nextState === STATES.COMPLETED
+    ) {
+        changes.completedAt =
+            new Date().toISOString();
+    }
+
+    return {
+        success: true,
+        ride: repository.update(
+            id,
+            changes
+        )
+    };
+}
+
+module.exports = {
+    STATES,
+    TRANSITIONS,
+    createRide,
+    getRide,
+    getAllRides,
+    transition,
+    canTransition,
+    acceptRide
+};
+
+============================================================
+12. CANONICAL REPOSITORY — FULL SOURCE
+============================================================
+const fs = require("fs");
+const path = require("path");
+
+const DATA_DIR = path.join(__dirname, "..", "data");
+const FILE = path.join(DATA_DIR, "rides.json");
+
+// In-process write lock for single-process runtime
+let writeLock = Promise.resolve();
+
+function withWriteLock(operation) {
+    const run = writeLock.then(operation);
+    writeLock = run.catch(() => {});
+    return run;
+}
+
+function ensureStore() {
+    try { require("fs").mkdirSync(DATA_DIR, { recursive: true }); } catch(_e) {}
+    if (!fs.existsSync(FILE)) {
+        try { fs.writeFileSync(FILE, "[]", "utf8"); } catch(_e) {}
+    }
+}
+
+function load() {
+    ensureStore();
+    try {
+        const raw = fs.readFileSync(FILE, "utf8");
+        const data = JSON.parse(raw);
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.error("Ride database read error:", error);
+        return [];
+    }
+}
+
+function save(rides) {
+    ensureStore();
+    try {
+        fs.writeFileSync(FILE, JSON.stringify(rides, null, 2), "utf8");
+    } catch(_e) {
+        /* Vercel read-only FS — in-memory only */
+    }
+}
+
+function create(ride) {
+    const rides = load();
+    rides.push(ride);
+    save(rides);
+    return ride;
+}
+
+function findById(id) {
+    return load().find(ride => ride.id === String(id)) || null;
+}
+
+function all() {
+    return load();
+}
+
+function update(id, changes) {
+    const rides = load();
+    const index = rides.findIndex(ride => ride.id === String(id));
+    if (index === -1) return null;
+    rides[index] = {
+        ...rides[index],
+        ...changes,
+        updatedAt: new Date().toISOString()
+    };
+    save(rides);
+    return rides[index];
+}
+
+async function accept(id, driverId, driverName) {
+    return withWriteLock(async () => {
+        const rides = load();
+        const index = rides.findIndex(ride => ride.id === String(id));
+
+        if (index === -1) {
+            return { success: false, code: "NOT_FOUND", error: "Ride not found" };
+        }
+
+        const ride = rides[index];
+
+        if (ride.status !== "MATCHING") {
+            return {
+                success: false,
+                code: "ALREADY_ACCEPTED",
+                error: "Ride is no longer available for acceptance",
+                currentStatus: ride.status,
+                ride
+            };
+        }
+
+        if (!driverId) {
+            return { success: false, code: "DRIVER_ID_REQUIRED", error: "Driver ID is required" };
+        }
+
+        rides[index] = {
+            ...ride,
+            driverId: String(driverId),
+            driverName: driverName || ride.driverName || null,
+            status: "DRIVER_ASSIGNED",
+            acceptedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        save(rides);
+
+        return { success: true, code: "ACCEPTED", ride: rides[index] };
+    });
+}
+
+module.exports = { create, findById, all, update, accept };
+
+============================================================
+13. LEGACY DATABASE RIDE REPOSITORY
+============================================================
+
+const db=require("../storage/database");
+
+
+function create(ride){
+
+let data=db.read();
+
+data.rides.push(ride);
+
+db.write(data);
+
+return ride;
+
+}
+
+
+function all(){
+
+return db.read().rides;
+
+}
+
+
+function update(id,status){
+
+let data=db.read();
+
+let ride=
+data.rides.find(
+r=>r.id===id
+);
+
+
+if(ride){
+
+console.warn("[CABLINK] Legacy status mutation blocked");
+
+db.write(data);
+
+}
+
+
+return ride;
+
+}
+
+
+module.exports={
+create,
+all,
+update
+};
+
+
+============================================================
+14. LEGACY RIDE REPOSITORY VARIANT
+============================================================
+
+
+const fs=require("fs");
+
+const file="backend/database/rides.json";
+
+
+function load(){
+
+if(!fs.existsSync(file)){
+fs.writeFileSync(file,"[]");
+}
+
+return JSON.parse(fs.readFileSync(file));
+
+}
+
+
+function save(data){
+
+fs.writeFileSync(
+file,
+JSON.stringify(data,null,2)
+);
+
+}
+
+
+module.exports={
+
+all(){
+
+return load();
+
+},
+
+
+create(ride){
+
+let rides=load();
+
+rides.push(ride);
+
+save(rides);
+
+return ride;
+
+},
+
+
+update(id,data){
+
+let rides=load();
+
+let ride=rides.find(r=>r.id===id);
+
+if(!ride) return null;
+
+
+Object.assign(
+ride,
+data,
+{
+updatedAt:new Date().toISOString()
+}
+);
+
+save(rides);
+
+return ride;
+
+}
+
+};
+
+
+============================================================
+15. LEGACY RIDE STORE
+============================================================
+const fs=require("fs");
+const path=require("path");
+
+const file=path.join(__dirname,"data","rides.json");
+
+function load(){
+    if(!fs.existsSync(file)){
+        fs.writeFileSync(file,JSON.stringify([] ,null,2));
+    }
+
+    return JSON.parse(fs.readFileSync(file,"utf8"));
+}
+
+function save(data){
+    fs.writeFileSync(file,JSON.stringify(data,null,2));
+}
+
+function createRide(ride){
+
+    let rides=load();
+
+    const id="CL-"+Math.random()
+    .toString(36)
+    .substring(2,8)
+    .toUpperCase();
+
+    const newRide={
+        id,
+        status:"requested",
+        createdAt:new Date().toISOString(),
+        ...ride
+    };
+
+    rides.push(newRide);
+
+    save(rides);
+
+    return newRide;
+}
+
+
+function getRides(){
+    return load();
+}
+
+
+function getRide(id){
+    return load().find(r=>r.id===id);
+}
+
+
+function updateRide(id,data){
+
+    let rides=load();
+
+    let index=rides.findIndex(r=>r.id===id);
+
+    if(index===-1)
+        return null;
+
+
+    rides[index]={
+        ...rides[index],
+        ...data,
+        updatedAt:new Date().toISOString()
+    };
+
+
+    save(rides);
+
+    return rides[index];
+}
+
+
+module.exports={
+    createRide,
+    getRides,
+    getRide,
+    updateRide
+};
+
+============================================================
+16. LEGACY RIDE API PATCH
+============================================================
+const store=require("./ride_store");
+
+
+module.exports=function(app){
+
+
+app.post("/api/rides",(req,res)=>{
+
+    try{
+
+        const ride=store.createRide(req.body);
+
+        console.log(
+        "🚕 NEW RIDE:",
+        ride.id
+        );
+
+        res.json({
+            success:true,
+            ride
+        });
+
+    }catch(e){
+
+        res.status(500)
+        .json({
+            error:e.message
+        });
+
+    }
+
+});
+
+
+
+app.get("/api/rides",(req,res)=>{
+
+    res.json(
+        store.getRides()
+    );
+
+});
+
+
+
+app.get("/api/rides/:id",(req,res)=>{
+
+    const ride=
+    store.getRide(req.params.id);
+
+
+    if(!ride)
+        return res.status(404)
+        .json({
+            error:"Ride not found"
+        });
+
+
+    res.json(ride);
+
+});
+
+
+
+app.patch("/api/rides/:id",(req,res)=>{
+
+    const ride=
+    store.updateRide(
+        req.params.id,
+        req.body
+    );
+
+
+    if(!ride)
+        return res.status(404)
+        .json({
+            error:"Ride not found"
+        });
+
+
+    res.json(ride);
+
+});
+
+
+};
+
+============================================================
+17. STORAGE DATABASE IMPLEMENTATION
+============================================================
+const fs = require("fs");
+const path = require("path");
+
+const DATA_DIR = __dirname;
+const FILE = path.join(DATA_DIR, "cablink_db.json");
+
+console.log("CABLINK DATABASE FILE:", FILE);
+
+function ensureStore() {
+    try {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+    } catch (_e) {
+        // Directory may already exist or filesystem may be read-only
+    }
+
+    if (!fs.existsSync(FILE)) {
+        try {
+            fs.writeFileSync(
+                FILE,
+                JSON.stringify(
+                    {
+                        users: [],
+                        rides: []
+                    },
+                    null,
+                    2
+                ),
+                "utf8"
+            );
+        } catch (_e) {
+            // Vercel/serverless filesystem may be read-only
+        }
+    }
+}
+
+function read() {
+    ensureStore();
+
+    try {
+        const raw = fs.readFileSync(FILE, "utf8");
+        return JSON.parse(raw);
+    } catch (error) {
+        console.error("❌ CabLink database read error:", error);
+
+        return {
+            users: [],
+            rides: []
+        };
+    }
+}
+
+function write(data) {
+    ensureStore();
+
+    try {
+        fs.writeFileSync(
+            FILE,
+            JSON.stringify(data, null, 2),
+            "utf8"
+        );
+
+        return true;
+    } catch (error) {
+        console.error("❌ CabLink database write error:", error);
+
+        return false;
+    }
+}
+
+module.exports = {
+    read,
+    write
+};
+
+============================================================
+18. ALL IMPORTS OF LEGACY RIDE REPOSITORIES
+============================================================
+backend/routes/mobile.js:5:const trips=require("../trips/trip_manager");
+backend/routes/dispatch_api.js:5:    require("../services/dispatch_service");
+backend/routes/live_ride_api.js:6:require("../services/live_ride_service");
+backend/routes/orchestrator_api.js:6:require("../services/ride_orchestrator_service");
+backend/routes/ride_state_api.js:16: *   canonical/ride_repository
+backend/services/ride_dispatch_bridge.js:1:const dispatchService = require("./dispatch_service");
+backend/services/ride_orchestrator_service.js:12:const rideRepository=require("../database/ride_repository");
+backend/services/canonical_reward_service.js:5:const rideRepository =
+backend/services/canonical_reward_service.js:6:    require("../canonical/ride_repository");
+backend/services/canonical_reward_service.js:134:        rideRepository.findById(
+backend/server.js:18:// backend/canonical/ride_repository.js
+backend/ride_api_patch.js:1:const store=require("./ride_store");
+backend/canonical/ride_engine.js:1:const repository = require("./ride_repository");
+
+============================================================
+19. ALL DIRECT WRITES TO RIDE DATA FILES
+============================================================
+backend/services/ride_service.js:16:rides.push(ride);
+backend/services/economy_ledger_service.js:31:db.rides.push(ride);
+backend/services/live_ride_service.js:19:fs.writeFileSync(
+backend/services/live_ride_service.js:21:JSON.stringify(data,null,2)
+backend/services/live_ride_service.js:50:db.rides.push(ride);
+backend/services/ride_event_service.js:18:fs.writeFileSync(
+backend/services/ride_event_service.js:20:JSON.stringify(data,null,2)
+backend/services/ride_event_service.js:41:db.events.push(item);
+backend/events/ride_event_bus.js:22:events.push(record);
+backend/broadcast/ride_broadcast.js:7:return firebase.write(
+backend/database/ride_repository.js:9:data.rides.push(ride);
+backend/database/ride_repository.js:11:db.write(data);
+backend/database/ride_repository.js:39:db.write(data);
+backend/database/rideRepository.js:11:fs.writeFileSync(file,"[]");
+backend/database/rideRepository.js:21:fs.writeFileSync(
+backend/database/rideRepository.js:23:JSON.stringify(data,null,2)
+backend/database/rideRepository.js:42:rides.push(ride);
+backend/ride_store.js:8:        fs.writeFileSync(file,JSON.stringify([] ,null,2));
+backend/ride_store.js:15:    fs.writeFileSync(file,JSON.stringify(data,null,2));
+backend/ride_store.js:34:    rides.push(newRide);
+backend/canonical/ride_repository.js:19:        try { fs.writeFileSync(FILE, "[]", "utf8"); } catch(_e) {}
+backend/canonical/ride_repository.js:38:        fs.writeFileSync(FILE, JSON.stringify(rides, null, 2), "utf8");
+backend/canonical/ride_repository.js:46:    rides.push(ride);
+backend/canonical/ride_repository_firestore_test.js:9:    return db.write(
+backend/canonical/ride_repository_firestore_test.js:74:    await db.write(
+backend/canonical/ride_repository_firestore_test.js:172:    await db.write(
+
+============================================================
+20. ALL RIDE STATUS MUTATIONS
+============================================================
+backend/routes/rides.js:59:            rideEngine.transition(
+backend/routes/rides.js:116:            await rideEngine.acceptRide(
+backend/routes/rides.js:256:            rideEngine.transition(
+backend/routes/driver_online_api.js:47:driver.status="ONLINE";
+backend/routes/live_ride_api.js:38:rides.update(
+backend/routes/ride_state_api.js:81: *   "status": "MATCHING"
+backend/routes/ride_state_api.js:133:                state.update(
+backend/routes/canonical_reward_api.js:35:                result.status ===
+backend/routes/canonical_reward_api.js:55:                result.status ===
+backend/routes/canonical_reward_api.js:71:                result.status ===
+backend/routes/canonical_reward_api.js:87:                result.status ===
+backend/routes/canonical_reward_api.js:122:                    status:
+backend/services/ride_service.js:12:status:"REQUESTED",
+backend/services/driver_service.js:12:status:"OFFLINE"
+backend/services/driver_service.js:28:d.status="ONLINE";
+backend/services/driver_service.js:37:return drivers.filter(d=>d.status==="ONLINE");
+backend/services/payment_service.js:19:status:"COMPLETED",
+backend/services/dispatch_service.js:43:status:"SEARCHING",
+backend/services/dispatch_service.js:77:request.status="DRIVER_FOUND";
+backend/services/dispatch_service.js:102:request.status="ACCEPTED";
+backend/services/economy_ledger_service.js:106:r=>r.status==="COMPLETED"
+backend/services/live_ride_service.js:43:status:"SEARCHING",
+backend/services/live_ride_service.js:60:function update(id,status){
+backend/services/ride_completion_service.js:79:        ride.status ===
+backend/services/ride_completion_service.js:141:        engine.transition(
+backend/services/ride_orchestrator_service.js:47:state.update(
+backend/services/ride_orchestrator_service.js:76:state.update(
+backend/services/ride_orchestrator_service.js:106:state.update(
+backend/services/ride_state_service.js:57: *     state.update(id, status)
+backend/services/ride_state_service.js:61: *     canonical ride_engine.transition()
+backend/services/ride_state_service.js:65:function update(
+backend/services/ride_state_service.js:71:    return compat.transition(
+backend/services/canonical_reward_service.js:116:            status: "INVALID_REQUEST",
+backend/services/canonical_reward_service.js:145:            status: "RIDE_NOT_FOUND",
+backend/services/canonical_reward_service.js:170:            status: "RIDE_NOT_COMPLETED",
+backend/services/canonical_reward_service.js:212:            status: "ALREADY_REWARDED",
+backend/services/canonical_reward_service.js:295:        status: "REWARD_CREATED",
+backend/api/reward_api.js:15:claimResult.status==="NO_REWARDS"
+backend/auth/phone_verification_engine.js:21:status:"CODE_SENT",
+backend/auth/auth_connector.js:29:status:"AUTH_SESSION_CREATED"
+backend/auth/otp_service.js:11:status:"OTP_READY",
+backend/payments/payment_engine.js:10:status:"PAYMENT_CONFIRMED",
+backend/payments/payment_adapter.js:13:status:"PENDING_GATEWAY"
+backend/payments/transaction_recorder.js:12:status:data.status
+backend/payments/payment_transaction_layer.js:16:status:data.status || "PENDING"
+backend/payments/payment_provider_adapter.js:12:status:"PENDING_PROVIDER"
+backend/payments/payment_provider_adapter.js:27:status:data.status
+backend/rides/settlement_engine.js:23:status:"SETTLEMENT_RECORDED"
+backend/rides/ride_lifecycle.js:17:status:"REQUESTED",
+backend/rides/ride_lifecycle.js:31:function update(id,status){
+backend/rides/ride_lifecycle.js:35:rides[id].status=status;
+backend/rewards/reward_engine.js:85:status:"CONFIRMED"
+backend/rewards/blockchain_reward_adapter.js:11:status:"READY_FOR_CONTRACT_TRANSFER",
+backend/rewards/thb_transaction_layer.js:15:status:"WAITING_CONTRACT_ADDRESS"
+backend/rewards/thb_service.js:14:status:"PENDING_CHAIN_CONFIRMATION",
+backend/rewards/reward_claim_engine.js:12:status:"READY_FOR_BLOCKCHAIN_TRANSFER",
+backend/rewards/thb_transfer_queue.js:17:status:"QUEUED",
+backend/rewards/thb_claim_engine.js:23:status:"NO_REWARDS",
+backend/rewards/thb_claim_engine.js:44:status:"READY_FOR_TRANSFER",
+backend/rewards/thb_claim_engine.js:69:status:"CONFIRMED",
+backend/rewards/thb_claim_engine.js:76:status:"CLAIM_COMPLETED",
+backend/rewards/auto_reward_trigger.js:13:status:"IGNORED",
+backend/rewards/auto_reward_trigger.js:31:status:"REWARDED",
+backend/rewards/delivery_completion.js:8:task.status="COMPLETED";
+backend/rewards/delivery_reward_engine.js:28:status:"PENDING"
+backend/rewards/delivery_reward_service.js:8:task.status="COMPLETED";
+backend/trust/trust_engine.js:25:status:
+backend/notifications/notification_center.js:11:status:"CREATED",
+backend/notifications/push_bridge.js:10:status:"DEVICE_REGISTERED"
+backend/notifications/push_bridge.js:28:status:"QUEUED"
+backend/safety/emergency_engine.js:11:status:"ACTIVE",
+backend/admin/operator_dashboard.js:18:status:"AVAILABLE"
+backend/blockchain/thb_transfer_worker.js:13:status:"WAITING_CONFIGURATION",
+backend/blockchain/thb_transfer_worker.js:26:status:"READY_FOR_TRANSFER",
+backend/blockchain/thb_transfer_service.js:7:let status=health.check();
+backend/blockchain/thb_transfer_service.js:16:status:"BLOCKED",
+backend/blockchain/thb_transfer_service.js:34:status:"READY",
+backend/blockchain/thb_transaction_engine.js:17:status:"SIMULATION_CREATED",
+backend/blockchain/thb_transaction_engine.js:37:tx.status="WAITING_BLOCKCHAIN";
+backend/blockchain/thb_transaction_engine.js:55:tx.status="CONFIRMED";
+backend/blockchain/thb_real_executor.js:17:status:"SIMULATION",
+backend/blockchain/thb_real_executor.js:60:status:"SUBMITTED",
+backend/realtime/realtime_bridge.js:13:status:"LISTENING"
+backend/cloud/cloud_adapter.js:15:status:"SYNC_QUEUE"
+backend/cloud/production_adapter.js:12:status:
+backend/push/push_engine.js:10:status:"PUSH_READY",
+backend/providers/cloud_database_connector.js:11:status:"WAITING_CONFIGURATION",
+backend/providers/cloud_database_connector.js:23:status:"CONNECTED",
+backend/providers/maps_connector.js:28:status:"ROUTE_REQUEST_READY"
+backend/maps/gps_engine.js:25:status:"ROUTE_READY"
+backend/maps/map_provider.js:9:status:"READY"
+backend/maps/map_provider.js:26:status:"ROUTE_REQUESTED"
+backend/sms/sms_engine.js:11:status:"OTP_PENDING",
+backend/extensions/extension_registry.js:11:status:"AVAILABLE_FOR_DEVELOPMENT",
+backend/firebase/firebase_adapter.js:31:status:"FIREBASE_WRITE_READY",
+backend/firebase/firestore_adapter.js:138:        status:
+backend/mobile/device_registry.js:17:status:"CONNECTED",
+backend/mobile/device_registry.js:36:devices[device].status="ACTIVE";
+backend/support/ticket_system.js:10:status:"OPEN",
+backend/database/production_schema.js:17:"status",
+backend/database/production_schema.js:25:"status"
+backend/database/migration_engine.js:8:status:"MIGRATION_READY",
+backend/database/ride_repository.js:25:function update(id,status){
+backend/database/rideRepository.js:51:update(id,data){
+backend/pricing/fare_calculator.js:18:status:"CALCULATED"
+backend/transactions/transaction_record.js:15:status:data.status || "PENDING",
+backend/server/app.js:41:        status: "ONLINE",
+backend/server/index.js:19:status:"RUNNING"
+backend/socket/socket_manager.js:20:status:"JOINED"
+backend/trips/trip_manager.js:17:status:"STARTED",
+backend/trips/trip_manager.js:31:function update(id,status){
+backend/trips/trip_manager.js:35:trips[id].status=status;
+backend/heartbeat/device_monitor.js:8:status:"ONLINE",
+backend/ride_store.js:29:        status:"requested",
+backend/tasks/task_manager.js:22:status:"AVAILABLE",
+backend/tasks/task_manager.js:43:tasks[id].status="ASSIGNED";
+backend/canonical/ride_repository.js:59:function update(id, changes) {
+backend/canonical/ride_repository.js:101:            status: "DRIVER_ASSIGNED",
+backend/canonical/ride_engine.js:88:        status: STATES.REQUESTED,
+backend/canonical/ride_engine.js:125:// This is intentionally separate from generic transition().
+backend/canonical/ride_engine.js:132:async function acceptRide(
+backend/canonical/ride_engine.js:145:function transition(id, nextState, metadata = {}) {
+backend/canonical/ride_engine.js:171:        status: nextState
+backend/canonical/ride_engine.js:211:        ride: repository.update(
+backend/canonical/ride_repository_firestore_test.js:51:async function update(
+backend/canonical/ride_repository_firestore_test.js:161:        status:
+backend/canonical/ride_compatibility.js:54:function transition(id, nextState, metadata = {}) {
+backend/canonical/ride_compatibility.js:55:    return engine.transition(
+backend/canonical/ride_compatibility.js:70:    return engine.acceptRide(
+
+============================================================
+21. LEGACY STATE NAMES
+============================================================
+backend/routes/rides.js:133:                "ALREADY_ACCEPTED"
+backend/services/dispatch_service.js:43:status:"SEARCHING",
+backend/services/dispatch_service.js:77:request.status="DRIVER_FOUND";
+backend/services/dispatch_service.js:102:request.status="ACCEPTED";
+backend/services/live_ride_service.js:43:status:"SEARCHING",
+backend/services/live_ride_service.js:100:console.warn("[CABLINK] Legacy DRIVER_FOUND mutation blocked");
+backend/services/ride_completion_service.js:24:// DRIVER_ASSIGNED
+backend/services/ride_orchestrator_service.js:44:console.warn("[CABLINK] Legacy DRIVER_FOUND mutation blocked");
+backend/services/ride_orchestrator_service.js:49:"DRIVER_FOUND"
+backend/services/ride_orchestrator_service.js:61:type:"DRIVER_ASSIGNED",
+backend/services/ride_orchestrator_service.js:108:"TRIP_STARTED"
+backend/services/ride_orchestrator_service.js:120:type:"TRIP_STARTED",
+backend/services/ride_orchestrator_service.js:156:type:"TRIP_COMPLETED",
+backend/testing/pilot_activation_test.js:33:"DRIVER_ACCEPTED",
+backend/testing/pilot_activation_test.js:34:"DRIVER_ARRIVING"
+backend/testing/phase34_economy_test.js:51:console.log("ACCEPTED:");
+backend/testing/phase42_dispatch_test.js:85:console.log("ACCEPTED:");
+backend/testing/phase46_live_test.js:66:console.log("ASSIGNED");
+backend/testing/phase46_live_test.js:76:status:"ACCEPTED"
+backend/testing/phase50_state_test.js:56:status:"DRIVER_ARRIVING"
+backend/testing/phase50_state_test.js:67:status:"TRIP_STARTED"
+backend/tasks/task_manager.js:43:tasks[id].status="ASSIGNED";
+backend/canonical/ride_repository.js:86:                code: "ALREADY_ACCEPTED",
+backend/canonical/ride_repository.js:101:            status: "DRIVER_ASSIGNED",
+backend/canonical/ride_repository.js:108:        return { success: true, code: "ACCEPTED", ride: rides[index] };
+backend/canonical/ride_engine.js:6:    DRIVER_ASSIGNED: "DRIVER_ASSIGNED",
+backend/canonical/ride_engine.js:21:        "DRIVER_ASSIGNED",
+backend/canonical/ride_engine.js:25:    DRIVER_ASSIGNED: [
+backend/canonical/ride_repository_firestore_test.js:135:                "ALREADY_ACCEPTED",
+backend/canonical/ride_repository_firestore_test.js:162:            "DRIVER_ASSIGNED",
+backend/canonical/ride_repository_firestore_test.js:184:            "ACCEPTED",
+frontend/js/operations_core.js:71:status:"DRIVER_FOUND"
+frontend/js/simulation_engine.js:59:"DRIVER_ASSIGNED"
+frontend/js/app_core.js:638:// → DRIVER_ASSIGNED
+frontend/js/app_core.js:651:    DRIVER_ASSIGNED: 'DRIVER_ASSIGNED',
+frontend/testing/human_interface_test.js:11:status:"DRIVER_ARRIVING",
+frontend/index.html:1032:      if(status === 'ACCEPTED' || status === 'ASSIGNED'){
+
+============================================================
+22. CANONICAL STATE NAMES
+============================================================
+backend/canonical/ride_repository.js:83:        if (ride.status !== "MATCHING") {
+backend/canonical/ride_repository.js:101:            status: "DRIVER_ASSIGNED",
+backend/canonical/ride_engine.js:4:    REQUESTED: "REQUESTED",
+backend/canonical/ride_engine.js:5:    MATCHING: "MATCHING",
+backend/canonical/ride_engine.js:6:    DRIVER_ASSIGNED: "DRIVER_ASSIGNED",
+backend/canonical/ride_engine.js:7:    DRIVER_ARRIVED: "DRIVER_ARRIVED",
+backend/canonical/ride_engine.js:8:    PICKED_UP: "PICKED_UP",
+backend/canonical/ride_engine.js:9:    STARTED: "STARTED",
+backend/canonical/ride_engine.js:10:    COMPLETED: "COMPLETED",
+backend/canonical/ride_engine.js:11:    CANCELLED: "CANCELLED"
+backend/canonical/ride_engine.js:15:    REQUESTED: [
+backend/canonical/ride_engine.js:16:        "MATCHING",
+backend/canonical/ride_engine.js:17:        "CANCELLED"
+backend/canonical/ride_engine.js:20:    MATCHING: [
+backend/canonical/ride_engine.js:21:        "DRIVER_ASSIGNED",
+backend/canonical/ride_engine.js:22:        "CANCELLED"
+backend/canonical/ride_engine.js:25:    DRIVER_ASSIGNED: [
+backend/canonical/ride_engine.js:26:        "DRIVER_ARRIVED",
+backend/canonical/ride_engine.js:27:        "CANCELLED"
+backend/canonical/ride_engine.js:30:    DRIVER_ARRIVED: [
+backend/canonical/ride_engine.js:31:        "PICKED_UP",
+backend/canonical/ride_engine.js:32:        "CANCELLED"
+backend/canonical/ride_engine.js:35:    PICKED_UP: [
+backend/canonical/ride_engine.js:36:        "STARTED"
+backend/canonical/ride_engine.js:39:    STARTED: [
+backend/canonical/ride_engine.js:40:        "COMPLETED"
+backend/canonical/ride_engine.js:43:    COMPLETED: [],
+backend/canonical/ride_engine.js:45:    CANCELLED: []
+backend/canonical/ride_engine.js:88:        status: STATES.REQUESTED,
+backend/canonical/ride_engine.js:127:// only one driver may claim a MATCHING ride.
+backend/canonical/ride_engine.js:203:        nextState === STATES.COMPLETED
+backend/canonical/ride_repository_firestore_test.js:127:        "MATCHING"
+backend/canonical/ride_repository_firestore_test.js:162:            "DRIVER_ASSIGNED",
+
+============================================================
+23. ALL RIDE DATA FILES
+============================================================
+backend/data/live_rides.json
+--- backend/data/live_rides.json
+16 backend/data/live_rides.json
+backend/data/ride_events.json
+--- backend/data/ride_events.json
+2029 backend/data/ride_events.json
+backend/data/rides.json
+--- backend/data/rides.json
+11728 backend/data/rides.json
+backend/database/rides.json
+--- backend/database/rides.json
+4896 backend/database/rides.json
+backend/storage/cablink_db.json
+--- backend/storage/cablink_db.json
+2841 backend/storage/cablink_db.json
+
+============================================================
+24. RIDE DATA COUNTS
+============================================================
+
+FILE: backend/data/rides.json
+ARRAY LENGTH: 27
+FIRST ITEM: {
+  "id": "CL-5EO1N3",
+  "status": "REQUESTED",
+  "createdAt": "2026-07-15T06:28:25.189Z",
+  "pickup": "BSTM HQ, Mmopane",
+  "dropoff": "Game City Mall",
+  "fare": 20,
+  "vehicle": "standard",
+  "updatedAt": "2026-07-15T06:28:25.189Z"
+}
+
+FILE: backend/data/live_rides.json
+ROOT TYPE: OBJECT
+KEYS: [ 'rides' ]
+rides LENGTH: 0
+FIRST RIDE: null
+
+FILE: backend/data/ride_events.json
+ROOT TYPE: OBJECT
+KEYS: [ 'events' ]
+
+FILE: backend/database/rides.json
+ARRAY LENGTH: 21
+FIRST ITEM: {
+  "id": "CL-1784115527974",
+  "pickup": "Gaborone Mall",
+  "dropoff": "Airport",
+  "fare": 50,
+  "status": "SEARCHING",
+  "driverId": null,
+  "createdAt": "2026-07-15T11:38:47.975Z"
+}
+
+FILE: backend/storage/cablink_db.json
+ROOT TYPE: OBJECT
+KEYS: [ 'users', 'rides' ]
+rides LENGTH: 9
+FIRST RIDE: {
+  "id": "RIDE-1784100848290",
+  "pickup": "BSTM HQ",
+  "dropoff": "Game City",
+  "fare": 32,
+  "rideType": "Standard",
+  "status": "REQUESTED",
+  "created": "2026-07-15T07:34:08.291Z"
+}
+
+============================================================
+25. CANONICAL REPOSITORY RUNTIME TEST
+============================================================
+Canonical repository exports:
+[ 'create', 'findById', 'all', 'update', 'accept' ]
+Canonical ride count:
+27
+Canonical statuses:
+{
+  "REQUESTED": 4,
+  "DRIVER_ASSIGNED": 9,
+  "COMPLETED": 10,
+  "MATCHING": 4
+}
+
+============================================================
+26. CANONICAL ENGINE RUNTIME TEST
+============================================================
+States:
+{
+  "REQUESTED": "REQUESTED",
+  "MATCHING": "MATCHING",
+  "DRIVER_ASSIGNED": "DRIVER_ASSIGNED",
+  "DRIVER_ARRIVED": "DRIVER_ARRIVED",
+  "PICKED_UP": "PICKED_UP",
+  "STARTED": "STARTED",
+  "COMPLETED": "COMPLETED",
+  "CANCELLED": "CANCELLED"
+}
+Transitions:
+{
+  "REQUESTED": [
+    "MATCHING",
+    "CANCELLED"
+  ],
+  "MATCHING": [
+    "DRIVER_ASSIGNED",
+    "CANCELLED"
+  ],
+  "DRIVER_ASSIGNED": [
+    "DRIVER_ARRIVED",
+    "CANCELLED"
+  ],
+  "DRIVER_ARRIVED": [
+    "PICKED_UP",
+    "CANCELLED"
+  ],
+  "PICKED_UP": [
+    "STARTED"
+  ],
+  "STARTED": [
+    "COMPLETED"
+  ],
+  "COMPLETED": [],
+  "CANCELLED": []
+}
+Engine exports:
+[
+  'STATES',
+  'TRANSITIONS',
+  'createRide',
+  'getRide',
+  'getAllRides',
+  'transition',
+  'canTransition',
+  'acceptRide'
+]
+
+============================================================
+27. LEGACY DATABASE RUNTIME TEST
+============================================================
+CABLINK DATABASE FILE: /data/data/com.termux/files/home/CabLink-pwa/backend/storage/cablink_db.json
+Legacy repository exports:
+[ 'create', 'all', 'update' ]
+Legacy ride count:
+9
+
+============================================================
+28. FINAL WRITE-TARGET CLASSIFICATION
+============================================================
+
+CANONICAL:
+  backend/data/rides.json
+  backend/canonical/ride_repository.js
+  backend/canonical/ride_engine.js
+
+LEGACY / TO BE REVIEWED:
+  backend/storage/cablink_db.json
+  backend/database/rides.json
+  backend/ride_store.js
+  backend/data/live_rides.json
+  backend/data/ride_events.json
+
+============================================================
+29. AUDIT COMPLETE
+============================================================
+NO FILES MODIFIED
+NO FILES DELETED
+NO DATA MIGRATED
+============================================================

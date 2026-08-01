@@ -1,0 +1,265 @@
+const express =
+    require("express");
+
+const db =
+    require(
+        "../backend/production/database_adapter"
+    );
+
+const app =
+    express();
+
+app.use(
+    express.json()
+);
+
+console.log(
+    "CABLINK TEST M: Production Database Adapter"
+);
+
+app.get(
+    "/api/health",
+    (req, res) => {
+
+        res.json({
+
+            system:
+                "CabLink API",
+
+            status:
+                "ONLINE",
+
+            test:
+                "PRODUCTION_DATABASE_ADAPTER",
+
+            time:
+                new Date().toISOString()
+
+        });
+
+    }
+);
+
+app.get(
+    "/api/database-provider",
+    (req, res) => {
+
+        try {
+
+            res.json({
+
+                success:
+                    true,
+
+                provider:
+                    db.provider()
+
+            });
+
+        } catch (error) {
+
+            res
+                .status(500)
+                .json({
+
+                    success:
+                        false,
+
+                    error:
+                        error.message
+
+                });
+
+        }
+
+    }
+);
+
+app.post(
+    "/api/database-adapter-test",
+    async (req, res) => {
+
+        const id =
+            "ADAPTER-TEST-" +
+            Date.now();
+
+        const userData = {
+
+            test:
+                true,
+
+            system:
+                "CabLink",
+
+            type:
+                "USER_ADAPTER_TEST",
+
+            name:
+                "CabLink Adapter Test User",
+
+            created:
+                new Date().toISOString()
+
+        };
+
+        const rideData = {
+
+            test:
+                true,
+
+            system:
+                "CabLink",
+
+            type:
+                "RIDE_ADAPTER_TEST",
+
+            pickup:
+                "BSTM HQ",
+
+            destination:
+                "Game City Mall",
+
+            fare:
+                20,
+
+            currency:
+                "BWP",
+
+            created:
+                new Date().toISOString()
+
+        };
+
+        try {
+
+            console.log(
+                "TEST M: Writing user test document"
+            );
+
+            const userWrite =
+                await db.write(
+                    "cablink_adapter_users_test",
+                    id,
+                    userData
+                );
+
+            console.log(
+                "TEST M: Reading user test document"
+            );
+
+            const userRead =
+                await db.read(
+                    "cablink_adapter_users_test",
+                    id
+                );
+
+            console.log(
+                "TEST M: Writing ride test document"
+            );
+
+            const rideWrite =
+                await db.write(
+                    "cablink_adapter_rides_test",
+                    id,
+                    rideData
+                );
+
+            console.log(
+                "TEST M: Reading ride test document"
+            );
+
+            const rideRead =
+                await db.read(
+                    "cablink_adapter_rides_test",
+                    id
+                );
+
+            res.json({
+
+                success:
+                    true,
+
+                test:
+                    "PRODUCTION_DATABASE_ADAPTER",
+
+                provider:
+                    db.provider(),
+
+                user: {
+
+                    write:
+                        userWrite,
+
+                    read:
+                        userRead,
+
+                    readAfterWrite:
+                        userRead.exists === true
+
+                },
+
+                ride: {
+
+                    write:
+                        rideWrite,
+
+                    read:
+                        rideRead,
+
+                    readAfterWrite:
+                        rideRead.exists === true
+
+                },
+
+                overallPersistence:
+                    userRead.exists === true &&
+                    rideRead.exists === true
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "TEST M DATABASE FAILURE"
+            );
+
+            console.error(
+                error.stack ||
+                error
+            );
+
+            res
+                .status(500)
+                .json({
+
+                    success:
+                        false,
+
+                    test:
+                        "PRODUCTION_DATABASE_ADAPTER",
+
+                    error: {
+
+                        name:
+                            error.name,
+
+                        code:
+                            error.code,
+
+                        message:
+                            error.message,
+
+                        stack:
+                            error.stack
+
+                    }
+
+                });
+
+        }
+
+    }
+);
+
+module.exports =
+    app;

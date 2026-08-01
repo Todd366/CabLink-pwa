@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="/styles/cablink.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
 <style>
@@ -2198,6 +2199,19 @@ modal.style.display="flex";
 Connect UI events to real backend.
 
 */
+
+
+/*
+ * CABLINK O.8.7
+ *
+ * Canonical active ride identity registry.
+ *
+ * Must load before any acceptance lifecycle
+ * attempts to register an active ride.
+ */
+
+import "./js/rides/activeRideRegistry.js";
+
 
 import {
 requestRealRide

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CabLink Launcher</title>
+  <style>
+    body, html { margin:0; padding:0; height:100%; overflow:hidden; background:#000; }
+    iframe { width:100%; height:100%; border:none; }
+  </style>
+</head>
+<body>
+  <iframe src="index.html" id="app"></iframe>
+
+  <script>
+    console.log("🚀 CabLink Launcher Started");
+    
+    window.onload = function() {
+      const iframe = document.getElementById('app');
+      
+      iframe.onload = function() {
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          
+          // Inject fix.js
+          const script = doc.createElement('script');
+          script.src = 'force-fix.js';
+          doc.body.appendChild(script);
+          
+          console.log("✅ Fixes injected into iframe");
+        } catch(e) {
+          console.log("Could not inject into iframe");
+        }
+      };
+    };
+  </script>
+</body>
+</html>

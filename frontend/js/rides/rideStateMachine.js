@@ -1,79 +1,30 @@
-
-
 (function(){
 
-
-window.CABLINK_RIDE_STATE={
-
-
-states:[
-"REQUESTED",
-"ACCEPTED",
-"ARRIVING",
-"PICKED_UP",
-"STARTED",
-"COMPLETED",
-"CANCELLED"
-],
-
-
+window.CABLINK_RIDE_STATE = {
 
 current:
-localStorage.getItem("cablink_ride_state")
+localStorage.getItem(
+"cablink_ride_state"
+)
 ||
 "REQUESTED",
 
 
+sync:function(state){
 
-set:function(state){
-
-
-if(!this.states.includes(state)){
-
-console.log(
-"Invalid ride state:",
-state
-);
-
-return;
-
-}
-
-
-this.current=state;
-
+this.current = state;
 
 localStorage.setItem(
 "cablink_ride_state",
 state
 );
 
-
-
 console.log(
-"🚕 Ride state:",
+"[CABLINK DISPLAY STATE]",
 state
 );
 
-
-
-window.dispatchEvent(
-
-new CustomEvent(
-"cablinkRideStateChanged",
-{
-detail:{
-state:state
-}
-}
-
-)
-
-);
-
-
 },
-
 
 
 get:function(){
@@ -81,8 +32,6 @@ get:function(){
 return this.current;
 
 }
-
-
 
 };
 
@@ -92,13 +41,18 @@ window.addEventListener(
 "cablinkRideStateChanged",
 function(e){
 
-console.log(
-"Ride lifecycle update:",
+if(
+e.detail &&
+e.detail.state
+){
+
+window.CABLINK_RIDE_STATE.sync(
 e.detail.state
 );
 
-});
+}
 
+});
 
 
 })();

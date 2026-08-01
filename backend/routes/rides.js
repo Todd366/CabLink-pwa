@@ -13,7 +13,7 @@ const {
 // Create new ride
 // ============================================================
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
 
     try {
 
@@ -43,7 +43,7 @@ router.post("/", (req, res) => {
         }
 
         const ride =
-            rideEngine.createRide({
+            await rideEngine.createRide({
                 pickup,
                 dropoff,
                 vehicle,
@@ -56,7 +56,7 @@ router.post("/", (req, res) => {
 
         // Move ride into matching state.
         const matching =
-            rideEngine.transition(
+            await rideEngine.transition(
                 ride.id,
                 STATES.MATCHING
             );
@@ -83,6 +83,82 @@ router.post("/", (req, res) => {
 
     }
 
+});
+
+
+// ============================================================
+// PATCH /api/rides/:id/accept
+//
+// Canonical driver acceptance endpoint.
+//
+// Only the first valid acceptance of a MATCHING ride wins.
+// A second acceptance returns HTTP 409.
+// ============================================================
+
+router.patch("/:id/accept", async (req, res) => {
+
+    try {
+
+        const {
+            driverId,
+            driverName
+        } = req.body || {};
+
+        if (!driverId) {
+
+            return res.status(400).json({
+                success: false,
+                error: "Driver ID is required"
+            });
+        }
+
+        const result =
+            await rideEngine.acceptRide(
+                req.params.id,
+                driverId,
+                driverName
+            );
+
+        if (!result.success) {
+
+            if (result.code === "NOT_FOUND") {
+
+                return res.status(404).json(
+                    result
+                );
+            }
+
+            if (
+                result.code ===
+                "ALREADY_ACCEPTED"
+            ) {
+
+                return res.status(409).json(
+                    result
+                );
+            }
+
+            return res.status(400).json(
+                result
+            );
+        }
+
+        return res.status(200).json(
+            result
+        );
+
+    } catch (error) {
+
+        console.error(
+            "❌ Ride acceptance error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            error: "Failed to accept ride"
+        });
+    }
 });
 
 
@@ -126,10 +202,10 @@ router.get("/", (req, res) => {
 // Get one ride
 // ============================================================
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
 
     const ride =
-        rideEngine.getRide(
+        await rideEngine.getRide(
             req.params.id
         );
 
@@ -218,5 +294,53 @@ router.patch("/:id", (req, res) => {
 // ============================================================
 // EXPORT
 // ============================================================
+
+
+
+// ============================================================
+// PATCH /api/rides/:id/state
+//
+// Canonical lifecycle transition bridge
+// ============================================================
+
+router.patch("/:id/state", async (req,res)=>{
+
+    try {
+
+        const { state } = req.body || {};
+
+        if(!state){
+
+            return res.status(400).json({
+                success:false,
+                error:"State required"
+            });
+
+        }
+
+        const result =
+            await rideEngine.transition(
+                req.params.id,
+                state
+            );
+
+        return res.json(result);
+
+    } catch(error){
+
+        console.error(
+            "State transition error:",
+            error
+        );
+
+        return res.status(500).json({
+            success:false,
+            error:"Failed state transition"
+        });
+
+    }
+
+});
+
 
 module.exports = router;

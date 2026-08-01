@@ -1,0 +1,76 @@
+./index.html:23:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+./index.html:24:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+./index.html:664:<script>
+./index.html:1696:<script>
+./index.html:1786:<script src="frontend/js/app_core.js"></script>
+./index.html:1787:<script src="role.js"></script>
+./index.html:1788:<script src="fix.js"></script>
+./index.html:1789:<script src="fare_engine.js"></script>
+./index.html:1790:<script src="frontend/js/rides/rideStateMachine.js"></script>
+./index.html:1791:<script src="frontend/js/rides/passengerRideStatus.js"></script>
+./index.html:1792:<script src="frontend/js/driver/driverLifecycleControls.js"></script>
+./index.html:1793:<script src="frontend/js/rides/completionRewardBridge.js"></script>
+./launcher.html:13:  <iframe src="index.html" id="app"></iframe>
+./launcher.html:15:  <script>
+./frontend/index.html:13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+./frontend/index.html:14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+./frontend/index.html:657:<script>
+./frontend/index.html:1724:<div id="root"></div><script type="module" src="/main.jsx"></script>
+./frontend/index.html:1726:<script>
+./frontend/index.html:1849:<script>
+./frontend/index.html:2000:<script>
+./frontend/index.html:2035:<script>
+./frontend/index.html:2115:<script>
+./frontend/index.html:2192:<script type="module">
+./frontend/index.html:2259:<script>
+./frontend/index.html:2350:<script>
+./frontend/index.html:2362:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:657:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:1724:<div id="root"></div><script type="module" src="/main.jsx"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:1726:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:1849:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:2000:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:2035:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:2115:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:2192:<script type="module">
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:2259:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:2350:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html:2362:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:23:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:24:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:664:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:1696:<script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:1786:<script src="frontend/js/app_core.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:1787:<script src="role.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:1788:<script src="fix.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:1789:<script src="fare_engine.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:1790:<script src="frontend/js/rides/rideStateMachine.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:1791:<script src="frontend/js/rides/passengerRideStatus.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:1792:<script src="frontend/js/driver/driverLifecycleControls.js"></script>
+./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html:1793:<script src="frontend/js/rides/completionRewardBridge.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:23:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:24:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:664:<script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:1700:<script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:1790:<script src="frontend/js/app_core.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:1791:<script src="role.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:1792:<script src="fix.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:1793:<script src="fare_engine.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:1794:<script src="frontend/js/rides/rideStateMachine.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:1795:<script src="frontend/js/rides/passengerRideStatus.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:1796:<script src="frontend/js/driver/driverLifecycleControls.js"></script>
+./.cablink_backups/driver_consolidation_20260725_213935/index.html:1797:<script src="frontend/js/rides/completionRewardBridge.js"></script>
+./dist/index.html:13:<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+./dist/index.html:14:<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+./dist/index.html:241:  <script type="module" crossorigin src="/assets/index-CQ3CRbqS.js"></script>
+./dist/index.html:658:<script>
+./dist/index.html:1748:<script>
+./dist/index.html:1871:<script>
+./dist/index.html:2022:<script>
+./dist/index.html:2057:<script>
+./dist/index.html:2137:<script>
+./dist/index.html:2229:<script>
+./dist/index.html:2320:<script>
+./dist/index.html:2332:<script>

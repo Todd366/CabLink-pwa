@@ -31,6 +31,186 @@
       "updated": "2026-07-14T19:26:33.537Z",
       "fare": 35,
       "completedAt": "2026-07-14T19:26:33.547Z"
+    },
+    {
+      "id": "RIDE-1785163520636",
+      "driverId": "O832_DRIVER",
+      "status": "COMPLETED",
+      "completedAt": "2026-07-27T14:45:20.737Z"
+    },
+    {
+      "id": "RIDE-1785163828923",
+      "driverId": "O832_DRIVER",
+      "status": "COMPLETED",
+      "completedAt": "2026-07-27T14:50:29.049Z"
+    },
+    {
+      "id": "RIDE-1785163950928",
+      "driverId": "O832_DRIVER",
+      "status": "COMPLETED",
+      "completedAt": "2026-07-27T14:52:30.998Z"
+    },
+    {
+      "id": "RIDE-1785164599236",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City Mall",
+      "vehicle": "standard",
+      "fare": 20,
+      "distanceKm": 0,
+      "wallet": null,
+      "notes": "",
+      "passenger": "O840_TEST",
+      "driverId": "O840_DRIVER",
+      "driverName": "Driver",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-27T15:03:19.236Z",
+      "updatedAt": "2026-07-27T15:03:19.327Z",
+      "acceptedAt": "2026-07-27T15:03:19.282Z",
+      "completedAt": "2026-07-27T15:03:19.326Z"
+    },
+    {
+      "id": "RIDE-1785178222548",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City Mall",
+      "vehicle": "standard",
+      "fare": 20,
+      "distanceKm": 0,
+      "wallet": null,
+      "notes": "",
+      "passenger": "O842_PERSISTENCE_TEST",
+      "driverId": "O842_DRIVER",
+      "driverName": "Persistence Test Driver",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-27T18:50:22.550Z",
+      "updatedAt": "2026-07-27T18:50:22.697Z",
+      "acceptedAt": "2026-07-27T18:50:22.639Z",
+      "completedAt": "2026-07-27T18:50:22.697Z"
+    },
+    {
+      "id": "RIDE-1785180179159",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City Mall",
+      "vehicle": "standard",
+      "fare": 20,
+      "distanceKm": 0,
+      "wallet": null,
+      "notes": "",
+      "passenger": "O847_SURVIVAL_TEST",
+      "driverId": "O847_DRIVER",
+      "driverName": "O.8.47 Survival Driver",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-27T19:22:59.161Z",
+      "updatedAt": "2026-07-27T19:22:59.368Z",
+      "acceptedAt": "2026-07-27T19:22:59.252Z",
+      "completedAt": "2026-07-27T19:22:59.367Z"
+    },
+    {
+      "id": "RIDE-1785243267044",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City Mall",
+      "vehicle": "standard",
+      "fare": 20,
+      "distanceKm": 0,
+      "wallet": null,
+      "notes": "",
+      "passenger": "O853_REAL_E2E_PASSENGER",
+      "driverId": "O853_DRIVER",
+      "driverName": "O.8.53 Test Driver",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-28T12:54:27.045Z",
+      "updatedAt": "2026-07-28T12:54:27.245Z",
+      "acceptedAt": "2026-07-28T12:54:27.158Z",
+      "completedAt": "2026-07-28T12:54:27.244Z"
+    },
+    {
+      "id": "RIDE-1785503796014",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City Mall",
+      "vehicle": "standard",
+      "fare": 100,
+      "distanceKm": 0,
+      "wallet": null,
+      "notes": "",
+      "passenger": "Todd-Final-Economy-Test",
+      "driverId": "DRIVER-ECONOMY-001",
+      "driverName": "Economy Driver",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-31T13:16:36.014Z",
+      "updatedAt": "2026-07-31T13:16:36.102Z",
+      "acceptedAt": "2026-07-31T13:16:36.080Z",
+      "completedAt": "2026-07-31T13:16:36.101Z"
+    },
+    {
+      "id": "RIDE-1785504250155",
+      "pickup": "BSTM HQ",
+      "dropoff": "Game City Mall",
+      "vehicle": "standard",
+      "fare": 100,
+      "distanceKm": 0,
+      "wallet": null,
+      "notes": "",
+      "passenger": "Todd-Final-Economy-Test-2",
+      "driverId": "DRIVER-ECONOMY-002",
+      "driverName": "Economy Driver",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-31T13:24:10.155Z",
+      "updatedAt": "2026-07-31T13:24:10.212Z",
+      "acceptedAt": "2026-07-31T13:24:10.196Z",
+      "completedAt": "2026-07-31T13:24:10.211Z"
+    },
+    {
+      "id": "RIDE-1785504298327",
+      "pickup": "BSTM HQ",
+      "dropoff": "Main Mall",
+      "vehicle": "standard",
+      "fare": 100,
+      "distanceKm": 0,
+      "wallet": null,
+      "notes": "",
+      "passenger": "Duplicate-Test",
+      "driverId": "DRIVER-DUP-001",
+      "driverName": "Duplicate Driver",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-31T13:24:58.328Z",
+      "updatedAt": "2026-07-31T13:24:58.372Z",
+      "acceptedAt": "2026-07-31T13:24:58.351Z",
+      "completedAt": "2026-07-31T13:24:58.372Z"
+    },
+    {
+      "id": "RIDE-1785510675559",
+      "pickup": "BSTM HQ",
+      "dropoff": "Airport Junction",
+      "vehicle": "standard",
+      "fare": 20,
+      "distanceKm": 0,
+      "wallet": null,
+      "notes": "",
+      "passenger": "AUTO-LIFECYCLE-RETRY",
+      "driverId": "AUTO-DRIVER",
+      "driverName": "Auto Driver",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-31T15:11:15.560Z",
+      "updatedAt": "2026-07-31T15:11:16.028Z",
+      "acceptedAt": "2026-07-31T15:11:15.836Z",
+      "completedAt": "2026-07-31T15:11:16.027Z"
+    },
+    {
+      "id": "RIDE-1785510936378",
+      "pickup": "BSTM HQ",
+      "dropoff": "Airport Junction",
+      "vehicle": "standard",
+      "fare": 20,
+      "distanceKm": 0,
+      "wallet": null,
+      "notes": "",
+      "passenger": "CANONICAL-GATE",
+      "driverId": "GATE-DRIVER-001",
+      "driverName": "Gate Driver",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-31T15:15:36.378Z",
+      "updatedAt": "2026-07-31T15:15:36.936Z",
+      "acceptedAt": "2026-07-31T15:15:36.676Z",
+      "completedAt": "2026-07-31T15:15:36.935Z"
     }
   ],
   "transactions": [
@@ -80,6 +260,93 @@
       "token": "THB",
       "status": "PENDING",
       "createdAt": "2026-07-25T20:48:39.292Z"
+    },
+    {
+      "id": "TX-1785162778429",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785162778400",
+      "driverId": "DRIVER-ECON-001",
+      "wallet": null
+    },
+    {
+      "id": "TX-1785163520747",
+      "type": "THB_REWARD",
+      "amount": 1,
+      "currency": "THB",
+      "ride": "RIDE-1785163520636",
+      "created": "2026-07-27T14:45:20.747Z"
+    },
+    {
+      "id": "TX-1785163829058",
+      "type": "THB_REWARD",
+      "amount": 1,
+      "currency": "THB",
+      "ride": "RIDE-1785163828923",
+      "created": "2026-07-27T14:50:29.058Z"
+    },
+    {
+      "id": "TX-1785163951002",
+      "type": "THB_REWARD",
+      "amount": 1,
+      "currency": "THB",
+      "ride": "RIDE-1785163950928",
+      "created": "2026-07-27T14:52:31.002Z"
+    },
+    {
+      "id": "TX-1785164599335",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785164599236",
+      "driverId": "O840_DRIVER",
+      "wallet": null
+    },
+    {
+      "id": "TX-1785178222707",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785178222548",
+      "driverId": "O842_DRIVER",
+      "wallet": null
+    },
+    {
+      "id": "TX-1785180179383",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785180179159",
+      "driverId": "O847_DRIVER",
+      "wallet": null
+    },
+    {
+      "id": "TX-1785243267257",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785243267044",
+      "driverId": "O853_DRIVER",
+      "wallet": null
+    },
+    {
+      "id": "TX-1785504250221",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785504250155",
+      "driverId": "DRIVER-ECONOMY-002",
+      "wallet": null
+    },
+    {
+      "id": "TX-1785504298379",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785504298327",
+      "driverId": "DRIVER-DUP-001",
+      "wallet": null
+    },
+    {
+      "id": "TX-1785510676058",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785510675559",
+      "driverId": "AUTO-DRIVER",
+      "wallet": null
+    },
+    {
+      "id": "TX-1785510936955",
+      "type": "THB_REWARD",
+      "rideId": "RIDE-1785510936378",
+      "driverId": "GATE-DRIVER-001",
+      "wallet": null
     }
   ]
 }

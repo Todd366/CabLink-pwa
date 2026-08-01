@@ -1,0 +1,66 @@
+import React, { useEffect, useState } from "react";
+import LegacyCabLink from "./components/LegacyCabLink.jsx";
+
+export default function App() {
+  const [apiStatus, setApiStatus] = useState("CHECKING");
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetch("/api/health")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        if (mounted && data.status === "ONLINE") {
+          setApiStatus("ONLINE");
+        } else if (mounted) {
+          setApiStatus("UNKNOWN");
+        }
+      })
+      .catch((error) => {
+        console.error("CabLink API health check failed:", error);
+
+        if (mounted) {
+          setApiStatus("OFFLINE");
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  return (
+    <>
+      <LegacyCabLink />
+
+      <div
+        style={{
+          position: "fixed",
+          right: "16px",
+          bottom: "16px",
+          zIndex: 99999,
+          padding: "10px 14px",
+          borderRadius: "999px",
+          background:
+            apiStatus === "ONLINE"
+              ? "#166534"
+              : apiStatus === "OFFLINE"
+              ? "#991b1b"
+              : "#92400e",
+          color: "#ffffff",
+          fontSize: "13px",
+          fontWeight: 700,
+          boxShadow: "0 4px 14px rgba(0,0,0,0.2)"
+        }}
+      >
+        API: {apiStatus}
+      </div>
+    </>
+  );
+}

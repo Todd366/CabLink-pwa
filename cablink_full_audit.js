@@ -38,6 +38,11 @@ const IGNORE_DIRS = new Set([
   'node_modules', '.git', 'dist', 'archive', 'logs',
   'migration_backup', '.vscode', '.idea'
 ]);
+// Any directory whose NAME contains "backup" (case-insensitive) is a
+// snapshot, not live code — catches backups/, .cablink_backups/,
+// cablink_ride_backup_20260725_221547/, stage4g5-backup-.../ etc.
+// without needing to enumerate every timestamp/naming variant.
+const IGNORE_DIR_PATTERN = /backup/i;
 
 // ---------------------------------------------------------------
 // 1. FILE STRUCTURE MAP
@@ -52,6 +57,7 @@ function walkAll(dir, out) {
   }
   for (const entry of entries) {
     if (IGNORE_DIRS.has(entry.name)) continue;
+    if (IGNORE_DIR_PATTERN.test(entry.name)) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       walkAll(full, out);
@@ -327,7 +333,6 @@ function buildReport(data) {
   lines.push('This tool changed nothing. Every finding below is backed by a file path and line number you can go check yourself.');
   lines.push('');
 
-  // ---- 1. STRUCTURE ----
   lines.push('## 1. File structure');
   lines.push('');
   lines.push(`Total files scanned: ${data.structure.total}`);
@@ -343,7 +348,6 @@ function buildReport(data) {
   });
   lines.push('');
 
-  // ---- 2. SYNTAX HEALTH (most urgent section) ----
   lines.push('## 2. Syntax health — THIS IS WHERE "EVERYTHING DISAPPEARED" BUGS LIVE');
   lines.push('');
   lines.push(`### Entry file: ${data.entryCheck.file}`);
@@ -398,7 +402,6 @@ function buildReport(data) {
   }
   lines.push('');
 
-  // ---- 3. DUPLICATE / COMPETING LOGIC ----
   lines.push('## 3. Duplicate / competing implementations');
   lines.push('');
   let anyDup = false;
@@ -414,7 +417,6 @@ function buildReport(data) {
   lines.push('_Note: with a single canonical entry file (no bundler ambiguity), the LAST definition in document/load order generally wins if names collide via `window.X =` reassignment. Plain `function X(){}` redeclarations follow normal JS scoping (later one wins if in the same scope)._');
   lines.push('');
 
-  // ---- 4. OPERATIONAL FLOW ----
   lines.push('## 4. Operational flow — three personas');
   lines.push('');
   ['passenger', 'driver', 'admin'].forEach(persona => {
@@ -426,7 +428,6 @@ function buildReport(data) {
     lines.push('');
   });
 
-  // ---- 5. GPS / FARE / DISTANCE LOGIC ----
   lines.push('## 5. GPS, distance, and fare logic');
   lines.push('');
   lines.push(`Geolocation (\`navigator.geolocation\`) used in: ${data.gpsFare.geolocationUsedIn.length ? data.gpsFare.geolocationUsedIn.join(', ') : 'nowhere found'}`);
@@ -451,7 +452,6 @@ function buildReport(data) {
   }
   lines.push('');
 
-  // ---- 6. RECOMMENDATIONS ----
   lines.push('## 6. What should be created / fixed, in priority order');
   lines.push('');
   let n = 1;
@@ -482,10 +482,6 @@ function buildReport(data) {
 
   return lines.join('\n');
 }
-
-// ---------------------------------------------------------------
-// MAIN
-// ---------------------------------------------------------------
 
 function main() {
   console.log('============================================================');

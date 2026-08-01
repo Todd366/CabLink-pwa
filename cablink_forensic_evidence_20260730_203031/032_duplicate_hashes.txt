@@ -1,0 +1,2706 @@
+HASH: 61ad0ac8a48dba1fe2f253af2cb09c2c107635b714bbecdfda439904750b4d02 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/notification_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/notification_api.js
+  ./backend/routes/notification_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/notification_api.js
+
+HASH: f72f0af00aa08e0b8a06149b97df65a389b1056755c1fd64e3562dc7525afe60 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pages/DriverDashboard.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/pages/DriverDashboard.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/pages/DriverDashboard.jsx
+  ./frontend/pages/DriverDashboard.jsx
+  ./migration_backup/frontend/pages/DriverDashboard.jsx
+
+HASH: a17ad4f9342d2d503c6e6da0c307ac4d3e04532fd0a2698408cc572a68517fd1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/payment_transaction_layer.js
+  ./archive/before_architecture_cleanup/backend_1784127601/payments/payment_transaction_layer.js
+  ./backend/payments/payment_transaction_layer.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/payments/payment_transaction_layer.js
+
+HASH: 83448394d11c474d452316f2ebb2df018d023d8a3804d826dbd43d27a5d0658f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/task_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/api/task_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/api/task_api.js
+  ./frontend/api/task_api.js
+
+HASH: 14554943d4819f11a30c4cff7272e1d08c48362c056c9afab21f5877c82cd172 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/transaction_recorder.js
+  ./archive/before_architecture_cleanup/backend_1784127601/payments/transaction_recorder.js
+  ./backend/payments/transaction_recorder.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/payments/transaction_recorder.js
+
+HASH: d07bb9ddd3c7447bbaaac16a902d90fdf5cd2935af12ec56dfb94a84bab8c9cf COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/rideController.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/rides/rideController.js
+  ./frontend/js/rides/rideController.js
+
+HASH: f95b7eaf33fe0225a49e1d168726939556270d9aa41a50550803cfe2f878741d COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/driver_dashboard_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/driver_dashboard_api.js
+  ./frontend/services/driver_dashboard_api.js
+  ./migration_backup/frontend/services/driver_dashboard_api.js
+
+HASH: 6154fcc0952641d8f8529c98d36869ec020e0e595d3faf211647499f3d57d3b3 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/ecosystem_hub_screen.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/screens/ecosystem_hub_screen.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/screens/ecosystem_hub_screen.js
+  ./frontend/screens/ecosystem_hub_screen.js
+  ./migration_backup/frontend/screens/ecosystem_hub_screen.js
+
+HASH: 9a42ba5818258b179d255c39d5642ef9a48c4feda2bffb7bf64232beef64b079 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/delivery_completion.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/delivery_completion.js
+  ./backend/rewards/delivery_completion.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/delivery_completion.js
+
+HASH: 3d83ae411ee944ace3c971c7616c9d47c9374fddeb6b80d75aab15dbb4682aa1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/cablink_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/api/cablink_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/api/cablink_api.js
+  ./frontend/api/cablink_api.js
+
+HASH: 673eedb120b7fed9421c12b41d6aa933314ec289780da8531adf5d9e4e0ece36 COUNT: 4
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/simulation_engine.js
+  ./backups/o821_auto/frontend_js_simulation_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/simulation_engine.js
+  ./migration_backup/frontend/js/simulation_engine.js
+
+HASH: e591f62d0ce52d47558f1f86c15a8b1c52558c9745111afbafe4f6b786eee710 COUNT: 2
+  ./index.html.before_driver_role_restore_20260726_100519.bak
+  ./index.html.step1_acceptance_backup_20260726_101659
+
+HASH: 2b470a614fab97499d5048e7140bea0cb964e8b97cc0ebaa207a90dbfd4c404b COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pages/UpdatesCenter.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/pages/UpdatesCenter.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/pages/UpdatesCenter.jsx
+  ./frontend/pages/UpdatesCenter.jsx
+  ./migration_backup/frontend/pages/UpdatesCenter.jsx
+
+HASH: f3aba15795429b488e48239862ee4b75734fa29532a2d2124dd414333d651336 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_economy_screen.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/driver_economy_screen.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/driver_economy_screen.js
+  ./frontend/components/driver_economy_screen.js
+  ./migration_backup/frontend/components/driver_economy_screen.js
+
+HASH: 31888b392bf57f6d1db74e883f15a24957623ee8ad1779d6a08cbf800aecca19 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/economy/delivery_fare_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/economy/delivery_fare_engine.js
+  ./backend/economy/delivery_fare_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/economy/delivery_fare_engine.js
+
+HASH: 4b262ddb8b18e672e68aa118f0f6fd1052f456361a2ad6f0473ec20f98b9ba93 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/push/push_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/push/push_engine.js
+  ./backend/push/push_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/push/push_engine.js
+
+HASH: a96103400686ceaab6114cf4583a5ae9b034640874b9b2799db13e89694a9fde COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/realtime_bridge.js
+  ./archive/before_architecture_cleanup/backend_1784127601/realtime/realtime_bridge.js
+  ./backend/realtime/realtime_bridge.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/realtime/realtime_bridge.js
+
+HASH: 9c42cfcebd03a8ca73310513e5e49382b9a673a811f80f9dae9992583bbd5e5d COUNT: 3
+  ./.cablink_backups/driver_consolidation_20260725_213935/fare_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/fare_engine.js
+  ./fare_engine.js
+
+HASH: a0361446f251b81cc0dbc05031c29cdba85e9e4e7dae31a74366764867b5df1f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_demand_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/driver_demand_api.js
+  ./backend/routes/driver_demand_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/driver_demand_api.js
+
+HASH: 46a1a6cd9d18f755c55fd4476edf8ad247b2785ad82299e8055b14692872a88d COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/rideService.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/rides/rideService.js
+  ./frontend/js/rides/rideService.js
+
+HASH: 97ebdc4edf5e67be3a44ca761c57516319d35a8db566b472899f2be6eca20284 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/live_ride_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/live_ride_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/live_ride_api.js
+  ./frontend/services/live_ride_api.js
+  ./migration_backup/frontend/services/live_ride_api.js
+
+HASH: 29c43ea3d016cab108e211dcdc1ab71062d47e7e14609c770b3c7c9a6f982fb6 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/mobile_dashboard.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/mobile_dashboard.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/mobile_dashboard.js
+  ./frontend/components/mobile_dashboard.js
+  ./migration_backup/frontend/components/mobile_dashboard.js
+
+HASH: ca6936d5faffdc2e6d17f8ef9ded32fb15283c3b31d11f99c773802c9cdb498b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/api/reward_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/api/reward_api.js
+  ./backend/api/reward_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/api/reward_api.js
+
+HASH: 49d06aaf8a18aa03c78ca177e59eed5c33badc1b7d0d9b3078c5ce3268452411 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/audit/production_audit.js
+  ./archive/before_architecture_cleanup/backend_1784127601/audit/production_audit.js
+  ./backend/audit/production_audit.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/audit/production_audit.js
+
+HASH: bed6b29336766b5a52ce2eff21606103450b176e069d5c0dfbf30a1159423582 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase47_eta_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase47_eta_test.js
+  ./backend/testing/phase47_eta_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase47_eta_test.js
+
+HASH: 72024b91cf11879eff1dd30046a59649e93755587733ad4f151495946e156126 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/pricing/fare_calculator.js
+  ./archive/before_architecture_cleanup/backend_1784127601/pricing/fare_calculator.js
+  ./backend/pricing/fare_calculator.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/pricing/fare_calculator.js
+
+HASH: dd79ba75ae84580477ab99e7033dd41afe822337a9b51efac6b196f5d24b4f19 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/live_ride_service.js
+  ./backend/services/live_ride_service.js
+
+HASH: 333daf2f810abbb5fa81818e345bbc066b42869333055b55bb8ec3da12837b07 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_repository.js
+  ./backend/canonical/ride_repository.js
+
+HASH: 9dc40e6b55d346de391705758e219e3a75a63456071690bd9c6883880a2f6638 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase48_completion_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase48_completion_test.js
+  ./backend/testing/phase48_completion_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase48_completion_test.js
+
+HASH: 291d59c6f106eafb6634fc799c5dc26bb3a1afce6bb946d4aeb73a062ba75ecf COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_state_service.js.backup_create_order_1784101726427
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_state_service.js.backup_create_order_1784101726427
+  ./backend/services/ride_state_service.js.backup_create_order_1784101726427
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_state_service.js.backup_create_order_1784101726427
+
+HASH: de3d62aee811a5d552b3c66aab683cde6ae1f537f21f5404a5d753a7bfee6d75 COUNT: 3
+  ./archive/before_architecture_cleanup/backend_1784127601/server.js
+  ./archive/driver_upgrade/server_before_driver_upgrade_1784126025.js
+  ./archive/server_conflicts/server.js.1784124267
+
+HASH: 9657922823475098a907e85b12e51f57b1281ac9b62f572cc58cda91df5e6f3c COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/passenger_profile_card.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/passenger_profile_card.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/passenger_profile_card.jsx
+  ./frontend/components/passenger_profile_card.jsx
+  ./migration_backup/frontend/components/passenger_profile_card.jsx
+
+HASH: bd683224504d97cf97f73b418065c0a77de84c4d2ea9e69e6363ebe4e82168c1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/trips/trip_manager.js
+  ./archive/before_architecture_cleanup/backend_1784127601/trips/trip_manager.js
+  ./backend/trips/trip_manager.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/trips/trip_manager.js
+
+HASH: 3eb7a6d1bde62cf8487cb2f768b07ef4957ef73a32037214394fc508c1944cfd COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/wallet_validator.js
+  ./archive/before_architecture_cleanup/backend_1784127601/blockchain/wallet_validator.js
+  ./backend/blockchain/wallet_validator.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/wallet_validator.js
+
+HASH: 5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292 COUNT: 7
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/call-bind-apply-helpers/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/call-bound/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/es-define-property/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/es-errors/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/es-object-atoms/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-list/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-map/LICENSE
+
+HASH: d8d850a096532813552c0706adf541b56f75f0281f0dd779e3dfd6df3f48fd2a COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/bstm_visible_ui_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/bstm_visible_ui_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/bstm_visible_ui_test.js
+  ./frontend/testing/bstm_visible_ui_test.js
+  ./migration_backup/frontend/testing/bstm_visible_ui_test.js
+
+HASH: 3109454165d52adbd1671090cd74c0960e1e9ba577c17cf124dc0b6dd95908c8 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/providers/cloud_database_connector.js
+  ./archive/before_architecture_cleanup/backend_1784127601/providers/cloud_database_connector.js
+  ./backend/providers/cloud_database_connector.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/providers/cloud_database_connector.js
+
+HASH: 04595fc73d0dfc1b4e7306cfa7873dda7f1af490ec10c3e572ef69bac4831d48 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/settlement_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rides/settlement_engine.js
+  ./backend/rides/settlement_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rides/settlement_engine.js
+
+HASH: c4311e00e2f53eb83a6a77ee4e20d5b0aba2812ac721c6dd6336bac5841b02d0 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/live_driver_economy.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/live_driver_economy.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/live_driver_economy.js
+  ./frontend/services/live_driver_economy.js
+  ./migration_backup/frontend/services/live_driver_economy.js
+
+HASH: f0e2a086efbaa28b017030c6e0cb9280364845f53e8f48ba25476fc824fa4e24 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server_before_api_layer.bak
+  ./archive/before_architecture_cleanup/backend_1784127601/server_before_api_layer.bak
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/backend/server.js
+  ./backend/server_before_api_layer.bak
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/server_before_api_layer.bak
+
+HASH: 8dc22b51d36a3d91a43fe3f630a97dd7b56fb7b5a36e1527c5997025fef8b619 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/delivery_earnings_panel.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/delivery_earnings_panel.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/delivery_earnings_panel.js
+  ./frontend/components/delivery_earnings_panel.js
+  ./migration_backup/frontend/components/delivery_earnings_panel.js
+
+HASH: 32f91d0d04e0a0b03994dd5ad2e2274e91dd6ae9f3fe198b976a262a9738bd8f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/auto_reward_trigger.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/auto_reward_trigger.js
+  ./backend/rewards/auto_reward_trigger.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/auto_reward_trigger.js
+
+HASH: f17380b4c4025ebbdf326515d8f564f3525244c1059f2ef12beeeb240ab321fc COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_contract_adapter.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/thb_contract_adapter.js
+  ./backend/rewards/thb_contract_adapter.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_contract_adapter.js
+
+HASH: ea3b946cc6c3c38d095ab2b54350d74b022a5996de85a536d0901bd17b0098f6 COUNT: 3
+  ./archive/before_architecture_cleanup/backend_1784127601/services/live_ride_service.js
+  ./backups/o822_auto/backend_services_live_ride_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/live_ride_service.js
+
+HASH: eb6237fbd50005e32dfce553dc59b9f61a84a044218dd426f76f059b7fe5ffc0 COUNT: 4
+  ./archive/before_architecture_cleanup/backend_1784127601/rides/ride_engine.js
+  ./backups/o822_auto/backend_rides_ride_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rides/ride_engine.js
+  ./cablink_ride_backup_20260725_221547/backend/rides/ride_engine.js
+
+HASH: 572fdf6d0589465fe1bbd538a37bda8400285c3b661bae3fcc0c9392ba5f477a COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/mobile.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/mobile.js
+  ./backend/routes/mobile.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/mobile.js
+
+HASH: 75c111a7e9d0f8e62a92d55b22a703917a2573024ffb8e1c255a4d7adb5122a1 COUNT: 4
+  ./archive/old_backups/fix.js_v300_100percent_1319.bak
+  ./archive/old_backups/fix_before_precise_clean.bak
+  ./archive/old_backups/fix_stable_backup.js
+  ./archive/old_backups/fix_working_1345.bak
+
+HASH: 23ca58279019f4af272913fc3f74b519ecb3a85537fd18d1ddce9c7ee0467903 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/economy_ledger_service.js
+  ./backend/services/economy_ledger_service.js
+
+HASH: 1c5af0cbfababd8f81e99d4b98cc3b5ca54658fe98f8372086204a32f4d30a38 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_persistence.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rides/ride_persistence.js
+  ./backend/rides/ride_persistence.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rides/ride_persistence.js
+
+HASH: c98f4e20928631395dac90e58969cf508c0324a776a91bc3409dd452bdfa722b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/payment_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/payments/payment_engine.js
+  ./backend/payments/payment_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/payments/payment_engine.js
+
+HASH: c6c53259df79970564b7df19b82f9c55ff727d13dbb0f4631488bda0d6e990e7 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/reward_wallet_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/reward_wallet_test.js
+  ./backend/testing/reward_wallet_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/reward_wallet_test.js
+
+HASH: 1868c588e5c6959853e18a783bbc787ce52447df76f5febe86e34aace271ba1d COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js.backup_route_cleanup_1784103021100
+  ./archive/before_architecture_cleanup/backend_1784127601/server.js.backup_route_cleanup_1784103021100
+  ./backend/server.js.backup_route_cleanup_1784103021100
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/server.js.backup_route_cleanup_1784103021100
+
+HASH: 807be7a178e0e842076d028826968642f143ea93055e0e43e7fd0fb4ffe4081e COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/auth/otp_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/auth/otp_service.js
+  ./backend/auth/otp_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/auth/otp_service.js
+
+HASH: 89f76e930713a10e777d0fab9de985e1e28f57976fc86d571205077ccba9adcd COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js.stage4.precanonical.bak
+  ./frontend/js/rides/completionRewardBridge.js.stage4.precanonical.bak
+
+HASH: 266011a011a900babfd07755f79e65a9e943a316e5c31668f83b8b627d668532 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/ride_service.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/ride_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/ride_service.js
+  ./frontend/services/ride_service.js
+  ./migration_backup/frontend/services/ride_service.js
+
+HASH: 32f94d5631035a8a74e07e96ebd83d66fc4b78fe4c98a41268eb40e8e9129d8d COUNT: 4
+  ./archive/driver_upgrade/index_before_driver_upgrade_1784126025.html
+  ./archive/server_conflicts/index_before_api_fix_1784125371.html
+  ./scripts/archive/root_migrations/index_before_booking_migration.html
+  ./scripts/archive/root_migrations/index_before_bookride_cleanup.html
+
+HASH: 1160bba6284c16fa0e6f2904c9a96864f0912bbd346852341a6baea2db92fb0d COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js.o8_backup_registry_migration_20260727_153216
+  ./frontend/js/app_core.js.o8_backup_registry_migration_20260727_153216
+
+HASH: ca1000172aa71293cf8517418e9e445f8cce7cb9f913a915f0faed8859d4b0a0 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/tasks/task_manager.js
+  ./archive/before_architecture_cleanup/backend_1784127601/tasks/task_manager.js
+  ./backend/tasks/task_manager.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/tasks/task_manager.js
+
+HASH: ceeabda2064d2ad487ac72f776fbbd2022809eb69b63a261a30a1161e49bcaef COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/location/radar_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/location/radar_engine.js
+  ./backend/location/radar_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/location/radar_engine.js
+
+HASH: e12e4a004437c7ea634940a926f8e92893ec9a9fc872741747a70db86c6fdd33 COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverController.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/driver/driverController.js
+  ./frontend/js/driver/driverController.js
+
+HASH: 4d9e4dc693e06c860b0b0e849131f93e43991892ba6ce3c8a5259769408d8aba COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_api_patch.js
+  ./archive/before_architecture_cleanup/backend_1784127601/ride_api_patch.js
+  ./backend/ride_api_patch.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/ride_api_patch.js
+
+HASH: 5facf8257fc48f1d11ce914b589d9fceeda24654225d4010058889d83a842506 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/extensions/extension_registry.js
+  ./archive/before_architecture_cleanup/backend_1784127601/extensions/extension_registry.js
+  ./backend/extensions/extension_registry.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/extensions/extension_registry.js
+
+HASH: 0bb607b5e093aa843c7a43faa5f30faa26594c26a3a7d92a6801afebfea26465 COUNT: 13
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app.js.backup_1784097007863
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_working_1345.bak
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/app.js.backup_1784097007863
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/app_working_1345.bak
+  ./archive/old_backups/backups_v67/app.js.autobak
+  ./archive/old_backups/backups_v67/app_stable_backup.js
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/frontend/js/app.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/app.js.backup_1784097007863
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/app_working_1345.bak
+  ./frontend/js/app.js.backup_1784097007863
+  ./frontend/js/app_working_1345.bak
+  ./migration_backup/frontend/js/app.js
+  ./migration_backup/frontend/js/app_working_1345.bak
+
+HASH: c183c109db48c2f48eb0ababa3585d9ee1b1229bbda2f2dbb4911bce9938ede3 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/passenger_dashboard.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/screens/passenger_dashboard.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/screens/passenger_dashboard.js
+  ./frontend/screens/passenger_dashboard.js
+  ./migration_backup/frontend/screens/passenger_dashboard.js
+
+HASH: d898e3816326a2e041233a83f692e196e57bbbd9b2dbcfb63d07cfe32146d3bc COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_engine.js
+  ./backend/rides/ride_engine.js
+
+HASH: 0579e57db792c86502c37321657c762ea5a86f2ca2566139303ab0b129b43fe3 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase52_driver_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase52_driver_test.js
+  ./backend/testing/phase52_driver_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase52_driver_test.js
+
+HASH: 0015a9119548c88c1446d5d69b6830d85d8d8b1cfcb66313fda683b9718c449d COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/event_bus.js
+  ./archive/before_architecture_cleanup/backend_1784127601/realtime/event_bus.js
+  ./backend/realtime/event_bus.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/realtime/event_bus.js
+
+HASH: 5e80d6f1840bca053a818ee8754323f8fe63ef0fe7b3a8e7f47d8ff0eeab04f0 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/driver_positions.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/driver_positions.json
+  ./backend/data/driver_positions.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/driver_positions.json
+
+HASH: bd8cd33f3c995dff0341b87ce37473fb29c8cf719aed7fc8bb5dfd566be33a7b COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/LegacyCabLink.jsx.backup_runtime_reconnect
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/LegacyCabLink.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/LegacyCabLink.jsx.backup_runtime_reconnect
+  ./frontend/components/LegacyCabLink.jsx.backup_runtime_reconnect
+  ./migration_backup/frontend/components/LegacyCabLink.jsx
+
+HASH: e3f5a510af1a5734f7e2b67706c13826310868d96db5d776a9c14018ef86d583 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/canonical_reward_api.js
+  ./backend/routes/canonical_reward_api.js
+
+HASH: c39dce4ea9d52e804effae1d2e49be2383e70983c1bf3b1485e5e2edd13f7445 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase53_identity_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase53_identity_test.js
+  ./backend/testing/phase53_identity_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase53_identity_test.js
+
+HASH: 8bd67dc6353af29c1f1d4834939fa08db00c11414498db8ae8c16f7ca00c7100 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_claim_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/thb_claim_engine.js
+  ./backend/rewards/thb_claim_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_claim_engine.js
+  ./backups/stage4g4_20260725_235846/backend/rewards/thb_claim_engine.js
+  ./backups/stage4g4_20260726_000412/backend/rewards/thb_claim_engine.js
+
+HASH: 794fde932151b5ecdca821a3dc700eb26af838bac83d1eabeab49b2483b97afd COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/cablink_updates.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/cablink_updates.json
+  ./backend/data/cablink_updates.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/cablink_updates.json
+
+HASH: 26b9bd3d4d75868be06d0db77199efd68739539a39315d4c1254c85a52587089 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js
+  ./backend/services/canonical_reward_service.js
+
+HASH: 6c8f2c8b8550fbe01f57119ca6a855ff89918bf41730a207686103f9aee0636f COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js.before-firestore-boot-diagnostic
+  ./api/index.js.before-firestore-boot-diagnostic
+
+HASH: d5321cc30a26ce1e1d63a55e23aa753e8a4563cbe363b61a5c0821387fd6c0a4 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_state_engine.js
+  ./backend/rides/ride_state_engine.js
+
+HASH: a93f1f9f5d42dfeb8d61f897598ed3794246bbf28a98dca1a66c5222ea6ee056 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html.bak_before_sync
+  ./archive/before_architecture_cleanup/frontend_1784127601/index.html.bak_before_sync
+  ./archive/phase_scripts/index.html.backup_reality_1784098466820
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/index.html.bak_before_sync
+  ./frontend/index.html.bak_before_sync
+  ./migration_backup/index_legacy.html
+
+HASH: 411e2c33fbdc92a578ec026859820a2ce4f2c444810ad770fc755e98d24ce415 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/phase43_ui_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/phase43_ui_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/phase43_ui_test.js
+  ./frontend/testing/phase43_ui_test.js
+  ./migration_backup/frontend/testing/phase43_ui_test.js
+
+HASH: e88b6c5495f2494c1b55c39ea61f9d4a21f7f6d3b147a2f8837d42570a5ac759 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-readiness-working.js
+  ./api/index.firebase-readiness-working.js
+
+HASH: b3ead9ca7ac4904535d04ddaf3cc85034fa396c76c365aa2844971dd0f9aa218 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/user_service.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/user_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/user_service.js
+  ./frontend/services/user_service.js
+  ./migration_backup/frontend/services/user_service.js
+
+HASH: d3f9d1b73ae5ee2f3d8ba4deb68ce805fb2dd442662efa50597e95f9a6017943 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js.stage4.bak
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js.stage4.reward.bak
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/rides/completionRewardBridge.js
+  ./frontend/js/rides/completionRewardBridge.js.stage4.bak
+  ./frontend/js/rides/completionRewardBridge.js.stage4.reward.bak
+
+HASH: c3b9627167c8464efe41b7667a31e5c98df5e787788c94eccf90b3628ca720b2 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/drivers/heartbeat_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/drivers/heartbeat_engine.js
+  ./backend/drivers/heartbeat_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/drivers/heartbeat_engine.js
+
+HASH: d861bc7fc489e630d0104dabb29d5d5620bb4ae32c84ee00cdaa073870362cb0 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/live_demand_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/live_demand_api.js
+  ./backend/routes/live_demand_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/live_demand_api.js
+
+HASH: 477ccc5aec2d903e264c152cc7312ed97b72168ef96a335e7cea1f7ac8d80e92 COUNT: 4
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/rides.js
+  ./archive/server_conflicts/rides.js.1784124267
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/rides.js
+  ./cablink_ride_backup_20260725_221547/backend/routes/rides.js
+
+HASH: c0fe7e38720bc2502ce1e3e56ed3f1075d33e8bb2cae25c2abf478b5e0881da0 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/vercel.json
+  ./vercel.json
+
+HASH: 6fc2fc98bf671d1c6232f3a245c80ee56713a3ac2f8b116f4ed8862041221a5d COUNT: 4
+  ./archive/before_architecture_cleanup/backend_1784127601/database/ride_repository.js
+  ./backups/o823_auto/backend_database_ride_repository.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/database/ride_repository.js
+  ./cablink_ride_backup_20260725_221547/backend/database/ride_repository.js
+
+HASH: 88e39152b858440739161d204f410e41b68e2ff2ee3bd7ce6479acf53e42f8af COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/payment_adapter.js
+  ./archive/before_architecture_cleanup/backend_1784127601/payments/payment_adapter.js
+  ./backend/payments/payment_adapter.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/payments/payment_adapter.js
+
+HASH: c924ca6d546eb0a96d0b0cfc672b363df073197e9c246423a3710f6bdff86d7d COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/production/database_adapter.js
+  ./backend/production/database_adapter.js
+
+HASH: d689433b2d550fd7cb283432e9e01ef3c8e7cdaf2bf11a5c84a44defc01bb2ed COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/mobile/device_registry.js
+  ./archive/before_architecture_cleanup/backend_1784127601/mobile/device_registry.js
+  ./backend/mobile/device_registry.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/mobile/device_registry.js
+
+HASH: 0f1cfd7b20e3aae53ffc7d8f2c6e12e06a2f60ebde5f334daad0427c10c070ab COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_economy_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/driver_economy_api.js
+  ./backend/routes/driver_economy_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/driver_economy_api.js
+
+HASH: abfe31caec48b36b514a6634e0eff80b9b289edc23f768de48e2f8b8ecc93b18 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js
+  ./frontend/js/app_core.js
+
+HASH: 51ce400fa578c7a3b804b8daddb9e3cb2a3658cc0113b8ccb6f373e3a37d423e COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/storage/cablink_db.json
+  ./backend/storage/cablink_db.json
+
+HASH: 1216bb55cb3e77498b419f437a8b998f83d460816c985cd499cab94faa5a021b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/driver_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/driver_service.js
+  ./backend/services/driver_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/driver_service.js
+
+HASH: 307611ca9dcb8fa3179bf69cebfa80b541f825b0a463f82ed95c00214f50c5bd COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/maps/gps_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/maps/gps_engine.js
+  ./backend/maps/gps_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/maps/gps_engine.js
+
+HASH: bab2c43f458079d29639e0a1e8556a1ca7fc619e3542638e141bf41b36adb104 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/canonical_wallet_resolver.js
+  ./backend/rewards/canonical_wallet_resolver.js
+
+HASH: 3268c35767a8ca6679a0e24d1d06bca030323453169842badf8a7e60e617de7a COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/applicationService.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/driver/applicationService.js
+  ./frontend/js/driver/applicationService.js
+
+HASH: eb394fd3517e5219b823d2f1304b5563057452b648f2ed12f785d71a7027610f COUNT: 3
+  ./.cablink_backups/driver_consolidation_20260725_213935/role.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/role.js
+  ./role.js
+
+HASH: 0dcbaddabbe187e83e3b5c140771e77aa7f306558d2b96c5813cadab9493bf70 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/live_ride_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/live_ride_api.js
+  ./backend/routes/live_ride_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/live_ride_api.js
+
+HASH: 2f03b0a1eb603d1668088228700ccf5ea98d378ca66013f7d1c95732ddd1f908 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/admin/admin_monitor.js
+  ./archive/before_architecture_cleanup/backend_1784127601/admin/admin_monitor.js
+  ./backend/admin/admin_monitor.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/admin/admin_monitor.js
+
+HASH: af925194b8de12bc8e30717f715fd9989e530e0bff52d0dea4835e8669f30a9c COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/financial_intelligence.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/financial_intelligence.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/financial_intelligence.js
+  ./frontend/js/financial_intelligence.js
+  ./migration_backup/frontend/js/financial_intelligence.js
+
+HASH: f0a4efcb6efd99a4868261bbf06bfc5e670f69897d56d41ff6daad52a823b5bc COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/middleware/error_handler.js
+  ./archive/before_architecture_cleanup/backend_1784127601/middleware/error_handler.js
+  ./backend/middleware/error_handler.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/middleware/error_handler.js
+
+HASH: d55fea13ec82ca4f80c4422353998e3662cc6facc32e3fdf27206ff0e7da5e45 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/admin/operator_dashboard.js
+  ./archive/before_architecture_cleanup/backend_1784127601/admin/operator_dashboard.js
+  ./backend/admin/operator_dashboard.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/admin/operator_dashboard.js
+
+HASH: 0638b6f98cf12f3b128a0c8905c2de4837e8f71aab473503df899588de5929af COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/updates_center.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/updates_center.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/updates_center.js
+  ./frontend/components/updates_center.js
+  ./migration_backup/frontend/components/updates_center.js
+
+HASH: bf17b7b9f8c59b6586aff28348d2b4f73e9e6922d2f3b062199c5c54e1efe2f8 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/app.js.stage4c.precanonical.bak
+  ./archive/before_architecture_cleanup/backend_1784127601/server/app.js
+  ./archive/server_conflicts/app.js.1784124267
+  ./backend/server/app.js.stage4c.precanonical.bak
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/server/app.js
+
+HASH: 0faaa7575332837e5ad2d6aff0ca5597a65dcb9850bc57b678e569551130f1ef COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/notifications/notification_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/notifications/notification_service.js
+  ./backend/services/notifications/notification_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/notifications/notification_service.js
+
+HASH: b4bbbe22e11846512e2b6791fc7bd90a02c830f861d3855688ee5097145d7584 COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/dispatch_requests.json
+  ./backend/data/dispatch_requests.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/dispatch_requests.json
+
+HASH: d787c9fadeb22258aca93cf5006d756ec62d59b46d1d36c0e1530166fd3c3ce8 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_engine.js
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_engine.js.before-firestore-test
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_engine.js.pre_o6
+  ./backend/canonical/ride_engine.js
+  ./backend/canonical/ride_engine.js.before-firestore-test
+  ./backend/canonical/ride_engine.js.pre_o6
+
+HASH: d18dd6cd33267a04d5bd5f8ed34c913a52829bcfc6be0cb2cf9ed821456d394f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_transaction_layer.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/thb_transaction_layer.js
+  ./backend/rewards/thb_transaction_layer.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_transaction_layer.js
+
+HASH: 4c35f5a17922be13b044cdc782f979ca86ca004cb1c361aa7e3d378fd146501f COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/passenger_trip_status.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/passenger_trip_status.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/passenger_trip_status.js
+  ./frontend/components/passenger_trip_status.js
+  ./migration_backup/frontend/components/passenger_trip_status.js
+
+HASH: 265df7b75154f1c01a734fe19597cd6ef4f050c569505abb765e50f24a67017f COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/wallet_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/wallet_service.js
+  ./backend/rewards/wallet_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/wallet_service.js
+  ./backups/stage4g4_20260725_235846/backend/rewards/wallet_service.js
+  ./backups/stage4g4_20260726_000412/backend/rewards/wallet_service.js
+
+HASH: 47c882ab53953aaa53007ed3edc55f7e6cc49c7ea716dd7afd8032fe7028ac99 COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverLifecycleControls.js.o7_backup_20260727_152409
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/driver/driverLifecycleControls.js
+  ./frontend/js/driver/driverLifecycleControls.js.o7_backup_20260727_152409
+
+HASH: 795901a2421982dbe7611362e3742c027c3eaabdc442b28a999387d8ce391ca3 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/bstm_hub_ui.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/bstm_hub_ui.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/bstm_hub_ui.js
+  ./frontend/js/bstm_hub_ui.js
+  ./migration_backup/frontend/js/bstm_hub_ui.js
+
+HASH: c8ca9afd74059c3bd92f8fe7e7e82c8131e459ced7258612ec8046c79bdb4e62 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html
+  ./frontend/index.html
+
+HASH: f3e9230a5e411831564b0a83313248a7455929098f389c5bc07e8241a754d3fd COUNT: 4
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-list/.editorconfig
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-map/.editorconfig
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-weakmap/.editorconfig
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel/.editorconfig
+
+HASH: d1f25ac93d6d55ecde61847c433de503230a563a58f5f63639db1541dfac2477 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/providers/maps_connector.js
+  ./archive/before_architecture_cleanup/backend_1784127601/providers/maps_connector.js
+  ./backend/providers/maps_connector.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/providers/maps_connector.js
+
+HASH: a07c5310aafec58369e11504b8636106d46544e8e962279b866da8fda96bba92 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase24_verification.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase24_verification.js
+  ./backend/testing/phase24_verification.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase24_verification.js
+
+HASH: 5f53b684438ea6e3419babb10a7dedac1695f7ebcc3eb2c394c06ba9167f5f46 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server_before_task_mount.bak
+  ./archive/before_architecture_cleanup/backend_1784127601/server_before_task_mount.bak
+  ./backend/server_before_task_mount.bak
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/server_before_task_mount.bak
+
+HASH: 3de2f8a3af8d81e524c2e71215b4f3d53e8bac504c732abf1dddd7c1e5b2f44c COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/tracking/location_tracker.js
+  ./archive/before_architecture_cleanup/backend_1784127601/tracking/location_tracker.js
+  ./backend/tracking/location_tracker.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/tracking/location_tracker.js
+
+HASH: 4fdf41a7b2d8fc6c473b3e8f2cfa0f86847dba909ab8edb8cf8b624368808636 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/DashboardCard.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/DashboardCard.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/DashboardCard.jsx
+  ./frontend/components/DashboardCard.jsx
+  ./migration_backup/frontend/components/DashboardCard.jsx
+
+HASH: 4c8b345e1e2cd013d3b12e14a690bb03b5ab85a2be878ce90d19614e873386b6 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/index.html
+  ./index.html
+
+HASH: 01e9b3e7427902028b2f8c537d279205c79f6527d415fd969a4118d514279e46 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/bstm_hub_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/bstm_hub_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/bstm_hub_test.js
+  ./frontend/testing/bstm_hub_test.js
+  ./migration_backup/frontend/testing/bstm_hub_test.js
+
+HASH: 47241a500e2b9f88feef02540bd75c742e126fe588e90027d98148b0135fbf6e COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/user_repository.js
+  ./archive/before_architecture_cleanup/backend_1784127601/database/user_repository.js
+  ./backend/database/user_repository.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/database/user_repository.js
+
+HASH: 922f224a9f5f59712d02a872820e8aa42d12acd3fa24e44e30e563dfb657a12d COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/driver_matching_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/driver_matching_service.js
+  ./backend/services/driver_matching_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/driver_matching_service.js
+
+HASH: fc6e44f6d5644adcbb0ed93e24845c9476da72e23c940684fb6a1d18a9d4af61 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-test-working.js
+  ./api/index.users-test-working.js
+
+HASH: c9f01f6b2d4c5345de8a7b9b39857efefa46bbdce82a0eccc23fe923e99f1af0 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/status/ride_status.js
+  ./backend/status/ride_status.js
+
+HASH: 96a0d2e28a8021c19373a4e92433fcdfccc4c6c2627d92ebf5a2627def2aea7a COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/cloud/production_adapter.js
+  ./archive/before_architecture_cleanup/backend_1784127601/cloud/production_adapter.js
+  ./backend/cloud/production_adapter.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/cloud/production_adapter.js
+
+HASH: ef46f809e8062ca380557401e31776088b7f4b30a46b9c1cb18950c77190b676 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/passenger_intelligence_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/passenger_intelligence_api.js
+  ./backend/routes/passenger_intelligence_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/passenger_intelligence_api.js
+
+HASH: 7a582a90d95722235486dffea687de7b6fc03ef96ec156bea1bfce36e43cf118 COUNT: 2
+  ./archive/before_architecture_cleanup/backend_1784127601/data/rides.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/rides.json
+
+HASH: 6f08d00418761517b06cb2abf06827d0b92932b1134210cc54ad2c2767659c98 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/passenger_ride_screen.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/screens/passenger_ride_screen.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/screens/passenger_ride_screen.js
+  ./frontend/screens/passenger_ride_screen.js
+  ./migration_backup/frontend/screens/passenger_ride_screen.js
+
+HASH: b783ac36cadb8272881a0e95864f59337fb8e12a0fdbd54cd8acd67934c87118 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/bstm_delivery_button.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/bstm_delivery_button.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/bstm_delivery_button.js
+  ./frontend/components/bstm_delivery_button.js
+  ./migration_backup/frontend/components/bstm_delivery_button.js
+
+HASH: d940b29ee707706e635ca913fabc215f299823b1ab9c1561f9b90c19bbfe569f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/fare/fare_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/fare/fare_engine.js
+  ./backend/fare/fare_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/fare/fare_engine.js
+
+HASH: 39c018d12fd392d9ee22472e7f90a1bb0111477c36e3d6aa267713ce2ecc2d88 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/safety/incident_report.js
+  ./archive/before_architecture_cleanup/backend_1784127601/safety/incident_report.js
+  ./backend/safety/incident_report.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/safety/incident_report.js
+
+HASH: 8832976819e9d49c567b5e90f472bd9fdea2b3eb47cda58e733925d3b1807191 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/api/bridge_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/api/bridge_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/api/bridge_test.js
+  ./frontend/api/bridge_test.js
+  ./migration_backup/frontend/api/bridge_test.js
+
+HASH: 39d88db98ccd8a2c23f970a800bb962114ce0927121557dea0f93a376ff93978 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/driver_task_dashboard_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/driver_task_dashboard_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/driver_task_dashboard_test.js
+  ./frontend/testing/driver_task_dashboard_test.js
+  ./migration_backup/frontend/testing/driver_task_dashboard_test.js
+
+HASH: 27d6cd883c98e92fdafbd5213520a38726c7644bb67c95c64a6793bea49e7cd3 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/driver_control_screen.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/screens/driver_control_screen.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/screens/driver_control_screen.js
+  ./frontend/screens/driver_control_screen.js
+  ./migration_backup/frontend/screens/driver_control_screen.js
+
+HASH: 836440c37742a6ee2348c4c35ea0184d76d686a5442c2c4f8d265a0c1c118bdf COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_state_service.js
+  ./backend/services/ride_state_service.js
+
+HASH: 9df2e891a3982ee693d8caf6481b803ca02ec0736c5acd5984f0fa3400ca3f43 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/sessions/session_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/sessions/session_engine.js
+  ./backend/sessions/session_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/sessions/session_engine.js
+
+HASH: 77a09d39417ee5902ed825d918ce8ab70b3e44baa624f30ce5cb7686b5f40a4c COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_dashboard.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/driver_dashboard.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/driver_dashboard.js
+  ./frontend/components/driver_dashboard.js
+  ./migration_backup/frontend/components/driver_dashboard.js
+
+HASH: 6e10bc66c4a7fa8e09130e543d509ec54ec0483cc71d3f586aec67bf3c82fede COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/ride_events.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/ride_events.json
+  ./backend/data/ride_events.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/ride_events.json
+
+HASH: 00a4134dccfb03f9304a446a47a0f709b2d67ba2b446c2bf22e60a41b940fcaa COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/package.json
+  ./package.json
+
+HASH: 8832baa9dedc01799f137c1f1f516b99361475c594ea201b98afe37677764da4 COUNT: 2
+  ./backups/o820/rideStateMachine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/rides/rideStateMachine.js
+
+HASH: 86fc0d996aea1a268dbb3b9b5aab33cfde57c51e5b158fb03082c18f03dfd66f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase42_dispatch_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase42_dispatch_test.js
+  ./backend/testing/phase42_dispatch_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase42_dispatch_test.js
+
+HASH: 436031ac73e27356c57ff946d209f828078e0a06af432ed04abc5c491a2086cc COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/dispatch_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/dispatch_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/dispatch_api.js
+
+HASH: dae7cd7d56084321568c86d6c5b366a007aba5b91a1ca28dd2a0c7fd5e7b7d37 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase41_matching_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase41_matching_test.js
+  ./backend/testing/phase41_matching_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase41_matching_test.js
+
+HASH: 3c4e2cb836d3545137662e84c9c52607af9e5ab0761897da0d17ba0cbb0dc99e COUNT: 7
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/role.js
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/role.js.backup.20260725_213658
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/role.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/role.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/role.js.backup.20260725_213658
+  ./frontend/js/role.js
+  ./frontend/js/role.js.backup.20260725_213658
+
+HASH: 540b3d0106d8d034e68487b2c390f2ba92aadcc0050e69e8c6bce0013863448c COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_economy.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/driver_economy.js
+  ./backend/routes/driver_economy.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/driver_economy.js
+
+HASH: 68c467fad0626321266edb6adf6d33421454dd67ff7d1070ed17dff9c43f3854 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/mobile/device_permissions.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/mobile/device_permissions.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/mobile/device_permissions.js
+  ./frontend/mobile/device_permissions.js
+  ./migration_backup/frontend/mobile/device_permissions.js
+
+HASH: f48e2f55c220b354bf45db4eafc1f1f93f2494ec979ed7caa5f8af612e6d2122 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/core.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/core.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/core.js
+  ./frontend/js/core.js
+
+HASH: 7ebb4895e86df7b1f8c55cca88a8daea779e7a8e249d8f4bf63e77c4dc4b3469 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/state/task_state.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/state/task_state.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/state/task_state.js
+  ./frontend/state/task_state.js
+  ./migration_backup/frontend/state/task_state.js
+
+HASH: e64608ade3ae4266bc9899a4c209bd49f2ba3f5ab50ef6ca39b07c4b390603fb COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase37_dashboard_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase37_dashboard_test.js
+  ./backend/testing/phase37_dashboard_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase37_dashboard_test.js
+
+HASH: 2b5f36639423082a6bf42ef420ec70d83c85551871ecf5ca9389ea9718c1bb83 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase28_reward_flow_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase28_reward_flow_test.js
+  ./backend/testing/phase28_reward_flow_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase28_reward_flow_test.js
+
+HASH: 2b770a704c15de238c3f622b01b0044ddd60b49ee30608ea6991ebf19db7a7a1 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/dunder-proto/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/math-intrinsics/LICENSE
+
+HASH: 074a5e6f0f1d200113941711a86c778333a20b30ebf4b33c3d937bb33e453151 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/matching/driver_matcher.js
+  ./archive/before_architecture_cleanup/backend_1784127601/matching/driver_matcher.js
+  ./backend/matching/driver_matcher.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/matching/driver_matcher.js
+
+HASH: 8b6a0227e732a96ecf5f9b4e6cba288f0857398af042c51268e105fa3ddc57e9 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-working.js
+  ./api/index.storage-test-working.js
+
+HASH: 8c4ffe277f71c9566538c8d2e534a943da91a9b74a0fdd32f706a5e187173df7 COUNT: 2
+  ./LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/LICENSE
+
+HASH: 2a6da76cb0a1aced6465c60d636f67578181cf36ffc7b0ff443454abf3af74c5 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/maps/live_map_component.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/maps/live_map_component.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/maps/live_map_component.js
+  ./frontend/maps/live_map_component.js
+  ./migration_backup/frontend/maps/live_map_component.js
+
+HASH: d915e58bcac8fa3b965b7527968c6d2e8d8a25c5f54466de6783eb8c5f31ecdf COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/support/ticket_system.js
+  ./archive/before_architecture_cleanup/backend_1784127601/support/ticket_system.js
+  ./backend/support/ticket_system.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/support/ticket_system.js
+
+HASH: 7a132986da71e30d2c793322bf87b726e2c9dd85b38a3d74783956793746ef85 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase49_notification_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase49_notification_test.js
+  ./backend/testing/phase49_notification_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase49_notification_test.js
+
+HASH: 8267d6699a077c5138b6cfae867244b31c12a9a07957f525cd192ea9c6c2c095 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/dispatch/dispatch_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/dispatch/dispatch_engine.js
+  ./backend/dispatch/dispatch_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/dispatch/dispatch_engine.js
+
+HASH: 2dbb422be90bf2ab339935b7bcfd25c9f2e991235b29029bc02bbda74a6065a5 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/security/security_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/security/security_engine.js
+  ./backend/security/security_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/security/security_engine.js
+
+HASH: 0b023be58acefce3e0fec8904b5bfa5a22de9133ddce3e3bd42b2db944be6086 COUNT: 2
+  ./archive/old_backups/fix.js_100percent_final_1256.bak
+  ./archive/old_backups/fix.js_100percent_final_1311.bak
+
+HASH: 36143f317d586e94feefafc82f5897d0800c306741b9b430ce8f5272e05e7da3 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/thb_reward_panel.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/thb_reward_panel.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/thb_reward_panel.js
+  ./frontend/components/thb_reward_panel.js
+  ./migration_backup/frontend/components/thb_reward_panel.js
+
+HASH: 5569ac0045941cd370bdadd8f686448d4b5f041d404beb5abf9f32e262f04cb7 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js.o8_backup_event_cleanup_20260727_154110
+  ./frontend/js/app_core.js.o8_backup_event_cleanup_20260727_154110
+
+HASH: 6eac7ae0444424366c561e6ddddac279cd182f5f2f6340d81c14cc352c220cf2 COUNT: 5
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_economy_service.js
+  ./backups/o823_auto/backend_services_ride_economy_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_economy_service.js
+  ./backups/stage4g4_20260725_235846/backend/services/ride_economy_service.js
+  ./backups/stage4g4_20260726_000412/backend/services/ride_economy_service.js
+
+HASH: e93d6e0358ec656c541a5cd16b860a7b8b9f61eabe859b78335ec1fd65d2f51f COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/phase45_shell_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/phase45_shell_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/phase45_shell_test.js
+  ./frontend/testing/phase45_shell_test.js
+  ./migration_backup/frontend/testing/phase45_shell_test.js
+
+HASH: 79b275ebafeb46258381e2e65388e05cf97d377a8c8802b5ef592b92277e67d2 COUNT: 3
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/completion_api.js
+  ./backups/o839_completion_route/completion_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/completion_api.js
+
+HASH: 02c0f2baf42bf1479b47a9b21fea135eb00b3b7de61de8ba0b62a5f514f2e3b2 COUNT: 3
+  ./backups/o820/driverDispatchBridge.js
+  ./backups/o820_auto/frontend_js_driver_driverDispatchBridge.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/driver/driverDispatchBridge.js
+
+HASH: 1d58de51b34a2f58618b24850f58d2931420ba6efcedb2485f9c372954a22e56 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/identity_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/identity_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/identity_api.js
+  ./frontend/services/identity_api.js
+  ./migration_backup/frontend/services/identity_api.js
+
+HASH: acd7f9b791a43b4383a72e17537ca0c4eab5cd95079da0bedcc1ce8f8069135b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ecosystem_tasks.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/ecosystem_tasks.js
+  ./backend/routes/ecosystem_tasks.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/ecosystem_tasks.js
+
+HASH: 3095e2f78c7012836a977ea065643a911a6560709a64f9d34b4189707e6911d3 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/dashboard_registry.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/dashboard_registry.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/dashboard_registry.js
+  ./frontend/components/dashboard_registry.js
+  ./migration_backup/frontend/components/dashboard_registry.js
+
+HASH: 5e958309e95521d3d54f80a6a17fb2f68f12ac78101ef2fe0376abcf8d2bf4ee COUNT: 7
+  ./archive/old_backups/index.html_before_final_1142.bak
+  ./archive/old_backups/index.html_final_backup_1152.bak
+  ./archive/old_backups/index.html_final_v170_1208.bak
+  ./archive/old_backups/index.html_v170_backup_1211.bak
+  ./archive/old_backups/index.html_v200_final_1234.bak
+  ./archive/old_backups/index_backup_before_cleanup_1783943720472.html
+  ./archive/old_backups/index_working_1345.bak
+
+HASH: d772da95e184900695dbcb3eba41a239af32e2f6486baa50d5f6ca1bc837ffba COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/users.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/users.js
+  ./backend/routes/users.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/users.js
+
+HASH: a6e76fbddbf21f427499f6d8d3ef2248ac96388cfb2eaf32d9f5b81bea228cd9 COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js.stage4.bak
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/app_core.js
+  ./frontend/js/app_core.js.stage4.bak
+
+HASH: 3d1e3c1b965c958a76fd63da379a44f5db67d30fcd466b04069e3cfaee040cd9 COUNT: 3
+  ./archive/old_backups/index_stable_backup_1784026555127.html
+  ./scripts/archive/root_migrations/index_before_role_auto_cleanup.html
+  ./scripts/archive/root_migrations/index_before_role_cleanup.html
+
+HASH: 12d4b76e67aeaa799065aa5192624562d125905b4bb768dd8c26d63b7b479d1a COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/realtime/realtime_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/realtime/realtime_service.js
+  ./backend/services/realtime/realtime_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/realtime/realtime_service.js
+
+HASH: d1308c39ea52c2cf88e195b29a6b43e96e783149714e1c72e53788a526168dd7 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js.backup_truth_1784102755787
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/rides.js.backup_truth_1784102755787
+  ./backend/routes/rides.js.backup_truth_1784102755787
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/rides.js.backup_truth_1784102755787
+
+HASH: bd47ce7b88c7759630d1e2b9fcfa170a0f1fde522be09e13fb1581a79d090400 COUNT: 3
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/content-disposition/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/forwarded/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/vary/LICENSE
+
+HASH: 165d0c388ebac5cfb7fa577573caed728cc3035e2d9d7b7ea04209921c9225b7 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/matching/driver_matching_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/matching/driver_matching_engine.js
+  ./backend/matching/driver_matching_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/matching/driver_matching_engine.js
+
+HASH: 27b758ed5dc572387cddc1da4d8941cecebc6a13c9e3b5293d46d2842da24217 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/analytics/pilot_failure_tracker.js
+  ./archive/before_architecture_cleanup/backend_1784127601/analytics/pilot_failure_tracker.js
+  ./backend/analytics/pilot_failure_tracker.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/analytics/pilot_failure_tracker.js
+
+HASH: d0a3d6ee495c93cc4ced0cd0d842a72f53aae24e6eeb0b24f816f4229518dfa2 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/socket_routes.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/socket_routes.js
+  ./backend/routes/socket_routes.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/socket_routes.js
+
+HASH: cf2ee939c20e6fd2fb3b8263fd7dacfac42ade0e1fbfe78b29ae3c091b1c930b COUNT: 2
+  ./backups/o843_automated_restart_survival_gate.js
+  ./o843_automated_restart_survival_gate.js
+
+HASH: f856952f463412d87a0b76407ec8424ec1d15abf451f393ac099b752b41e4641 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js.before-adapter-test
+  ./api/index.js.before-adapter-test
+
+HASH: eb7b090740a92a9278da42d077bdb6f722a078f6f9a65cfe95df793890effda1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/controllers/README.md
+  ./archive/before_architecture_cleanup/backend_1784127601/controllers/README.md
+  ./backend/controllers/README.md
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/controllers/README.md
+
+HASH: 78b17bb734cb9a7bf9f6f880ec6e5b3246f9dfecf5a7155582da6cf79fc7b19d COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firebase_adapter.js
+  ./archive/before_architecture_cleanup/backend_1784127601/firebase/firebase_adapter.js
+  ./backend/firebase/firebase_adapter.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/firebase/firebase_adapter.js
+
+HASH: a349d5df4ca8bda18ea16f97311a6cddff46b27721e771c7c17566dd2f4c6867 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app.js.backup_booking_1784097198231
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/app.js.backup_booking_1784097198231
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/app.js.backup_booking_1784097198231
+  ./frontend/js/app.js.backup_booking_1784097198231
+
+HASH: 854f406e16b017fc7293bbbb462090a13ac1ad1e8e5a4dfa3a6b4ddc7dbb8c57 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ride_api.js.disabled
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/ride_api.js.disabled
+  ./backend/routes/ride_api.js.disabled
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/ride_api.js.disabled
+
+HASH: 701d52044b7a99847c077145556a0a17734fbda725de02b81ad54260bacf4b5f COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_orchestrator_service.js
+  ./backend/services/ride_orchestrator_service.js
+
+HASH: 45d1c089c8b9b1ab6ea2f38198099953ae134d37023538c89954db9e69cccdd4 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase50_state_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase50_state_test.js
+  ./backend/testing/phase50_state_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase50_state_test.js
+
+HASH: 38c00ba466ed4f0ab410a38b29f5edc06cae01e5bacfced18a0b613a08f752dc COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_dispatch_bridge.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_dispatch_bridge.js
+  ./backend/services/ride_dispatch_bridge.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_dispatch_bridge.js
+
+HASH: d2b39f7401ec8df29627e8931f868ec36d5bce79d6f32c9d62577d8614b6b405 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/app.js
+  ./archive/truth_cleanup_1784127676771/frontend_js_app.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/app.js
+  ./frontend/js/app.js
+
+HASH: e73efc789aa60571faf55f134c348d9f68ab82371287e9244d2f0c67c7bfd623 COUNT: 5
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_completion_service.js
+  ./backups/o834_auto/ride_completion_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_completion_service.js
+  ./backups/stage4g4_20260725_235846/backend/services/ride_completion_service.js
+  ./backups/stage4g4_20260726_000412/backend/services/ride_completion_service.js
+
+HASH: f7c0bd070ec4a3ee579bb5641ccbaec78e7551bfa740715965ee14d9e5e275b3 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/realtime.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/realtime.js
+  ./backend/routes/realtime.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/realtime.js
+
+HASH: dc8a9b492baa8b016e58e9c9641a1b7d60a720df43d57bacabbaa09f1099346b COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/reward_claim_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/reward_claim_engine.js
+  ./backend/rewards/reward_claim_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/reward_claim_engine.js
+  ./backups/stage4g4_20260725_235846/backend/rewards/reward_claim_engine.js
+  ./backups/stage4g4_20260726_000412/backend/rewards/reward_claim_engine.js
+
+HASH: b81f05d497c29c36406c7af1027183c8f721f7319052a66f5509b982fa855636 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/fraud/ride_validation.js
+  ./archive/before_architecture_cleanup/backend_1784127601/fraud/ride_validation.js
+  ./backend/fraud/ride_validation.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/fraud/ride_validation.js
+
+HASH: d2d53ae5280ac0965b1bf7e5f77434e7b927cd1e28bacace1532b3154d90dd66 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/passenger_dashboard_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/passenger_dashboard_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/passenger_dashboard_api.js
+  ./frontend/services/passenger_dashboard_api.js
+  ./migration_backup/frontend/services/passenger_dashboard_api.js
+
+HASH: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945 COUNT: 6
+  ./beta/command/logs/incidents.json
+  ./beta/human_pilot/feedback/feedback.json
+  ./beta/human_pilot/participants/participants.json
+  ./beta/pilot/issues/issues.json
+  ./beta/pilot/rides/rides.json
+  ./beta/pilot/users/users.json
+
+HASH: 951719513d24aef7fcaf1b32a272242974b993426f7acd8987cf5316ee85d6fb COUNT: 6
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/ride_engine.js
+  ./backups/o820/ride_engine.js
+  ./backups/o820_auto/frontend_js_ride_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/ride_engine.js
+  ./migration_backup/frontend/js/ride_engine.js
+  ./scripts/archive/root_migrations/ride_engine_before_booking_merge.js
+
+HASH: 98ef2104fc04e54ba32f40fa40ee200aff254f87b6b9c07bbe1948a6e8452376 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/migration_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/database/migration_engine.js
+  ./backend/database/migration_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/database/migration_engine.js
+
+HASH: d53d8fd967e1191357d68fbb1f871ef541edbb7cf90d981ce8ce6aa9e7cea446 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_config.js
+  ./archive/before_architecture_cleanup/backend_1784127601/blockchain/thb_config.js
+  ./backend/blockchain/thb_config.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_config.js
+
+HASH: 3636c23de003dc82251f06ea562fe4b7791a3f043ff8147c518625c9eeb6b264 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/delivery_economy_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/delivery_economy_test.js
+  ./backend/testing/delivery_economy_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/delivery_economy_test.js
+
+HASH: e4698d4b94855797623427afd8f2081f4d93c0bed241dd63001da8ed9c3e36df COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase51_orchestrator_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase51_orchestrator_test.js
+  ./backend/testing/phase51_orchestrator_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase51_orchestrator_test.js
+
+HASH: 784c64a2fced0cb1d8f28d8e3a16168fc589c744d371619bd76be19178c16710 COUNT: 2
+  ./archive/phase_scripts/index_backup_before_bookride_cleanup.html
+  ./archive/phase_scripts/index_backup_before_runtime_merge.html
+
+HASH: 6346ee4c020f341387588479dd83740a65ab902a462b8c6b3b8bf51f032c6795 COUNT: 5
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/gopd/tsconfig.json
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-list/tsconfig.json
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-map/tsconfig.json
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-weakmap/tsconfig.json
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel/tsconfig.json
+
+HASH: a1d6fea998f1889ab0fa9815dc93b2b793bda7456b1148aee96e1b151e62619e COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/mobile/mobile_entry.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/mobile/mobile_entry.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/mobile/mobile_entry.js
+  ./frontend/mobile/mobile_entry.js
+  ./migration_backup/frontend/mobile/mobile_entry.js
+
+HASH: e5a0411393f341e326749de54f7a95b56030ec16f442ae1e655036f34cec2807 COUNT: 10
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/core_working_1345.bak
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/core_working_1345.bak
+  ./archive/old_backups/backups_v67/core.js.autobak
+  ./archive/old_backups/backups_v67/core_stable_backup.js
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/frontend/js/core.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/core_working_1345.bak
+  ./frontend/js/core_working_1345.bak
+  ./migration_backup/frontend/js/core.js
+  ./migration_backup/frontend/js/core_working_1345.bak
+  ./scripts/archive/root_migrations/core_before_bookride_cleanup.js
+
+HASH: 487d4e3b99b490ef29b07785da505050dc12b7682da47264e59ac79bc77f3150 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/styles/cablink.css
+  ./archive/before_architecture_cleanup/frontend_1784127601/styles/cablink.css
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/styles/cablink.css
+  ./frontend/styles/cablink.css
+  ./migration_backup/frontend/styles/cablink.css
+
+HASH: 71ff205ab2bed0c29ba169b804671e50a17a180bf95c8e4d63b2021b8c252846 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/production/database_adapter.js.before-firestore
+  ./archive/before_architecture_cleanup/backend_1784127601/production/database_adapter.js
+  ./backend/production/database_adapter.js.before-firestore
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/production/database_adapter.js
+
+HASH: df9a5bf744c3718af83ab8b998d1b6a5750f28c596c57e1947e1e7db0db2f977 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/demand_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/demand_service.js
+  ./backend/services/demand_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/demand_service.js
+
+HASH: 6ac2aeb91dc714b0ad1844ca6ff52616cfa961c0c42bd5190d207720d0736611 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/config/env_check.js
+  ./archive/before_architecture_cleanup/backend_1784127601/config/env_check.js
+  ./backend/config/env_check.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/config/env_check.js
+
+HASH: a72f2cb0fc2e5ed3a02d162804623faa334fd01b24476c3b9c72271ab4830dec COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js.stage3_backup
+  ./backend/server.js.stage3_backup
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/server.js
+
+HASH: f9bb29404e1f2f8d3b02a5a7b49d5d2f58d0a7d0372638c4b5c0b5ff977172c1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/drivers/driver_state.js
+  ./archive/before_architecture_cleanup/backend_1784127601/drivers/driver_state.js
+  ./backend/drivers/driver_state.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/drivers/driver_state.js
+
+HASH: e76f17eab236ab144b27e9427e3c826fb9e8eb0d68d680285ebcccc7cafdefa6 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_real_executor.js
+  ./archive/before_architecture_cleanup/backend_1784127601/blockchain/thb_real_executor.js
+  ./backend/blockchain/thb_real_executor.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_real_executor.js
+  ./backups/stage4g4_20260725_235846/backend/blockchain/thb_real_executor.js
+  ./backups/stage4g4_20260726_000412/backend/blockchain/thb_real_executor.js
+
+HASH: 23d466b1b134b415b66fa50c6526b4cf3e7b9258554da88d3abb371721e7ce68 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/body-parser/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/type-is/LICENSE
+
+HASH: 1607d1a75895cfb2051c78d8ed941c40693fb8604d090c0c9b4b0bbca0267a9a COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.firebase-forensics-backup.js
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.write-forensics-working.js
+  ./api/index.firebase-forensics-backup.js
+  ./api/index.write-forensics-working.js
+
+HASH: 8f748f6f30b4122e1809142b332f459ec99bd102db910b8251b69c6c17c5fe32 COUNT: 2
+  ./backups/o837_completion_fix/ride_completion_service.js
+  ./backups/o839_completion_service/ride_completion_service.js
+
+HASH: 8625f03c289df8f97f20a82b90b6c34138c50b8b83779df85a03169a27e137cd COUNT: 2
+  ./archive/old_backups/index_stable_backup_1784017709341.html
+  ./scripts/archive/root_migrations/index_before_role_fix_1784018514824.html
+
+HASH: 5daa611347882b7d65f608f9793b4c2488098b46e67388fca6894e835e619198 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rides/ride_lifecycle.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rides/ride_lifecycle.js
+  ./backend/rides/ride_lifecycle.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rides/ride_lifecycle.js
+
+HASH: 500f27fc5e9f70a6dafa46a6995802a2c447c788ddb1dc4f33176b8d1138db6d COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/ride_repository.js
+  ./backend/database/ride_repository.js
+
+HASH: d6f258850cf0a5162d786dd4e05147db1be1e5ecb0c88f6ec7cc2d653720fb02 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/delivery_reward_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/delivery_reward_service.js
+  ./backend/rewards/delivery_reward_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/delivery_reward_service.js
+
+HASH: c232e5f42286617b94cee6f915f80c44297278ad86a2c3922ecaf45304f71974 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fare_engine.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/fare_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/fare_engine.js
+  ./frontend/js/fare_engine.js
+
+HASH: 2cbbd8deecff85bba3550f1e1457d91564fae7ef328f8447ed3fa4da15959e18 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/notification_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/notification_service.js
+  ./backend/services/notification_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/notification_service.js
+
+HASH: 4ce5cb08ffc36d2b8b8a8413fa5c9c5dc56606f67b87aad1dd8b25c3735f9eb1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.storage-test-backup.js
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.users-route-failing.js
+  ./api/index.storage-test-backup.js
+  ./api/index.users-route-failing.js
+
+HASH: 71a38c79ec49b1d87d841c8ea39f69b6c6a86720b89a24b850987acf13c1efef COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js.before-firestore-test
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js.pre_o6
+  ./backend/routes/rides.js
+  ./backend/routes/rides.js.before-firestore-test
+  ./backend/routes/rides.js.pre_o6
+
+HASH: 27ba67e64a0941f37389a41a20ebafc85e9abd86a9a8fcd50337251a122bfac7 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/human_interface_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/human_interface_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/human_interface_test.js
+  ./frontend/testing/human_interface_test.js
+  ./migration_backup/frontend/testing/human_interface_test.js
+
+HASH: 0ecfc73f104df5214f0747dabe5bf6689cefa0236094ba429d59e29c4f208307 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverDispatchBridge.js
+  ./frontend/js/driver/driverDispatchBridge.js
+
+HASH: f469d2fc7ee058ccbd2a561f152b00a374a645516cfde52ef1edb899f31a9a23 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/monitoring/system_health.js
+  ./archive/before_architecture_cleanup/backend_1784127601/monitoring/system_health.js
+  ./backend/monitoring/system_health.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/monitoring/system_health.js
+
+HASH: 6213519063b5b8ea450b82de10dfd931ffe655899233b8ff97ab3b1d35210bdf COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/passenger_trip_status.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/passenger_trip_status.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/passenger_trip_status.jsx
+  ./frontend/components/passenger_trip_status.jsx
+  ./migration_backup/frontend/components/passenger_trip_status.jsx
+
+HASH: f136a8005e89c6e0f7f062f2540ce5333be216c690af3d5aa39db9c707548032 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/simulation_engine.js
+  ./frontend/js/simulation_engine.js
+
+HASH: ded2b12a99fd345cd56dd6ebbd3c90cbe0b258e9b076b7adfa43bc570184ea60 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/notifications/push_bridge.js
+  ./archive/before_architecture_cleanup/backend_1784127601/notifications/push_bridge.js
+  ./backend/notifications/push_bridge.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/notifications/push_bridge.js
+
+HASH: 8d2b80696984196562981b061282bd7f794153331f99f678deb59f0e65c01b56 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/activeRideRegistry.js
+  ./frontend/js/rides/activeRideRegistry.js
+
+HASH: 093235cdfa9e69c6b78d231e24bf504c6f000ef8a6d991b47d572a61c87b2d2c COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/index.html.bak
+  ./archive/old_backups/index.html.bak
+
+HASH: ce4b4f63a12e6c9f77ca8d8f1d77065b575585bdb92655b700c9c5ed8f2aef00 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase34_economy_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase34_economy_test.js
+  ./backend/testing/phase34_economy_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase34_economy_test.js
+
+HASH: e2e3e878f4f073c64969781d380466d16cbb17af7bc7478415cc3a9a87cc462c COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server/index.js
+  ./archive/before_architecture_cleanup/backend_1784127601/server/index.js
+  ./backend/server/index.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/server/index.js
+
+HASH: 86c12d5d20cb26adb3478b9ac68ee4f6dcbb190a4e27955bfc96ac1236b64ee7 COUNT: 4
+  ./.cablink_backups/driver_consolidation_20260725_213935/app_core.js
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js.backup.20260725_213658
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/app_core.js.backup.20260725_213658
+  ./frontend/js/app_core.js.backup.20260725_213658
+
+HASH: 591ab498e9960d117486767e9680eee89ae4b99c07c62862645a6fe20282aaa0 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/storage/database.js
+  ./backend/storage/database.js
+
+HASH: c626dc8773d3767bd2824110cc85c5055783ddb82942843d056f95952b75047d COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/auth/auth_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/auth/auth_engine.js
+  ./backend/auth/auth_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/auth/auth_engine.js
+
+HASH: 95cb92e3b5c34b9dd5c7390bb1ab7f591491af6c22aaec90de271950274de203 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_intelligence_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/driver_intelligence_api.js
+  ./backend/routes/driver_intelligence_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/driver_intelligence_api.js
+
+HASH: 6ed7653bea4a8411831219c0210d2ea1fb7e027612775460f1fa8f86d1bf4351 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/presence_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/realtime/presence_engine.js
+  ./backend/realtime/presence_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/realtime/presence_engine.js
+
+HASH: 0548bf37f9e945691c8372eb031ae37ba85c64e62c5990043408c2482e6cf051 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/two_phone_pilot.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/two_phone_pilot.js
+  ./backend/testing/two_phone_pilot.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/two_phone_pilot.js
+
+HASH: e7cc0b45b9a824a23cbae86f9186f3d26e7d4141101f6a0041eecbac6a3612bb COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/role.js
+  ./archive/old_backups/backups_v67/role.js.autobak
+
+HASH: 11cbae95ba57308fa8ae3f7b7f8984c4feb4751ce94806445726a2927b023ae2 COUNT: 3
+  ./archive/before_architecture_cleanup/backend_1784127601/rides/ride_state_engine.js
+  ./backups/o822_auto/backend_rides_ride_state_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rides/ride_state_engine.js
+
+HASH: 525ca39b0693d0ad49cae7d704ffd30d4cc8b280deff66283e802125a9674475 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_economy_service.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/driver_economy_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/driver_economy_service.js
+  ./frontend/services/driver_economy_service.js
+  ./migration_backup/frontend/services/driver_economy_service.js
+
+HASH: 0678aa9a405b2824a471123a6ca7e52abc7c64cdb659572ff5e27dc51bdfbfa3 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/chain_health.js
+  ./archive/before_architecture_cleanup/backend_1784127601/blockchain/chain_health.js
+  ./backend/blockchain/chain_health.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/chain_health.js
+
+HASH: 0de64ee1cd1a3583a2094d5921c0bed983211600c8cb2e3c5c28c584f539186f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/updates_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/updates_api.js
+  ./backend/routes/updates_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/updates_api.js
+
+HASH: f038c9b9e906d5cdcd33b3695abbf64b1666102bcc48e59e747b7388ad8e7dca COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_demand_map.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/driver_demand_map.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/driver_demand_map.js
+  ./frontend/components/driver_demand_map.js
+  ./migration_backup/frontend/components/driver_demand_map.js
+
+HASH: 0cf07b77a4d20a8de08df3fdf53579e079393b01e6923a285d9d232859cdb83c COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/ride_engine.js
+  ./frontend/js/ride_engine.js
+
+HASH: 57fa412077efeab3248892628b7ba07222d94035586ab965252f3a27089ff4a0 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/config/environment_validator.js
+  ./archive/before_architecture_cleanup/backend_1784127601/config/environment_validator.js
+  ./backend/config/environment_validator.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/config/environment_validator.js
+
+HASH: 269fea1f8b59fde6d5cb177bb9da8bf88b53ce04dfe9fc847f4604cdad1f9b56 COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/fix.js
+  ./frontend/js/fix.js
+
+HASH: 351074b5d3dca811406a1431318bdf364642246eec5a5a376d4702c293a43c4e COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js.backup_1784096856161
+  ./archive/before_architecture_cleanup/backend_1784127601/server.js.backup_1784096856161
+  ./backend/server.js.backup_1784096856161
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/server.js.backup_1784096856161
+
+HASH: 26c8f7241b1e738b3276b1f1673e9a28451c726d0a4e487ae091bc2b267486c8 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/screens/driver_dashboard.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/screens/driver_dashboard.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/screens/driver_dashboard.js
+  ./frontend/screens/driver_dashboard.js
+  ./migration_backup/frontend/screens/driver_dashboard.js
+
+HASH: 31e0c6eed511cf45295917307549a2461931bd569cec76e5aceafb7b1ee44a42 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/main.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/main.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/main.jsx
+  ./frontend/main.jsx
+  ./migration_backup/frontend/main.jsx
+
+HASH: c635399e480ad0122bfdaa0b556f9e08f6b6c6c08178cddbd308e2a5a03656ee COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/notification_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/notification_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/notification_api.js
+  ./frontend/services/notification_api.js
+  ./migration_backup/frontend/services/notification_api.js
+
+HASH: 625135033b02353da84f6d279f009c5df48ba217777cb23fa1c2ec27c74b3918 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/heartbeat/device_monitor.js
+  ./archive/before_architecture_cleanup/backend_1784127601/heartbeat/device_monitor.js
+  ./backend/heartbeat/device_monitor.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/heartbeat/device_monitor.js
+
+HASH: 357fe2a93e7c921a4bef9c2106ebdfd26802f41341019b80a04c2c40c74f2860 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/fix.js
+  ./archive/old_backups/fix.js_v66_1124.bak
+
+HASH: 34c0568b1ff36adc4c395cbd840a112cf2ea791344b9446df47872cd7c7092bc COUNT: 4
+  ./archive/before_architecture_cleanup/backend_1784127601/services/rideService.js
+  ./backups/o824_auto/backend_services_rideService.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/rideService.js
+  ./cablink_ride_backup_20260725_221547/backend/services/rideService.js
+
+HASH: dbe3a63b86854ee1c26322db6181e1e8809a484bc09dbae7c73d58b9695f0be3 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/gps/location_stream.js
+  ./archive/before_architecture_cleanup/backend_1784127601/gps/location_stream.js
+  ./backend/gps/location_stream.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/gps/location_stream.js
+
+HASH: c537053b109627ea5e78a5e6aab3d0f8384bd088cfcc1818eab43b62c54df1c2 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js.backup
+  ./api/index.js.backup
+
+HASH: a32652b4c2aa09abf94180f0cec6030b063462413bb4d0c76445d1381ba79f1b COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/driver_economy_screen_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/driver_economy_screen_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/driver_economy_screen_test.js
+  ./frontend/testing/driver_economy_screen_test.js
+  ./migration_backup/frontend/testing/driver_economy_screen_test.js
+
+HASH: c230daee89bf1ce8e7f99974ec20e9cd2cd9a77d0c116a772f6addf673458b78 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/gps.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/gps.js
+  ./backend/routes/gps.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/gps.js
+
+HASH: 9282cbab7c473cca318012621ea3e5f0e6e6760c6280f4417cab6bfae9ef3ce9 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase46_live_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase46_live_test.js
+  ./backend/testing/phase46_live_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase46_live_test.js
+
+HASH: 5f2677f1c91297e45001cb27b1984087dcc92a94cbbc21dae413139095ed5508 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/fraud/reward_guard.js
+  ./archive/before_architecture_cleanup/backend_1784127601/fraud/reward_guard.js
+  ./backend/fraud/reward_guard.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/fraud/reward_guard.js
+
+HASH: 57904feaebec5203b56bfb49edf329b3e992e0803485ebb956a322deb10344e7 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/environment/readiness_check.js
+  ./archive/before_architecture_cleanup/backend_1784127601/environment/readiness_check.js
+  ./backend/environment/readiness_check.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/environment/readiness_check.js
+
+HASH: b1e67706cf61bb130484cbec7dc8db47f5adc6dfbe7816bed5d710a250703984 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/live_driver_dashboard.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/live_driver_dashboard.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/live_driver_dashboard.js
+  ./frontend/components/live_driver_dashboard.js
+  ./migration_backup/frontend/components/live_driver_dashboard.js
+
+HASH: a86a50caed31bbfd247b6180b48eec8b83cdbcdfa38ff47a2c4cd5262b489bf7 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/marketplace_bridge_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/marketplace_bridge_test.js
+  ./backend/testing/marketplace_bridge_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/marketplace_bridge_test.js
+
+HASH: f5e70ff501bdc9b06ad7779884885769c6113cb3555b5569cf3ad26d73360803 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_economy_dashboard.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/driver_economy_dashboard.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/driver_economy_dashboard.js
+  ./frontend/components/driver_economy_dashboard.js
+  ./migration_backup/frontend/components/driver_economy_dashboard.js
+
+HASH: e018c544bd03c4cf2bb7da429f50c2916990106cf4a585ab585df8ee6665e644 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/driver-form.js
+  ./archive/phase_scripts/driver-form.js
+
+HASH: 800d1b34215e13fb1b237dbe3338bf41d3d0dd7aed542013f26a796e3a3e348a COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/demand_panel.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/demand_panel.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/demand_panel.js
+  ./frontend/components/demand_panel.js
+  ./migration_backup/frontend/components/demand_panel.js
+
+HASH: fc2dc6792251cfd6c9424213072c25768df39af510b3663f508886e4f3b4b613 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/broadcast/ride_broadcast.js
+  ./archive/before_architecture_cleanup/backend_1784127601/broadcast/ride_broadcast.js
+  ./backend/broadcast/ride_broadcast.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/broadcast/ride_broadcast.js
+
+HASH: 611f96c6fd819de5d9309453822fe40568dd5e473e37537d14f41d15043b9bb4 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_event_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_event_service.js
+  ./backend/services/ride_event_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_event_service.js
+
+HASH: 3a8e8d8be564ba8b0d090e77efc361abcbf722edc194b4d4d90039fd946a7a51 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_state_service.js.backup_single_storage_1784102172187
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_state_service.js.backup_single_storage_1784102172187
+  ./backend/services/ride_state_service.js.backup_single_storage_1784102172187
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_state_service.js.backup_single_storage_1784102172187
+
+HASH: 695020186a6334f4b09c63781c887c05f38532e3eabc1709afffa62dd2fb1e77 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/ride_channel.js
+  ./archive/before_architecture_cleanup/backend_1784127601/realtime/ride_channel.js
+  ./backend/realtime/ride_channel.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/realtime/ride_channel.js
+
+HASH: 7e51ce4f44fb006ff81d48dcbcda377460f6aac7cc51fc470cf8e38cfc5511a9 COUNT: 2
+  ./archive/before_architecture_cleanup/backend_1784127601/data/economy_ledger.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/economy_ledger.json
+
+HASH: 9e6424ea116f1edba0e876b422bc162db44411cab9e2af08e0aef08dee6206f6 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-weakmap/.eslintrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel/.eslintrc
+
+HASH: 0c8283a3ee324516611018e45123eb3ed0880d07caf747972a502b8a08ec60da COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverService.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/driver/driverService.js
+  ./frontend/js/driver/driverService.js
+
+HASH: a9fd68b3c979d0765e94b9c7ed9358fafa312cad74f5df70c4faac2e21e3a467 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/analytics/pilot_analytics.js
+  ./archive/before_architecture_cleanup/backend_1784127601/analytics/pilot_analytics.js
+  ./backend/analytics/pilot_analytics.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/analytics/pilot_analytics.js
+
+HASH: fd3a3270dedce9ea4b7c8db571c304bd5216d108cdfa24415b759ba410f7de1c COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/maps/map_provider.js
+  ./archive/before_architecture_cleanup/backend_1784127601/maps/map_provider.js
+  ./backend/maps/map_provider.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/maps/map_provider.js
+
+HASH: ee152d05c599bcf4724f40a659f9efef52d47da3add619abb53319a34dd65af6 COUNT: 2
+  ./scripts/archive/root_migrations/index_before_module_cleanup.html
+  ./scripts/archive/root_migrations/index_before_script_restore.html
+
+HASH: 128dc532b1749beb60076a691c76004a100f91a4098114e6c26939c6ae8d5124 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_repository_firestore_test.js
+  ./backend/canonical/ride_repository_firestore_test.js
+
+HASH: dc0ec1d3f65f44dfa7d07ff41aea0c49d01f66fc13863d8d12bfc300e1f33830 COUNT: 2
+  ./README.md
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/README.md
+
+HASH: db0063ccbc10646176175bbf700ffc52afa95d5b0fec7fdaa2aa9f00685bb426 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/security/fraud_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/security/fraud_engine.js
+  ./backend/security/fraud_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/security/fraud_engine.js
+
+HASH: 326c15a18d8a385f6bc2fd7d8ddcac6a479fc3cccde379f8a710585b70566624 COUNT: 2
+  ./archive/before_architecture_cleanup/backend_1784127601/storage/cablink_db.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/storage/cablink_db.json
+
+HASH: 7864f10551436c927366095fb8424fd428e4f735ec543a5b5c3e71fb0a000dad COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/gps/gps_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/gps/gps_service.js
+  ./backend/gps/gps_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/gps/gps_service.js
+
+HASH: 73e76ef26fb29ff1e3db8b54ccc94e37f8c2747edbebfd40595d98aed28b3119 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/operations_core.js
+  ./frontend/js/operations_core.js
+
+HASH: 20b338e10a9fd03a957bec2b22fc383a976398f7d69a6d04ca005b596bb966b7 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/firebase/firestore_adapter.js
+  ./backend/firebase/firestore_adapter.js
+
+HASH: 4697b6eae2700943984d7e7f7c2ae766a9f3d3fff4ff671ff720e584d626b44b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/sync/live_sync_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/sync/live_sync_engine.js
+  ./backend/sync/live_sync_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/sync/live_sync_engine.js
+
+HASH: bc4dab3f242f896a12b227d02bfde4468dcd1ff13ffec37d8043c7cdce5806e8 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/live_task_flow_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/live_task_flow_test.js
+  ./backend/testing/live_task_flow_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/live_task_flow_test.js
+
+HASH: 32ea5c704f8bcc9adbc893ee836c2d4e5a1365684c3fff48388378c91b9ce435 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/phase44_page_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/phase44_page_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/phase44_page_test.js
+  ./frontend/testing/phase44_page_test.js
+  ./migration_backup/frontend/testing/phase44_page_test.js
+
+HASH: fab44c0a912149cdea1de66a688c3c0648d02159409269e749ac6b481e560f8a COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/realtime/tracking_engine.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/realtime/tracking_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/realtime/tracking_engine.js
+  ./frontend/js/realtime/tracking_engine.js
+  ./migration_backup/frontend/js/realtime/tracking_engine.js
+
+HASH: 9feaf2019d27235ee370c1502e2b03ac08b4d15e42513a94c6dfc5a1607eb332 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/font-fix.js
+  ./archive/phase_scripts/font-fix.js
+
+HASH: 1edc0a0b2e85dbba1a43b44b7df41463121bb40c6431816a175edf00e0174626 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/devices/device_registry.js
+  ./archive/before_architecture_cleanup/backend_1784127601/devices/device_registry.js
+  ./backend/devices/device_registry.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/devices/device_registry.js
+
+HASH: 9821a190975b0693e6e3d46d939eddc711de61b6e7818fd8ae16d955ccc0ec0a COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/config/app_config.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/config/app_config.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/config/app_config.js
+  ./frontend/config/app_config.js
+
+HASH: db47eff04cdbf2b90975701d439f66f682fe005cc1eeac44a66c02826180572a COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/live_driver_economy_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/live_driver_economy_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/live_driver_economy_test.js
+  ./frontend/testing/live_driver_economy_test.js
+  ./migration_backup/frontend/testing/live_driver_economy_test.js
+
+HASH: f791a6e6041b74dcf800d399869d1383b3298c66a262c9c9e5090f4c79b45f8a COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/validation/input_validator.js
+  ./archive/before_architecture_cleanup/backend_1784127601/validation/input_validator.js
+  ./backend/validation/input_validator.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/validation/input_validator.js
+
+HASH: 85f59b898460666f8393da99d8cb36452737fffcbec7b09d607218a0307bea05 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/transactions/transaction_record.js
+  ./archive/before_architecture_cleanup/backend_1784127601/transactions/transaction_record.js
+  ./backend/transactions/transaction_record.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/transactions/transaction_record.js
+
+HASH: 2aec86483da8ec6d418eda006dbd1db8410d81da4a3ae2585cdc34a64aa82187 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/location/gps_event_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/location/gps_event_engine.js
+  ./backend/location/gps_event_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/location/gps_event_engine.js
+
+HASH: 2e18230577985ffef82983575390e27f8d9fc56263fdc7850c9443e672f965fc COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/state/ride_ui_state.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/state/ride_ui_state.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/state/ride_ui_state.js
+  ./frontend/state/ride_ui_state.js
+  ./migration_backup/frontend/state/ride_ui_state.js
+
+HASH: adda208a138e149bbfa1a71804978849393727e92b22f45c60dba4d1e60ef44f COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/role_switch.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/role_switch.js
+  ./frontend/js/role_switch.js
+
+HASH: 9d94adb518559cd590ce7a2d7c00517f2166d133266d2a76e41738ee807cb084 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/state/session_store.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/state/session_store.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/state/session_store.js
+  ./frontend/state/session_store.js
+  ./migration_backup/frontend/state/session_store.js
+
+HASH: 3fedced35943f660153beff689142edcabab65ffdcb81927dda72feb9214c53c COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/reward_history.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/reward_history.js
+  ./backend/rewards/reward_history.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/reward_history.js
+
+HASH: 8a6407856b6b6cb6db7979ef05d34b5b80d23ceae9135a7ccaf424e9ad9ee0ac COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/ecosystem/bstm_links.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/ecosystem/bstm_links.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/ecosystem/bstm_links.js
+  ./frontend/ecosystem/bstm_links.js
+  ./migration_backup/frontend/ecosystem/bstm_links.js
+
+HASH: 47d442c9535ab44f6409dd91c069460b75c9548e9a42a140f83ab69390491287 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/human_ride_scenario.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/human_ride_scenario.js
+  ./backend/testing/human_ride_scenario.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/human_ride_scenario.js
+
+HASH: 6431f78cc0b11401ae92a89a9bd792236e49cb4f46ee1df2bb058e67ad0da571 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/.git/refs/heads/main
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/.git/refs/remotes/origin/main
+
+HASH: 2aa7720fe97699a08185bdb7f38c4d5813ff3ac3f3a7d4ac5f0bbd61b7736e20 COUNT: 3
+  ./archive/before_architecture_cleanup/backend_1784127601/status/ride_status.js
+  ./backups/o822_auto/backend_status_ride_status.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/status/ride_status.js
+
+HASH: a19226f4649f9dbe40831f75d63b4435d14b64790391adeeb2c83124226a9f9f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ecosystem/marketplace_bridge.js
+  ./archive/before_architecture_cleanup/backend_1784127601/ecosystem/marketplace_bridge.js
+  ./backend/ecosystem/marketplace_bridge.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/ecosystem/marketplace_bridge.js
+
+HASH: c2932b10a89ed7d8a850e2ca8f30b39be19ec280d36fe184019fdacfd25f6041 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/driver_location_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/driver_location_service.js
+  ./backend/services/driver_location_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/driver_location_service.js
+
+HASH: e82d4855facb2722b790feebe6b6a3e3d31c0c34e44384dc05b0ab2e1e982be0 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/cloud/cloud_adapter.js
+  ./archive/before_architecture_cleanup/backend_1784127601/cloud/cloud_adapter.js
+  ./backend/cloud/cloud_adapter.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/cloud/cloud_adapter.js
+
+HASH: 004fe6fa4ada1af4e730de6d5fbdb638d660cf9c560ecbf237a479e68dd66e3d COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/notifications/notification_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/notifications/notification_engine.js
+  ./backend/notifications/notification_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/notifications/notification_engine.js
+
+HASH: 6eb9344ccd27dc21b02d0e1761baeec54b0dc88c27344cec363e7d3ddcb6f288 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js.before-firestore-operation-diagnostic
+  ./api/index.js.before-firestore-operation-diagnostic
+
+HASH: 63526bdbb909b90df6f7b338aa81d05b2158b159d29ba812ac1842547711b8a7 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/package-lock.json
+  ./package-lock.json
+
+HASH: 04633615897648a94973bc5657d186dbb8cb92953edba2dc69da95d8bedbf45b COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js.before-canonical-firestore-test
+  ./api/index.js.before-canonical-firestore-test
+
+HASH: 03f7bf2bdc0e5af0520e46f5beadcf6f50d65821a32a7ce142c605c400201598 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/storage/database.js.backup_relative_path
+  ./archive/before_architecture_cleanup/backend_1784127601/storage/database.js
+  ./backend/storage/database.js.backup_relative_path
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/storage/database.js
+
+HASH: 948366fea3b423a46366326d0bb2e54b08abd1cf0b243678ba6625740c40da5a COUNT: 7
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/dunder-proto/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/function-bind/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/hasown/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-list/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-map/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-weakmap/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel/.nycrc
+
+HASH: 3299e38e493ed30b042a86003ea4dd45368b82f305ac025c8e248cc46d66cf0a COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/passenger_dashboard.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/passenger_dashboard.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/passenger_dashboard.jsx
+  ./frontend/components/passenger_dashboard.jsx
+  ./migration_backup/frontend/components/passenger_dashboard.jsx
+
+HASH: 43b6ad3ab2a40e38eca2b833c4651d5824063afb432ae2a092f7697de3a18942 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/live_demand.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/live_demand.json
+  ./backend/data/live_demand.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/live_demand.json
+
+HASH: cfc3f455254c0af0655cc3ff46a41ed644b67599f6043346169d285bf2b3cf3b COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-weakmap/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel/LICENSE
+
+HASH: 23e1918faa954cf54962085f826296c08b8e5ea190e5a325d1bd869cc6a715cc COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/security/security_audit.js
+  ./archive/before_architecture_cleanup/backend_1784127601/security/security_audit.js
+  ./backend/security/security_audit.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/security/security_audit.js
+
+HASH: d97f22a514ee80f1758659ef4a72ef7de9148459ab1627722c8bfde660c427b7 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/socket/socket_manager.js
+  ./archive/before_architecture_cleanup/backend_1784127601/socket/socket_manager.js
+  ./backend/socket/socket_manager.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/socket/socket_manager.js
+
+HASH: 0694050195fc694c5846b0a2a66b437ac775da988f0a779c55fb892597f7f641 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/dunder-proto/.eslintrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/es-errors/.eslintrc
+
+HASH: ae5757478bcf165ccfefdf87e4eb0aa703c452cf3868bc6fc5106b0eb5d2c4e1 COUNT: 2
+  ./backups/stage4g4_20260725_235846/backend/data/rides.json
+  ./backups/stage4g4_20260726_000412/backend/data/rides.json
+
+HASH: 6047250f257f8464015a8586651ac7da8958ed276c0749068bef2600786cac0b COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/task_service.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/task_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/task_service.js
+  ./frontend/services/task_service.js
+  ./migration_backup/frontend/services/task_service.js
+
+HASH: 6a0d5ad33c3e3b841c8e6d2534ec5790adae9f8f3b8e7f2fb0515191a068a3fa COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/passenger_intelligence_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/passenger_intelligence_service.js
+  ./backend/services/passenger_intelligence_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/passenger_intelligence_service.js
+
+HASH: 528629b8dbc05d97b4a67def12e0e4077cbd05006f6c5b012ec7d3e03d4d3292 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/safety/emergency_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/safety/emergency_engine.js
+  ./backend/safety/emergency_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/safety/emergency_engine.js
+
+HASH: 3e256a7e9e84f58b11f92154f749f8b4f28ec61dc122c06b786d0438af229df0 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/config/provider_config.js
+  ./archive/before_architecture_cleanup/backend_1784127601/config/provider_config.js
+  ./backend/config/provider_config.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/config/provider_config.js
+
+HASH: 6458da8cdcb3feddd3d4f78d35a7e73ebf8a5bb48d7e7c7400ae640d0a790aa9 COUNT: 5
+  ./.cablink_backups/driver_consolidation_20260725_213935/fix.js
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/fix.js.backup.20260725_213658
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/fix.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/fix.js.backup.20260725_213658
+  ./frontend/js/fix.js.backup.20260725_213658
+
+HASH: 76afd6fa1154ca51a135f80fcb8ced64851ce1382bea9825796d137672514560 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/location/location_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/location/location_service.js
+  ./backend/services/location/location_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/location/location_service.js
+
+HASH: 5b0f9dd4dff8f3debdebdc341c12102276603ae48a3c5df115ca4bfe3c4c88a2 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/thb_service.js
+  ./backend/rewards/thb_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_service.js
+
+HASH: fb8682c818c33fb9df20762d68ada999962dd62930ec4c6399e4e91a16b3b85d COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverModeBridge.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/driver/driverModeBridge.js
+  ./frontend/js/driver/driverModeBridge.js
+
+HASH: fe5be7d8cc9d6a2cbd31d454033f111dba08998f4051cdcda6ff897df0580754 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_location_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/driver_location_api.js
+  ./backend/routes/driver_location_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/driver_location_api.js
+
+HASH: dff135b2e7d2846af2e39c0f7e8c1796f092f990c2ca4512e044c656cd8af73b COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/status_panel.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/status_panel.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/status_panel.js
+  ./frontend/components/status_panel.js
+  ./migration_backup/frontend/components/status_panel.js
+
+HASH: 58f507f8a4a795a70e7cfbe2ee8f0290b5869fb7614d5888cd0d347f7e802538 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/live_driver_dashboard_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/live_driver_dashboard_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/live_driver_dashboard_test.js
+  ./frontend/testing/live_driver_dashboard_test.js
+  ./migration_backup/frontend/testing/live_driver_dashboard_test.js
+
+HASH: 73f4979f583e4c86e685ac641cf1be7a61d875019c0be50075494e676f6553e2 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/App.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/App.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/App.jsx
+  ./migration_backup/frontend/App.jsx
+
+HASH: 4fdb51db9172c344a8fc32c81b1cf0d5cddddb2e4fc82ddfd4406295c0ebf95a COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/pilot_activation_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/pilot_activation_test.js
+  ./backend/testing/pilot_activation_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/pilot_activation_test.js
+
+HASH: da158ff5534dd6a48658a5dd26491e700cf0bdb691befd2edadafe3d398d316b COUNT: 3
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_service.js
+  ./backups/o822_auto/backend_services_ride_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_service.js
+
+HASH: 47793c2ac28489b04a16b180af9f177e9736be182be364ca25271ab0422747b3 COUNT: 2
+  ./archive/before_architecture_cleanup/frontend_1784127601/index.html
+  ./archive/truth_cleanup_1784127676771/frontend_index.html
+
+HASH: bfd690e5df7151067d51cd44af9cdcdfad58a24b4544db17425642730ee622f9 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_transfer_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/blockchain/thb_transfer_service.js
+  ./backend/blockchain/thb_transfer_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_transfer_service.js
+  ./backups/stage4g4_20260725_235846/backend/blockchain/thb_transfer_service.js
+  ./backups/stage4g4_20260726_000412/backend/blockchain/thb_transfer_service.js
+
+HASH: a04e6bebb147cc1a69efe42847b0915d44cc17fd89997e06d6b70ca4d04acb7c COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.ride-routes-working.js
+  ./api/index.ride-routes-working.js
+
+HASH: e06dbddbc7f917f279f1c217b92b3821ae11e7c4a94dc3ef12015a8562a2e2e0 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/identity_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/identity_service.js
+  ./backend/services/identity_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/identity_service.js
+
+HASH: 4f2693b50b044c8a465654bae385a64036282527f70c55b37fed8f26e3e928f5 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069
+  ./backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_orchestrator_service.js.backup_orchestrator_1784101867069
+
+HASH: 900c42ec298608f8e89612fe377d8f9bfaf8e32a4a51c5e1025d91ecf7922b62 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/matching/matching_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/matching/matching_engine.js
+  ./backend/matching/matching_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/matching/matching_engine.js
+
+HASH: b438bdf70bbc8b222ebc18c3976a6008dc4cd8ab2f9d7958c4b8052b59275e78 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/thb_reward_panel.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/thb_reward_panel.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/thb_reward_panel.jsx
+  ./frontend/components/thb_reward_panel.jsx
+  ./migration_backup/frontend/components/thb_reward_panel.jsx
+
+HASH: 2e3b2e8c09dcff8c61f7cab82984cc12e3ccbfd4df80cffa7903758dbdf5f69b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/logs/system_logger.js
+  ./archive/before_architecture_cleanup/backend_1784127601/logs/system_logger.js
+  ./backend/logs/system_logger.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/logs/system_logger.js
+
+HASH: 157245698651965d129c0a1e94c28e3655a3fe1ad8bce696ec05d8fb93303463 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/api/cablink_gateway.js
+  ./archive/before_architecture_cleanup/backend_1784127601/api/cablink_gateway.js
+  ./backend/api/cablink_gateway.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/api/cablink_gateway.js
+
+HASH: 0e60d3ab6dbc6bde2932a60cae56b37cf1fd3749e2bc46e20ac3f37eb222e6d9 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/monitoring/ui_health.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/monitoring/ui_health.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/monitoring/ui_health.js
+  ./frontend/monitoring/ui_health.js
+  ./migration_backup/frontend/monitoring/ui_health.js
+
+HASH: 4eeb3271453a891df609e5a9f4ee79a68307f730c13417a3bfeffa604ac8cf25 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/array-flatten/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/path-to-regexp/LICENSE
+
+HASH: 338bbc8ca5f90bcb403218b5056316869f449d81ee59b5703e722ccbb5232554 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase35_ledger_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase35_ledger_test.js
+  ./backend/testing/phase35_ledger_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase35_ledger_test.js
+
+HASH: a4229ab7a90eb717ac0225aaeadb14a2104134107afe98c1cc69d98e6791138e COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/ecosystem/README.md
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/ecosystem/README.md
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/ecosystem/README.md
+  ./frontend/js/ecosystem/README.md
+  ./migration_backup/frontend/js/ecosystem/README.md
+
+HASH: 16e827ff428eba628ade2b43682348bec9aa96290ce4f119d0d1977631d0b8db COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_online_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/driver_online_api.js
+  ./backend/routes/driver_online_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/driver_online_api.js
+
+HASH: f16bd1fa60baa224cfe0d3d9f05e51a94ad6f5887b2f4556e126753572afb226 COUNT: 2
+  ./archive/frontend_cleanup/index_before_bookride_migration_1784131014.html
+  ./archive/frontend_cleanup/index_before_truth_bookride_1784131157245.html
+
+HASH: b9a16cad08fa0681d65b2fb07042e85160e6597cd0f73981e7d3d8d48ff2ba0b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/canonical_reward_service.js.stage4g5-backup-1785018382944
+  ./backend/services/canonical_reward_service.js.stage4g5-backup-1785018382944
+  ./backups/stage4g4_20260725_235846/backend/services/canonical_reward_service.js
+  ./backups/stage4g4_20260726_000412/backend/services/canonical_reward_service.js
+
+HASH: 5af5407f5f8b0f6805298c2cf6530f664779cfbaf6b52badf13b991258ec5b21 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/driver_intelligence_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/driver_intelligence_service.js
+  ./backend/services/driver_intelligence_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/driver_intelligence_service.js
+
+HASH: 20017db1173fa0d2ec36ff84e07e764236cccff5766d1d2f6d4f7ca2b3efc876 COUNT: 4
+  ./archive/old_backups/backups_v67/fix.js.old
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/fix.js.bak
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/fix.js.old
+  ./archive/old_backups/fix.js.bak
+
+HASH: 945b2b35c8d6dc3bb008e7a6391fb98f8d4103ca0dc64652b13dcbea0dd090e1 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/es-object-atoms/.eslintrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/math-intrinsics/.eslintrc
+
+HASH: 5b0d57d3600817dafd2fe92e356794fbe36102792f6fed7d576c98ba8293f6b0 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/server.js
+  ./backend/server.js
+
+HASH: 10f6692d6e9927f7d1f03926738f3a11e11e654135ecd7fa9d7e261d2b116faa COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/thb_wallet_panel.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/thb_wallet_panel.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/thb_wallet_panel.js
+  ./frontend/components/thb_wallet_panel.js
+  ./migration_backup/frontend/components/thb_wallet_panel.js
+
+HASH: 51a3b787c7a11a2ede32a4955aa64c5e66fd680f460c004b07458d3fa39c86ee COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/role_service.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/role_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/role_service.js
+  ./frontend/services/role_service.js
+  ./migration_backup/frontend/services/role_service.js
+
+HASH: 51216c7e644581b4530b6475b4d9218acf66f3b4028b8ed4cbb4e66a9a21461d COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/thb_transfer_queue.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/thb_transfer_queue.js
+  ./backend/rewards/thb_transfer_queue.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/thb_transfer_queue.js
+  ./backups/stage4g4_20260725_235846/backend/rewards/thb_transfer_queue.js
+  ./backups/stage4g4_20260726_000412/backend/rewards/thb_transfer_queue.js
+
+HASH: e1543be3ad254ce00616bf079c8a3ffb674269ad637862a6cbd719531b38781d COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_economy_screen_service.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/driver_economy_screen_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/driver_economy_screen_service.js
+  ./frontend/services/driver_economy_screen_service.js
+  ./migration_backup/frontend/services/driver_economy_screen_service.js
+
+HASH: a781a5b2285693f9b8ac89fdd81c91e09557ec4d6523a4e1427295fe7d885d6a COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_transfer_worker.js
+  ./archive/before_architecture_cleanup/backend_1784127601/blockchain/thb_transfer_worker.js
+  ./backend/blockchain/thb_transfer_worker.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_transfer_worker.js
+
+HASH: 14f099b77759ab9763d10942d0dafa274c72da6d1b18b5329751ca570e7ac8e4 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/delivery_reward_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/delivery_reward_engine.js
+  ./backend/rewards/delivery_reward_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/delivery_reward_engine.js
+
+HASH: bd849ba1dcd2a4395d94bbc7e022f8691d9b18f10a9be115aa2cc06ecb9b5871 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/README.md
+  ./archive/before_architecture_cleanup/backend_1784127601/services/README.md
+  ./backend/services/README.md
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/README.md
+
+HASH: 29035857cf31d6509fa409764281845229f7b49e916446411f44dcd6d9223516 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/location/location_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/location/location_service.js
+  ./backend/location/location_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/location/location_service.js
+
+HASH: 64039aa669dd055255dbeabae17730cbbd3a55f8aea41ab61d3becadf2af728c COUNT: 4
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/operations_core.js
+  ./backups/o820_auto/frontend_js_operations_core.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/operations_core.js
+  ./migration_backup/frontend/js/operations_core.js
+
+HASH: aa84c276cdd8093c6a3ea89bb5d6f6516cd061b5b5a14cbdeed947ce6a857271 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/driver_task_panel.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/driver_task_panel.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/driver_task_panel.js
+  ./frontend/components/driver_task_panel.js
+  ./migration_backup/frontend/components/driver_task_panel.js
+
+HASH: e74b75793c669f68b3f9d221281b7e92f04f00bf7a8bc106f49e3be5f6b1b8ac COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/socket/server_socket.js
+  ./archive/before_architecture_cleanup/backend_1784127601/socket/server_socket.js
+  ./backend/socket/server_socket.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/socket/server_socket.js
+
+HASH: 997785c50b0773e5e18bf15550fbf57823c634fefe623cd37b3c83696402ad0a COUNT: 6
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/call-bind-apply-helpers/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/call-bound/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/es-define-property/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/get-intrinsic/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/get-proto/.nycrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/has-symbols/.nycrc
+
+HASH: 48ed6f932a68cbab1a91720b0b40effd2049a62da98404b77966ed5750c7bfff COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/rideRepository.js
+  ./archive/before_architecture_cleanup/backend_1784127601/database/rideRepository.js
+  ./backend/database/rideRepository.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/database/rideRepository.js
+  ./cablink_ride_backup_20260725_221547/backend/database/rideRepository.js
+
+HASH: 66cb4cfb9ee41411b7862516f36df1ea9c65117d7ce5a9940a0cf65eeeed778e COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/launcher.html
+  ./launcher.html
+
+HASH: e728880a6a2adeea2e07641c4c086c4cfe2dadd6c8b4d96565ce3e692bddbec0 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/payment_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/payment_service.js
+  ./backend/services/payment_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/payment_service.js
+
+HASH: 190e11a65a0a658680553294aea8868b6e72bf4eadc83ab0bd8f5285b2b436dc COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/driver_dashboard_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/driver_dashboard_api.js
+  ./backend/routes/driver_dashboard_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/driver_dashboard_api.js
+
+HASH: 615c106d93eee38358ac8582a825ca9e5581fe471921576adbac89919f1d9c4f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/reward_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/reward_service.js
+  ./backend/services/reward_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/reward_service.js
+
+HASH: 71f83c4c0621102a56d9853812777b85751bce7e9726f686f5b056c1f8a4b0e6 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/accepts/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/mime-types/LICENSE
+
+HASH: 3c0fe2d2799ea90d90fb4714962029a3082215dcab26add749bfff9647241490 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.minimal-test.js
+  ./api/index.minimal-test.js
+
+HASH: 9099f4cf5ae3e72b118133be608d1d125a1adf03953ae3bc0df3026f8830418f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/users/user_account_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/users/user_account_engine.js
+  ./backend/users/user_account_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/users/user_account_engine.js
+
+HASH: 1ff39f5b53763d0c5492ec2d4b84f5b0ccc7d0cb56c2ec98de441a209f9cea03 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/testing/driver_economy_dashboard_test.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/testing/driver_economy_dashboard_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/testing/driver_economy_dashboard_test.js
+  ./frontend/testing/driver_economy_dashboard_test.js
+  ./migration_backup/frontend/testing/driver_economy_dashboard_test.js
+
+HASH: 7b0ac90187d2c385e1bff7c49c53044368456b2a01f944c6b1b6c84a8a9894ea COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js
+  ./api/index.js
+
+HASH: 3a5a41246304d0cdf44d99d879683d1c510c451d5ce5d133ac2467d98555ed35 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/completionRewardBridge.js
+  ./frontend/js/rides/completionRewardBridge.js
+
+HASH: 45ae46c540c7dfdc5be2ce21334362603e95d02c7130533c9197e4d4b6d9f1f8 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/driver_dashboard_live.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/driver_dashboard_live.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/driver_dashboard_live.js
+  ./frontend/services/driver_dashboard_live.js
+  ./migration_backup/frontend/services/driver_dashboard_live.js
+
+HASH: 500b4e81ffc1f398a9bee0754a09721c5a98d827c895a84e1500f61ff93d6d32 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js.pre_o6
+  ./frontend/js/app_core.js.pre_o6
+
+HASH: 40e2670e8839767e09f0d7c04c16f118a5cec18c10f603757e41337654153453 COUNT: 2
+  ./archive/old_backups/fix_broken_home_backup.bak
+  ./archive/old_backups/fix_broken_home_backup_1349.bak
+
+HASH: c6ad36a44cad9696204dfb7360504faf75732165d63a50d3ede741ab7f1daa03 COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/services/api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/services/api.js
+  ./frontend/js/services/api.js
+
+HASH: f3d41fbd95ab1fa744c38423de8b1fbbd5b5e8c8e1e553f6151863ded043dd83 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/demand_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/demand_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/demand_api.js
+  ./frontend/services/demand_api.js
+  ./migration_backup/frontend/services/demand_api.js
+
+HASH: 1026702ada933c4a649119cdf519a05ab310dec93540fedfb07dd484ed68d707 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pages/PassengerRide.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/pages/PassengerRide.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/pages/PassengerRide.jsx
+  ./frontend/pages/PassengerRide.jsx
+  ./migration_backup/frontend/pages/PassengerRide.jsx
+
+HASH: a2dbeaf44bd5761e78b25586b6e13104711e09e068baac6569242709e86904bc COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/rideStateMachine.js
+  ./frontend/js/rides/rideStateMachine.js
+
+HASH: 88f7a043c37fdbd025ffa987cbb0d1b7bff7885662852e7f08dba0988876e5e0 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase32_dashboard_api_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase32_dashboard_api_test.js
+  ./backend/testing/phase32_dashboard_api_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase32_dashboard_api_test.js
+
+HASH: 548295ca01e3f20c12908fc196475e8e09017e918f535df281fc8273e349605f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/providers/cloud_provider.js
+  ./archive/before_architecture_cleanup/backend_1784127601/providers/cloud_provider.js
+  ./backend/providers/cloud_provider.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/providers/cloud_provider.js
+
+HASH: 7a1a04ff516aa6b2905885fe15f4f57858ea1703c92456daed9763fa7b4ea7c6 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-list/.eslintrc
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/side-channel-map/.eslintrc
+
+HASH: 6222579a7a83870f4c3d08328977a1cdad2c160217fded81fd07fb8692610a5a COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html.o8_backup_registry_import_20260727_153749
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html.pre_o6
+  ./frontend/index.html.o8_backup_registry_import_20260727_153749
+  ./frontend/index.html.pre_o6
+
+HASH: f5111e32ab813b8959570294816a41d2bd346ba2b0e688c62a91ab382bab4a26 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/rides.js.backup
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/rides.js.backup
+  ./backend/routes/rides.js.backup
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/rides.js.backup
+
+HASH: cbddbbbb430fbcb0f5ba7b3a692f3dd22a7b321063f884a65f495823ff5656b4 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/LegacyCabLink.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/LegacyCabLink.jsx
+
+HASH: 07d69cac5ea91d5100d49c6b18a5c481fa5750fd13c9a8ac78f8848964d7d1ec COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ride_state_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/ride_state_api.js
+  ./backend/routes/ride_state_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/ride_state_api.js
+
+HASH: 75619f9d6a3d94a15e496cfe138f1eab00eadc3d2a9703a78067c5362b361372 COUNT: 3
+  ./scripts/archive/root_migrations/app_before_booking_migration.js
+  ./scripts/archive/root_migrations/app_before_bookride_cleanup.js
+  ./scripts/archive/root_migrations/app_before_cleanup_final.js
+
+HASH: 45e7e0162b807323b64b388c728a1000a196bf40618080f95a66a9db50bebeed COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/drivers_live.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/drivers_live.json
+  ./backend/data/drivers_live.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/drivers_live.json
+  ./backups/stage4g4_20260725_235846/backend/data/drivers_live.json
+  ./backups/stage4g4_20260726_000412/backend/data/drivers_live.json
+
+HASH: 7d3cd5562c9c7e27c7af50766245962a39b132e6b749b126000256a90554055b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/notifications/notification_center.js
+  ./archive/before_architecture_cleanup/backend_1784127601/notifications/notification_center.js
+  ./backend/notifications/notification_center.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/notifications/notification_center.js
+
+HASH: ae4c81ee5d1d2f651e990a5230bc4e41209a68fbcbc96cabf1b8c4290fbfcd4f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/economy_dashboard_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/economy_dashboard_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/economy_dashboard_api.js
+  ./frontend/services/economy_dashboard_api.js
+
+HASH: dfa38443f14a47629dd012cd04ef46d82996269b40af87dd961ffbabf97667a1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/reward_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/reward_engine.js
+  ./backend/rewards/reward_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/reward_engine.js
+
+HASH: c5af695174f902e4d5f65b20a73e4ac09d2335f5599df26423ff846223e18615 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/rewards/blockchain_reward_adapter.js
+  ./archive/before_architecture_cleanup/backend_1784127601/rewards/blockchain_reward_adapter.js
+  ./backend/rewards/blockchain_reward_adapter.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/rewards/blockchain_reward_adapter.js
+  ./backups/stage4g4_20260725_235846/backend/rewards/blockchain_reward_adapter.js
+  ./backups/stage4g4_20260726_000412/backend/rewards/blockchain_reward_adapter.js
+
+HASH: 9c16c9605ac6a2393d53ea971745817a2322a5f8452a75fe14fbed804fb7a093 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/events/ride_event_bus.js
+  ./archive/before_architecture_cleanup/backend_1784127601/events/ride_event_bus.js
+  ./backend/events/ride_event_bus.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/events/ride_event_bus.js
+
+HASH: 2097bfec9c9167cb63c85c9da6fd98f42183bbce2f37399c2c0e3db47e9b9adf COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/CabLinkHeader.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/CabLinkHeader.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/CabLinkHeader.jsx
+  ./frontend/components/CabLinkHeader.jsx
+  ./migration_backup/frontend/components/CabLinkHeader.jsx
+
+HASH: 75f2121f858b8b04b74cbb15e75a4e97e474bee33267e127b75af80f4916793d COUNT: 4
+  ./.cablink_backups/driver_consolidation_20260725_213935/index.html
+  ./.cablink_backups/driver_consolidation_20260725_213935/index.html.pre_consolidation
+  ./backups/phase3-runtime-consolidation-20260725-215339/index.html
+  ./index.html.backup.20260725_213658
+
+HASH: f4f2957e79cf548a79b6f71bf64e9c641f5d07c56f7d9bdbbf7ff132df3c0bde COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/rides.json
+  ./backend/database/rides.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/database/rides.json
+
+HASH: 6d2a4f4d2bb5d1101f953645a11691194c157c04fc0824fe6cc46ca5c43d9d68 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js.pre_driver_count_fix
+  ./frontend/js/app_core.js.pre_driver_count_fix
+
+HASH: 242896422cb2ac23a07c4123b8543aeb378fa9eb33b77a553531fd22b7f3f8d0 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/driver/driverLifecycleControls.js
+  ./frontend/js/driver/driverLifecycleControls.js
+
+HASH: 14550f245b098a1cfa4adb30417527d82c03af290dd482f6462ca33ffef1e2f7 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/sms/sms_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/sms/sms_engine.js
+  ./backend/sms/sms_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/sms/sms_engine.js
+
+HASH: 041ffc245d8cc27ce95c17af981549491d2a3715b3eb09e85bcac2e5f4191fd5 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/app_core.js.o7_backup_active_ride_20260727_152748
+  ./frontend/js/app_core.js.o7_backup_active_ride_20260727_152748
+
+HASH: dadff29037389a5603f281dd514df60a6d99eb4b8c132541405b66fec8b725a1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/trust/trust_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/trust/trust_engine.js
+  ./backend/trust/trust_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/trust/trust_engine.js
+
+HASH: 3852af3f1daaa73259aef700aeee5a6ca44f074e65f0e5863884f6883a746707 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html.backup.20260725_213658
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/index.html.step1_acceptance_backup_20260726_101659
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/index.html
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/index.html.backup.20260725_213658
+  ./frontend/index.html.backup.20260725_213658
+  ./frontend/index.html.step1_acceptance_backup_20260726_101659
+
+HASH: d1cd96cf812bfbd287cf7b2584782b3447f25bee173e2b66f00b92e245fac864 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/status_card.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/status_card.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/status_card.jsx
+  ./frontend/components/status_card.jsx
+  ./migration_backup/frontend/components/status_card.jsx
+
+HASH: 97cd9eb5655088d7f5be61f81e950164c688d8c8614bae6a974f2a057c982487 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/api/index.js.before-firestore-canonical-lifecycle
+  ./api/index.js.before-firestore-canonical-lifecycle
+
+HASH: 0ef891ec14748a51a9fdc9cf3358e52212db4555cc8f940d9053913ccc77961f COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_service.js
+  ./backend/services/ride_service.js
+
+HASH: 3a9674e2e1ed374b2a93f5b065a6551330034bb9d39c9537fdd20550e1ea0d5e COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/gps/location_engine.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/gps/location_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/gps/location_engine.js
+  ./frontend/js/gps/location_engine.js
+  ./migration_backup/frontend/js/gps/location_engine.js
+
+HASH: 0d055c74c8cd15f9c264bd87ff75c043658733bbcfb7dff5c366ee61116abcf6 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/realtime/channel_manager.js
+  ./archive/before_architecture_cleanup/backend_1784127601/realtime/channel_manager.js
+  ./backend/realtime/channel_manager.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/realtime/channel_manager.js
+
+HASH: f4c104e268f56f957e904591388f7ddc824c98f0ec6e54c017b94207d5bdbb57 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/safety/safety_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/safety/safety_engine.js
+  ./backend/safety/safety_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/safety/safety_engine.js
+
+HASH: 5c3f535a8a334dc0d276df14affd6240f24bd679bad2b08ecb7abad547646daf COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_state_service.js.backup_identity_1784101614431
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_state_service.js.backup_identity_1784101614431
+  ./backend/services/ride_state_service.js.backup_identity_1784101614431
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_state_service.js.backup_identity_1784101614431
+
+HASH: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/mime/.npmignore
+  ./logs/.gitkeep
+
+HASH: 6484e64106cd34a1295abd0ff8e7b10bbf8e872aa4852aae3803c532085a6e2d COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/firebase.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/firebase.js
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/frontend/js/firebase.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/firebase.js
+  ./frontend/js/firebase.js
+  ./migration_backup/frontend/js/firebase.js
+
+HASH: 5bd6014e04733bece444ffdaa714fc856a02af3302eeebdea8f5d745b7714037 COUNT: 2
+  ./cablink_architecture_health_audit.js
+  ./scripts/archive/root_migrations/cablink_architecture_health_audit.js
+
+HASH: 81d8673d79bd5d5440bb9908ba03d6d55526ca6b15f16f48b20f2f5476079e18 COUNT: 3
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/services/cablinkAPI.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/services/cablinkAPI.js
+  ./frontend/js/services/cablinkAPI.js
+
+HASH: 3c2569fd4eac46a512ec9f9c332609e71f9bee4343217f9692a79cf07a3139a6 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/phase40_demand_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/phase40_demand_test.js
+  ./backend/testing/phase40_demand_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/phase40_demand_test.js
+
+HASH: 7a23b8773f1f53392d20bafbabea959fe1ba97d1f3c882edf361b6c440325a1c COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/economy_ledger_service.js.stage4c.precanonical.bak
+  ./archive/before_architecture_cleanup/backend_1784127601/services/economy_ledger_service.js
+  ./backend/services/economy_ledger_service.js.stage4c.precanonical.bak
+  ./backups/o822_auto/backend_services_economy_ledger_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/economy_ledger_service.js
+
+HASH: 7b58153874acc1564eea718df78aa28421f55db0eb838c58a85789a65a23f81d COUNT: 3
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_state_service.js
+  ./backups/o822_auto/backend_services_ride_state_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_state_service.js
+
+HASH: 136d4a4b64eeccbb11ca24606f89f15e23af433f0b03176cf72ae5a9d816c5d2 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/services/updates_api.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/services/updates_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/services/updates_api.js
+  ./frontend/services/updates_api.js
+  ./migration_backup/frontend/services/updates_api.js
+
+HASH: 060501018f49172698de926ee827c026ea715ebd706a0aaa417a683389a8acb4 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/database/production_schema.js
+  ./archive/before_architecture_cleanup/backend_1784127601/database/production_schema.js
+  ./backend/database/production_schema.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/database/production_schema.js
+
+HASH: 3adbe6142524ae51ff7c08ed4da75abc45b9e821846aaeedf722275910d1cb61 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/live_demand_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/live_demand_service.js
+  ./backend/services/live_demand_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/live_demand_service.js
+
+HASH: 50d6fa1190d5c8ea9ac3643862e468825bfe4eda85cdb880713a390bfbbaea56 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/pwa/install_manager.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/pwa/install_manager.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/pwa/install_manager.js
+  ./frontend/pwa/install_manager.js
+  ./migration_backup/frontend/pwa/install_manager.js
+
+HASH: f25aa2ac56c4afc527d7789c21a35cca131915895553f8745f86a66190967d9a COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_abi.json
+  ./backend/blockchain/thb_abi.json
+
+HASH: e9f88431751818cbf20b002d2407923963451a46c0324856e352805cd9c4fc98 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/orchestrator_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/orchestrator_api.js
+  ./backend/routes/orchestrator_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/orchestrator_api.js
+
+HASH: 9d5e7ef9f529513d88bbfadb08932a36ef663dacec237b7fc43266f258dadb24 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/rideService.js
+  ./backend/services/rideService.js
+
+HASH: 1b6d79dc4e89ca8676b2f2a2e3411a12233aa9dcc9fcbe0d96e496bf638e94d4 COUNT: 2
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/ride_economy_service.js
+  ./backend/services/ride_economy_service.js
+
+HASH: 392d2748b662448b3b1b0a869ca2da0b5a0bee2a3cf816111d3d607160263fc6 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/rides/passengerRideStatus.js
+  ./backups/o820/passengerRideStatus.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/rides/passengerRideStatus.js
+  ./frontend/js/rides/passengerRideStatus.js
+
+HASH: 93f95421a045090cec62aca33b71e2ddd679e68e45c78f13d19d4fbd4af447e1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_repository.js.before-firestore-test
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/canonical/ride_repository.js.pre_o6
+  ./backend/canonical/ride_repository.js.before-firestore-test
+  ./backend/canonical/ride_repository.js.pre_o6
+
+HASH: 13900935863732b37af50dee4dbb0af346bc3dd4abb084054a27788566d9234f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/payments/payment_provider_adapter.js
+  ./archive/before_architecture_cleanup/backend_1784127601/payments/payment_provider_adapter.js
+  ./backend/payments/payment_provider_adapter.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/payments/payment_provider_adapter.js
+
+HASH: bf3276ab11a24d5b3c2bfc3171e87d538232139ef43a06e2ace0a1967dae1357 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/drivers.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/drivers.json
+  ./backend/data/drivers.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/drivers.json
+  ./backups/stage4g4_20260725_235846/backend/data/drivers.json
+  ./backups/stage4g4_20260726_000412/backend/data/drivers.json
+
+HASH: d899a3ca43cfccccb34683f39e5eeb190bab5c2e38a1fa97b5c462ab7a185f20 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/users.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/users.json
+  ./backend/data/users.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/users.json
+  ./backups/stage4g4_20260725_235846/backend/data/users.json
+  ./backups/stage4g4_20260726_000412/backend/data/users.json
+
+HASH: d0d4c39df8f4b2f1880d029c27cea3573f028ffb611b6f162bdf7366b52b071f COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/identity_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/identity_api.js
+  ./backend/routes/identity_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/identity_api.js
+
+HASH: a7996721249a136fbcfc1c201bcb5f414f38a701d4a24f28abe65e16cfcce813 COUNT: 2
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/etag/LICENSE
+  ./archive/old_backups/backups_v67/recovery_backup_20260713_110611/CabLink-pwa/node_modules/proxy-addr/LICENSE
+
+HASH: 5f754254d425a1fb4c9ed3a7a277b754dcc3157657ab4743377a054c0081a1aa COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/services/dispatch_service.js
+  ./archive/before_architecture_cleanup/backend_1784127601/services/dispatch_service.js
+  ./backend/services/dispatch_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/dispatch_service.js
+
+HASH: 6ac30831521fe009ed2db09481ad9914a15cdefc90b4432f47781b0df4084331 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/users/wallet_manager.js
+  ./archive/before_architecture_cleanup/backend_1784127601/users/wallet_manager.js
+  ./backend/users/wallet_manager.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/users/wallet_manager.js
+
+HASH: 78035ae2375481e58152b6e826f992ec8bdb6351648c2d830add770a8b93225e COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/client_demand.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/client_demand.json
+  ./backend/data/client_demand.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/client_demand.json
+
+HASH: e20d6c4bef58a35db0b83acff0e02ae3237acc6d7ec12dcbb18010756110be7b COUNT: 2
+  ./backups/stage4g4_20260725_235846/backend/canonical/ride_engine.js
+  ./backups/stage4g4_20260726_000412/backend/canonical/ride_engine.js
+
+HASH: f85139bed6b26e242ec03e425e63aa15f848b696a3031f4f27ec9636fee64db1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/testing/thb_delivery_reward_test.js
+  ./archive/before_architecture_cleanup/backend_1784127601/testing/thb_delivery_reward_test.js
+  ./backend/testing/thb_delivery_reward_test.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/testing/thb_delivery_reward_test.js
+
+HASH: aa012a9762ad54e6fc7b903250f054a9d1b47da45301d750c6e7d15ed4f4b09d COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/tracking/location_session.js
+  ./archive/before_architecture_cleanup/backend_1784127601/tracking/location_session.js
+  ./backend/tracking/location_session.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/tracking/location_session.js
+
+HASH: 847c865d387ca9a6e969a741ead87a9dc33dec34832d5203fc021c8d04e8f04b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/ride_economy_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/ride_economy_api.js
+  ./backend/routes/ride_economy_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/ride_economy_api.js
+
+HASH: d2092125beca26159e919c9fac1b71e5c06e2398ee8ab6eba87827426c60c209 COUNT: 2
+  ./backups/phase3-runtime-consolidation-20260725-215339/fix.js
+  ./fix.js
+
+HASH: 0dd3fbaf95b26cc10c54bf3a28f7f38d64d2e67331f2d04cbbcf2a979a9006a1 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/live_rides.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/live_rides.json
+  ./backend/data/live_rides.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/live_rides.json
+
+HASH: 549ae15de86fc7e3188cb98cf929be9a957de586e03750fd708c7def3b241fa4 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/ride_timeline.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/ride_timeline.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/ride_timeline.jsx
+  ./frontend/components/ride_timeline.jsx
+  ./migration_backup/frontend/components/ride_timeline.jsx
+
+HASH: 5499e0a2ffc8c9309e5730060c7f409fe8e0c6b9e2c6eff482c325e28d78dc56 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/ride_status_card.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/ride_status_card.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/ride_status_card.jsx
+  ./frontend/components/ride_status_card.jsx
+  ./migration_backup/frontend/components/ride_status_card.jsx
+
+HASH: 169281c0df29e9e13cc0d11d6886c695dcaf2d2b92d8f8672290fd35a0a62751 COUNT: 4
+  ./archive/before_architecture_cleanup/backend_1784127601/services/ride_orchestrator_service.js
+  ./backups/o823_auto/backend_services_ride_orchestrator_service.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/services/ride_orchestrator_service.js
+  ./cablink_ride_backup_20260725_221547/backend/services/ride_orchestrator_service.js
+
+HASH: b7824d1ae2858563b51e4563f97dc19659e32b1537b8c9abc6e13f24f218c6f2 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/bstm_menu.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/bstm_menu.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/bstm_menu.js
+  ./frontend/components/bstm_menu.js
+  ./migration_backup/frontend/components/bstm_menu.js
+
+HASH: 04b61e51df58ccfbf64a8767b9d569729a7281f2f7ebbd0ce885b015180f9ee8 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/BottomNavigation.jsx
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/BottomNavigation.jsx
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/BottomNavigation.jsx
+  ./frontend/components/BottomNavigation.jsx
+  ./migration_backup/frontend/components/BottomNavigation.jsx
+
+HASH: 780e59a1a85ef3de44d90a73cbec05fa42a2b918df3af80055a8df6d5bd79d69 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/location/location_stream.js
+  ./archive/before_architecture_cleanup/backend_1784127601/location/location_stream.js
+  ./backend/location/location_stream.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/location/location_stream.js
+
+HASH: f9c6121666955e23129bccf8ea0ad4717cd6e9327222ec05c2b9cea7cfc1da5e COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/ride_store.js
+  ./archive/before_architecture_cleanup/backend_1784127601/ride_store.js
+  ./backend/ride_store.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/ride_store.js
+  ./cablink_ride_backup_20260725_221547/backend/ride_store.js
+
+HASH: 8780cfd797974c1809378b216d092fd71a42fb0e66d938e9efea54900d2a371c COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/auth/phone_verification_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/auth/phone_verification_engine.js
+  ./backend/auth/phone_verification_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/auth/phone_verification_engine.js
+
+HASH: 2e023e10b7b06e66b6f948579bfad0d6b17bf4f1e484300d7cf7fe223cc261d9 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/js/services/README.md
+  ./archive/before_architecture_cleanup/frontend_1784127601/js/services/README.md
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/js/services/README.md
+  ./frontend/js/services/README.md
+  ./migration_backup/frontend/js/services/README.md
+
+HASH: 675a4dfcb2dff1c1fb891a421a911e1f7f2f6ac4b8a1866a861d289855719617 COUNT: 5
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/frontend/components/ecosystem_card.js
+  ./archive/before_architecture_cleanup/frontend_1784127601/components/ecosystem_card.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/frontend/components/ecosystem_card.js
+  ./frontend/components/ecosystem_card.js
+  ./migration_backup/frontend/components/ecosystem_card.js
+
+HASH: 7557ba3ebaba195fe7ce5f2a16c475f00bca684a68846cd9944dcbaf889e3698 COUNT: 2
+  ./archive/before_architecture_cleanup/backend_1784127601/blockchain/thb_abi.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_abi.json
+
+HASH: 6b4aa66b76c3e558897929886436cd81b62196443d0e9a40a5de371a77ffbf49 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/data/passengers.json
+  ./archive/before_architecture_cleanup/backend_1784127601/data/passengers.json
+  ./backend/data/passengers.json
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/data/passengers.json
+
+HASH: 3282337ccdcfed005af595815cf0803670db60ab06b5b33f0be62ba751737b2b COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/auth/auth_connector.js
+  ./archive/before_architecture_cleanup/backend_1784127601/auth/auth_connector.js
+  ./backend/auth/auth_connector.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/auth/auth_connector.js
+
+HASH: d9631dfac3e203f98d5ebc240f26d2c6971790223bc30a0ef36e5c17b938caa1 COUNT: 6
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/blockchain/thb_transaction_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/blockchain/thb_transaction_engine.js
+  ./backend/blockchain/thb_transaction_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/blockchain/thb_transaction_engine.js
+  ./backups/stage4g4_20260725_235846/backend/blockchain/thb_transaction_engine.js
+  ./backups/stage4g4_20260726_000412/backend/blockchain/thb_transaction_engine.js
+
+HASH: cac7d93cc09883a54da0fd3ddc54000730cf8127a8f637827c6ef65c496b14e5 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/routes/matching_api.js
+  ./archive/before_architecture_cleanup/backend_1784127601/routes/matching_api.js
+  ./backend/routes/matching_api.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/routes/matching_api.js
+
+HASH: 285d9db92cede9482a4301db2dd6b59a246bea2863fcf4c2331ff20625599ab4 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/security/device_registry.js
+  ./archive/before_architecture_cleanup/backend_1784127601/security/device_registry.js
+  ./backend/security/device_registry.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/security/device_registry.js
+
+HASH: eac339e6316a7a265511ad28e42745494f9ab35f7fd102063da63804392dec75 COUNT: 4
+  ./_audit_backups/cablink_pre_ui_consolidation_20260728_144533/backend/onboarding/onboarding_engine.js
+  ./archive/before_architecture_cleanup/backend_1784127601/onboarding/onboarding_engine.js
+  ./backend/onboarding/onboarding_engine.js
+  ./backups/phase3-runtime-consolidation-20260725-215339/backend/onboarding/onboarding_engine.js
+
