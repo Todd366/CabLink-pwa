@@ -1,1222 +1,663 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="cl-critical">
+:root{
+  --bg:#0a0a0f;--bg2:#16213e;--bg3:#0f172a;--card:#12121d;
+  --accent:#f5c518;--accent2:#ff8c00;--green:#22d672;--red:#ff4757;
+  --blue:#4fc3f7;--purple:#b388ff;
+  --text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
+  --radius:14px;--font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
+}
+html,body,#app{background:#0a0a0f!important;color:#f0f0f5!important;}
+@keyframes timerDrain{from{width:100%}to{width:0%}}
+@keyframes slideIn{from{transform:translateY(-8px);opacity:0}to{transform:translateY(0);opacity:1}}
+</style>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="theme-color" content="#060911"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<title>CabLink · Gaborone</title>
-<link rel="manifest" href="/manifest.json"/>
+<title>CabLink · BSTM Ecosystem</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
 <style>
-/* ═══════════════════════════════════════════════════
-   CABLINK DESIGN SYSTEM — SINGLE SOURCE OF TRUTH
-   Botswana-inspired: deep navy night + pula gold
-═══════════════════════════════════════════════════ */
 :root{
-  /* Surfaces */
-  --bg:       #060911;
-  --bg2:      #0f1526;
-  --bg3:      #161e33;
-  --glass:    rgba(22,30,51,.7);
-  --card:     #12192e;
-  /* Borders */
-  --hair:     rgba(255,255,255,.07);
-  --hair2:    rgba(255,255,255,.13);
-  /* Brand */
-  --gold:     #f0b93a;
-  --gold2:    #ffd873;
-  --sapphire: #2e6be6;
-  --sapphire2:#5b8bff;
-  /* Status */
-  --green:    #22d672;
-  --red:      #ff4757;
-  --amber:    #ffb347;
-  /* Text */
-  --text:     #f0f2f8;
-  --muted:    #6b7a9b;
-  --subtle:   #3d4a66;
-  /* Radius */
-  --r:        16px;
-  --r-sm:     10px;
-  --r-xs:     6px;
-  /* Nav */
-  --nav-h:    64px;
-  --safe-b:   env(safe-area-inset-bottom,0px);
-  --safe-t:   env(safe-area-inset-top,0px);
-  /* Font */
-  --f-head:   'Space Grotesk',system-ui,sans-serif;
-  --f-mono:   'Space Mono',monospace;
+  --bg:#0a0a0f;--bg2:#16213e;--bg3:#0f172a;--card:#12121d;
+  --accent:#f5c518;--accent2:#ff8c00;--green:#22d672;--red:#ff4757;
+  --blue:#4fc3f7;--purple:#b388ff;
+  --text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
+  --radius:14px;--font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
 }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-font-smoothing:antialiased}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:460px;margin:0 auto;position:relative;overflow:hidden;background:var(--ink)}
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f-head);font-size:14px;-webkit-font-smoothing:antialiased;overflow:hidden}
+/* ambient bg blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;opacity:.35;z-index:0}
+.blob-1{width:260px;height:260px;background:var(--sapphire);top:-80px;left:-60px}
+.blob-2{width:220px;height:220px;background:var(--gold);top:120px;right:-80px;opacity:.18}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:2px}
-::-webkit-scrollbar-thumb{background:var(--hair2);border-radius:2px}
+.statusbar{position:relative;z-index:2;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;color:var(--muted);flex-shrink:0;font-family:var(--data)}
+.statusbar .time{font-weight:700;color:var(--text)}
+.statusbar .right{display:flex;gap:10px;align-items:center}
+.pip{width:7px;height:7px;border-radius:50%;background:var(--muted2);display:inline-block}
+.pip.green{background:var(--emerald);box-shadow:0 0 8px var(--emerald)}
+.pip.yellow{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.pip.red{background:var(--coral);box-shadow:0 0 8px var(--coral)}
 
-/* ── APP SHELL ── */
-#app{
-  display:flex;flex-direction:column;
-  height:100dvh;max-width:430px;
-  margin:0 auto;position:relative;overflow:hidden;
-  background:var(--bg);
-}
+#alertStrip,#chainWarning{display:none;position:relative;z-index:2;font-size:12px;font-weight:600;padding:9px 18px;text-align:center;flex-shrink:0}
+#alertStrip{background:linear-gradient(90deg,#c98a1f,var(--gold));color:#241a04}
+#alertStrip.show{display:block}
+#alertStrip button{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#241a04;font-size:16px;cursor:pointer}
+#chainWarning{background:var(--coral);color:#2a0808;cursor:pointer}
+#chainWarning.show{display:block}
+#surgeBanner{display:none;position:relative;z-index:2;background:linear-gradient(90deg,#7a4d0a,var(--gold));color:#241a04;padding:9px 18px;text-align:center;font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+#surgeBanner.show{display:block}
+#arrivedBanner{display:none;position:relative;z-index:2;background:var(--emerald);color:#04241a;padding:9px 18px;font-weight:700;font-size:12px;text-align:center;flex-shrink:0}
+#arrivedBanner.show{display:block}
+#rideProgressBar{display:none;position:relative;z-index:2;background:var(--surface);padding:12px 18px;border-bottom:1px solid var(--hair);flex-shrink:0}
+#rideProgressBar.show{display:block}
+.rp-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px;font-family:var(--data)}
+.rp-label .rp-status{color:var(--gold-l);font-weight:700}
+.progress-track{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--sapphire),var(--gold));border-radius:2px;transition:width .5s ease;width:0%}
 
-/* ── STATUS BAR ── */
-.statusbar{
-  height:calc(44px + var(--safe-t));
-  padding-top:var(--safe-t);
-  display:flex;align-items:center;
-  justify-content:space-between;
-  padding-left:18px;padding-right:18px;
-  background:var(--bg2);
-  border-bottom:1px solid var(--hair);
-  flex-shrink:0;z-index:50;
-}
-.statusbar .time{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--text)}
-.statusbar .right{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--muted)}
-.net-badge{
-  display:flex;align-items:center;gap:4px;
-  background:rgba(46,107,230,.15);border:1px solid rgba(46,107,230,.3);
-  border-radius:20px;padding:2px 8px;font-size:11px;
-  font-family:var(--f-mono);color:var(--sapphire2);
-}
-.pip{width:7px;height:7px;border-radius:50%;background:var(--subtle);flex-shrink:0}
-.pip.green{background:var(--green);box-shadow:0 0 6px var(--green)}
-.pip.amber{background:var(--amber);box-shadow:0 0 6px var(--amber)}
-.pip.red{background:var(--red)}
-
-/* ── BANNERS ── */
-.banner{
-  display:none;align-items:center;justify-content:space-between;
-  padding:10px 18px;font-size:12px;font-weight:600;
-  border-bottom:1px solid var(--hair);flex-shrink:0;
-}
-.banner.show{display:flex}
-.banner.warning{background:rgba(255,179,71,.08);color:var(--amber)}
-.banner.error{background:rgba(255,71,87,.08);color:var(--red)}
-.banner.info{background:rgba(240,185,58,.08);color:var(--gold)}
-.banner-x{background:none;border:none;color:inherit;opacity:.6;cursor:pointer;font-size:16px;padding:0 4px}
-
-/* ── SCROLL AREA ── */
-#screens{
-  flex:1;overflow-y:auto;overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;scrollbar-width:none;
-}
+#screens{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 #screens::-webkit-scrollbar{display:none}
+.screen{display:none;padding:16px 16px 100px;animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── SCREENS ── */
-.screen{display:none;padding:16px;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 20px)}
-.screen.active{display:block;animation:fadeUp .25s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+h1,h2,h3,.disp{font-family:var(--disp)}
+.eyebrow{font-family:var(--data);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.greeting{font-family:var(--disp);font-size:22px;font-weight:600;margin:2px 0 16px}
+.greeting span{color:var(--gold-l)}
 
-/* ── BOTTOM NAV ── */
-#nav{
-  position:absolute;bottom:0;left:0;right:0;
-  height:calc(var(--nav-h) + var(--safe-b));
-  padding-bottom:var(--safe-b);
-  background:var(--bg2);
-  border-top:1px solid var(--hair);
-  display:flex;align-items:flex-start;
-  z-index:100;backdrop-filter:blur(16px);
-}
-.nav-btn{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:3px;padding:10px 4px;
-  background:none;border:none;cursor:pointer;
-  color:var(--subtle);font-family:var(--f-head);
-  font-size:10px;font-weight:600;letter-spacing:.3px;
-  transition:.2s;
-}
-.nav-btn.active{color:var(--gold)}
-.nav-btn .ni{font-size:20px;line-height:1}
-.nav-cta{
-  flex:none;width:54px;height:54px;
-  margin-top:-14px;margin-left:12px;margin-right:12px;
-  border-radius:50%;border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;box-shadow:0 4px 20px rgba(240,185,58,.35);
-  transition:.2s;align-self:flex-start;
-}
-.nav-cta:active{transform:scale(.94)}
+/* cards */
+.card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
+.card-title{font-family:var(--disp);font-weight:600;font-size:15px}
+.card-sub{font-size:11px;color:var(--muted);font-family:var(--data)}
 
-/* ── CARDS ── */
-.card{
-  background:var(--card);border:1px solid var(--hair);
-  border-radius:var(--r);padding:16px;margin-bottom:12px;
-  position:relative;overflow:hidden;
-}
-.card::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.02) 0%,transparent 60%);
-  pointer-events:none;border-radius:inherit;
-}
-.card-label{
-  font-size:10px;font-weight:700;letter-spacing:1.5px;
-  text-transform:uppercase;color:var(--muted);margin-bottom:12px;
-}
-.card-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
-.card-sub{font-size:12px;color:var(--muted)}
+/* diamond wallet — signature element */
+.diamond-card{position:relative;background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid var(--hair2);border-radius:var(--r-lg);padding:22px 20px 18px;margin-bottom:14px;overflow:hidden}
+.diamond-card::before{content:'';position:absolute;top:-40%;right:-20%;width:70%;height:180%;background:linear-gradient(135deg,rgba(240,185,58,.18),transparent 60%);transform:rotate(20deg);pointer-events:none}
+.diamond-facet{width:34px;height:34px;background:linear-gradient(135deg,var(--gold-l),var(--gold) 55%,#a3760c);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 18px rgba(240,185,58,.35)}
+.wallet-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.wallet-addr{font-family:var(--data);font-size:11px;color:var(--muted)}
+.wallet-stage{font-size:10px;font-family:var(--data);letter-spacing:.08em;color:var(--gold-l);text-transform:uppercase;margin-top:2px}
+.wallet-bar{display:flex;gap:10px}
+.bal-card{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 10px;text-align:center}
+.bal-card .val{font-family:var(--data);font-size:20px;font-weight:700;color:var(--gold-l)}
+.bal-card .lbl{font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:.05em;text-transform:uppercase}
+.chainrow{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.gas-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--muted);font-family:var(--data)}
 
-/* ── WALLET CARD ── */
-#walletCard{
-  background:linear-gradient(135deg,#0d1528 0%,#111c38 100%);
-  border-color:rgba(46,107,230,.2);
-}
-.wallet-row{display:flex;gap:8px;margin-top:14px}
-.wallet-stat{
-  flex:1;background:rgba(0,0,0,.3);border-radius:var(--r-sm);
-  padding:10px;text-align:center;border:1px solid var(--hair);
-}
-.wallet-stat .sv{font-family:var(--f-mono);font-size:16px;font-weight:700;color:var(--text)}
-.wallet-stat .sl{font-size:10px;color:var(--muted);margin-top:2px}
-.wallet-links{display:flex;gap:6px;margin-top:10px}
-.wallet-link{
-  flex:1;padding:8px;background:rgba(0,0,0,.3);border:1px solid var(--hair);
-  border-radius:var(--r-sm);font-size:11px;color:var(--muted);
-  text-align:center;text-decoration:none;transition:.2s;
-}
-.wallet-link:hover{border-color:var(--gold);color:var(--gold)}
-#connectBtn{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#000;border:none;border-radius:var(--r-sm);
-  padding:8px 16px;font-family:var(--f-head);font-weight:700;
-  font-size:12px;cursor:pointer;white-space:nowrap;
-}
-
-/* ── LOCATION INPUTS ── */
-.loc-wrap{
-  background:var(--bg3);border:1px solid var(--hair);
-  border-radius:var(--r);overflow:hidden;margin-bottom:10px;
-  position:relative;
-}
-.loc-row{
-  display:flex;align-items:center;gap:10px;
-  padding:13px 14px;border-bottom:1px solid var(--hair);
-  position:relative;
-}
-.loc-row:last-child{border-bottom:none}
-.loc-dot{
-  width:10px;height:10px;border-radius:50%;flex-shrink:0;
-}
-.loc-dot.from{background:var(--green);box-shadow:0 0 8px var(--green)}
-.loc-dot.to{background:var(--gold);box-shadow:0 0 8px rgba(240,185,58,.5)}
-.loc-dot.stop{background:var(--sapphire)}
-.loc-input{
-  flex:1;background:none;border:none;outline:none;
-  font-family:var(--f-head);font-size:14px;color:var(--text);
-}
-.loc-input::placeholder{color:var(--subtle)}
-.loc-action{
-  background:none;border:none;color:var(--muted);cursor:pointer;
-  font-size:16px;padding:4px;flex-shrink:0;transition:.2s;
-}
-.loc-action:hover{color:var(--gold)}
-
-/* ── AUTOCOMPLETE ── */
-.autocomplete-drop{
-  position:absolute;left:0;right:0;top:100%;z-index:200;
-  background:var(--bg2);border:1px solid var(--hair2);
-  border-top:none;border-radius:0 0 var(--r) var(--r);
-  box-shadow:0 12px 32px rgba(0,0,0,.5);overflow:hidden;
-}
-.autocomplete-item{
-  display:flex;align-items:center;gap:10px;
-  padding:11px 14px;cursor:pointer;
-  font-size:13px;border-bottom:1px solid var(--hair);
-  transition:.15s;
-}
-.autocomplete-item:hover{background:rgba(240,185,58,.06);color:var(--gold)}
-.autocomplete-item:last-child{border-bottom:none}
-
-/* ── VEHICLE GRID ── */
-.vehicle-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:8px;margin-bottom:12px;
-}
-.vehicle-card{
-  background:var(--bg3);border:1px solid var(--hair);
-  border-radius:var(--r-sm);padding:11px 8px;text-align:center;
-  cursor:pointer;transition:.2s;
-}
-.vehicle-card.active{border-color:var(--gold);background:rgba(240,185,58,.07)}
-.vehicle-card:active{transform:scale(.97)}
-.vc-icon{font-size:24px;margin-bottom:4px}
-.vc-name{font-size:11px;font-weight:700;color:var(--muted)}
-.vc-fare{font-family:var(--f-mono);font-size:12px;color:var(--gold);margin-top:2px}
-
-/* ── FARE CARD ── */
-.fare-row{
-  display:flex;justify-content:space-between;
-  padding:7px 0;border-bottom:1px solid var(--hair);
-  font-size:13px;
-}
-.fare-row:last-child{border:none;font-weight:700;font-size:15px}
-.fare-row .fl{color:var(--muted)}
-.fare-row .fv{font-family:var(--f-mono);color:var(--text)}
-.fare-row.total .fv{color:var(--gold)}
-.fare-row.reward .fv{color:var(--green)}
-
-/* ── MAP ── */
-#mapWrap{
-  border-radius:var(--r);overflow:hidden;
-  height:200px;margin-bottom:12px;
-  border:1px solid var(--hair);
-  background:var(--bg3);
-}
-#map{width:100%;height:100%}
-
-/* ── BUTTONS ── */
-.btn{
-  display:flex;align-items:center;justify-content:center;
-  gap:8px;width:100%;padding:14px;border:none;
-  border-radius:var(--r-sm);cursor:pointer;
-  font-family:var(--f-head);font-size:14px;font-weight:700;
-  transition:.2s;position:relative;overflow:hidden;
-}
-.btn:active{transform:scale(.98)}
-.btn-primary{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#000;
-}
-.btn-primary:disabled{background:var(--bg3);color:var(--muted);cursor:not-allowed}
-.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--hair)}
-.btn-danger{background:rgba(255,71,87,.12);color:var(--red);border:1px solid rgba(255,71,87,.2)}
-.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--hair)}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:var(--r-sm);font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;border:none;transition:.2s;width:100%;letter-spacing:.01em}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 6px 20px -6px rgba(240,185,58,.5)}
+.btn-primary:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--surface3);color:var(--muted2);box-shadow:none;cursor:not-allowed}
+.btn-outline{background:rgba(255,255,255,.02);border:1px solid var(--hair2);color:var(--text)}
+.btn-outline:hover{border-color:var(--sapphire-l);color:var(--sapphire-l)}
+.btn-sapphire{background:linear-gradient(135deg,var(--sapphire-l),var(--sapphire));color:#fff}
+.btn-danger{background:var(--coral);color:#2a0808}
+.btn-green{background:var(--emerald);color:#04241a}
 .btn-sm{padding:9px 14px;font-size:12px;width:auto}
 
-/* ── STATUS ROW ── */
-.status-row{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 0;font-size:12px;color:var(--muted);
-}
-.status-row .sr-label{flex:1}
+/* inputs */
+.input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:13px 14px;color:var(--text);font-family:var(--body);font-size:13px;outline:none;transition:.2s}
+.input:focus{border-color:var(--sapphire-l);background:rgba(255,255,255,.05)}
+.input-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;position:relative}
+.input-icon{position:absolute;left:13px;font-size:13px;pointer-events:none;top:50%;transform:translateY(-50%);opacity:.8}
+.input.has-icon{padding-left:36px}
+.loc-line{width:2px;background:linear-gradient(var(--sapphire-l),var(--gold));height:22px;margin:1px 0 1px 17px;opacity:.5}
 
-/* ── PROGRESS BAR ── */
-.progress-track{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;margin:8px 0}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--sapphire),var(--gold));border-radius:2px;transition:width .5s ease;width:0}
+/* ride types */
+.ride-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ride-type-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 6px;text-align:center;cursor:pointer;transition:.2s}
+.ride-type-card.active{border-color:var(--gold);background:rgba(240,185,58,.08)}
+.ride-type-card .icon{font-size:20px;margin-bottom:5px}
+.ride-type-card .name{font-size:10.5px;font-weight:700}
+.ride-type-card .price{font-size:10px;color:var(--muted);font-family:var(--data)}
 
-/* ── RIDE ACTIVE CARD ── */
-#rideActiveCard{
-  display:none;
-  background:linear-gradient(135deg,rgba(34,214,114,.06) 0%,var(--card) 100%);
-  border-color:rgba(34,214,114,.2);
-}
-#rideActiveCard.show{display:block}
-.ride-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.ride-status-badge{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;font-weight:700;color:var(--green);
-}
-.ride-id{font-family:var(--f-mono);font-size:10px;color:var(--muted);cursor:pointer}
-.ride-countdown{
-  font-family:var(--f-mono);font-size:32px;font-weight:700;
-  color:var(--text);text-align:center;margin:10px 0;
-}
-.driver-info{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.driver-avatar{
-  width:44px;height:44px;border-radius:50%;
-  background:var(--bg3);border:2px solid var(--hair2);
-  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
-}
-.driver-name{font-weight:700;font-size:14px}
-.driver-meta{font-size:11px;color:var(--muted);margin-top:2px}
-.driver-plate{
-  background:#fff;color:#000;font-family:var(--f-mono);
-  font-size:11px;font-weight:700;padding:2px 8px;
-  border-radius:4px;display:inline-block;margin-top:3px;
-}
+.fare-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--hair);font-size:12px;font-family:var(--data)}
+.fare-row:last-child{border:none;font-weight:700;color:var(--gold-l);font-size:13px}
 
-/* ── CHAT ── */
-#chatSection{display:none;margin-top:12px}
-#chatSection.show{display:block}
-.chat-box{
-  height:150px;overflow-y:auto;
-  background:var(--bg3);border-radius:var(--r-sm);
-  padding:10px;margin-bottom:8px;
-  display:flex;flex-direction:column;gap:8px;
-  scrollbar-width:none;
-}
-.msg{
-  max-width:75%;padding:8px 12px;border-radius:10px;
-  font-size:12px;line-height:1.5;
-}
-.msg.me{
-  background:var(--gold);color:#000;
-  align-self:flex-end;border-bottom-right-radius:2px;
-}
-.msg.them{
-  background:var(--bg2);color:var(--text);
-  align-self:flex-start;border-bottom-left-radius:2px;
-}
-.msg .ms{font-size:10px;margin-bottom:2px;opacity:.6}
-.chat-input-row{display:flex;gap:6px}
-.chat-input{
-  flex:1;background:var(--bg3);border:1px solid var(--hair);
-  border-radius:20px;padding:8px 14px;color:var(--text);
-  font-family:var(--f-head);font-size:13px;outline:none;
-}
-.chat-send{
-  width:36px;height:36px;border-radius:50%;
-  background:var(--gold);color:#000;border:none;
-  cursor:pointer;font-size:16px;display:flex;
-  align-items:center;justify-content:center;flex-shrink:0;
-}
+/* map */
+.map-container{position:relative;background:var(--surface2);border-radius:var(--r-md);overflow:hidden;height:230px;margin-bottom:14px;border:1px solid var(--hair)}
+#leafletMap{width:100%;height:100%;filter:saturate(1.15)}
+.map-badge{position:absolute;top:10px;left:10px;z-index:400;background:rgba(6,9,17,.75);backdrop-filter:blur(6px);border:1px solid var(--hair);border-radius:20px;padding:5px 12px;font-size:10px;font-family:var(--data);display:flex;align-items:center;gap:6px}
+.map-recenter{position:absolute;bottom:10px;right:10px;z-index:400;background:rgba(6,9,17,.8);border:1px solid var(--hair2);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
 
-/* ── QUICK ACTIONS ── */
-.qa-row{display:flex;gap:8px;margin:10px 0}
-.qa-btn{
-  flex:1;background:var(--bg3);border:1px solid var(--hair);
-  border-radius:var(--r-sm);padding:10px 6px;cursor:pointer;
-  font-size:10px;font-weight:700;color:var(--muted);
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  transition:.2s;font-family:var(--f-head);
-}
-.qa-btn:hover{border-color:var(--gold);color:var(--gold)}
-.qa-btn.danger{color:var(--red);border-color:rgba(255,71,87,.2)}
-.qa-icon{font-size:18px}
+/* chips / status */
+.chip{padding:6px 12px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid var(--hair);background:rgba(255,255,255,.02);color:var(--muted);display:inline-block}
+.chip.active{border-color:var(--gold);background:rgba(240,185,58,.08);color:var(--gold-l)}
 
-/* ── SECTION LABEL ── */
-.section-label{
-  font-size:10px;font-weight:700;letter-spacing:1.5px;
-  text-transform:uppercase;color:var(--muted);
-  margin:18px 0 10px;padding:0 2px;
-}
+/* chat */
+.chat-box{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-md);padding:12px;height:150px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none}
+.msg{max-width:75%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.4}
+.msg.me{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;align-self:flex-end;border-bottom-right-radius:3px;font-weight:600}
+.msg.them{background:var(--surface3);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px}
+.msg .sender{font-size:9px;margin-bottom:2px;opacity:.6;font-family:var(--data)}
 
-/* ── REWARDS ── */
-.rewards-hero{
-  background:linear-gradient(135deg,var(--bg3) 0%,rgba(240,185,58,.06) 100%);
-  border-color:rgba(240,185,58,.15);text-align:center;padding:24px;
-}
-.rh-val{font-family:var(--f-mono);font-size:48px;font-weight:700;color:var(--gold);line-height:1}
-.rh-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:4px}
-.rh-stats{display:flex;gap:8px;margin-top:16px}
-.rh-stat{flex:1;background:rgba(0,0,0,.3);border-radius:var(--r-sm);padding:12px;text-align:center;border:1px solid var(--hair)}
-.rh-sv{font-family:var(--f-mono);font-size:18px;font-weight:700;color:var(--text)}
-.rh-sl{font-size:10px;color:var(--muted);margin-top:2px}
+/* toast */
+#toastContainer{position:fixed;top:56px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;width:calc(100% - 36px);max-width:424px;pointer-events:none}
+.toast{background:var(--surface2);border:1px solid var(--hair2);border-radius:var(--r-sm);padding:12px 16px;font-size:12px;display:flex;align-items:center;gap:10px;animation:slideDown .3s ease;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.toast.success{border-color:var(--emerald)}
+.toast.error{border-color:var(--coral)}
+.toast.warning{border-color:var(--gold)}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── LEADERBOARD ── */
-.lb-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--hair)}
-.lb-rank{font-family:var(--f-mono);font-weight:700;font-size:14px;width:22px;color:var(--muted)}
-.lb-rank.g{color:#ffd700}.lb-rank.s{color:#b0b8c8}.lb-rank.b{color:#c97d4e}
-.lb-name{flex:1;font-size:13px;font-weight:600}
-.lb-thb{font-family:var(--f-mono);font-size:13px;color:var(--gold)}
-.lb-you{background:rgba(240,185,58,.05);margin:0 -16px;padding:10px 16px;border-radius:6px}
-
-/* ── BADGES ── */
-.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.badge-item{
-  background:var(--bg3);border:1px solid var(--hair);
-  border-radius:var(--r-sm);padding:10px;text-align:center;
-}
-.badge-item.earned{border-color:rgba(240,185,58,.3);background:rgba(240,185,58,.05)}
-.bi-icon{font-size:22px;margin-bottom:4px;display:block}
-.bi-name{font-size:9px;color:var(--muted)}
-.badge-item.earned .bi-name{color:var(--gold)}
-
-/* ── DRIVER SCREEN ── */
-.shift-toggle{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--card);border:1px solid var(--hair);
-  border-radius:var(--r);padding:18px;margin-bottom:12px;
-}
-.st-label .st-title{font-weight:700;font-size:16px;margin-bottom:3px}
-.st-label .st-sub{font-size:12px;color:var(--muted)}
-.toggle{
-  width:54px;height:28px;background:var(--bg3);
-  border-radius:14px;cursor:pointer;border:1px solid var(--hair2);
-  position:relative;transition:.3s;flex-shrink:0;
-}
-.toggle.on{background:var(--green);border-color:var(--green)}
-.toggle::after{
-  content:'';position:absolute;top:2px;left:2px;
-  width:22px;height:22px;background:#fff;border-radius:50%;
-  transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,.3);
-}
-.toggle.on::after{left:28px}
-
-.request-card{
-  background:var(--bg3);border:1px solid var(--hair);
-  border-radius:var(--r-sm);padding:14px;margin-bottom:10px;
-  animation:slideIn .3s ease;
-}
-@keyframes slideIn{from{transform:translateY(-8px);opacity:0}to{transform:translateY(0);opacity:1}}
-.rc-timer{height:3px;background:var(--bg2);border-radius:2px;margin:10px 0;overflow:hidden}
-.rc-timer-fill{height:100%;background:var(--gold);border-radius:2px;animation:drain 20s linear forwards}
-@keyframes drain{from{width:100%}to{width:0%}}
-
-/* ── PROFILE ── */
-.profile-hero{
-  text-align:center;padding:24px;
-  background:linear-gradient(135deg,var(--bg3) 0%,rgba(46,107,230,.06) 100%);
-  border-color:rgba(46,107,230,.15);
-}
-.ph-avatar{
-  width:76px;height:76px;border-radius:50%;
-  background:var(--bg2);border:2px solid var(--hair2);
-  margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px;
-}
-.ph-name{font-size:18px;font-weight:700;margin-bottom:4px}
-.ph-wallet{font-family:var(--f-mono);font-size:10px;color:var(--muted);word-break:break-all}
-.ph-badges{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:10px}
-.ph-badge{
-  background:var(--bg3);border:1px solid var(--hair);
-  border-radius:20px;padding:3px 10px;font-size:11px;color:var(--muted);
-}
-.ph-badge.active{border-color:rgba(240,185,58,.3);color:var(--gold)}
-
-.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
-.kpi-card{
-  background:var(--card);border:1px solid var(--hair);
-  border-radius:var(--r-sm);padding:14px;
-}
-.kv{font-family:var(--f-mono);font-size:22px;font-weight:700}
-.kl{font-size:11px;color:var(--muted);margin-top:2px}
-
-.settings-item{
-  display:flex;align-items:center;gap:12px;
-  padding:13px 0;border-bottom:1px solid var(--hair);cursor:pointer;
-}
-.settings-item:last-child{border:none}
-.si-icon{font-size:16px;width:18px;flex-shrink:0}
-.si-body{flex:1}
-.si-label{font-size:14px}
-.si-sub{font-size:11px;color:var(--muted);margin-top:1px}
-.si-arrow{color:var(--muted);font-size:14px}
-
-/* ── ONBOARDING ── */
-#onboarding{
-  display:none;position:fixed;inset:0;z-index:900;
-  background:var(--bg);flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:40px 28px;text-align:center;
-}
-#onboarding.show{display:flex}
-.ob-slides{width:100%;overflow:hidden}
-.ob-track{display:flex;transition:transform .4s cubic-bezier(.16,1,.3,1)}
-.ob-slide{min-width:100%;flex-shrink:0}
-.ob-emoji{font-size:72px;margin-bottom:24px;display:block}
-.ob-title{font-size:28px;font-weight:700;color:var(--gold);margin-bottom:12px}
-.ob-desc{font-size:14px;color:var(--muted);line-height:1.7;max-width:300px;margin:0 auto}
-.ob-dots{display:flex;gap:6px;justify-content:center;margin:28px 0}
-.ob-dot{width:7px;height:7px;border-radius:50%;background:var(--subtle);transition:.3s}
-.ob-dot.active{background:var(--gold);width:22px;border-radius:4px}
-.ob-actions{display:flex;gap:10px;width:100%;max-width:280px}
-
-/* ── MODALS ── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;z-index:500;
-  background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
-  align-items:flex-end;justify-content:center;
-}
+/* modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(3,5,10,.78);backdrop-filter:blur(2px);z-index:500;align-items:flex-end;justify-content:center}
 .modal-overlay.show{display:flex}
-.modal-box{
-  background:var(--bg2);border:1px solid var(--hair2);
-  border-radius:20px 20px 0 0;
-  padding:24px;width:100%;max-width:430px;
-  max-height:80dvh;overflow-y:auto;
-  animation:slideUp .3s cubic-bezier(.16,1,.3,1);
-}
+.modal-box{background:var(--surface2);border:1px solid var(--hair2);border-radius:22px 22px 0 0;padding:24px;width:100%;max-width:460px;max-height:82dvh;overflow-y:auto;animation:slideUp .32s cubic-bezier(.2,.8,.2,1)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-handle{width:32px;height:3px;background:var(--hair2);border-radius:2px;margin:0 auto 20px}
-.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-family:var(--disp);font-size:17px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
 .modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
 
-/* ── TOAST ── */
-#toastContainer{
-  position:fixed;top:60px;left:50%;transform:translateX(-50%);
-  z-index:1000;display:flex;flex-direction:column;gap:8px;
-  width:calc(100% - 32px);max-width:398px;pointer-events:none;
-}
-.toast{
-  background:var(--bg2);border:1px solid var(--hair2);
-  border-radius:10px;padding:11px 16px;font-size:12px;
-  display:flex;align-items:center;gap:10px;
-  animation:tin .3s ease;box-shadow:0 8px 24px rgba(0,0,0,.4);
-}
-.toast.success{border-color:rgba(34,214,114,.3)}
-.toast.error{border-color:rgba(255,71,87,.3)}
-.toast.warning{border-color:rgba(255,179,71,.3)}
-@keyframes tin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+/* onboarding */
+#onboarding{display:none;position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,#0f1c3d,var(--ink) 60%);z-index:99999;flex-direction:column;align-items:center;justify-content:center;padding:32px 26px;text-align:center}
+#onboarding.show{display:flex}
+.ob-slide{display:none}.ob-slide.active{display:block;animation:fadeUp .4s ease}
+.ob-emoji{font-size:60px;margin-bottom:22px}
+.ob-title{font-family:var(--disp);font-size:26px;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,var(--gold-l),var(--sapphire-l));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ob-text{font-size:13.5px;color:var(--muted);line-height:1.65;max-width:290px}
+.ob-dots{display:flex;gap:7px;margin:26px 0}
+.ob-dot{width:7px;height:7px;border-radius:50%;background:var(--hair2)}
+.ob-dot.active{background:var(--gold);width:22px;border-radius:4px}
+.ob-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:270px}
 
-/* ── FAQ ── */
-.faq-item{border-bottom:1px solid var(--hair);padding:12px 0}
-.faq-q{display:flex;justify-content:space-between;cursor:pointer;font-weight:600;font-size:13px;user-select:none}
-.faq-arrow{color:var(--muted);transition:.2s}
-.faq-item.open .faq-arrow{transform:rotate(45deg)}
-.faq-a{font-size:12px;color:var(--muted);line-height:1.7;padding-top:10px;display:none}
-.faq-a.show{display:block}
+/* rating */
+.stars{display:flex;gap:8px;font-size:28px;cursor:pointer;justify-content:center;margin:16px 0}
+.star{color:var(--hair2);transition:.2s}.star.lit{color:var(--gold)}
 
-/* ── REFERRAL ── */
-.ref-code-box{
-  display:flex;align-items:center;gap:8px;
-  background:var(--bg3);border:1px solid var(--hair2);
-  border-radius:var(--r-sm);padding:12px 14px;
-}
-.ref-code{font-family:var(--f-mono);font-size:18px;font-weight:700;color:var(--gold);flex:1}
+/* leaderboard */
+.lb-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--hair)}
+.lb-rank{font-family:var(--disp);font-weight:700;font-size:17px;width:26px;color:var(--muted2)}
+.lb-rank.gold{color:#ffd700}.lb-rank.silver{color:#c9d3e0}.lb-rank.bronze{color:#cd8a4f}
+.lb-info{flex:1}.lb-name{font-weight:600;font-size:13px}.lb-rides{font-size:10.5px;color:var(--muted);font-family:var(--data)}
+.lb-thb{font-family:var(--data);font-weight:700;color:var(--gold-l)}
+.lb-you{background:rgba(240,185,58,.05);margin:0 -18px;padding:11px 18px;border-radius:10px}
 
-/* ── CONFETTI CANVAS ── */
 #confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:800;display:none}
 
-/* ── THANK YOU OVERLAY ── */
-#thankYou{
-  display:none;position:fixed;inset:0;z-index:700;
-  background:var(--bg);flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:32px;text-align:center;
-}
-#thankYou.show{display:flex}
-.ty-emoji{font-size:80px;animation:pop .5s ease}
-@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.tx-row{display:flex;align-items:center;gap:10px;padding:11px;background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);margin-bottom:8px}
+.tx-status{font-size:17px}
+.tx-info{flex:1;font-size:12px}.tx-hash{font-size:10px;color:var(--muted);font-family:var(--data)}
 
-/* ── OFFLINE BANNER ── */
-#offlineBanner{
-  display:none;background:rgba(255,71,87,.08);
-  border-bottom:1px solid rgba(255,71,87,.2);
-  padding:8px 16px;font-size:12px;color:var(--red);
-  text-align:center;flex-shrink:0;
-}
-#offlineBanner.show{display:block}
+.faq-item{border-bottom:1px solid var(--hair);padding:13px 0}
+.faq-q{display:flex;justify-content:space-between;cursor:pointer;font-weight:600;font-size:13px;user-select:none}
+.faq-a{font-size:12px;color:var(--muted);line-height:1.6;padding-top:10px;display:none}
+.faq-a.open{display:block}
 
-/* ── ARRIVED BANNER ── */
-#arrivedBanner{
-  display:none;
-  background:linear-gradient(90deg,rgba(34,214,114,.15),rgba(34,214,114,.08));
-  border-bottom:1px solid rgba(34,214,114,.2);
-  padding:10px 16px;font-size:12px;font-weight:700;
-  color:var(--green);text-align:center;flex-shrink:0;
-}
-#arrivedBanner.show{display:block}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.badge-item{text-align:center;padding:11px 4px;background:rgba(255,255,255,.02);border-radius:var(--r-sm);border:1px solid var(--hair)}
+.badge-item .b-icon{font-size:22px;margin-bottom:4px;display:block}
+.badge-item .b-name{font-size:9.5px;color:var(--muted)}
+.badge-item.unlocked{border-color:var(--gold);background:rgba(240,185,58,.06)}
+.badge-item.unlocked .b-name{color:var(--gold-l)}
 
-/* ── SURGE BANNER ── */
-#surgeBanner{
-  display:none;cursor:pointer;
-  background:linear-gradient(90deg,rgba(240,185,58,.12),rgba(240,185,58,.06));
-  border-bottom:1px solid rgba(240,185,58,.2);
-  padding:10px 16px;font-size:12px;font-weight:700;
-  color:var(--gold);flex-shrink:0;
-}
-#surgeBanner.show{display:flex;align-items:center;justify-content:space-between}
+.ride-id-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border:1px solid var(--hair2);border-radius:10px;padding:7px 13px;font-size:11px;font-family:var(--data);cursor:pointer}
 
-/* ── RIDE PROGRESS BAR ── */
-#rideProgressBar{display:none;padding:10px 16px;border-bottom:1px solid var(--hair);flex-shrink:0;background:var(--bg2)}
-#rideProgressBar.show{display:block}
-.rpb-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}
-.rpb-status{color:var(--gold);font-weight:700}
+.request-card{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-md);padding:14px;margin-bottom:10px}
+.request-card.pending{border-color:var(--gold)}
 
-/* ── INPUTS ── */
-.input{
-  width:100%;background:var(--bg3);border:1px solid var(--hair);
-  border-radius:var(--r-sm);padding:11px 14px;color:var(--text);
-  font-family:var(--f-head);font-size:13px;outline:none;
-  transition:.2s;
-}
-.input:focus{border-color:var(--gold)}
-select.input{cursor:pointer}
+.scroll-hint{text-align:center;color:var(--muted2);font-size:10.5px;padding:8px 0 0}
 
-/* ── NEGO ── */
-.nego-section{display:none;margin-bottom:10px}
-.nego-section.show{display:block}
+#thankYouOverlay{display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#132043,var(--ink) 65%);z-index:700;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+#thankYouOverlay.show{display:flex}
+.ty-emoji{font-size:72px;animation:bounceIn .6s ease}
+@keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
 
-/* ── PENDING TX ── */
-.tx-row{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border-radius:var(--r-sm);margin-bottom:6px}
-.tx-status{font-size:18px}
-.tx-info{flex:1;font-size:12px}
-.tx-hash{font-size:10px;color:var(--muted);font-family:var(--f-mono)}
-
-/* ── SCHEDULE ── */
-.schedule-section{display:none;margin-bottom:10px}
+.stop-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.stop-row .rm-btn{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer}
+.share-link{background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:8px;padding:11px 12px;font-size:11px;font-family:var(--data);word-break:break-all;color:var(--sapphire-l);cursor:pointer}
+.nego-card{background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px;margin-bottom:8px}
+.nego-offer{font-family:var(--disp);font-size:21px;font-weight:700;color:var(--gold-l);margin:8px 0}
+.schedule-section{display:none;margin-top:10px}
 .schedule-section.show{display:block}
+.wallet-connect-btn{display:flex;align-items:center;gap:10px;background:rgba(240,185,58,.08);border:1px solid var(--gold);border-radius:var(--r-sm);padding:12px 16px;cursor:pointer;width:100%;color:var(--gold-l);font-family:var(--body);font-weight:700;font-size:13px}
 
-/* ── RIDES HISTORY ── */
-.rh-item{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid var(--hair)}
-.rh-icon{font-size:18px;width:20px;flex-shrink:0}
-.rh-body{flex:1}
-.rh-route{font-weight:600;font-size:13px}
-.rh-meta{font-size:11px;color:var(--muted);margin-top:2px}
-.rh-right{text-align:right;flex-shrink:0}
-.rh-price{font-family:var(--f-mono);font-size:13px}
-.rh-thb{font-size:11px;color:var(--gold);margin-top:2px}
+/* profile identity */
+.avatar-ring{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--sapphire-l),var(--gold));display:flex;align-items:center;justify-content:center;margin:0 auto 10px;padding:3px}
+.avatar-ring .inner{width:100%;height:100%;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:26px}
 
-/* ── EMPTY STATE ── */
-.empty{text-align:center;padding:28px 16px;color:var(--muted)}
-.empty-icon{font-size:36px;margin-bottom:10px;opacity:.4}
-.empty-text{font-weight:700;font-size:14px;margin-bottom:4px;color:var(--muted)}
+/* ecosystem grid */
+.eco-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.eco-item{background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:13px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:6px;transition:.2s}
+.eco-item:hover{border-color:var(--sapphire-l);background:rgba(46,107,230,.06)}
+.eco-icon{font-size:18px}
+.eco-name{font-size:12px;font-weight:700}
+.eco-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.eco-item.wide{grid-column:1/-1;flex-direction:row;align-items:center}
 
-/* ── ROADMAP ── */
-.rm-item{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
-.rm-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.rm-dot.live{background:var(--green)}
-.rm-dot.next{background:var(--gold)}
-.rm-dot.future{background:var(--subtle)}
-.rm-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
-.rm-label.live{color:var(--green)}.rm-label.next{color:var(--gold)}.rm-label.future{color:var(--muted)}
-.rm-desc{font-size:13px;color:var(--muted)}
+/* nav */
 
-/* ── STREAK ── */
-.streak-track{display:flex;gap:4px}
-.streak-day{
-  flex:1;background:var(--bg3);border:1px solid var(--hair);
-  border-radius:var(--r-xs);padding:8px 4px;text-align:center;
-}
-.streak-day.done{background:rgba(34,214,114,.1);border-color:rgba(34,214,114,.3)}
-.streak-day.today{border-color:var(--gold)}
-.sd-icon{font-size:11px}
-.sd-day{font-size:9px;color:var(--muted);margin-top:2px}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;cursor:pointer;color:var(--muted);transition:.2s;border:none;background:none;font-family:var(--data);font-size:9.5px;min-width:0;border-radius:16px}
+.nav-btn.active{color:var(--gold-l);background:rgba(240,185,58,.08)}
+.nav-btn .icon{font-size:18px}
+.nav-btn.center-btn{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;border-radius:50%;width:52px;height:52px;margin-top:-24px;padding:0;flex:none;align-self:flex-start;font-size:21px;box-shadow:0 6px 22px -4px rgba(240,185,58,.6);font-weight:700;min-width:52px}
 
-/* ── STARS ── */
-.stars{display:flex;gap:8px;font-size:28px;cursor:pointer;justify-content:center;margin:12px 0}
-.star{color:var(--subtle);transition:.15s}
-.star.lit{color:var(--gold)}
-
-/* ── CONTRACT INFO ── */
-.ci-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--hair);font-size:12px}
-.ci-row:last-child{border:none}
-.ci-label{color:var(--muted)}
-.ci-val{font-family:var(--f-mono);font-size:11px;color:var(--sapphire2);word-break:break-all;max-width:180px;text-align:right}
-
-/* ── FAVOURITES ── */
-.fav-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--hair);cursor:pointer}
-.fav-item:last-child{border:none}
-.fav-icon{font-size:18px;flex-shrink:0}
-.fav-label{font-weight:600;font-size:13px}
-.fav-route{font-size:11px;color:var(--muted);margin-top:1px}
-
-/* ── CHAIN WARNING ── */
-#chainWarning{display:none;background:rgba(255,71,87,.1);border-bottom:1px solid rgba(255,71,87,.2);padding:9px 16px;font-size:12px;color:var(--red);font-weight:700;cursor:pointer;flex-shrink:0;text-align:center}
-#chainWarning.show{display:block}
+@media(max-height:700px){.screen{padding-bottom:calc(var(--nav-h) + 12px)}}
+#nav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#16213e;border-top:1px solid #2a2a3e;display:flex;padding-bottom:env(safe-area-inset-bottom);align-items:flex-end;}
 </style>
 </head>
 <body>
 <div id="app">
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
 
-<!-- STATUS BAR -->
 <div class="statusbar">
-  <span class="time" id="clockTime">10:00</span>
+  <span class="time" id="clockTime">9:41</span>
   <div class="right">
-    <div class="net-badge">
-      <span class="pip" id="netPip"></span>
-      <span id="netLabel">BSC</span>
-    </div>
-    <span>📶</span>
+    <span id="netPip" class="pip green"></span>
+    <span id="netLabel">BSC · 97</span>
   </div>
 </div>
 
-<!-- CHAIN WARNING -->
 <div id="chainWarning" onclick="switchToBSC()">⚠ Wrong network — tap to switch to BSC Testnet</div>
-
-<!-- OFFLINE BANNER -->
-<div id="offlineBanner">📡 Offline — rides will queue and sync when reconnected</div>
-
-<!-- SURGE BANNER -->
-<div id="surgeBanner" onclick="openModal('surgeModal')">
-  <span id="surgeBannerText">⚡ SURGE ACTIVE · 1.8× — Tap for fares</span>
-  <span>›</span>
+<div id="alertStrip"><span id="alertText"></span><button onclick="hideAlert()">×</button></div>
+<div id="surgeBanner" onclick="openModal('surgeModal')" style="display:none">⚡ Surge active · <span id="surgeBannerMult">1.8×</span> — tap to see fares</div>
+<div id="arrivedBanner" style="display:none">🚗 Driver has arrived · <span id="graceTimer">5:00</span> free wait</div>
+<div id="rideProgressBar" style="display:none">
+  <div class="rp-label"><span class="rp-status" id="rideStatusLabel">DRIVER EN ROUTE</span><span id="rideETA">ETA 3 min</span></div>
+  <div class="progress-track"><div class="progress-fill" id="rideProgressFill"></div></div>
 </div>
 
-<!-- ARRIVED BANNER -->
-<div id="arrivedBanner">🚗 Your driver has arrived · <span id="graceTimer">5:00</span> free wait</div>
-
-<!-- RIDE PROGRESS BAR -->
-<div id="rideProgressBar">
-  <div class="rpb-label">
-    <span class="rpb-status" id="rideStatusLabel">🔍 Finding driver</span>
-    <span id="rideETA">—</span>
-  </div>
-  <div class="progress-track"><div class="progress-fill" id="rideFill"></div></div>
-</div>
-
-<!-- SCREENS -->
 <div id="screens">
 
-<!-- ════ HOME ════ -->
+<!-- ===== HOME ===== -->
 <div class="screen active" id="s-home">
+  <div class="eyebrow">Gaborone · Botswana</div>
+  <div class="greeting">Good day, <span id="greetName">Todd</span></div>
 
-  <!-- Wallet -->
-  <div class="card" id="walletCard">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
-      <div>
-        <div class="card-label">THoBoCoin Wallet</div>
-        <div style="font-family:var(--f-mono);font-size:32px;font-weight:700;color:var(--gold);line-height:1" id="thbBal">0</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="bwpBal">0.00 BWP equiv</div>
+  <div class="diamond-card">
+    <div class="wallet-row">
+      <div class="diamond-facet">◆</div>
+      <div style="flex:1">
+        <div class="card-sub" style="font-size:10px">THOBOCOIN WALLET</div>
+        <div class="wallet-addr" id="walletAddr">Not connected</div>
       </div>
-      <button id="connectBtn" onclick="connectWallet()">🔗 Connect</button>
+      <button class="btn btn-outline btn-sm" onclick="connectWallet()" id="connectBtn">Connect</button>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:10px">
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="thbBal">0</div><div class="lbl">THB</div></div>
+      <div class="bal-card"><div class="val" id="bwpBal">0.00</div><div class="lbl">BWP equiv</div></div>
+      <div class="bal-card"><div class="val" id="bnbBal">0</div><div class="lbl">tBNB gas</div></div>
+    </div>
+    <div class="chainrow">
       <span class="pip" id="chainPip"></span>
       <span id="chainLabel" style="font-size:11px;color:var(--muted)">Not connected</span>
-      <span id="gasPill" style="font-size:11px;color:var(--muted);margin-left:auto">⛽ Gas —</span>
+      <span class="gas-pill" id="gasPill">⛽ Gas —</span>
     </div>
-    <div class="wallet-row">
-      <div class="wallet-stat"><div class="sv" id="bnbBal">0</div><div class="sl">tBNB</div></div>
-      <div class="wallet-stat"><div class="sv" id="rideCount">0</div><div class="sl">Rides</div></div>
-      <div class="wallet-stat"><div class="sv" id="streakCount">0🔥</div><div class="sl">Streak</div></div>
-    </div>
-    <div class="wallet-links" style="margin-top:10px">
-      <a class="wallet-link" href="https://testnet.binance.org/faucet-smart" target="_blank" rel="noopener">🚰 Faucet</a>
-      <a class="wallet-link" href="https://testnet.bscscan.com/address/0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628" target="_blank" rel="noopener">🔍 BSCScan</a>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <a href="https://testnet.binance.org/faucet-smart" target="_blank" class="btn btn-outline btn-sm" style="flex:1">🚰 Faucet</a>
+      <a href="https://testnet.bscscan.com/address/0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628" target="_blank" class="btn btn-outline btn-sm" style="flex:1">🔍 BscScan</a>
     </div>
   </div>
 
-  <!-- Book ride -->
   <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div class="card-header">
       <div class="card-title">Where to?</div>
       <div style="display:flex;gap:6px">
-        <button class="loc-action" onclick="toggleSchedule()" title="Schedule">📅</button>
-        <button class="loc-action" onclick="swapLocations()" title="Swap">⇅</button>
-        <button class="loc-action" onclick="voiceInput()" title="Voice">🎤</button>
+        <button class="btn btn-outline btn-sm" onclick="toggleSchedule()" title="Schedule">📅</button>
+        <button class="btn btn-outline btn-sm" onclick="swapLocations()" title="Swap">⇅</button>
+        <button class="btn btn-outline btn-sm" onclick="voiceInput()" title="Voice">🎤</button>
       </div>
     </div>
 
-    <!-- Locations -->
-    <div class="loc-wrap" id="locWrap">
-      <div class="loc-row" style="position:relative">
-        <div class="loc-dot from"></div>
-        <input class="loc-input" id="pickup" placeholder="Pickup location" autocomplete="off"/>
-        <button class="loc-action" onclick="detectLocation()" title="My location">📍</button>
-        <div class="autocomplete-drop" id="pickup-drop" style="display:none"></div>
-      </div>
+    <div style="position:relative">
+      <div class="input-row"><span class="input-icon">📍</span><input class="input has-icon" id="pickup" placeholder="Pickup location" value="BSTM HQ, Mmopane"/></div>
+      <div class="loc-line"></div>
       <div id="stopsContainer"></div>
-      <div class="loc-row" style="position:relative">
-        <div class="loc-dot to"></div>
-        <input class="loc-input" id="dropoff" placeholder="Drop-off location" autocomplete="off"/>
-        <div class="autocomplete-drop" id="dropoff-drop" style="display:none"></div>
-      </div>
+      <div class="input-row"><span class="input-icon">🏁</span><input class="input has-icon" id="dropoff" placeholder="Where to?" value="Game City Mall"/></div>
     </div>
-    <button class="btn btn-ghost btn-sm" style="margin-bottom:10px" onclick="addStop()">＋ Add stop</button>
+    <button class="btn btn-outline btn-sm" style="margin-bottom:10px" onclick="addStop()">＋ Add stop</button>
 
-    <!-- Schedule -->
-    <div class="schedule-section" id="scheduleSection">
-      <input type="datetime-local" class="input" id="scheduleTime" style="margin-bottom:10px"/>
-    </div>
+    <div class="schedule-section" id="scheduleSection"><input type="datetime-local" class="input" id="scheduleTime" style="margin-bottom:10px"/></div>
 
-    <!-- Vehicle types -->
-    <div class="vehicle-grid" id="vehicleGrid"></div>
-
-    <!-- Fare -->
-    <div class="card" style="margin:0 0 10px;background:var(--bg3)">
-      <div class="fare-row"><span class="fl">Base fare</span><span class="fv" id="fb-base">— BWP</span></div>
-      <div class="fare-row" id="fb-surge-row" style="display:none"><span class="fl">⚡ Surge</span><span class="fv" style="color:var(--amber)" id="fb-surge">— BWP</span></div>
-      <div class="fare-row" id="fb-stops-row" style="display:none"><span class="fl">Extra stops</span><span class="fv" id="fb-stops">— BWP</span></div>
-      <div class="fare-row reward"><span class="fl">THB reward</span><span class="fv" style="color:var(--green)">+1 THB</span></div>
-      <div class="fare-row total"><span class="fl">TOTAL</span><span class="fv" id="fb-total">— BWP</span></div>
+    <div class="ride-type-grid" id="rideTypeGrid">
+      <div class="ride-type-card active" data-type="standard" data-fare="20" onclick="selectRideType(this)"><div class="icon">🚕</div><div class="name">Standard</div><div class="price">20 BWP</div></div>
+      <div class="ride-type-card" data-type="premium" data-fare="35" onclick="selectRideType(this)"><div class="icon">🚙</div><div class="name">Premium</div><div class="price">35 BWP</div></div>
+      <div class="ride-type-card" data-type="xl" data-fare="50" onclick="selectRideType(this)"><div class="icon">🚐</div><div class="name">XL / Van</div><div class="price">50 BWP</div></div>
+      <div class="ride-type-card" data-type="moto" data-fare="12" onclick="selectRideType(this)"><div class="icon">🏍</div><div class="name">Moto</div><div class="price">12 BWP</div></div>
+      <div class="ride-type-card" data-type="eco" data-fare="15" onclick="selectRideType(this)"><div class="icon">🌿</div><div class="name">Eco</div><div class="price">15 BWP</div></div>
+      <div class="ride-type-card" data-type="quiet" data-fare="22" onclick="selectRideType(this)"><div class="icon">🤫</div><div class="name">Quiet</div><div class="price">22 BWP</div></div>
     </div>
 
-    <!-- Notes -->
+    <div id="fareBreakdown" style="background:rgba(255,255,255,.02);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:12px">
+      <div class="fare-row"><span>Base fare</span><span id="fb-base">20 BWP</span></div>
+      <div class="fare-row" id="fb-surge-row" style="display:none"><span>⚡ Surge</span><span id="fb-surge">0 BWP</span></div>
+      <div class="fare-row" id="fb-stops-row" style="display:none"><span>Extra stops</span><span id="fb-stops">0 BWP</span></div>
+      <div class="fare-row"><span>THB reward</span><span style="color:var(--emerald)">+1 THB</span></div>
+      <div class="fare-row"><span>Total</span><span id="fb-total">20 BWP</span></div>
+    </div>
+
     <input class="input" placeholder="Notes for driver (luggage, gate code...)" id="rideNotes" style="margin-bottom:10px"/>
 
-    <!-- Negotiate -->
-    <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;margin-bottom:10px">
-      <input type="checkbox" id="negoCheck" onchange="toggleNego()"/>
-      💬 Negotiate fare (InDrive-style)
-    </label>
-    <div class="nego-section" id="negoSection">
-      <div style="display:flex;gap:8px;margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <input type="checkbox" id="negoToggle" onchange="toggleNego()"/>
+      <label for="negoToggle" style="font-size:12px;cursor:pointer">💬 Negotiate fare (InDrive-style)</label>
+    </div>
+    <div id="negoSection" style="display:none;margin-bottom:10px">
+      <div style="display:flex;gap:8px;align-items:center">
         <input class="input" id="offerAmount" type="number" placeholder="Your offer (BWP)" style="flex:1"/>
-        <button class="btn btn-ghost btn-sm" onclick="sendOffer()">Send</button>
+        <button class="btn btn-outline btn-sm" onclick="sendOffer()">Send</button>
       </div>
-      <div id="negoStatus" style="font-size:12px;color:var(--muted)"></div>
+      <div class="nego-card" id="negoConvo" style="display:none">
+        <div class="card-sub">Negotiation</div>
+        <div class="nego-offer" id="currentOffer">—</div>
+        <div style="font-size:11px;color:var(--muted)" id="negoStatus"></div>
+        <div id="negoActions" style="display:none;gap:6px;margin-top:8px">
+          <button class="btn btn-green btn-sm" onclick="acceptOffer()">✓ Accept counter</button>
+          <button class="btn btn-outline btn-sm" onclick="sendOffer()">Send new</button>
+        </div>
+      </div>
     </div>
 
-    <!-- Map -->
-    <div id="mapWrap"><div id="map"></div></div>
+    <div class="map-container">
+      <div class="map-badge"><span class="pip green" id="mapPip"></span><span id="mapDriverCount">Searching live drivers...</span></div>
+      <div class="map-recenter" onclick="recenterMap()">⌖</div>
+      <div id="leafletMap"></div>
+    </div>
 
-    <!-- Status row -->
-    <div class="status-row">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
       <span class="pip" id="statusPip"></span>
-      <span class="sr-label" id="statusLabel">Enter locations to book</span>
-      <span style="font-size:11px;color:var(--sapphire2)">📡 <span id="driverCount">0</span> drivers nearby</span>
+      <span id="statusLabel" style="font-size:12px;color:var(--muted)">Enter locations to book</span>
     </div>
 
-    <!-- Ride active card -->
-    <div class="card" id="rideActiveCard">
-      <div class="ride-header">
-        <div class="ride-status-badge"><span class="pip green"></span><span id="rideStatusText">En Route</span></div>
-        <div class="ride-id" id="rideIdEl" onclick="copyRideId()">—</div>
-      </div>
-      <div class="driver-info" id="driverInfoRow">
-        <div class="driver-avatar" id="driverAvatar">🧑‍💼</div>
-        <div>
-          <div class="driver-name" id="driverNameEl">—</div>
-          <div class="driver-meta" id="driverMetaEl">—</div>
-          <div class="driver-plate" id="driverPlateEl">—</div>
-        </div>
-        <div style="margin-left:auto;text-align:right">
-          <div class="ride-countdown" id="countdown" style="font-size:24px">—</div>
-          <div style="font-size:10px;color:var(--muted)">ETA</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost btn-sm" onclick="toggleChat()">💬 Chat</button>
-        <button class="btn btn-danger btn-sm" id="cancelBtn" onclick="cancelRide()">✕ Cancel</button>
-      </div>
+    <div id="countdownRow" style="display:none;text-align:center;margin-bottom:10px" style="display:none">
+      <div style="font-size:30px;font-family:var(--data);font-weight:700;color:var(--gold-l)" id="countdown">3:00</div>
+      <div style="font-size:11px;color:var(--muted)">Ride in progress</div>
     </div>
 
-    <!-- Chat -->
-    <div id="chatSection">
+    <div id="rideIdRow" style="display:none;margin-bottom:10px;text-align:center" style="display:none">
+      <div class="ride-id-chip" onclick="copyRideId()">🎫 Ride <strong id="rideId">—</strong> 📋</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request ride · Earn 1 THB</button>
+      <button class="btn btn-danger btn-sm" id="cancelBtn" style="display:none" onclick="cancelRide()" style="display:none">✕ Cancel ride</button>
+    </div>
+
+    <div id="chatSection" style="display:none;margin-top:14px" style="display:none">
+      <div class="card-title" style="margin-bottom:8px;font-size:13px">💬 Chat with driver</div>
       <div class="chat-box" id="chatBox"></div>
-      <div class="chat-input-row">
-        <input class="chat-input" id="chatInput" placeholder="Message driver…" onkeydown="if(event.key==='Enter')sendChat()"/>
-        <button class="chat-send" onclick="sendChat()">➤</button>
+      <div style="display:flex;gap:8px">
+        <input class="input" id="chatInput" placeholder="Type a message..." style="flex:1" onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="btn btn-primary btn-sm" onclick="sendChat()">Send</button>
       </div>
     </div>
 
-    <!-- Action buttons -->
-    <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
-      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">🚕 Request Ride · Earn 1 THB</button>
-      <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled style="background:var(--bg3);color:var(--muted)">⚡ Complete a ride to claim</button>
+    <div style="margin-top:14px">
+      <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
+      <div style="display:flex;justify-content:space-between;margin-top:6px">
+        <span style="font-size:10.5px;color:var(--muted)" id="claimHint">Book or simulate a ride first</span>
+        <span class="gas-pill" id="gasEstimate" style="display:none">⛽ ~0.001 tBNB</span>
+      </div>
     </div>
 
-    <!-- Quick actions -->
-    <div class="qa-row">
-      <button class="qa-btn danger" onclick="openSOS()"><span class="qa-icon">🆘</span>SOS</button>
-      <button class="qa-btn" onclick="openModal('shareModal')"><span class="qa-icon">📤</span>Share Trip</button>
-      <button class="qa-btn" onclick="openModal('surgeModal')"><span class="qa-icon">⚡</span>Surge</button>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-danger" style="flex:1" onclick="openSOS()">🆘 Emergency SOS</button>
+      <button class="btn btn-outline btn-sm" onclick="openModal('shareModal')">📤 Share trip</button>
     </div>
+    <div class="scroll-hint">↓ scroll for more</div>
   </div>
 
-  <!-- Favourites -->
-  <div class="section-label">⭐ Quick Favourites</div>
-  <div class="card" style="padding:0 16px">
-    <div id="favsList"><div class="empty"><div class="empty-icon">⭐</div><div class="empty-text">No saved routes yet</div></div></div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">⭐ Quick favourites</div><button class="btn btn-outline btn-sm" onclick="saveFav()">＋ Save</button></div>
+    <div id="favsList"><div style="font-size:12px;color:var(--muted)">No saved routes yet — book a ride to auto-save.</div></div>
   </div>
-  <div style="text-align:right;margin-bottom:4px"><button class="btn btn-ghost btn-sm" onclick="saveFav()">＋ Save current</button></div>
 
-  <!-- Recent rides -->
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <div class="section-label" style="margin-bottom:0">🕐 Recent Rides</div>
-    <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 CSV</button>
-  </div>
-  <div class="card" style="padding:0 16px;margin-top:8px">
-    <div id="rideHistory"><div class="empty"><div class="empty-icon">🚕</div><div class="empty-text">No rides yet</div></div></div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">🕐 Recent rides</div><button class="btn btn-outline btn-sm" onclick="exportCSV()">📥 CSV</button></div>
+    <div id="rideHistory"><div style="font-size:12px;color:var(--muted)">No rides yet.</div></div>
   </div>
 </div>
 
-<!-- ════ REWARDS ════ -->
+<!-- ===== REWARDS ===== -->
 <div class="screen" id="s-rewards">
-  <div class="card rewards-hero">
-    <div class="card-label">Total THoBoCoin Earned</div>
-    <div class="rh-val" id="r-earned">0</div>
-    <div class="rh-label">THB</div>
-    <div class="rh-stats">
-      <div class="rh-stat"><div class="rh-sv" id="r-rides">0</div><div class="rh-sl">Rides</div></div>
-      <div class="rh-stat"><div class="rh-sv" id="r-streak">0🔥</div><div class="rh-sl">Streak</div></div>
-      <div class="rh-stat"><div class="rh-sv" id="r-refs">0</div><div class="rh-sl">Referrals</div></div>
+  <div class="eyebrow">Loyalty</div>
+  <div class="greeting">Rewards dashboard</div>
+  <div class="card">
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="r-earned">0</div><div class="lbl">THB earned</div></div>
+      <div class="bal-card"><div class="val" id="r-rides">0</div><div class="lbl">Rides done</div></div>
+      <div class="bal-card"><div class="val" id="r-streak">0</div><div class="lbl">Streak 🔥</div></div>
     </div>
+    <div style="display:flex;gap:8px;align-items:center;margin:14px 0 12px">
+      <span style="font-size:12px">🏆 Daily bonus</span>
+      <button class="btn btn-primary btn-sm" id="dailyBtn" onclick="claimDaily()">Claim +0.5 THB</button>
+      <span id="dailyStatus" style="font-size:10.5px;color:var(--muted)"></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="streakFill"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:5px" id="streakLabel">0 / 7 days for bonus badge</div>
   </div>
 
-  <!-- Daily bonus -->
   <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <div>
-        <div class="card-title">🏆 Daily Bonus</div>
-        <div class="card-sub">Ride every day to earn extra</div>
-      </div>
-      <button class="btn btn-primary btn-sm" id="dailyBtn" onclick="claimDaily()">+0.5 THB</button>
-    </div>
-    <div class="streak-track" id="streakTrack"></div>
-    <div style="margin-top:8px">
-      <div class="progress-track"><div class="progress-fill" id="streakFill"></div></div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px" id="streakLabel">0/7 for bonus badge</div>
-    </div>
-  </div>
-
-  <!-- Claim -->
-  <div class="card">
-    <div class="card-label">🪙 Claim THB Reward</div>
-    <div class="card-sub" style="margin-bottom:12px">After each ride, claim 1 THB to your wallet via BSC Testnet. tBNB needed for gas.</div>
-    <button class="btn btn-primary" id="r-claimBtn" onclick="claimReward()" disabled>⚡ Complete a ride to claim</button>
+    <div class="card-header"><div class="card-title">🪙 Claim THB reward</div><div class="gas-pill" id="r-gasPill">⛽ ~0.001 tBNB</div></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">After each ride, claim 1 THB to your wallet on BSC Testnet. Gas paid in tBNB.</div>
+    <button class="btn btn-primary" id="r-claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
     <div id="pendingTxSection" style="margin-top:12px;display:none">
-      <div class="card-label">Pending Transactions</div>
+      <div class="card-sub" style="margin-bottom:8px">📋 Pending transactions</div>
       <div id="pendingTxList"></div>
     </div>
   </div>
 
-  <!-- Rating -->
-  <div class="card" id="rateCard" style="display:none">
-    <div class="card-label">⭐ Rate Your Driver</div>
-    <div class="stars" id="ratingStars">
-      <span class="star" onclick="setRating(1)">★</span>
-      <span class="star" onclick="setRating(2)">★</span>
-      <span class="star" onclick="setRating(3)">★</span>
-      <span class="star" onclick="setRating(4)">★</span>
-      <span class="star" onclick="setRating(5)">★</span>
-    </div>
-    <button class="btn btn-primary" onclick="submitRating()">Submit Rating</button>
-  </div>
-
-  <!-- Referral -->
   <div class="card">
-    <div class="card-label">🎁 Referral</div>
-    <div class="card-sub" style="margin-bottom:10px">+0.2 THB when a friend books their first ride with your code</div>
-    <div class="ref-code-box">
-      <span class="ref-code" id="refCode">—</span>
-      <button class="btn btn-ghost btn-sm" onclick="copyRef()">📋 Copy</button>
+    <div class="card-title" style="margin-bottom:8px">🎁 Referral programme</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Earn +0.2 THB when a friend books their first ride with your code.</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+      <div class="input" style="flex:1;font-size:12px" id="refLink">Share your code to earn THB</div>
+      <button class="btn btn-outline btn-sm" onclick="copyRef()">📋 Copy</button>
     </div>
-    <div class="wallet-row" style="margin-top:10px">
-      <div class="wallet-stat"><div class="sv" id="ref-count">0</div><div class="sl">Referrals</div></div>
-      <div class="wallet-stat"><div class="sv" id="ref-thb">0.0</div><div class="sl">THB Earned</div></div>
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="ref-count">0</div><div class="lbl">Referrals</div></div>
+      <div class="bal-card"><div class="val" id="ref-thb">0.0</div><div class="lbl">THB earned</div></div>
     </div>
   </div>
 
-  <!-- Leaderboard -->
-  <div class="card">
-    <div class="card-label">🏆 Gaborone Leaderboard</div>
-    <div id="leaderboard"></div>
-  </div>
-
-  <!-- Badges -->
-  <div class="card">
-    <div class="card-label">🏅 Badges</div>
-    <div class="badge-grid" id="badgeGrid"></div>
-  </div>
-
-  <!-- FAQ -->
-  <div class="card">
-    <div class="card-label">❓ FAQ</div>
-    <div id="faqList"></div>
-  </div>
+  <div class="card"><div class="card-title" style="margin-bottom:12px">🏆 Gaborone leaderboard</div><div id="leaderboard"></div></div>
+  <div class="card"><div class="card-title" style="margin-bottom:12px">🏅 Badges</div><div class="badge-grid" id="badgeGrid"></div></div>
+  <div class="card"><div class="card-title" style="margin-bottom:12px">❓ FAQ</div><div id="faqList"></div></div>
 </div>
 
-<!-- ════ DRIVER ════ -->
+<!-- ===== DRIVER ===== -->
 <div class="screen" id="s-driver">
-  <div class="shift-toggle">
-    <div class="st-label">
-      <div class="st-title" id="driverStatusTitle">🔴 Offline</div>
-      <div class="st-sub" id="driverStatusSub">Toggle to receive ride requests</div>
+  <div class="eyebrow">Driver mode</div>
+  <div class="greeting">Your shift</div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="btn btn-outline btn-sm" id="driverModeBtn" onclick="toggleDriverMode()" style="flex:1">🟢 Go online</button>
+    <button class="btn btn-outline btn-sm" onclick="openModal('earningsModal')" style="flex:1">💰 Earnings</button>
+  </div>
+  <div class="card">
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="drv-requests">0</div><div class="lbl">Requests</div></div>
+      <div class="bal-card"><div class="val" id="drv-accepted">0</div><div class="lbl">Accepted</div></div>
+      <div class="bal-card"><div class="val" id="drv-thb">0</div><div class="lbl">THB earned</div></div>
     </div>
-    <div class="toggle" id="driverToggle" onclick="toggleDriverMode()"></div>
   </div>
-  <div class="wallet-row" style="margin-bottom:14px">
-    <div class="wallet-stat"><div class="sv" id="drv-reqs">0</div><div class="sl">Requests</div></div>
-    <div class="wallet-stat"><div class="sv" id="drv-accepted">0</div><div class="sl">Accepted</div></div>
-    <div class="wallet-stat"><div class="sv" id="drv-thb">0</div><div class="sl">THB Earned</div></div>
-  </div>
-  <div class="section-label">📋 Incoming Requests</div>
-  <div id="driverRequests">
-    <div class="empty"><div class="empty-icon">🚗</div><div class="empty-text">Go online to see requests</div></div>
-  </div>
+  <div class="card-title" style="margin-bottom:10px">📋 Incoming requests</div>
+  <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
 </div>
 
-<!-- ════ PROFILE ════ -->
+<!-- ===== PROFILE ===== -->
 <div class="screen" id="s-profile">
-  <div class="card profile-hero">
-    <div class="ph-avatar" id="profileAvatar">🧍</div>
-    <div class="ph-name" id="profileName">Not connected</div>
-    <div class="ph-wallet" id="profileWallet">Connect wallet to see address</div>
-    <div class="ph-badges">
-      <span class="ph-badge active">BSC Testnet</span>
-      <span class="ph-badge active">Gaborone, BWA</span>
-      <span class="ph-badge" id="roleBadge">🧍 Rider</span>
+  <div class="card" style="text-align:center">
+    <div class="avatar-ring"><div class="inner">🧍</div></div>
+    <div class="card-title" id="profile-name">Not connected</div>
+    <div class="card-sub" id="profile-sub">Connect wallet to see your profile</div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <span class="chip active">THoBoCoin creator</span>
+      <span class="chip active">BSC Testnet</span>
+      <span class="chip active">Gaborone, BWA</span>
     </div>
   </div>
-
-  <div class="section-label">📊 My KPIs</div>
-  <div class="kpi-grid">
-    <div class="kpi-card"><div class="kv" id="kpi-rides">0</div><div class="kl">Total Rides</div></div>
-    <div class="kpi-card"><div class="kv" id="kpi-thb">0</div><div class="kl">THB Earned</div></div>
-    <div class="kpi-card"><div class="kv" id="kpi-rating">—</div><div class="kl">Avg Rating ⭐</div></div>
-    <div class="kpi-card"><div class="kv" id="kpi-streak">0🔥</div><div class="kl">Best Streak</div></div>
-  </div>
-
-  <div class="section-label">⚙️ Settings</div>
-  <div class="card" style="padding:0 16px">
-    <div class="settings-item" onclick="clearHistory()"><span class="si-icon">🗑️</span><div class="si-body"><div class="si-label">Clear Ride History</div></div><span class="si-arrow">›</span></div>
-    <div class="settings-item" onclick="deleteMyData()"><span class="si-icon">🔒</span><div class="si-body"><div class="si-label" style="color:var(--red)">Delete My Data</div></div><span class="si-arrow">›</span></div>
-    <div class="settings-item" onclick="showOnboarding()"><span class="si-icon">📖</span><div class="si-body"><div class="si-label">Replay Onboarding</div></div><span class="si-arrow">›</span></div>
-    <div class="settings-item" onclick="exportCSV()"><span class="si-icon">📥</span><div class="si-body"><div class="si-label">Export CSV</div></div><span class="si-arrow">›</span></div>
-    <div class="settings-item" onclick="openModal('feedbackModal')"><span class="si-icon">💬</span><div class="si-body"><div class="si-label">Beta Feedback</div></div><span class="si-arrow">›</span></div>
-    <div class="settings-item" onclick="showChangeLog()"><span class="si-icon">📋</span><div class="si-body"><div class="si-label">Changelog</div></div><span class="si-arrow">›</span></div>
-  </div>
-
-  <div class="section-label">🔗 Contract Info</div>
-  <div class="card" style="padding:0 16px">
-    <div class="ci-row"><span class="ci-label">Network</span><span class="ci-val">BSC Testnet · 97</span></div>
-    <div class="ci-row"><span class="ci-label">Contract</span><span class="ci-val">0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628</span></div>
-    <div class="ci-row"><span class="ci-label">Function</span><span class="ci-val">transfer() ERC-20</span></div>
-    <div class="ci-row"><span class="ci-label">Library</span><span class="ci-val">ethers.js v6</span></div>
-  </div>
-
-  <div class="section-label">🚀 Roadmap</div>
   <div class="card">
-    <div class="rm-item"><div class="rm-dot live"></div><div><div class="rm-label live">LIVE</div><div class="rm-desc">CabLink Pilot — ride, earn, claim</div></div></div>
-    <div class="rm-item"><div class="rm-dot next"></div><div><div class="rm-label next">NEXT</div><div class="rm-desc">Real driver matching + Firebase sync</div></div></div>
-    <div class="rm-item"><div class="rm-dot future"></div><div><div class="rm-label future">Q4</div><div class="rm-desc">THB Staking + 63-Room BSTM Ecosystem</div></div></div>
+    <div class="card-title" style="margin-bottom:12px">📊 My KPIs</div>
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="kpi-rides">0</div><div class="lbl">Rides</div></div>
+      <div class="bal-card"><div class="val" id="kpi-thb">0</div><div class="lbl">THB</div></div>
+      <div class="bal-card"><div class="val" id="kpi-rating">—</div><div class="lbl">Avg ⭐</div></div>
+    </div>
   </div>
-
-  <div style="text-align:center;font-size:11px;color:var(--muted);padding:16px 0">
-    CabLink v5.0 · BSTM Ecosystem · Gaborone, Botswana
-  </div>
-</div>
-
-<!-- ════ MORE ════ -->
-<div class="screen" id="s-more">
   <div class="card">
-    <div class="card-label">🔧 More Features</div>
+    <div class="card-title" style="margin-bottom:12px">⚙ Settings</div>
     <div style="display:flex;flex-direction:column;gap:8px">
-      <button class="btn btn-secondary" onclick="openModal('surgeModal')">⚡ Surge Pricing Info</button>
-      <button class="btn btn-secondary" onclick="openModal('pendingModal')">🔄 Pending Transactions</button>
-      <button class="btn btn-secondary" onclick="openModal('shareModal')">📤 Share Trip Link</button>
-      <button class="btn btn-secondary" onclick="openModal('privacyModal')">🔒 Privacy Settings</button>
+      <button class="btn btn-outline" onclick="clearHistory()">🗑 Clear ride history</button>
+      <button class="btn btn-outline" onclick="deleteMyData()">🔒 Delete my data</button>
+      <button class="btn btn-outline" onclick="showOnboarding()">📖 Replay onboarding</button>
+      <button class="btn btn-outline" onclick="exportCSV()">📥 Export CSV</button>
     </div>
   </div>
   <div class="card">
-    <div class="card-label">📡 Offline Queue</div>
+    <div class="card-title" style="margin-bottom:10px">🔗 Contract info</div>
+    <div style="font-size:12px;display:flex;flex-direction:column;gap:6px;font-family:var(--data)">
+      <div>Network: <span style="color:var(--gold-l)">BSC Testnet · chainId 97</span></div>
+      <div>Contract: <span style="color:var(--sapphire-l);word-break:break-all;font-size:10px">0xaf2f749ea89b3aa9a2d2028dba4004cb3c615628</span></div>
+      <div>Function: <span style="color:var(--emerald)">transfer() via ERC-20</span></div>
+      <div>Library: <span style="color:var(--muted)">ethers.js v6</span></div>
+    </div>
+  </div>
+  <div style="text-align:center;font-size:10.5px;color:var(--muted);padding:16px 0;font-family:var(--data)">CabLink v6.0 · BSTM Ecosystem · Gaborone, Botswana</div>
+</div>
+
+<!-- ===== MORE / ECOSYSTEM ===== -->
+<div class="screen" id="s-more">
+  <div class="eyebrow">BSTM Ecosystem</div>
+  <div class="greeting">The full network</div>
+  <div class="card">
+    <div class="card-sub" style="margin-bottom:12px">CabLink is one room in the 63-room BSTM Ecosystem. Tap to open any connected property.</div>
+    <div class="eco-grid" id="ecoGrid"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">🔧 More features</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn btn-outline" onclick="openModal('surgeModal')">⚡ Surge pricing info</button>
+      <button class="btn btn-outline" onclick="openModal('pendingModal')">🔄 Pending transactions</button>
+      <button class="btn btn-outline" onclick="openModal('shareModal')">📤 Share trip link</button>
+      <button class="btn btn-outline" onclick="openModal('privacyModal')">🔒 Privacy settings</button>
+      <button class="btn btn-outline" onclick="openModal('feedbackModal')">💬 Beta feedback</button>
+      <button class="btn btn-outline" onclick="showChangeLog()">📋 Changelog v6.0</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:10px">📡 Offline queue</div>
     <div id="offlineQueueInfo" style="font-size:12px;color:var(--muted)">No queued rides.</div>
-    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="syncOfflineQueue()">🔄 Sync Now</button>
+    <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="syncOfflineQueue()">🔄 Sync now</button>
   </div>
 </div>
 
-</div><!-- end #screens -->
+</div><!-- end screens -->
 
-<!-- NAV -->
 <nav id="nav">
-  <button class="nav-btn active" id="nav-home" onclick="showScreen('home',this)"><span class="ni">🏠</span>Home</button>
-  <button class="nav-btn" id="nav-rewards" onclick="showScreen('rewards',this)"><span class="ni">⚡</span>Rewards</button>
-  <button class="nav-cta" onclick="bookRide()">🚕</button>
-  <button class="nav-btn" id="nav-driver" onclick="showScreen('driver',this)"><span class="ni">🚗</span>Driver</button>
-  <button class="nav-btn" id="nav-profile" onclick="showScreen('profile',this)"><span class="ni">👤</span>Profile</button>
-  <button class="nav-btn" id="nav-more" onclick="showScreen('more',this)"><span class="ni">⋯</span>More</button>
+  <button class="nav-btn active" onclick="showScreen('home',this)" id="nav-home"><span class="icon">🏠</span><span>Home</span></button>
+  <button class="nav-btn" onclick="showScreen('rewards',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>
+  <button class="nav-btn center-btn" onclick="bookRide()">🚕</button>
+  <button class="nav-btn" onclick="showScreen('driver',this)" id="nav-driver"><span class="icon">🚗</span><span>Driver</span></button>
+  <button class="nav-btn" onclick="showScreen('profile',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>
+  <button class="nav-btn" onclick="showScreen('more',this)" id="nav-more"><span class="icon">◆</span><span>Ecosystem</span></button>
 </nav>
 
-</div><!-- end #app -->
+</div><!-- end app -->
 
-<!-- TOAST -->
 <div id="toastContainer"></div>
-
-<!-- CONFETTI -->
 <canvas id="confettiCanvas"></canvas>
 
-<!-- THANK YOU -->
-<div id="thankYou">
-  <span class="ty-emoji">🎉</span>
-  <div style="font-size:26px;font-weight:700;color:var(--gold);margin:16px 0 8px">Ride Complete!</div>
-  <div style="font-size:14px;color:var(--muted);margin-bottom:6px">You earned <strong style="color:var(--gold)" id="ty-thb">1 THB</strong></div>
-  <div style="font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-bottom:24px" id="ty-id">—</div>
-  <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px">
-    <button class="btn btn-primary" onclick="openRating()">⭐ Rate Driver</button>
-    <button class="btn btn-ghost" onclick="closeThankyou()">✓ Done</button>
-  </div>
-</div>
-
-<!-- ONBOARDING -->
 <div id="onboarding">
-  <div class="ob-slides"><div class="ob-track" id="obTrack">
-    <div class="ob-slide"><span class="ob-emoji">🚕</span><div class="ob-title">Welcome to CabLink</div><div class="ob-desc">The blockchain-powered ride app for Gaborone. Earn THoBoCoin for every trip.</div></div>
-    <div class="ob-slide"><span class="ob-emoji">🪙</span><div class="ob-title">Earn THB Tokens</div><div class="ob-desc">Every ride earns 1 THB. Claim direct to your wallet via BSC Testnet. You need tBNB for gas.</div></div>
-    <div class="ob-slide"><span class="ob-emoji">🔗</span><div class="ob-title">Connect MetaMask</div><div class="ob-desc">Tap Connect on Home. Switch to BSC Testnet (chainId 97). Get free tBNB from the faucet.</div></div>
-    <div class="ob-slide"><span class="ob-emoji">🏆</span><div class="ob-title">Referrals & Streaks</div><div class="ob-desc">Share your code → +0.2 THB per friend. Ride daily for streaks and exclusive badges.</div></div>
-  </div></div>
-  <div class="ob-dots" id="obDots">
-    <div class="ob-dot active"></div><div class="ob-dot"></div>
-    <div class="ob-dot"></div><div class="ob-dot"></div>
-  </div>
-  <div class="ob-actions">
-    <button class="btn btn-primary" onclick="obNext()">Next →</button>
-    <button class="btn btn-ghost" onclick="finishOnboarding()">Skip</button>
-  </div>
+  <div class="ob-slide active" id="ob0"><div class="ob-emoji">🚕</div><div class="ob-title">Welcome to CabLink</div><div class="ob-text">The blockchain-powered ride app for Gaborone. Earn THoBoCoin for every trip, part of the BSTM Ecosystem.</div></div>
+  <div class="ob-slide" id="ob1"><div class="ob-emoji">◆</div><div class="ob-title">Earn THB tokens</div><div class="ob-text">Every ride earns 1 THB. Claim direct to your wallet via BSC Testnet. You need MetaMask and tBNB for gas.</div></div>
+  <div class="ob-slide" id="ob2"><div class="ob-emoji">🔗</div><div class="ob-title">Connect MetaMask</div><div class="ob-text">Tap "Connect" on Home. Switch to BSC Testnet (chainId 97). Get free tBNB from the faucet link.</div></div>
+  <div class="ob-slide" id="ob3"><div class="ob-emoji">🏆</div><div class="ob-title">Referrals & streaks</div><div class="ob-text">Share your code → earn +0.2 THB per friend. Ride daily to build a streak and unlock badges.</div></div>
+  <div class="ob-dots" id="obDots"><div class="ob-dot active"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+  <div class="ob-actions"><button class="btn btn-primary" onclick="obNext()">Next →</button><button class="btn btn-outline" onclick="finishOnboarding()">Skip</button></div>
 </div>
 
 <!-- MODALS -->
-<div class="modal-overlay" id="sosModal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🆘 Emergency SOS<button class="modal-close" onclick="closeModal('sosModal')">×</button></div>
-    <div style="text-align:center;font-size:48px;margin:12px 0">🚨</div>
-    <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px">Your location will be shared when you call.</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <a href="tel:999" class="btn btn-danger" style="text-decoration:none">📞 Call 999 — Emergency</a>
-      <a href="tel:911" class="btn btn-danger" style="text-decoration:none">📞 Call 911</a>
-      <button class="btn btn-secondary" onclick="shareLocation()">📍 Share My Location</button>
-      <button class="btn btn-ghost" onclick="closeModal('sosModal')">Cancel</button>
-    </div>
+<div class="modal-overlay" id="sosModal"><div class="modal-box">
+  <div class="modal-title">🆘 Emergency SOS <button class="modal-close" onclick="closeModal('sosModal')">×</button></div>
+  <div style="text-align:center;margin-bottom:20px"><div style="font-size:44px">🚨</div><div style="font-size:13px;color:var(--muted);margin-top:8px">Your location will be shared when you call.</div></div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <a href="tel:999" class="btn btn-danger">📞 Call 999 — Emergency</a>
+    <a href="tel:911" class="btn btn-danger">📞 Call 911</a>
+    <button class="btn btn-outline" onclick="shareLocation()">📍 Share my location</button>
+    <button class="btn btn-outline" onclick="closeModal('sosModal')">Cancel</button>
   </div>
-</div>
+</div></div>
 
-<div class="modal-overlay" id="surgeModal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div class="modal-title">⚡ Surge Pricing<button class="modal-close" onclick="closeModal('surgeModal')">×</button></div>
-    <div style="font-size:40px;text-align:center;font-weight:700;color:var(--amber);margin-bottom:8px" id="surgeMultEl">1.0×</div>
-    <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px" id="surgeReasonEl">Normal pricing</div>
-    <div class="fare-row"><span class="fl">Normal fare</span><span class="fv" id="sm-normal">—</span></div>
-    <div class="fare-row"><span class="fl">Surge fare</span><span class="fv" style="color:var(--amber)" id="sm-surge">—</span></div>
-    <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="btn btn-primary" onclick="acceptSurge()">✓ Accept & Book</button>
-      <button class="btn btn-ghost" onclick="closeModal('surgeModal')">Cancel</button>
-    </div>
+<div class="modal-overlay" id="surgeModal"><div class="modal-box">
+  <div class="modal-title">⚡ Surge pricing <button class="modal-close" onclick="closeModal('surgeModal')">×</button></div>
+  <div style="font-size:30px;text-align:center;font-family:var(--disp);font-weight:700;color:var(--gold-l);margin-bottom:8px" id="surgeMultiplierEl">1.0×</div>
+  <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px" id="surgeReason">Normal pricing — no surge right now.</div>
+  <div class="fare-row"><span>Normal fare</span><span id="sm-normal">—</span></div>
+  <div class="fare-row"><span>Surge fare</span><span id="sm-surge">—</span></div>
+  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-primary" onclick="acceptSurge()">✓ Accept & book</button><button class="btn btn-outline" onclick="closeModal('surgeModal')">Cancel</button></div>
+</div></div>
+
+<div class="modal-overlay" id="shareModal"><div class="modal-box">
+  <div class="modal-title">📤 Share trip <button class="modal-close" onclick="closeModal('shareModal')">×</button></div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Share your live trip link with a trusted contact. Expires when your ride ends.</div>
+  <div class="share-link" id="shareLink" onclick="copyShareLink()">No active ride — book a ride first</div>
+  <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-primary" onclick="copyShareLink()">📋 Copy link</button><button class="btn btn-outline" onclick="closeModal('shareModal')">Close</button></div>
+</div></div>
+
+<div class="modal-overlay" id="pendingModal"><div class="modal-box">
+  <div class="modal-title">🔄 Transactions <button class="modal-close" onclick="closeModal('pendingModal')">×</button></div>
+  <div id="pendingModalList"><div style="font-size:12px;color:var(--muted)">No transactions yet.</div></div>
+  <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('pendingModal')">Close</button>
+</div></div>
+
+<div class="modal-overlay" id="ratingModal"><div class="modal-box">
+  <div class="modal-title">⭐ Rate your driver <button class="modal-close" onclick="closeModal('ratingModal')">×</button></div>
+  <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--muted)">How was your ride with driver #<span id="driverRef">—</span>?</div>
+  <div class="stars" id="modalStars"><span class="star" onclick="setRating(1)">★</span><span class="star" onclick="setRating(2)">★</span><span class="star" onclick="setRating(3)">★</span><span class="star" onclick="setRating(4)">★</span><span class="star" onclick="setRating(5)">★</span></div>
+  <textarea class="input" placeholder="Optional comment..." style="height:76px;resize:none;margin-bottom:12px" id="ratingComment"></textarea>
+  <button class="btn btn-primary" onclick="submitRating()">Submit rating</button>
+</div></div>
+
+<div class="modal-overlay" id="privacyModal"><div class="modal-box">
+  <div class="modal-title">🔒 Privacy settings <button class="modal-close" onclick="closeModal('privacyModal')">×</button></div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:16px">CabLink stores ride history locally on your device only during beta. No data leaves your device.</div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <button class="btn btn-outline" onclick="clearHistory()">🗑 Clear ride history</button>
+    <button class="btn btn-danger" onclick="deleteMyData()">⚠ Delete all my data</button>
+    <button class="btn btn-outline" onclick="closeModal('privacyModal')">Close</button>
   </div>
-</div>
+</div></div>
 
-<div class="modal-overlay" id="shareModal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div class="modal-title">📤 Share Trip<button class="modal-close" onclick="closeModal('shareModal')">×</button></div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Share your live trip link with a trusted contact.</div>
-    <div id="shareLinkEl" style="background:var(--bg3);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px;font-size:11px;font-family:var(--f-mono);color:var(--sapphire2);word-break:break-all;cursor:pointer" onclick="copyShareLink()">No active ride</div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn btn-primary" onclick="copyShareLink()">📋 Copy</button>
-      <button class="btn btn-ghost" onclick="closeModal('shareModal')">Close</button>
-    </div>
+<div class="modal-overlay" id="earningsModal"><div class="modal-box">
+  <div class="modal-title">💰 Driver earnings <button class="modal-close" onclick="closeModal('earningsModal')">×</button></div>
+  <div class="wallet-bar">
+    <div class="bal-card"><div class="val" id="earn-today">0</div><div class="lbl">Today BWP</div></div>
+    <div class="bal-card"><div class="val" id="earn-thb">0</div><div class="lbl">THB earned</div></div>
+    <div class="bal-card"><div class="val" id="earn-rides">0</div><div class="lbl">Trips</div></div>
   </div>
-</div>
+  <div style="font-size:12px;color:var(--muted);margin-top:12px">Detailed earnings sync arrives with the Firebase backend in Phase 2.</div>
+  <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('earningsModal')">Close</button>
+</div></div>
 
-<div class="modal-overlay" id="pendingModal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🔄 Transactions<button class="modal-close" onclick="closeModal('pendingModal')">×</button></div>
-    <div id="pendingModalList"><div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No transactions yet</div></div></div>
-    <button class="btn btn-ghost" style="margin-top:12px" onclick="closeModal('pendingModal')">Close</button>
-  </div>
-</div>
+<div class="modal-overlay" id="feedbackModal"><div class="modal-box">
+  <div class="modal-title">💬 Beta feedback <button class="modal-close" onclick="closeModal('feedbackModal')">×</button></div>
+  <textarea class="input" placeholder="Tell us what's broken, what's missing, or what you love..." style="height:110px;resize:none;margin-bottom:12px" id="feedbackText"></textarea>
+  <select class="input" id="feedbackType" style="margin-bottom:12px">
+    <option value="bug">🐛 Bug report</option><option value="feature">💡 Feature request</option><option value="love">❤ Positive feedback</option>
+  </select>
+  <button class="btn btn-primary" onclick="submitFeedback()">📤 Submit feedback</button>
+</div></div>
 
-<div class="modal-overlay" id="ratingModal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div class="modal-title">⭐ Rate Driver<button class="modal-close" onclick="closeModal('ratingModal')">×</button></div>
-    <div style="text-align:center;font-size:13px;color:var(--muted);margin-bottom:4px">How was your ride?</div>
-    <div class="stars" id="modalStars">
-      <span class="star" onclick="setRating(1)">★</span><span class="star" onclick="setRating(2)">★</span>
-      <span class="star" onclick="setRating(3)">★</span><span class="star" onclick="setRating(4)">★</span>
-      <span class="star" onclick="setRating(5)">★</span>
-    </div>
-    <textarea class="input" id="ratingComment" placeholder="Optional comment…" style="height:72px;resize:none;margin-bottom:12px"></textarea>
-    <button class="btn btn-primary" onclick="submitRating()">Submit</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="privacyModal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🔒 Privacy<button class="modal-close" onclick="closeModal('privacyModal')">×</button></div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">All data stored locally on your device during beta. Nothing sent to external servers.</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <button class="btn btn-secondary" onclick="clearHistory()">🗑️ Clear Ride History</button>
-      <button class="btn btn-danger" onclick="deleteMyData()">⚠ Delete All My Data</button>
-      <button class="btn btn-ghost" onclick="closeModal('privacyModal')">Close</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="feedbackModal">
-  <div class="modal-box">
-    <div class="modal-handle"></div>
-    <div class="modal-title">💬 Feedback<button class="modal-close" onclick="closeModal('feedbackModal')">×</button></div>
-    <select class="input" id="feedbackType" style="margin-bottom:10px">
-      <option value="bug">🐛 Bug Report</option>
-      <option value="feature">💡 Feature Request</option>
-      <option value="love">❤️ Positive Feedback</option>
-    </select>
-    <textarea class="input" id="feedbackText" placeholder="Tell us what's broken or what you love…" style="height:100px;resize:none;margin-bottom:12px"></textarea>
-    <button class="btn btn-primary" onclick="submitFeedback()">📤 Submit</button>
+<div id="thankYouOverlay">
+  <div class="ty-emoji">🎉</div>
+  <div style="font-family:var(--disp);font-size:26px;font-weight:700;color:var(--gold-l);margin-bottom:12px">Ride complete!</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:8px">You earned <strong style="color:var(--gold-l)" id="ty-thb">1 THB</strong></div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:24px">Ride ID: <span id="ty-id" style="color:var(--sapphire-l)">—</span></div>
+  <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:270px">
+    <button class="btn btn-primary" onclick="openRating()">⭐ Rate your driver</button>
+    <button class="btn btn-outline" onclick="closeThankyou()">✓ Done</button>
   </div>
 </div>
 
@@ -1553,8 +994,7 @@ async function bookRide(){
   document.getElementById('chatSection').style.display = 'block';
   document.getElementById('cancelBtn').style.display = 'block';
   document.getElementById('bookBtn').disabled = true;
-  document.getElementById('simBtn').disabled = true;
-  setStatusPip('yellow'); setStatusLabel('🔍 Requesting ride…');
+    setStatusPip('yellow'); setStatusLabel('🔍 Requesting ride…');
   showRideProgressBar('FINDING DRIVER', 10);
 
   try{
@@ -1614,7 +1054,6 @@ function legacy_simulateRide_disabled(){
 
 function cancelRide(){
   if(!STATE.inRide) return;
-  clearInterval(STATE.countdownInterval); clearInterval(STATE.graceInterval); clearInterval(window._carInterval);
   STATE.inRide = false; STATE.rideReady = false; STATE.rideId = null;
   resetRideUI(); toast('Ride cancelled.', 'warning');
 }
@@ -1647,10 +1086,8 @@ function showArrived(){
   document.getElementById('rideStatusLabel').textContent = 'DRIVER ARRIVED';
   setStatusPip('green'); setStatusLabel('🚗 Driver arrived! 5 min free wait'); toast('🚗 Your driver has arrived!', 'success'); haptic();
   let secs = 300;
-  STATE.graceInterval = setInterval(() => {
     secs--; const m=Math.floor(secs/60), s=secs%60;
     document.getElementById('graceTimer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-    if(secs<=0){ clearInterval(STATE.graceInterval); completeRide(); }
   }, 1000);
   setTimeout(() => {
     document.getElementById('arrivedBanner').classList.remove('show');
@@ -1665,8 +1102,7 @@ function resetRideUI(keepId){
   document.getElementById('chatSection').style.display = 'none';
   document.getElementById('cancelBtn').style.display = 'none';
   document.getElementById('bookBtn').disabled = false;
-  document.getElementById('simBtn').disabled = false;
-  if(!keepId){ document.getElementById('rideIdRow').style.display = 'none'; document.getElementById('rideId').textContent = '—'; }
+    if(!keepId){ document.getElementById('rideIdRow').style.display = 'none'; document.getElementById('rideId').textContent = '—'; }
   setStatusPip(''); setStatusLabel('Enter locations to book');
   document.getElementById('chatBox').innerHTML = '';
   hideRideProgressBar();
@@ -1714,7 +1150,7 @@ function appendDriverMsg(name, text){ appendMsg(name, text, false); document.get
 function sendChat(){
   const input = document.getElementById('chatInput'); const text = input.value.trim();
   if(!text) return; appendMsg('You', text, true); input.value = '';
-  const replies = ["Got it! On my way 🚗","Sure, no problem!","I can see your location 📍",`ETA about ${calcETA()} minutes.`,"Traffic is light today ✅"];
+  // fake replies removed
   setTimeout(() => appendDriverMsg('Driver', replies[Math.floor(Math.random()*replies.length)]), 1500+Math.random()*2000);
 }
 
@@ -2191,6 +1627,76 @@ function startClock(){
 }
 function shortAddr(addr){ if(!addr) return '—'; return addr.substr(0,6)+'…'+addr.substr(-4); }
 </script>
+
+
+<!-- CABLINK DRIVER APPLICATION -->
+<div id="driverApplyModal" class="modal-overlay">
+<div class="modal">
+
+<h2>🚕 Become a CabLink Driver</h2>
+
+<label>Full Name</label>
+<input id="driverName" class="input" placeholder="Your full name">
+
+<label>Phone Number</label>
+<input id="driverPhone" class="input" placeholder="+267">
+
+<label>Driver Licence</label>
+<input id="driverLicense" class="input" placeholder="Licence number">
+
+<label>Vehicle Model</label>
+<input id="driverVehicle" class="input" placeholder="Toyota Corolla">
+
+<label>Vehicle Registration</label>
+<input id="driverReg" class="input" placeholder="B123 ABC">
+
+<button class="btn btn-green" onclick="submitDriverApplication()">
+Submit Application
+</button>
+
+<button class="btn btn-outline" onclick="closeModal('driverApplyModal')">
+Cancel
+</button>
+
+</div>
+</div>
+
+
+
+<!-- CABLINK ROLE SWITCH -->
+<div id="cablinkRoleSwitch"
+style="
+position:fixed;
+top:12px;
+right:12px;
+z-index:9999;
+background:#ffffff;
+padding:8px;
+border-radius:12px;
+box-shadow:0 3px 15px rgba(0,0,0,.15);
+font-family:sans-serif;
+">
+
+<button id="passengerModeBtn">
+🧍 Passenger
+</button>
+
+<button id="driverModeBtn">
+🚗 Driver
+</button>
+
+<div id="roleStatus"
+style="
+font-size:12px;
+margin-top:5px;
+text-align:center;
+">
+Passenger Mode
+</div>
+
+</div>
+
+
 <script>
 
 (function(){
@@ -2279,9 +1785,8 @@ updateRole();
 })();
 
 </script>
-<!-- SCRIPTS — ordered, no conflicts -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+
+<!-- CabLink Runtime — DO NOT REORDER -->
 <script src="frontend/js/app_core.js"></script>
 <script src="role.js"></script>
 <script src="fix.js"></script>
@@ -2290,7 +1795,20 @@ updateRole();
 <script src="frontend/js/rides/passengerRideStatus.js"></script>
 <script src="frontend/js/driver/driverLifecycleControls.js"></script>
 <script src="frontend/js/rides/completionRewardBridge.js"></script>
-    <script src="frontend/js/ui/ui_bridge.js"></script>
-<script src="frontend/js/ui/ui_runtime_extra.js"></script>
+<!-- END CabLink Runtime -->
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
