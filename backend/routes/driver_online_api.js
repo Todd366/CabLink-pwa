@@ -22,7 +22,7 @@ const registry = require("../services/driver_registry_service");
 router.get("/drivers/online", async (req, res) => {
     try {
         const drivers = await registry.all();
-        res.json(drivers);
+        res.json({ __CANARY_0817: "patch12-verify", drivers });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
