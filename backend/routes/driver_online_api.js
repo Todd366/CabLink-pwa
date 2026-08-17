@@ -1,92 +1,59 @@
-
 // =========================================
 // CABLINK DRIVER ONLINE API
 // =========================================
+//
+// PATCH 12: rewired onto the persistent driver registry
+// (backend/services/driver_registry_service.js) instead of a
+// plain in-memory array. The array approach lost every online
+// driver on each Vercel serverless cold start, which meant ride
+// matching could silently see zero drivers in production even
+// with real drivers logged in and online. See
+// driver_registry_service.js for the LOCAL/FIRESTORE dual-mode
+// persistence this now goes through.
+// =========================================
 
-const express=require("express");
+const express = require("express");
+const router = express.Router();
 
-const router=express.Router();
-
-
-// temporary live driver registry bridge
-// connected to driver state layer when available
-
-let onlineDrivers=[];
-
+const registry = require("../services/driver_registry_service");
 
 // GET ONLINE DRIVERS
 
-router.get(
-"/drivers/online",
-(req,res)=>{
-
-res.json(
-onlineDrivers
-);
-
+router.get("/drivers/online", async (req, res) => {
+    try {
+        const drivers = await registry.all();
+        res.json(drivers);
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
-
 
 // DRIVER GO ONLINE
 
-router.post(
-"/drivers/online",
-(req,res)=>{
-
-let driver=req.body;
-
-
-if(!driver.id){
-
-driver.id=
-"DRV-"+Date.now();
-
-}
-
-
-driver.status="ONLINE";
-
-
-onlineDrivers.push(driver);
-
-
-res.json({
-
-success:true,
-
-driver
-
+router.post("/drivers/online", async (req, res) => {
+    try {
+        const driver = await registry.goOnline(req.body || {});
+        res.json({ success: true, driver });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
-
-
-});
-
 
 // DRIVER GO OFFLINE
 
-router.post(
-"/drivers/offline",
-(req,res)=>{
+router.post("/drivers/offline", async (req, res) => {
+    try {
+        const id = req.body && req.body.id;
 
+        if (!id) {
+            return res.status(400).json({ success: false, error: "id is required" });
+        }
 
-let id=req.body.id;
-
-
-onlineDrivers=
-onlineDrivers.filter(
-d=>d.id!==id
-);
-
-
-res.json({
-
-success:true
-
+        await registry.goOffline(id);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
-
-});
-
-
-module.exports=router;
-
+module.exports = router;

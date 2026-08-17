@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CabLink · Digital Mall Task Tester</title>
+<style>
+  :root{--ink:#0b0f1a;--surface:#121826;--gold:#e0b03c;--muted:#8b93a7;--good:#3fb87f;--bad:#e05252;--sapphire:#2e6be6;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:#eef1f7;font-family:system-ui,sans-serif;padding:20px;max-width:480px;margin:0 auto}
+  h1{font-size:19px;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.5}
+  .card{background:var(--surface);border:1px solid #23293b;border-radius:14px;padding:18px;margin-bottom:14px}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;margin-top:12px}
+  input{width:100%;padding:10px;border-radius:8px;border:1px solid #2a3245;background:#0e1420;color:#fff;font-size:14px}
+  button{width:100%;margin-top:16px;padding:12px;border-radius:10px;border:none;font-weight:700;cursor:pointer;background:var(--gold);color:#1a1200;font-size:14px}
+  button:disabled{opacity:.5}
+  #result{margin-top:14px;padding:12px;border-radius:8px;font-size:13px;display:none;white-space:pre-wrap;word-break:break-word}
+  #result.ok{display:block;background:#0f3a24;color:var(--good);border:1px solid var(--good)}
+  #result.err{display:block;background:#3a1414;color:var(--bad);border:1px solid var(--bad)}
+  .badge{display:inline-block;font-size:10px;font-weight:700;color:var(--sapphire);border:1px solid var(--sapphire);border-radius:6px;padding:2px 6px;margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<div class="badge">DIGITAL MALL INTEGRATION TEST</div>
+<h1>🚕 Send a test delivery task</h1>
+<div class="sub">
+  This calls CabLink's real <code>/api/marketplace/tasks</code> endpoint exactly like
+  the Digital Mall's backend would once it's wired up. A real ride will appear in
+  CabLink's driver network, tagged "Digital Mall Delivery."
+</div>
+
+<div class="card">
+  <label>Marketplace API key</label>
+  <input id="apiKey" type="password" placeholder="MARKETPLACE_API_KEY">
+
+  <label>Order ID</label>
+  <input id="orderId" placeholder="e.g. MALL-ORDER-1042">
+
+  <label>Pickup</label>
+  <input id="pickup" placeholder="e.g. Digital Mall warehouse, Gaborone">
+
+  <label>Dropoff</label>
+  <input id="dropoff" placeholder="e.g. Plot 4021, Phakalane">
+
+  <label>Item description</label>
+  <input id="item" placeholder="e.g. 2x groceries bags">
+
+  <label>Customer name</label>
+  <input id="customerName" placeholder="e.g. Keabetswe M.">
+
+  <label>Fare (BWP)</label>
+  <input id="fare" type="number" value="30">
+
+  <button id="submitBtn" onclick="submitTask()">Send task to CabLink</button>
+
+  <div id="result"></div>
+</div>
+
+<div class="card">
+  <strong style="font-size:13px">Check status</strong>
+  <label>Task ID (from the response above)</label>
+  <input id="statusTaskId" placeholder="RIDE-...">
+  <button style="background:var(--surface);color:#fff;border:1px solid #2a3245" onclick="checkStatus()">Check status</button>
+  <div id="statusResult"></div>
+</div>
+
+<script>
+async function submitTask(){
+  const btn = document.getElementById('submitBtn');
+  const result = document.getElementById('result');
+  btn.disabled = true;
+  result.className = ''; result.style.display = 'none';
+
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const orderId = document.getElementById('orderId').value.trim();
+  const pickup = document.getElementById('pickup').value.trim();
+  const dropoff = document.getElementById('dropoff').value.trim();
+
+  if(!apiKey || !orderId || !pickup || !dropoff){
+    result.className = 'err';
+    result.textContent = 'API key, Order ID, pickup, and dropoff are all required.';
+    btn.disabled = false;
+    return;
+  }
+
+  try{
+    const res = await fetch('/api/marketplace/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-marketplace-key': apiKey
+      },
+      body: JSON.stringify({
+        orderId,
+        pickup,
+        dropoff,
+        itemDescription: document.getElementById('item').value.trim(),
+        customerName: document.getElementById('customerName').value.trim(),
+        fare: Number(document.getElementById('fare').value) || 30
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+      result.className = 'ok';
+      result.textContent = '✅ Task created!\n\nRide ID: ' + data.ride.id +
+        '\nStatus: ' + data.ride.status +
+        '\n\nThis is now a real ride in the driver network — open CabLink and go online as a driver to see it appear.';
+      document.getElementById('statusTaskId').value = data.ride.id;
+    } else {
+      result.className = 'err';
+      result.textContent = '❌ ' + (data.error || 'Unknown error');
+    }
+  }catch(e){
+    result.className = 'err';
+    result.textContent = '❌ Network error: ' + e.message;
+  }
+
+  btn.disabled = false;
+}
+
+async function checkStatus(){
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const taskId = document.getElementById('statusTaskId').value.trim();
+  const el = document.getElementById('statusResult');
+
+  if(!apiKey || !taskId){ return; }
+
+  try{
+    const res = await fetch('/api/marketplace/tasks/' + encodeURIComponent(taskId) + '/status', {
+      headers: { 'x-marketplace-key': apiKey }
+    });
+    const data = await res.json();
+    el.style.marginTop = '10px';
+    el.style.fontSize = '13px';
+    el.textContent = data.success
+      ? 'Status: ' + data.status + (data.driverName ? ' · Driver: ' + data.driverName : '')
+      : '❌ ' + (data.error || 'Not found');
+  }catch(e){
+    el.textContent = '❌ Network error: ' + e.message;
+  }
+}
+</script>
+</body>
+</html>

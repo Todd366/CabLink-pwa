@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CabLink Admin</title>
+<style>
+  :root{--ink:#0b0f1a;--surface:#121826;--gold:#e0b03c;--muted:#8b93a7;--good:#3fb87f;--bad:#e05252;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:#eef1f7;font-family:system-ui,sans-serif;padding:20px}
+  h1{font-size:20px;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+  .card{background:var(--surface);border:1px solid #23293b;border-radius:14px;padding:16px;margin-bottom:14px}
+  input{width:100%;padding:10px;border-radius:8px;border:1px solid #2a3245;background:#0e1420;color:#fff;margin-bottom:10px}
+  button{padding:9px 14px;border-radius:8px;border:none;font-weight:600;cursor:pointer;margin-right:6px}
+  .btn-primary{background:var(--gold);color:#1a1200}
+  .btn-approve{background:var(--good);color:#022}
+  .btn-reject{background:var(--bad);color:#200}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #23293b}
+  .status{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700}
+  .PENDING{background:#3a3010;color:var(--gold)}
+  .APPROVED{background:#0f3a24;color:var(--good)}
+  .REJECTED{background:#3a1414;color:var(--bad)}
+  #gate{max-width:340px;margin:60px auto}
+  #dash{display:none}
+</style>
+</head>
+<body>
+
+<div id="gate" class="card">
+  <h1>🚕 CabLink Admin</h1>
+  <div class="sub">Enter your admin key to continue.</div>
+  <input id="adminKey" type="password" placeholder="Admin key">
+  <button class="btn-primary" onclick="unlock()">Enter</button>
+</div>
+
+<div id="dash">
+  <h1>🚕 CabLink Admin</h1>
+  <div class="sub">Driver applications and accounts. Third side of the app — didn't exist before this pass.</div>
+
+  <div class="card">
+    <strong>Driver Applications</strong>
+    <table id="appsTable"><thead><tr><th>Name</th><th>Phone</th><th>Vehicle</th><th>Status</th><th></th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <div class="card">
+    <strong>Accounts</strong>
+    <table id="accountsTable"><thead><tr><th>Name</th><th>Phone</th><th>Role</th><th>Created</th></tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<script>
+let ADMIN_KEY = '';
+
+function unlock(){
+  ADMIN_KEY = document.getElementById('adminKey').value.trim();
+  if(!ADMIN_KEY){ alert('Enter a key'); return; }
+  loadAll();
+}
+
+async function api(path){
+  const res = await fetch(path, { headers: { 'x-admin-key': ADMIN_KEY } });
+  if(res.status === 401){
+    alert('Wrong admin key');
+    throw new Error('unauthorized');
+  }
+  return res.json();
+}
+
+async function loadAll(){
+  try{
+    await loadApplications();
+    await loadAccounts();
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('dash').style.display = 'block';
+  }catch(e){}
+}
+
+async function loadApplications(){
+  const data = await api('/api/admin/driver-applications');
+  const tbody = document.querySelector('#appsTable tbody');
+  tbody.innerHTML = '';
+  (data.applications || []).forEach(app => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(app.name)}</td>
+      <td>${escapeHtml(app.phone)}</td>
+      <td>${escapeHtml(app.vehicle)}</td>
+      <td><span class="status ${app.status}">${app.status}</span></td>
+      <td>${app.status === 'PENDING' ? `
+        <button class="btn-approve" onclick="review('${app.id}','approve')">Approve</button>
+        <button class="btn-reject" onclick="review('${app.id}','reject')">Reject</button>
+      ` : ''}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function loadAccounts(){
+  const data = await api('/api/admin/accounts');
+  const tbody = document.querySelector('#accountsTable tbody');
+  tbody.innerHTML = '';
+  (data.accounts || []).forEach(acc => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(acc.name)}</td>
+      <td>${escapeHtml(acc.phone)}</td>
+      <td>${escapeHtml(acc.role)}</td>
+      <td>${new Date(acc.createdAt).toLocaleDateString()}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function review(id, action){
+  await fetch(`/api/admin/driver-applications/${id}/${action}`, {
+    method: 'POST',
+    headers: { 'x-admin-key': ADMIN_KEY }
+  });
+  loadApplications();
+}
+
+function escapeHtml(s){
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>
+</body>
+</html>

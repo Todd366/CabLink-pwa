@@ -1,113 +1,156 @@
-import React,{useState} from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-import PassengerTripStatus 
-from "../components/passenger_trip_status.jsx";
+import PassengerTripStatus from "../components/passenger_trip_status.jsx";
+import THBRewardPanel from "../components/thb_reward_panel.jsx";
+import LiveMap from "../components/LiveMap.jsx";
+import { GABORONE_LOCATIONS, findLocation, distanceKm } from "../config/gaborone_locations.js";
 
-import THBRewardPanel
-from "../components/thb_reward_panel.jsx";
+const POLL_INTERVAL_MS = 4000;
 
+export default function PassengerRide() {
+    const [pickupId, setPickupId] = useState("cbd");
+    const [dropoffId, setDropoffId] = useState("airport");
+    const [ride, setRide] = useState(null);
+    const [error, setError] = useState(null);
+    const [booking, setBooking] = useState(false);
+    const pollRef = useRef(null);
 
-export default function PassengerRide(){
+    const pickup = findLocation(pickupId);
+    const dropoff = findLocation(dropoffId);
 
-const [ride,setRide]=useState({
+    const estimatedKm = pickup && dropoff ? distanceKm(pickup, dropoff) : 0;
+    const estimatedFare = Math.max(20, Math.round(estimatedKm * 6)); // rough BWP/km estimate
 
-id:null,
-status:"Ready",
-driver:null,
-reward:0
+    async function requestRide() {
+        setError(null);
+        setBooking(true);
 
-});
+        try {
+            const res = await fetch("/api/rides", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    passenger: "USER001",
+                    pickup: pickup.name,
+                    dropoff: dropoff.name,
+                    distanceKm: Number(estimatedKm.toFixed(1)),
+                    fare: estimatedFare
+                })
+            });
 
+            const data = await res.json();
 
-async function requestRide(){
+            if (!data.success) {
+                setError(data.error || "Could not create ride");
+                setBooking(false);
+                return;
+            }
 
-let r=
-await fetch(
-"/api/dispatch/request",
-{
+            setRide(data.ride);
+        } catch (err) {
+            setError("Network error creating ride — check your connection.");
+            setBooking(false);
+        }
+    }
 
-method:"POST",
+    // Poll the canonical ride while it's active, so status/driver/reward
+    // update live without the passenger refreshing anything.
+    useEffect(() => {
+        if (!ride || !ride.id) return;
 
-headers:{
-"Content-Type":"application/json"
-},
+        if (pollRef.current) clearInterval(pollRef.current);
 
-body:JSON.stringify({
+        pollRef.current = setInterval(async () => {
+            try {
+                const res = await fetch(`/api/rides/${ride.id}`);
+                const data = await res.json();
 
-passenger:"USER001",
+                if (data.success) {
+                    setRide(data.ride);
 
-pickup:"Gaborone CBD",
+                    if (
+                        data.ride.status === "COMPLETED" ||
+                        data.ride.status === "CANCELLED"
+                    ) {
+                        clearInterval(pollRef.current);
+                    }
+                }
+            } catch (_) {
+                // Transient network error during polling — try again next tick.
+            }
+        }, POLL_INTERVAL_MS);
 
-destination:"Airport"
+        return () => clearInterval(pollRef.current);
+    }, [ride?.id]);
 
-})
+    const rideActive = ride && !["COMPLETED", "CANCELLED"].includes(ride.status);
 
-}
-);
+    // Driver marker: once a driver's device reports its live location via
+    // /api/driver/:id/location, that would be threaded in here. Until that
+    // pipeline is connected, show the driver at the pickup point once
+    // assigned as a placeholder so the map isn't empty mid-ride.
+    const driverMarker =
+        ride && ride.driverId && rideActive
+            ? { lat: pickup.lat, lng: pickup.lng, name: ride.driverName || ride.driverId }
+            : null;
 
+    return (
+        <div className="cablink-screen">
+            <h1>🚖 Request a Ride</h1>
 
-let data=await r.json();
+            {!rideActive && (
+                <div className="cab-card">
+                    <label>
+                        Pickup
+                        <select value={pickupId} onChange={e => setPickupId(e.target.value)}>
+                            {GABORONE_LOCATIONS.map(loc => (
+                                <option key={loc.id} value={loc.id}>{loc.name}</option>
+                            ))}
+                        </select>
+                    </label>
 
+                    <label>
+                        Dropoff
+                        <select value={dropoffId} onChange={e => setDropoffId(e.target.value)}>
+                            {GABORONE_LOCATIONS.map(loc => (
+                                <option key={loc.id} value={loc.id}>{loc.name}</option>
+                            ))}
+                        </select>
+                    </label>
 
-setRide({
+                    <p>Estimated distance: {estimatedKm.toFixed(1)} km — Estimated fare: P{estimatedFare}</p>
 
-id:data.request.id,
+                    <button onClick={requestRide} disabled={booking || pickupId === dropoffId}>
+                        {booking ? "Booking..." : "Book Ride"}
+                    </button>
 
-status:data.request.status,
+                    {pickupId === dropoffId && (
+                        <p className="cab-warning">Pickup and dropoff can't be the same place.</p>
+                    )}
 
-driver:data.request.driver,
+                    {error && <p className="cab-error">{error}</p>}
+                </div>
+            )}
 
-reward:1
+            <LiveMap pickup={pickup} dropoff={dropoff} driver={driverMarker} />
 
-});
+            <PassengerTripStatus
+                rideId={ride?.id}
+                status={ride?.status || "Ready"}
+                driver={ride?.driverName || ride?.driverId}
+            />
 
+            {ride?.status === "COMPLETED" && (
+                <THBRewardPanel
+                    reward={ride.reward?.amount ?? 0}
+                    currency="THB"
+                    status={ride.reward?.status || "Pending"}
+                />
+            )}
 
-}
-
-
-
-return (
-
-<div>
-
-<h1>
-🚖 Request Ride
-</h1>
-
-
-<button
-onClick={requestRide}
->
-
-Book Ride
-
-</button>
-
-
-<PassengerTripStatus
-
-rideId={ride.id}
-
-status={ride.status}
-
-driver={ride.driver}
-
-/>
-
-
-<THBRewardPanel
-
-reward={ride.reward}
-
-currency="THB"
-
-status="Waiting"
-
-/>
-
-
-</div>
-
-);
-
+            {ride?.status === "COMPLETED" && (
+                <button onClick={() => setRide(null)}>Book another ride</button>
+            )}
+        </div>
+    );
 }

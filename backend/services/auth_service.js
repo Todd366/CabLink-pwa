@@ -1,0 +1,259 @@
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+// ============================================================
+// REAL AUTH SERVICE — DUAL-MODE PERSISTENCE
+//
+// Same LOCAL / FIRESTORE pattern already proven in
+// canonical/ride_persistence.js. Set:
+//
+//   CABLINK_ACCOUNT_PERSISTENCE=FIRESTORE
+//
+// in the Vercel project's environment variables (Firebase
+// Admin credentials must also be set — see firebase/
+// firestore_adapter.js) or accounts and sessions will be
+// wiped whenever a new serverless instance cold-starts.
+// Defaults to LOCAL flat-file storage for local dev in
+// Termux, where a persistent filesystem is fine.
+// ============================================================
+
+const MODE = process.env.CABLINK_ACCOUNT_PERSISTENCE || "LOCAL";
+
+const ACCOUNTS_FILE = path.join(__dirname, "..", "data", "accounts.json");
+const SESSIONS_FILE = path.join(__dirname, "..", "data", "sessions.json");
+
+const ACCOUNTS_COLLECTION = process.env.CABLINK_ACCOUNT_FIRESTORE_COLLECTION || "cablink_accounts";
+const SESSIONS_COLLECTION = process.env.CABLINK_SESSION_FIRESTORE_COLLECTION || "cablink_sessions";
+
+const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+let firestore = null;
+function getFirestoreAdapter() {
+    if (!firestore) {
+        firestore = require("../firebase/firestore_adapter");
+    }
+    return firestore;
+}
+
+// ------------------------------------------------------------
+// LOCAL (flat-file) storage
+// ------------------------------------------------------------
+
+function localLoadAccounts() {
+    if (!fs.existsSync(ACCOUNTS_FILE)) return [];
+    try {
+        const parsed = JSON.parse(fs.readFileSync(ACCOUNTS_FILE, "utf8"));
+        return Array.isArray(parsed.accounts) ? parsed.accounts : [];
+    } catch (error) {
+        throw new Error("Unable to read accounts file: " + error.message);
+    }
+}
+
+function localSaveAccounts(accounts) {
+    fs.mkdirSync(path.dirname(ACCOUNTS_FILE), { recursive: true });
+    fs.writeFileSync(ACCOUNTS_FILE, JSON.stringify({ accounts }, null, 2), "utf8");
+}
+
+function localLoadSessions() {
+    if (!fs.existsSync(SESSIONS_FILE)) return [];
+    try {
+        const parsed = JSON.parse(fs.readFileSync(SESSIONS_FILE, "utf8"));
+        return Array.isArray(parsed.sessions) ? parsed.sessions : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function localSaveSessions(sessions) {
+    fs.mkdirSync(path.dirname(SESSIONS_FILE), { recursive: true });
+    fs.writeFileSync(SESSIONS_FILE, JSON.stringify({ sessions }, null, 2), "utf8");
+}
+
+// ------------------------------------------------------------
+// UNIFIED LOAD/SAVE — branches on MODE
+// ------------------------------------------------------------
+
+async function loadAccounts() {
+    if (MODE === "FIRESTORE") {
+        return getFirestoreAdapter().list(ACCOUNTS_COLLECTION);
+    }
+    return localLoadAccounts();
+}
+
+async function saveAccount(account) {
+    if (MODE === "FIRESTORE") {
+        await getFirestoreAdapter().write(ACCOUNTS_COLLECTION, account.id, account);
+        return;
+    }
+    const accounts = localLoadAccounts();
+    const idx = accounts.findIndex(a => a.id === account.id);
+    if (idx >= 0) accounts[idx] = account;
+    else accounts.push(account);
+    localSaveAccounts(accounts);
+}
+
+async function loadSessions() {
+    if (MODE === "FIRESTORE") {
+        return getFirestoreAdapter().list(SESSIONS_COLLECTION);
+    }
+    return localLoadSessions();
+}
+
+async function saveSession(session) {
+    if (MODE === "FIRESTORE") {
+        await getFirestoreAdapter().write(SESSIONS_COLLECTION, session.token, session);
+        return;
+    }
+    const sessions = localLoadSessions();
+    sessions.push(session);
+    localSaveSessions(sessions);
+}
+
+async function findSessionByToken(token) {
+    if (MODE === "FIRESTORE") {
+        const result = await getFirestoreAdapter().read(SESSIONS_COLLECTION, token);
+        return result.exists ? result.data : null;
+    }
+    return localLoadSessions().find(s => s.token === token) || null;
+}
+
+// ------------------------------------------------------------
+// HELPERS
+// ------------------------------------------------------------
+
+function hashPin(pin, salt) {
+    return crypto.scryptSync(String(pin), salt, 64).toString("hex");
+}
+
+function normalizePhone(phone) {
+    return String(phone || "").replace(/[^\d+]/g, "");
+}
+
+function publicAccount(account) {
+    if (!account) return null;
+    const { pinHash, pinSalt, ...safe } = account;
+    return safe;
+}
+
+// ------------------------------------------------------------
+// PUBLIC API
+// ------------------------------------------------------------
+
+async function register({ phone, pin, name }) {
+    phone = normalizePhone(phone);
+
+    if (!phone || !pin || String(pin).length < 4) {
+        throw new Error("Phone number and a PIN of at least 4 digits are required");
+    }
+
+    const accounts = await loadAccounts();
+
+    if (accounts.find(a => a.phone === phone)) {
+        throw new Error("An account with this phone number already exists");
+    }
+
+    const salt = crypto.randomBytes(16).toString("hex");
+
+    const account = {
+        id: "ACC-" + Date.now() + "-" + Math.floor(Math.random() * 10000),
+        phone,
+        name: name || phone,
+        avatarUrl: null,
+        pinSalt: salt,
+        pinHash: hashPin(pin, salt),
+        role: "PASSENGER",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+
+    await saveAccount(account);
+
+    return publicAccount(account);
+}
+
+async function login({ phone, pin }) {
+    phone = normalizePhone(phone);
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.phone === phone);
+
+    if (!account || hashPin(pin, account.pinSalt) !== account.pinHash) {
+        throw new Error("Incorrect phone number or PIN");
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+
+    const session = {
+        token,
+        accountId: account.id,
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + SESSION_TTL_MS).toISOString()
+    };
+
+    await saveSession(session);
+
+    return { token, account: publicAccount(account) };
+}
+
+async function accountFromToken(token) {
+    if (!token) return null;
+
+    const session = await findSessionByToken(token);
+    if (!session || new Date(session.expiresAt) < new Date()) return null;
+
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === session.accountId);
+
+    return publicAccount(account);
+}
+
+async function getAccountById(id) {
+    const accounts = await loadAccounts();
+    return publicAccount(accounts.find(a => a.id === id));
+}
+
+async function updateProfile(accountId, profileChanges) {
+    profileChanges = profileChanges || {};
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === accountId);
+
+    if (!account) {
+        throw new Error("Account not found");
+    }
+
+    if (typeof profileChanges.name === "string" && profileChanges.name.trim()) {
+        account.name = profileChanges.name.trim();
+    }
+
+    if (typeof profileChanges.avatarUrl === "string") {
+        account.avatarUrl = profileChanges.avatarUrl.trim() || null;
+    }
+
+    account.updatedAt = new Date().toISOString();
+
+    await saveAccount(account);
+
+    return publicAccount(account);
+}
+
+async function allAccounts() {
+    const accounts = await loadAccounts();
+    return accounts.map(publicAccount);
+}
+
+// Shared helper: resolve the calling account (or null) from a
+// standard "Authorization: Bearer <token>" header.
+async function accountFromRequest(req) {
+    const token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
+    return accountFromToken(token);
+}
+
+module.exports = {
+    register,
+    login,
+    accountFromToken,
+    accountFromRequest,
+    getAccountById,
+    updateProfile,
+    allAccounts
+};

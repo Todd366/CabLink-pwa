@@ -1,18 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style id="cl-critical">
-:root{
-  --bg:#0a0a0f;--bg2:#16213e;--bg3:#0f172a;--card:#12121d;
-  --accent:#f5c518;--accent2:#ff8c00;--green:#22d672;--red:#ff4757;
-  --blue:#4fc3f7;--purple:#b388ff;
-  --text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
-  --radius:14px;--font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
-}
-html,body,#app{background:#0a0a0f!important;color:#f0f0f5!important;}
-@keyframes timerDrain{from{width:100%}to{width:0%}}
-@keyframes slideIn{from{transform:translateY(-8px);opacity:0}to{transform:translateY(0);opacity:1}}
-</style>
+<!-- CABLINK_BOOKRIDE_TRUTH_MIGRATION -->
+
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="theme-color" content="#060911"/>
@@ -20,15 +10,20 @@ html,body,#app{background:#0a0a0f!important;color:#f0f0f5!important;}
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="/styles/cablink.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
 <style>
 :root{
-  --bg:#0a0a0f;--bg2:#16213e;--bg3:#0f172a;--card:#12121d;
-  --accent:#f5c518;--accent2:#ff8c00;--green:#22d672;--red:#ff4757;
-  --blue:#4fc3f7;--purple:#b388ff;
-  --text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
-  --radius:14px;--font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
+  --ink:#060911; --surface:#0f1526; --surface2:#161e33; --surface3:#1c2540;
+  --glass:rgba(22,30,51,.62); --hair:rgba(255,255,255,.07); --hair2:rgba(255,255,255,.12);
+  --sapphire:#2e6be6; --sapphire-l:#5b8bff;
+  --gold:#f0b93a; --gold-l:#ffd873;
+  --emerald:#21c980; --coral:#ff5d5d;
+  --text:#edeff5; --muted:#8992a9; --muted2:#5b6376;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --data:'Space Mono',monospace;
+  --nav-h:78px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-font-smoothing:antialiased}
@@ -53,7 +48,7 @@ html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--
 #alertStrip button{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#241a04;font-size:16px;cursor:pointer}
 #chainWarning{background:var(--coral);color:#2a0808;cursor:pointer}
 #chainWarning.show{display:block}
-#surgeBanner{display:none;position:relative;z-index:2;background:linear-gradient(90deg,#7a4d0a,var(--gold));color:#241a04;padding:9px 18px;text-align:center;font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+#surgeBanner{display:none;position:relative;z-index:2;background:var(--surface2);border-bottom:1px solid rgba(240,185,58,.3);color:var(--gold-l);padding:9px 18px;text-align:center;font-weight:600;font-size:12px;cursor:pointer;flex-shrink:0;letter-spacing:.02em}
 #surgeBanner.show{display:block}
 #arrivedBanner{display:none;position:relative;z-index:2;background:var(--emerald);color:#04241a;padding:9px 18px;font-weight:700;font-size:12px;text-align:center;flex-shrink:0}
 #arrivedBanner.show{display:block}
@@ -66,7 +61,7 @@ html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--
 
 #screens{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 #screens::-webkit-scrollbar{display:none}
-.screen{display:none;padding:16px 16px 100px;animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+.screen{display:none;padding:14px 18px calc(var(--nav-h) + 40px);animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
 .screen.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
@@ -97,7 +92,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:var(--r-sm);font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;border:none;transition:.2s;width:100%;letter-spacing:.01em}
-.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 6px 20px -6px rgba(240,185,58,.5)}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 3px 10px -4px rgba(240,185,58,.35)}
 .btn-primary:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
 .btn-primary:disabled{background:var(--surface3);color:var(--muted2);box-shadow:none;cursor:not-allowed}
 .btn-outline{background:rgba(255,255,255,.02);border:1px solid var(--hair2);color:var(--text)}
@@ -152,9 +147,9 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
 /* modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(3,5,10,.78);backdrop-filter:blur(2px);z-index:500;align-items:flex-end;justify-content:center}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(3,5,10,.78);backdrop-filter:blur(2px);z-index:10000;align-items:flex-end;justify-content:center}
 .modal-overlay.show{display:flex}
-.modal-box{background:var(--surface2);border:1px solid var(--hair2);border-radius:22px 22px 0 0;padding:24px;width:100%;max-width:460px;max-height:82dvh;overflow-y:auto;animation:slideUp .32s cubic-bezier(.2,.8,.2,1)}
+.modal-box{background:var(--surface2);border:1px solid var(--hair2);border-radius:22px 22px 0 0;padding:24px;padding-bottom:calc(24px + var(--nav-h));width:100%;max-width:460px;max-height:82dvh;overflow-y:auto;animation:slideUp .32s cubic-bezier(.2,.8,.2,1)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-title{font-family:var(--disp);font-size:17px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
 .modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
@@ -208,7 +203,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 .scroll-hint{text-align:center;color:var(--muted2);font-size:10.5px;padding:8px 0 0}
 
-#thankYouOverlay{display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#132043,var(--ink) 65%);z-index:700;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+#thankYouOverlay{display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#132043,var(--ink) 65%);z-index:10000;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
 #thankYouOverlay.show{display:flex}
 .ty-emoji{font-size:72px;animation:bounceIn .6s ease}
 @keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
@@ -236,14 +231,13 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 .eco-item.wide{grid-column:1/-1;flex-direction:row;align-items:center}
 
 /* nav */
-
+#nav{position:fixed;bottom:14px;left:14px;right:14px;max-width:432px;margin:0 auto;z-index:9999;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--hair2);border-radius:24px;display:flex;padding:8px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;cursor:pointer;color:var(--muted);transition:.2s;border:none;background:none;font-family:var(--data);font-size:9.5px;min-width:0;border-radius:16px}
 .nav-btn.active{color:var(--gold-l);background:rgba(240,185,58,.08)}
 .nav-btn .icon{font-size:18px}
-.nav-btn.center-btn{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;border-radius:50%;width:52px;height:52px;margin-top:-24px;padding:0;flex:none;align-self:flex-start;font-size:21px;box-shadow:0 6px 22px -4px rgba(240,185,58,.6);font-weight:700;min-width:52px}
+.nav-btn.center-btn{background:var(--surface3);color:var(--gold-l);border:1px solid var(--hair2);border-radius:50%;width:50px;height:50px;margin-top:-18px;padding:0;flex:none;align-self:flex-start;font-size:19px;box-shadow:0 4px 12px -4px rgba(0,0,0,.5);font-weight:700;min-width:50px}
 
 @media(max-height:700px){.screen{padding-bottom:calc(var(--nav-h) + 12px)}}
-#nav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#16213e;border-top:1px solid #2a2a3e;display:flex;padding-bottom:env(safe-area-inset-bottom);align-items:flex-end;}
 </style>
 </head>
 <body>
@@ -261,9 +255,9 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 <div id="chainWarning" onclick="switchToBSC()">⚠ Wrong network — tap to switch to BSC Testnet</div>
 <div id="alertStrip"><span id="alertText"></span><button onclick="hideAlert()">×</button></div>
-<div id="surgeBanner" onclick="openModal('surgeModal')" style="display:none">⚡ Surge active · <span id="surgeBannerMult">1.8×</span> — tap to see fares</div>
-<div id="arrivedBanner" style="display:none">🚗 Driver has arrived · <span id="graceTimer">5:00</span> free wait</div>
-<div id="rideProgressBar" style="display:none">
+<div id="surgeBanner" onclick="openModal('surgeModal')">⚡ Surge active · <span id="surgeBannerMult">1.8×</span> — tap to see fares</div>
+<div id="arrivedBanner">🚗 Driver has arrived · <span id="graceTimer">5:00</span> free wait</div>
+<div id="rideProgressBar">
   <div class="rp-label"><span class="rp-status" id="rideStatusLabel">DRIVER EN ROUTE</span><span id="rideETA">ETA 3 min</span></div>
   <div class="progress-track"><div class="progress-fill" id="rideProgressFill"></div></div>
 </div>
@@ -273,7 +267,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 <!-- ===== HOME ===== -->
 <div class="screen active" id="s-home">
   <div class="eyebrow">Gaborone · Botswana</div>
-  <div class="greeting">Good day, <span id="greetName">Todd</span></div>
+  <div class="greeting">Good day<span id="greetName"></span></div>
 
   <div class="diamond-card">
     <div class="wallet-row">
@@ -370,21 +364,21 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <span id="statusLabel" style="font-size:12px;color:var(--muted)">Enter locations to book</span>
     </div>
 
-    <div id="countdownRow" style="display:none;text-align:center;margin-bottom:10px" style="display:none">
+    <div id="countdownRow" style="display:none;text-align:center;margin-bottom:10px">
       <div style="font-size:30px;font-family:var(--data);font-weight:700;color:var(--gold-l)" id="countdown">3:00</div>
       <div style="font-size:11px;color:var(--muted)">Ride in progress</div>
     </div>
 
-    <div id="rideIdRow" style="display:none;margin-bottom:10px;text-align:center" style="display:none">
+    <div id="rideIdRow" style="display:none;margin-bottom:10px;text-align:center">
       <div class="ride-id-chip" onclick="copyRideId()">🎫 Ride <strong id="rideId">—</strong> 📋</div>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:8px">
-      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request ride · Earn 1 THB</button>
-      <button class="btn btn-danger btn-sm" id="cancelBtn" style="display:none" onclick="cancelRide()" style="display:none">✕ Cancel ride</button>
+      <button class="btn btn-primary" id="bookBtn" onclick="bookRide()">Request Ride</button>
+<button class="btn btn-danger btn-sm" id="cancelBtn" style="display:none" onclick="cancelRide()">✕ Cancel ride</button>
     </div>
 
-    <div id="chatSection" style="display:none;margin-top:14px" style="display:none">
+    <div id="chatSection" style="display:none;margin-top:14px">
       <div class="card-title" style="margin-bottom:8px;font-size:13px">💬 Chat with driver</div>
       <div class="chat-box" id="chatBox"></div>
       <div style="display:flex;gap:8px">
@@ -396,7 +390,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
     <div style="margin-top:14px">
       <button class="btn btn-primary" id="claimBtn" onclick="claimReward()" disabled>Complete a ride to claim</button>
       <div style="display:flex;justify-content:space-between;margin-top:6px">
-        <span style="font-size:10.5px;color:var(--muted)" id="claimHint">Book or simulate a ride first</span>
+        <span style="font-size:10.5px;color:var(--muted)" id="claimHint">Book a ride first</span>
         <span class="gas-pill" id="gasEstimate" style="display:none">⛽ ~0.001 tBNB</span>
       </div>
     </div>
@@ -468,12 +462,15 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 <!-- ===== DRIVER ===== -->
 <div class="screen" id="s-driver">
+  <div id="s-driver-header">
   <div class="eyebrow">Driver mode</div>
   <div class="greeting">Your shift</div>
   <div style="display:flex;gap:8px;margin-bottom:12px">
     <button class="btn btn-outline btn-sm" id="driverModeBtn" onclick="toggleDriverMode()" style="flex:1">🟢 Go online</button>
     <button class="btn btn-outline btn-sm" onclick="openModal('earningsModal')" style="flex:1">💰 Earnings</button>
   </div>
+  </div>
+  
   <div class="card">
     <div class="wallet-bar">
       <div class="bal-card"><div class="val" id="drv-requests">0</div><div class="lbl">Requests</div></div>
@@ -481,7 +478,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <div class="bal-card"><div class="val" id="drv-thb">0</div><div class="lbl">THB earned</div></div>
     </div>
   </div>
-  <div class="card-title" style="margin-bottom:10px">📋 Incoming requests</div>
+  <div class="card-title" id="driverRequestsTitle" style="margin-bottom:10px">📋 Incoming requests</div>
   <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
 </div>
 
@@ -497,12 +494,38 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <span class="chip active">Gaborone, BWA</span>
     </div>
   </div>
+  <div class="card" id="accountCard">
+    <div class="card-title" style="margin-bottom:12px">👤 Account</div>
+    <div id="accountLoggedOut">
+      <input class="input" id="acc-phone" placeholder="Phone number" style="margin-bottom:10px"/>
+      <input class="input" id="acc-name" placeholder="Full name (for new accounts)" style="margin-bottom:10px"/>
+      <input class="input" id="acc-pin" type="password" placeholder="PIN (4+ digits)" style="margin-bottom:14px"/>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" style="flex:1" onclick="clAuthLogin()">Log in</button>
+        <button class="btn btn-outline" style="flex:1" onclick="clAuthRegister()">Register</button>
+      </div>
+    </div>
+    <div id="accountLoggedIn" style="display:none">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px" id="acc-loggedin-phone"></div>
+      <input class="input" id="acc-edit-name" placeholder="Your name" style="margin-bottom:8px"/>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="btn btn-primary" style="flex:1" onclick="clSaveProfileName()">Save name</button>
+        <button class="btn btn-outline" style="flex:1" onclick="clAuthLogout()">Log out</button>
+      </div>
+    </div>
+  </div>
   <div class="card">
     <div class="card-title" style="margin-bottom:12px">📊 My KPIs</div>
     <div class="wallet-bar">
       <div class="bal-card"><div class="val" id="kpi-rides">0</div><div class="lbl">Rides</div></div>
       <div class="bal-card"><div class="val" id="kpi-thb">0</div><div class="lbl">THB</div></div>
       <div class="bal-card"><div class="val" id="kpi-rating">—</div><div class="lbl">Avg ⭐</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">🚕 My Rides</div>
+    <div id="myRidesList" style="display:flex;flex-direction:column;gap:8px">
+      <div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>
     </div>
   </div>
   <div class="card">
@@ -729,7 +752,130 @@ window.addEventListener('load', () => {
   checkOnline();
   window.addEventListener('online', () => { checkOnline(); syncOfflineQueue(); });
   window.addEventListener('offline', checkOnline);
+  registerServiceWorkerAndPush();
 });
+
+async function registerServiceWorkerAndPush(){
+  if(!('serviceWorker' in navigator)) return;
+  try{
+    await navigator.serviceWorker.register('/sw.js');
+  }catch(e){
+    console.log('Service worker registration failed', e);
+  }
+}
+
+// Call this after a driver goes online, or a passenger books a ride,
+// so they can actually receive a push when something happens even if
+// the app isn't open. Silently does nothing if the browser or user
+// doesn't support/allow notifications — this should never block the
+// core booking/driving flow.
+async function subscribeToPush(role){
+  console.log('[CabLink Push] START role=', role);
+
+  if(!('serviceWorker' in navigator)){
+    console.log('[CabLink Push] FAIL: serviceWorker unsupported');
+    return;
+  }
+
+  if(!('PushManager' in window)){
+    console.log('[CabLink Push] FAIL: PushManager unsupported');
+    return;
+  }
+
+  if(!('Notification' in window)){
+    console.log('[CabLink Push] FAIL: Notification API unsupported');
+    return;
+  }
+
+  try{
+    console.log('[CabLink Push] requesting notification permission');
+
+    const permission = await Notification.requestPermission();
+
+    console.log('[CabLink Push] permission=', permission);
+
+    if(permission !== 'granted'){
+      console.log('[CabLink Push] STOP: permission not granted');
+      return;
+    }
+
+    console.log('[CabLink Push] waiting for service worker');
+
+    const reg = await navigator.serviceWorker.ready;
+
+    console.log('[CabLink Push] service worker ready=', !!reg);
+
+    const keyRes = await fetch('/api/push/vapid-public-key');
+
+    console.log('[CabLink Push] VAPID HTTP status=', keyRes.status);
+
+    const keyData = await keyRes.json();
+
+    console.log('[CabLink Push] VAPID response success=', keyData.success);
+
+    if(!keyData.success){
+      console.log('[CabLink Push] STOP: VAPID endpoint unavailable');
+      return;
+    }
+
+    let subscription = await reg.pushManager.getSubscription();
+
+    console.log('[CabLink Push] existing subscription=', !!subscription);
+
+    if(!subscription){
+      console.log('[CabLink Push] creating PushSubscription');
+
+      subscription = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(keyData.publicKey)
+      });
+
+      console.log('[CabLink Push] PushSubscription created=', !!subscription);
+    }
+
+    const clAccountRaw = localStorage.getItem('cl_account');
+    const clAccount = clAccountRaw ? JSON.parse(clAccountRaw) : null;
+
+    console.log('[CabLink Push] accountId=', clAccount && clAccount.id ? 'PRESENT' : 'NULL');
+    console.log('[CabLink Push] posting subscription to backend');
+
+    const saveRes = await fetch('/api/push/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accountId: (clAccount && clAccount.id) || null,
+        role,
+        subscription
+      })
+    });
+
+    console.log('[CabLink Push] save HTTP status=', saveRes.status);
+
+    const saveData = await saveRes.json();
+
+    console.log('[CabLink Push] save response=', saveData);
+
+    if(!saveRes.ok){
+      console.log('[CabLink Push] BACKEND REJECTED SUBSCRIPTION');
+      return;
+    }
+
+    console.log('[CabLink Push] SUCCESS — subscription saved');
+  }catch(e){
+    console.error('[CabLink Push] ERROR:', e);
+  }
+}
+
+function urlBase64ToUint8Array(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for(let i = 0; i < rawData.length; i++){
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
 
 function renderEcosystem(){
   const el = document.getElementById('ecoGrid');
@@ -784,6 +930,8 @@ async function connectWallet(){
     estimateGas();
     document.getElementById('profile-name').textContent = shortAddr(STATE.wallet);
     document.getElementById('profile-sub').textContent = 'BSC Testnet · THoBoCoin holder';
+    const greetEl = document.getElementById('greetName');
+    if(greetEl) greetEl.textContent = ', ' + shortAddr(STATE.wallet);
   }catch(e){ toast('Could not connect: ' + (e.message || 'User rejected'), 'error'); }
 }
 async function updateWalletUI(){
@@ -913,22 +1061,35 @@ function initMap(){
   routeLine = L.polyline([[LANDMARKS.bstmHQ.lat,LANDMARKS.bstmHQ.lng],[LANDMARKS.gameCity.lat,LANDMARKS.gameCity.lng]], {color:'#f0b93a', weight:3, dashArray:'6,6', opacity:.85}).addTo(MAP);
   carMarker = L.marker([LANDMARKS.bstmHQ.lat, LANDMARKS.bstmHQ.lng], {icon:carIcon}).addTo(MAP);
 
-  const nearbyDrivers = [LANDMARKS.molapo, LANDMARKS.mainMall, LANDMARKS.riverwalk];
-  driverMarkers = nearbyDrivers.map(l => L.marker([l.lat + (Math.random()-.5)*.01, l.lng + (Math.random()-.5)*.01], {
-    icon:L.divIcon({html:'<div style="font-size:14px">🚗</div>', className:'', iconSize:[16,16]})
-  }).addTo(MAP));
+  driverMarkers = {}; // real markers populated by pollOnlineDrivers()
+  pollOnlineDrivers();
+  setInterval(pollOnlineDrivers, 5000);
 
   MAP.fitBounds(routeLine.getBounds(), {padding:[30,30]});
-  setInterval(driftDriverMarkers, 2800);
 }
-function driftDriverMarkers(){
-  driverMarkers.forEach(m => {
-    const p = m.getLatLng();
-    m.setLatLng([p.lat + (Math.random()-.5)*.002, p.lng + (Math.random()-.5)*.002]);
+function pollOnlineDrivers(){
+  fetch('/api/drivers/online').then(r => r.json()).then(data => {
+    const list = data.drivers || [];
+    const seen = new Set();
+    list.forEach(d => {
+      seen.add(d.id);
+      if(driverMarkers[d.id]){
+        driverMarkers[d.id].setLatLng([d.lat, d.lng]);
+      } else {
+        driverMarkers[d.id] = L.marker([d.lat, d.lng], {
+          icon: L.divIcon({html:'<div style="font-size:14px">🚗</div>', className:'', iconSize:[16,16]})
+        }).addTo(MAP).bindPopup('Driver ' + d.id.slice(-4));
+      }
+    });
+    Object.keys(driverMarkers).forEach(id => {
+      if(!seen.has(id)){ MAP.removeLayer(driverMarkers[id]); delete driverMarkers[id]; }
+    });
+    const el = document.getElementById('mapDriverCount');
+    if(el) el.textContent = list.length ? (list.length + ' driver' + (list.length===1?'':'s') + ' online') : 'No drivers online';
+  }).catch(() => {
+    const el = document.getElementById('mapDriverCount');
+    if(el) el.textContent = 'Driver network unavailable';
   });
-  const n = Math.floor(Math.random()*3)+2;
-  const el = document.getElementById('mapDriverCount');
-  if(el) el.textContent = n + ' drivers nearby';
 }
 function recenterMap(){ if(MAP && routeLine) MAP.fitBounds(routeLine.getBounds(), {padding:[30,30]}); }
 function updateMapRoute(){
@@ -971,7 +1132,7 @@ function animateCarAlongRoute(totalSeconds){
 // ============================================================
 // RIDE FLOW
 // ============================================================
-function generateRideId(){ return 'CL-' + Math.random().toString(36).substr(2,6).toUpperCase(); }
+// Ride IDs now generated by backend
 
 
 
@@ -981,12 +1142,19 @@ async function bookRide(){
   if(!pickup || !dropoff){ toast('Please enter pickup and drop-off locations', 'warning'); return; }
   if(STATE.inRide){ toast('Ride already in progress', 'warning'); return; }
 
+  const clAccountRaw = localStorage.getItem('cl_account');
+  const clAccount = clAccountRaw ? JSON.parse(clAccountRaw) : null;
+
   const payload = {
     pickup, dropoff,
     fare: STATE.selectedFare || 0,
     type: STATE.selectedRideType || 'standard',
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    passengerId: (clAccount && clAccount.id) || STATE.anonPassengerId || (STATE.anonPassengerId = 'ANON-' + Date.now()),
+    passengerName: (clAccount && clAccount.name) || 'Passenger'
   };
+  payload.passenger = payload.passengerId; // canonical backend field name
+  subscribeToPush('passenger');
 
   STATE.inRide = true; STATE.rideReady = false;
   updateMapRoute();
@@ -994,16 +1162,11 @@ async function bookRide(){
   document.getElementById('chatSection').style.display = 'block';
   document.getElementById('cancelBtn').style.display = 'block';
   document.getElementById('bookBtn').disabled = true;
-    setStatusPip('yellow'); setStatusLabel('🔍 Requesting ride…');
+  setStatusPip('yellow'); setStatusLabel('🔍 Requesting ride…');
   showRideProgressBar('FINDING DRIVER', 10);
 
   try{
-    const response = await fetch('/api/rides', {
-      method: 'PATCH',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-    const data = await response.json();
+    const data = await window.requestRealCabLinkRide(payload);
     console.log('REAL RIDE CREATED:', data);
     const ride = data.ride || data;
     STATE.rideId = ride.id || ride._id || ('CL-' + Date.now());
@@ -1026,18 +1189,18 @@ async function pollRideStatus(rideId){
       if(!res.ok) return;
       const data = await res.json();
       const ride = data.ride || data;
-      const status = (ride.status || '').toLowerCase();
+      const status = (ride.status || '').toUpperCase();
       console.log('Ride status:', status);
-      if(status === 'accepted' || status === 'assigned'){
+      if(status === 'ACCEPTED' || status === 'ASSIGNED'){
         setStatusPip('green'); setStatusLabel('🚗 Driver assigned! En route…');
         showRideProgressBar('DRIVER EN ROUTE', 40);
-      } else if(status === 'arrived'){
+      } else if(status === 'ARRIVED'){
         clearInterval(_rideStatusPoller);
         showArrived();
-      } else if(status === 'completed'){
+      } else if(status === 'COMPLETED'){
         clearInterval(_rideStatusPoller);
         completeRide();
-      } else if(status === 'cancelled'){
+      } else if(status === 'CANCELLED'){
         clearInterval(_rideStatusPoller);
         toast('Ride was cancelled', 'warning');
         resetRideUI();
@@ -1046,19 +1209,19 @@ async function pollRideStatus(rideId){
   }, 3000);
 }
 
-function legacy_simulateRide_disabled(){
- console.log("Simulation disabled. CabLink uses live dispatch.");
- toast("Live dispatch mode active","success");
+function simulateRide(){
+    console.log("Simulation removed.");
 }
 
 
 function cancelRide(){
   if(!STATE.inRide) return;
+  clearInterval(STATE.countdownInterval); clearInterval(STATE.graceInterval); clearInterval(window._carInterval);
   STATE.inRide = false; STATE.rideReady = false; STATE.rideId = null;
   resetRideUI(); toast('Ride cancelled.', 'warning');
 }
 
-function recordCompletedRide(){
+function completeRide(){
   clearInterval(STATE.countdownInterval);
   STATE.inRide = false; STATE.rideReady = true; STATE.totalRides++;
   STATE.lastRideDate = new Date().toISOString();
@@ -1086,14 +1249,16 @@ function showArrived(){
   document.getElementById('rideStatusLabel').textContent = 'DRIVER ARRIVED';
   setStatusPip('green'); setStatusLabel('🚗 Driver arrived! 5 min free wait'); toast('🚗 Your driver has arrived!', 'success'); haptic();
   let secs = 300;
+  STATE.graceInterval = setInterval(() => {
     secs--; const m=Math.floor(secs/60), s=secs%60;
     document.getElementById('graceTimer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    if(secs<=0){ clearInterval(STATE.graceInterval); completeRide(); }
   }, 1000);
   setTimeout(() => {
     document.getElementById('arrivedBanner').classList.remove('show');
     appendDriverMsg('Driver', "All aboard? Let's go! 🚕");
     showRideProgressBar('RIDE IN PROGRESS', 70);
-    // REAL COMPLETION: controlled by driver lifecycle API
+    // completeRide() now must be triggered by real backend status
   }, 10000);
 }
 
@@ -1102,7 +1267,7 @@ function resetRideUI(keepId){
   document.getElementById('chatSection').style.display = 'none';
   document.getElementById('cancelBtn').style.display = 'none';
   document.getElementById('bookBtn').disabled = false;
-    if(!keepId){ document.getElementById('rideIdRow').style.display = 'none'; document.getElementById('rideId').textContent = '—'; }
+  if(!keepId){ document.getElementById('rideIdRow').style.display = 'none'; document.getElementById('rideId').textContent = '—'; }
   setStatusPip(''); setStatusLabel('Enter locations to book');
   document.getElementById('chatBox').innerHTML = '';
   hideRideProgressBar();
@@ -1110,8 +1275,80 @@ function resetRideUI(keepId){
 
 function calcRideDuration(){ return Math.min(STATE.selectedFare * 2, 90); }
 function calcETA(){ return Math.round(STATE.selectedFare * 0.6); }
+
+// ═══ REAL FARE ENGINE — replaces flat pricing ═══
+const BOTSWANA_ECONOMY = {
+  fuelPrice: 14.80,       // BWP per litre
+  maintenancePerKm: 0.45,
+  tyresPerKm: 0.18,
+  servicePerKm: 0.22,
+  driverMarginPct: 0.35,
+  platformFeePct: 0.12,
+  minimumFare: 15
+};
+const VEHICLE_CONSUMPTION = { // km per litre
+  standard: 14, premium: 10, xl: 8, moto: 28, eco: 18, quiet: 12
+};
+
+function toRad(v){ return v * Math.PI / 180; }
+function haversineKm(a, b){
+  const R = 6371;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const s = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1-s));
+}
+
+function resolveLandmark(text, fallback){
+  if(!text) return fallback;
+  const lower = text.toLowerCase();
+  for(const key in LANDMARKS){ if(LANDMARKS[key].name.toLowerCase().includes(lower.split(' ')[0])) return LANDMARKS[key]; }
+  if(lower.includes('game')) return LANDMARKS.gameCity;
+  if(lower.includes('main')) return LANDMARKS.mainMall;
+  if(lower.includes('airport')) return LANDMARKS.airport;
+  if(lower.includes('river')) return LANDMARKS.riverwalk;
+  if(lower.includes('ub')||lower.includes('university')) return LANDMARKS.ub;
+  if(lower.includes('molapo')) return LANDMARKS.molapo;
+  if(lower.includes('kgale')) return LANDMARKS.kgale;
+  return fallback;
+}
+
+function getCurrentDistanceKm(){
+  const pu = resolveLandmark(document.getElementById('pickup')?.value, LANDMARKS.bstmHQ);
+  const doff = resolveLandmark(document.getElementById('dropoff')?.value, LANDMARKS.gameCity);
+  return haversineKm(pu, doff);
+}
+
+function calcRealFare(type, distanceKm){
+  const cfg = BOTSWANA_ECONOMY;
+  const consumption = VEHICLE_CONSUMPTION[type] || VEHICLE_CONSUMPTION.standard;
+  const fuelUsed = distanceKm / consumption;
+  const fuelCost = fuelUsed * cfg.fuelPrice;
+  const maintenance = distanceKm * cfg.maintenancePerKm;
+  const tyres = distanceKm * cfg.tyresPerKm;
+  const service = distanceKm * cfg.servicePerKm;
+  const operatingCost = fuelCost + maintenance + tyres + service;
+  const driverMargin = operatingCost * cfg.driverMarginPct;
+  const subtotal = operatingCost + driverMargin;
+  const platformFee = subtotal * cfg.platformFeePct;
+  let total = subtotal + platformFee;
+  total = Math.max(total, cfg.minimumFare);
+  return {
+    distanceKm: +distanceKm.toFixed(2),
+    fuelCost: +fuelCost.toFixed(2),
+    maintenance: +maintenance.toFixed(2),
+    tyres: +tyres.toFixed(2),
+    service: +service.toFixed(2),
+    driverMargin: +driverMargin.toFixed(2),
+    platformFee: +platformFee.toFixed(2),
+    total: Math.round(total)
+  };
+}
+
 function calcTotalFare(){
-  let total = STATE.selectedFare;
+  const distanceKm = getCurrentDistanceKm();
+  const breakdown = calcRealFare(STATE.selectedRideType, distanceKm);
+  let total = breakdown.total;
   total += STATE.stops.length * 5;
   if(STATE.surgeActive) total = Math.round(total * STATE.surgeMultiplier);
   return total;
@@ -1150,8 +1387,7 @@ function appendDriverMsg(name, text){ appendMsg(name, text, false); document.get
 function sendChat(){
   const input = document.getElementById('chatInput'); const text = input.value.trim();
   if(!text) return; appendMsg('You', text, true); input.value = '';
-  // fake replies removed
-  setTimeout(() => appendDriverMsg('Driver', replies[Math.floor(Math.random()*replies.length)]), 1500+Math.random()*2000);
+  // Real driver replies come from backend chat endpoint (not yet built)
 }
 
 // ============================================================
@@ -1164,17 +1400,26 @@ function selectRideType(el){
   updateFareBreakdown();
 }
 function updateFareBreakdown(){
-  const base = STATE.selectedFare, stops = STATE.stops.length*5;
-  const surgeAdd = STATE.surgeActive ? Math.round(base*(STATE.surgeMultiplier-1)) : 0;
-  const total = base + stops + surgeAdd;
-  document.getElementById('fb-base').textContent = base + ' BWP';
+  const distanceKm = getCurrentDistanceKm();
+  const breakdown = calcRealFare(STATE.selectedRideType, distanceKm);
+  const stops = STATE.stops.length*5;
+  const surgeAdd = STATE.surgeActive ? Math.round(breakdown.total*(STATE.surgeMultiplier-1)) : 0;
+  const total = breakdown.total + stops + surgeAdd;
+  document.getElementById('fb-base').textContent = breakdown.total + ' BWP (' + breakdown.distanceKm + ' km)';
   document.getElementById('fb-stops').textContent = stops + ' BWP';
   document.getElementById('fb-stops-row').style.display = stops ? 'flex' : 'none';
   document.getElementById('fb-surge').textContent = surgeAdd + ' BWP';
   document.getElementById('fb-surge-row').style.display = STATE.surgeActive ? 'flex' : 'none';
   document.getElementById('fb-total').textContent = total + ' BWP';
-  document.getElementById('sm-normal').textContent = base + ' BWP';
-  document.getElementById('sm-surge').textContent = (base+surgeAdd) + ' BWP';
+  document.getElementById('sm-normal').textContent = breakdown.total + ' BWP';
+  document.getElementById('sm-surge').textContent = (breakdown.total+surgeAdd) + ' BWP';
+  // update the live price shown on each ride-type card
+  document.querySelectorAll('.ride-type-card').forEach(card => {
+    const t = card.dataset.type;
+    const b = calcRealFare(t, distanceKm);
+    const priceEl = card.querySelector('.price');
+    if(priceEl) priceEl.textContent = b.total + ' BWP';
+  });
 }
 function addStop(){
   if(STATE.stops.length>=3){ toast('Max 3 extra stops', 'warning'); return; }
@@ -1200,7 +1445,7 @@ function voiceInput(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const rec = new SR(); rec.lang = 'en-ZA';
   rec.onresult = e => { const t=e.results[0][0].transcript; document.getElementById('dropoff').value=t; updateMapRoute(); toast('🎤 Heard: '+t, 'success'); };
-  rec.onerror = e => { const msgs={'not-allowed':'Microphone permission denied','no-speech':'No speech detected','network':'Network error'}; toast(msgs[e.error]||'Voice error', 'error'); };
+  rec.onerror = e => { const msgs={'not-allowed':'Mic blocked — tap the ⓘ next to the address bar → Permissions → Microphone → Allow, then try again','no-speech':'No speech detected','network':'Network error'}; toast(msgs[e.error]||'Voice error', 'error'); };
   try{ rec.start(); toast('🎤 Listening…', 'success'); }catch(e){ toast('Voice input failed', 'error'); }
 }
 function checkSurge(){
@@ -1270,10 +1515,20 @@ async function toggleDriverMode(){
   }
   try{
     const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
+    let coords = {};
+    if(STATE.driverOnline && navigator.geolocation){
+      coords = await new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          () => { toast('Location unavailable — using default area', 'warning'); resolve({}); },
+          { timeout: 5000 }
+        );
+      });
+    }
     await fetch(endpoint, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ driverId: STATE.driverId })
+      body: JSON.stringify({ driverId: STATE.driverId, lat: coords.lat, lng: coords.lng })
     });
   } catch(e){ console.error('Driver status update failed', e); }
   btn.textContent = STATE.driverOnline ? '🔴 Go offline' : '🟢 Go online';
@@ -1309,29 +1564,38 @@ function renderIncomingRequest(r){
   const container = document.getElementById('driverRequests');
   const div = document.createElement('div');
   div.className = 'request-card pending'; div.id = 'req-' + r.id;
-  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${r.id}</strong><span style="color:var(--gold-l);font-weight:700">${r.fare||''} BWP</span></div>
+  const isMarketplace = r.source === 'digital_mall';
+  const badge = isMarketplace
+    ? `<span style="font-size:10px;font-weight:700;letter-spacing:.03em;color:var(--sapphire-l);border:1px solid var(--sapphire);border-radius:6px;padding:2px 6px;margin-right:6px">DIGITAL MALL DELIVERY</span>`
+    : '';
+  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>${badge}<strong>${r.id}</strong></span><span style="color:var(--gold-l);font-weight:700">${r.fare||''} BWP</span></div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${r.pickup||''} → 🏁 ${r.dropoff||''}</div>
+    ${r.notes ? `<div style="font-size:11px;color:var(--muted2);margin-bottom:8px">${r.notes}</div>` : ''}
     <div style="display:flex;gap:8px">
-      <button class="btn btn-green btn-sm" onclick="acceptRealRequest('${r.id}')">✓ Accept</button>
+      <button class="btn btn-green btn-sm" onclick="window.acceptRideRequest('${r.id}',${r.fare||20})">✓ Accept</button>
       <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${r.id}').remove()">✗ Pass</button>
     </div>`;
   if(container.firstChild?.textContent?.includes('online')) container.innerHTML = '';
   container.prepend(div);
   updateDriverUI();
-  toast('🚗 New ride request received', 'warning'); haptic();
+  toast(isMarketplace ? '📦 New Digital Mall delivery received' : '🚗 New ride request received', 'warning'); haptic();
 }
 
-async function acceptRealRequest(rideId){
+
+
+
+
+async function completeRealRide(rideId){
   try{
-    await fetch('/api/rides/' + rideId + '/accept', {
-      method: 'PATCH',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ driverId: STATE.driverId })
-    });
-    document.getElementById('req-' + rideId)?.remove();
-    STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
-    toast('Ride accepted! Earn 1 THB when complete.', 'success');
-  } catch(e){ toast('Could not accept ride', 'error'); }
+    const res = await fetch('/api/rides/' + rideId + '/complete', { method: 'PATCH' });
+    const data = await res.json();
+    console.log('Ride completed on backend:', data);
+    return data.ride;
+  } catch(e){
+    console.error('Complete failed', e);
+    toast('Could not complete ride', 'error');
+    return null;
+  }
 }
 
 function addDriverRequest(){
@@ -1344,21 +1608,13 @@ function addDriverRequest(){
   div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${req.id}</strong><span style="color:var(--gold-l);font-weight:700">${req.fare} BWP</span></div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${req.from} → 🏁 ${req.to} · ${req.dist} km</div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-green btn-sm" onclick="acceptRequest('${req.id}',${req.fare})">✓ Accept</button>
+      <button class="btn btn-green btn-sm" onclick="window.acceptRideRequest('${req.id}',${req.fare})">✓ Accept</button>
       <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${req.id}').remove()">✗ Pass</button>
       <button class="btn btn-outline btn-sm" onclick="negoRequest('${req.id}',${req.fare})">💬 Counter</button>
     </div>`;
   if(container.firstChild?.textContent?.includes('online')) container.innerHTML = '';
   container.prepend(div); updateDriverUI();
   toast('🚗 New ride request: ' + req.from + ' → ' + req.to, 'warning'); haptic();
-}
-function acceptRequest(id, fare){
-  document.getElementById('req-'+id)?.remove();
-  STATE.driverAccepted++; STATE.driverThb += 1; updateDriverUI();
-  toast('Ride accepted! Earn 1 THB when complete.', 'success');
-  document.getElementById('earn-today').textContent = (STATE.driverAccepted*fare).toString();
-  document.getElementById('earn-thb').textContent = STATE.driverThb.toString();
-  document.getElementById('earn-rides').textContent = STATE.driverAccepted.toString();
 }
 function negoRequest(id, fare){ const counter = prompt(`Counter-offer (original: ${fare} BWP):`); if(counter && parseFloat(counter)>0) toast(`Counter-offer ${counter} BWP sent to rider`, 'success'); }
 function updateDriverUI(){ document.getElementById('drv-requests').textContent=STATE.driverRequests; document.getElementById('drv-accepted').textContent=STATE.driverAccepted; document.getElementById('drv-thb').textContent=STATE.driverThb; }
@@ -1451,18 +1707,34 @@ function deleteMyData(){
 // LEADERBOARD / BADGES / FAQ
 // ============================================================
 function renderLeaderboard(){
-  const lb = [
-    {name:'Thobo A.', rides:STATE.totalRides+12, thb:STATE.totalEarned+15.5, you:true},
-    {name:'Keabetswe M.', rides:34, thb:38.2}, {name:'Oratile D.', rides:28, thb:31.0},
-    {name:'Mpho S.', rides:21, thb:24.5}, {name:'Lesego T.', rides:18, thb:20.1},
-  ].sort((a,b)=>b.thb-a.thb);
-  const medals=['gold','silver','bronze'];
   const el = document.getElementById('leaderboard'); if(!el) return;
-  el.innerHTML = lb.map((u,i)=>`
-    <div class="lb-row ${u.you?'lb-you':''}"><span class="lb-rank ${medals[i]||''}">${i+1}</span>
-      <div class="lb-info"><div class="lb-name">${u.name}${u.you?' 👈 You':''}</div><div class="lb-rides">${u.rides} rides</div></div>
-      <span class="lb-thb">${u.thb.toFixed(1)} THB</span></div>`).join('');
+  el.innerHTML = '<div style="padding:12px;color:var(--muted)">Loading leaderboard…</div>';
+
+  fetch('/api/leaderboard')
+    .then(r => r.json())
+    .then(data => {
+      const lb = (data.leaderboard || []);
+      const myAccount = JSON.parse(localStorage.getItem('cl_account') || 'null');
+
+      if(lb.length === 0){
+        el.innerHTML = '<div style="padding:12px;color:var(--muted)">No completed rides yet — be the first on the board.</div>';
+        return;
+      }
+
+      const medals = ['gold','silver','bronze'];
+      el.innerHTML = lb.map((u,i) => {
+        const isYou = myAccount && u.driverId === myAccount.id;
+        return `
+    <div class="lb-row ${isYou?'lb-you':''}"><span class="lb-rank ${medals[i]||''}">${i+1}</span>
+      <div class="lb-info"><div class="lb-name">${u.name}${isYou?' 👈 You':''}</div><div class="lb-rides">${u.rides} rides</div></div>
+      <span class="lb-thb">${u.thb.toFixed(1)} THB</span></div>`;
+      }).join('');
+    })
+    .catch(() => {
+      el.innerHTML = '<div style="padding:12px;color:var(--muted)">Could not load leaderboard — check your connection.</div>';
+    });
 }
+
 const BADGES = [
   {icon:'🚀',name:'First ride',req:()=>STATE.totalRides>=1}, {icon:'🏅',name:'5 rides',req:()=>STATE.totalRides>=5},
   {icon:'🔥',name:'3-day streak',req:()=>STATE.streak>=3}, {icon:'🌟',name:'7-day streak',req:()=>STATE.streak>=7},
@@ -1590,9 +1862,25 @@ function updateDailyBtn(){
   if(STATE.lastBonus === today){ btn.disabled=true; status.textContent='Come back tomorrow!'; } else { btn.disabled=false; status.textContent=''; }
 }
 function updateProfileKPI(){
-  document.getElementById('kpi-rides').textContent = STATE.totalRides;
   document.getElementById('kpi-thb').textContent = STATE.totalEarned.toFixed(1);
   document.getElementById('kpi-rating').textContent = STATE.avgRating || '—';
+
+  const token = localStorage.getItem('cl_token');
+  if(!token){
+    document.getElementById('kpi-rides').textContent = STATE.totalRides;
+    return;
+  }
+
+  fetch('/api/rides/mine', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(r => r.json())
+    .then(data => {
+      if(data.success){
+        document.getElementById('kpi-rides').textContent = data.count;
+      } else {
+        document.getElementById('kpi-rides').textContent = STATE.totalRides;
+      }
+    })
+    .catch(() => { document.getElementById('kpi-rides').textContent = STATE.totalRides; });
 }
 function showChangeLog(){ toast('v6.0: Real Gaborone map (Leaflet + OSM), new diamond-cut design system, BSTM Ecosystem hub, wallet + claim flow, surge, negotiation, driver mode, offline queue, chat, haptics, confetti.', 'success'); }
 function submitFeedback(){
@@ -1626,159 +1914,861 @@ function startClock(){
   tick(); setInterval(tick, 30000);
 }
 function shortAddr(addr){ if(!addr) return '—'; return addr.substr(0,6)+'…'+addr.substr(-4); }
+window.cablinkInputsWired = true;
+document.addEventListener('DOMContentLoaded', () => {
+  const pu = document.getElementById('pickup');
+  const doff = document.getElementById('dropoff');
+  const recalc = () => { updateMapRoute(); updateFareBreakdown(); };
+  if(pu) pu.addEventListener('input', recalc);
+  if(doff) doff.addEventListener('input', recalc);
+});
 </script>
+<script src="/js/driver_accept_bridge.js"></script>
+<!-- The React app (main.jsx / App.jsx) is intentionally not
+     loaded here. It was an earlier, parallel implementation
+     that never matched what this vanilla-JS app actually
+     renders, and having both mounted caused confusing
+     duplicate UI to appear below the real screens on scroll. -->
+
+<script>
+
+// =========================================
+// CABLINK_REALITY_RUNTIME_BRIDGE
+// =========================================
+
+window.CABLINK_RUNTIME={
+    ride:null,
+    drivers:[],
+    connected:true
+};
 
 
-<!-- CABLINK DRIVER APPLICATION -->
-<div id="driverApplyModal" class="modal-overlay">
-<div class="modal">
+// Load real driver availability
 
-<h2>🚕 Become a CabLink Driver</h2>
+async function loadRealDrivers(){
 
-<label>Full Name</label>
-<input id="driverName" class="input" placeholder="Your full name">
+try{
 
-<label>Phone Number</label>
-<input id="driverPhone" class="input" placeholder="+267">
+let r=await fetch("/api/drivers/online");
 
-<label>Driver Licence</label>
-<input id="driverLicense" class="input" placeholder="Licence number">
+if(r.ok){
 
-<label>Vehicle Model</label>
-<input id="driverVehicle" class="input" placeholder="Toyota Corolla">
+let data=await r.json();
 
-<label>Vehicle Registration</label>
-<input id="driverReg" class="input" placeholder="B123 ABC">
+window.CABLINK_RUNTIME.drivers=data;
 
-<button class="btn btn-green" onclick="submitDriverApplication()">
-Submit Application
-</button>
+let el=document.getElementById("mapDriverCount");
 
-<button class="btn btn-outline" onclick="closeModal('driverApplyModal')">
-Cancel
-</button>
+if(el){
 
-</div>
-</div>
+el.textContent =
+data.length+
+" drivers online";
+
+}
+
+}
+
+}catch(e){
+
+console.log(
+"Driver API waiting..."
+);
+
+}
+
+}
 
 
+// Send real ride request
 
-<!-- role switch removed -->
+async function createRealRide(payload){
+
+try{
+
+let r=await fetch(
+"/api/rides",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(payload)
+}
+);
+
+
+let data=await r.json();
+
+
+console.log(
+"🚕 REAL RIDE:",
+data
+);
+
+
+window.CABLINK_RUNTIME.ride=data.ride;
+
+
+return data.ride;
+
+
+}catch(e){
+
+console.error(
+"Ride connection failed",
+e
+);
+
+}
+
+}
+
+
+// Replace fake nearby count
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+loadRealDrivers();
+
+});
+
+
+// Expose bridge
+
+window.CabLinkReality={
+drivers:loadRealDrivers,
+ride:createRealRide
+};
+
+
+console.log(
+"🚕 Reality bridge active"
+);
+
+
+</script>
 
 
 
 <script>
 
-(function(){
+// =========================================
+// CABLINK_DRIVER_REALITY_PATCH
+// =========================================
 
-window.CABLINK_ROLE =
-localStorage.getItem("cablink_role") || "PASSENGER";
+
+const originalToggleDriverMode = window.toggleDriverMode;
 
 
-function updateRole(){
+window.toggleDriverMode = async function(){
 
-var status=document.getElementById("roleStatus");
 
-if(status){
+STATE.driverOnline = !STATE.driverOnline;
 
-status.textContent =
-window.CABLINK_ROLE==="DRIVER"
-?
-"🚗 Driver Mode"
-:
-"🧍 Passenger Mode";
 
+const btn=document.getElementById("driverModeBtn");
+
+
+if(STATE.driverOnline){
+
+
+btn.textContent="🔴 Go offline";
+
+btn.className=
+"btn btn-sm btn-danger";
+
+
+const clAccountRaw = localStorage.getItem('cl_account');
+const clAccount = clAccountRaw ? JSON.parse(clAccountRaw) : null;
+
+let coords = {};
+if(navigator.geolocation){
+  coords = await new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => { toast('Could not get GPS location — using default area', 'warning'); resolve({}); },
+      { timeout: 8000 }
+    );
+  });
 }
 
+let driver={
 
-document.body.dataset.role =
-window.CABLINK_ROLE;
+id:
+(clAccount && clAccount.id) ||
+localStorage.getItem("cablink_driver_id")
+||
+"DRV-"+Date.now(),
 
+name:
+(clAccount && clAccount.name) ||
+"CabLink Driver",
 
-window.dispatchEvent(
-new CustomEvent(
-"cablinkRoleChanged",
-{
-detail:{
-role:window.CABLINK_ROLE
+location:
+"Gaborone",
+
+lat:
+coords.lat || null,
+
+lng:
+coords.lng || null,
+
+timestamp:
+Date.now()
+
+};
+
+if(!clAccount){
+toast('Log in on the Profile tab so your rides and THB track to your real account', 'warning');
 }
-}
-));
 
-}
+subscribeToPush('driver');
 
-
-window.setCabLinkRole=function(role){
-
-window.CABLINK_ROLE=role;
 
 localStorage.setItem(
-"cablink_role",
-role
+"cablink_driver_id",
+driver.id
 );
 
-updateRole();
+STATE.driverId = driver.id;
+
+
+
+try{
+
+
+let r=await fetch(
+"/api/drivers/online",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(driver)
+}
+);
+
+
+let data=await r.json();
+
 
 console.log(
-"CabLink role:",
-role
+"🚗 Driver LIVE:",
+data
+);
+
+
+toast(
+"Driver is LIVE on network",
+"success"
+);
+
+pollForRideRequests();
+
+
+}catch(e){
+
+console.log(
+"Driver backend unavailable"
+);
+
+}
+
+
+}else{
+
+
+btn.textContent="🚗 Go online";
+
+btn.className=
+"btn btn-sm btn-outline";
+
+
+let id=
+localStorage.getItem(
+"cablink_driver_id"
+);
+
+
+fetch(
+"/api/drivers/offline",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+id
+})
+}
+);
+
+
+clearInterval(_driverRequestPoller);
+
+toast(
+"Driver offline",
+"warning"
+);
+
+
+}
+
+
+updateDriverUI();
+
+};
+
+
+console.log(
+"🚕 Driver reality patch active"
+);
+
+
+</script>
+
+
+
+<script>
+
+// =========================================
+// CABLINK_DISABLE_FAKE_DRIVER_ENGINE
+// =========================================
+
+window.addDriverRequest=function(){
+
+console.log(
+"🛑 Fake driver request blocked"
 );
 
 };
 
 
+console.log(
+"🚕 Fake request engine disabled"
+);
 
-document.addEventListener(
-"click",
-function(e){
+</script>
 
-if(e.target.id==="driverModeBtn"){
 
-setCabLinkRole("DRIVER");
 
+
+<!-- Removed duplicate runtime block -->
+
+
+
+
+
+<!-- Removed duplicate runtime block -->
+
+
+
+
+<script>
+
+/*
+
+🚕 CABLINK_LIVE_DRIVER_BRIDGE
+
+*/
+
+async function CABLINK_LIVE_DRIVER_BRIDGE(){
+
+try{
+
+const response =
+await fetch('/api/drivers/online');
+
+
+const data =
+await response.json();
+
+
+let count=0;
+
+
+if(Array.isArray(data)){
+count=data.length;
 }
 
 
-if(e.target.id==="passengerModeBtn"){
+const elements=[
+"mapDriverCount",
+"driverCount",
+"nearbyDrivers"
+];
 
-setCabLinkRole("PASSENGER");
+
+elements.forEach(id=>{
+
+const el=document.getElementById(id);
+
+if(el){
+
+el.textContent=
+count+" drivers online";
 
 }
-
 
 });
 
 
-updateRole();
+console.log(
+"🚕 Live drivers:",
+count
+);
 
 
-})();
+}catch(e){
+
+console.error(
+"Driver bridge error",
+e
+);
+
+}
+
+
+}
+
+
+CABLINK_LIVE_DRIVER_BRIDGE();
+
+
+setInterval(
+CABLINK_LIVE_DRIVER_BRIDGE,
+10000
+);
+
 
 </script>
 
-<!-- CabLink Runtime — DO NOT REORDER -->
-<script src="frontend/js/app_core.js"></script>
-<script src="role.js"></script>
-<script src="fix.js"></script>
-<script src="fare_engine.js"></script>
-<script src="frontend/js/rides/rideStateMachine.js"></script>
-<script src="frontend/js/rides/passengerRideStatus.js"></script>
-<script src="frontend/js/driver/driverLifecycleControls.js"></script>
-<script src="frontend/js/rides/completionRewardBridge.js"></script>
-<!-- END CabLink Runtime -->
+
+<script>
+
+async function submitDriverApplication(){
+
+const data={
+
+name:
+document.getElementById("driverName").value,
+
+phone:
+document.getElementById("driverPhone").value,
+
+license:
+document.getElementById("driverLicense").value,
+
+vehicle:
+document.getElementById("driverVehicle").value,
+
+registration:
+document.getElementById("driverReg").value
+
+};
+
+
+try{
+
+const r =
+await fetch('/api/drivers/apply',{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(data)
+});
+
+
+const result=await r.json();
+
+
+alert(
+"🚕 Driver application submitted"
+);
+
+
+console.log(result);
+
+
+}catch(e){
+
+console.error(e);
+
+alert(
+"Driver application failed"
+);
+
+}
+
+}
+
+
+function openDriverApplication(){
+
+const modal=
+document.getElementById(
+"driverApplyModal"
+);
+
+if(modal)
+modal.style.display="flex";
+
+}
+
+
+</script>
+
+
+
+<script type="module">
+
+/*
+
+🚕 CABLINK_TRUTH_BRIDGE
+
+Connect UI events to real backend.
+
+*/
+
+
+/*
+ * CABLINK O.8.7
+ *
+ * Canonical active ride identity registry.
+ *
+ * Must load before any acceptance lifecycle
+ * attempts to register an active ride.
+ */
+
+import "./js/rides/activeRideRegistry.js";
+
+
+import {
+requestRealRide
+} from "./js/rides/rideController.js";
+
+
+window.requestRealCabLinkRide =
+async function(data){
+
+console.log(
+"Sending REAL ride request",
+data
+);
+
+const ride=
+await requestRealRide(data);
+
+
+console.log(
+"Backend ride:",
+ride
+);
+
+
+return ride;
+
+};
+
+
+</script>
+
+
+<!-- CABLINK ROLE GATING + DRIVER APPLICATION (real, wired to /api/drivers/apply) -->
+<div class="modal-overlay" id="driverApplyModal">
+  <div class="modal-box">
+    <div class="modal-title">🚖 Apply to drive <button class="modal-close" onclick="document.getElementById('driverApplyModal').classList.remove('show')">×</button></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Fill in your details. Applications are reviewed before you can go online as a driver.</div>
+    <input class="input" id="apply-name" placeholder="Full name" style="margin-bottom:10px"/>
+    <input class="input" id="apply-phone" placeholder="Phone number" style="margin-bottom:10px"/>
+    <input class="input" id="apply-license" placeholder="Driver's license number" style="margin-bottom:10px"/>
+    <input class="input" id="apply-vehicle" placeholder="Vehicle (e.g. Toyota Corolla)" style="margin-bottom:14px"/>
+    <button class="btn btn-primary" onclick="submitDriverApplication()">Submit application</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var K = 'cl_userRole';
+
+  function getRole(){ return localStorage.getItem(K) || 'customer'; }
+  function setRole(r){ localStorage.setItem(K, r); if(window.STATE) window.STATE.role = r; }
+  window.CL_ROLE = { get:getRole, set:setRole, isDriver:function(){ return getRole()==='driver'; } };
+
+  function gateDriverScreen(){
+    var ds = document.getElementById('s-driver');
+    if(!ds) return;
+    var cta = document.getElementById('cl-drv-cta');
+    var header = document.getElementById('s-driver-header');
+    var walletBar = ds.querySelector('.wallet-bar');
+    var reqList = document.getElementById('driverRequests');
+    var reqTitle = document.getElementById('driverRequestsTitle');
+    var goOnlineBtn = document.getElementById('driverModeBtn');
+
+    if(getRole() !== 'driver'){
+      if(header) header.style.display = 'none';
+      if(walletBar) walletBar.style.display = 'none';
+      if(reqList) reqList.style.display = 'none';
+      if(reqTitle) reqTitle.style.display = 'none';
+      if(goOnlineBtn) goOnlineBtn.style.display = 'none';
+      if(!cta){
+        cta = document.createElement('div');
+        cta.id = 'cl-drv-cta';
+        cta.className = 'card';
+        cta.style.textAlign = 'center';
+        cta.innerHTML = '<div style="font-size:44px;margin-bottom:10px">🚖</div>'
+          + '<div style="font-weight:700;margin-bottom:8px">Want to earn as a driver?</div>'
+          + '<div style="font-size:12px;color:var(--muted);margin-bottom:16px">Apply once — after approval you can go online and receive real ride requests, earning 1 THB per trip.</div>'
+          + '<button class="btn btn-primary" onclick="window.showDriverRegistrationForm()">Apply to drive</button>';
+        ds.insertBefore(cta, ds.firstChild);
+      }
+    } else {
+      if(cta) cta.remove();
+      if(header) header.style.display = '';
+      if(walletBar) walletBar.style.display = '';
+      if(reqList) reqList.style.display = '';
+      if(reqTitle) reqTitle.style.display = '';
+      if(goOnlineBtn) goOnlineBtn.style.display = '';
+    }
+  }
+
+  window.showDriverRegistrationForm = function(){
+    document.getElementById('driverApplyModal').classList.add('show');
+  };
+
+  window.submitDriverApplication = async function(){
+    var name = document.getElementById('apply-name').value.trim();
+    var phone = document.getElementById('apply-phone').value.trim();
+    var license = document.getElementById('apply-license').value.trim();
+    var vehicle = document.getElementById('apply-vehicle').value.trim();
+    if(!name || !phone || !license || !vehicle){
+      toast('Please fill in all fields', 'warning');
+      return;
+    }
+    try{
+      const res = await fetch('/api/drivers/apply', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ name, phone, license, vehicle })
+      });
+      const data = await res.json();
+      if(data.success){
+        toast('Application received — pending admin review.', 'success');
+        document.getElementById('driverApplyModal').classList.remove('show');
+        localStorage.setItem('cl_applicantPhone', phone);
+        pollApplicationStatus(phone);
+      } else {
+        toast(data.error || 'Application failed', 'error');
+      }
+    } catch(e){
+      console.error(e);
+      toast('Could not submit application — backend unavailable', 'error');
+    }
+  };
+
+  async function pollApplicationStatus(phone){
+    try{
+      const res = await fetch('/api/drivers/application-status?phone=' + encodeURIComponent(phone));
+      const data = await res.json();
+      if(data.status === 'APPROVED'){
+        setRole('driver');
+        gateDriverScreen();
+        toast('You are approved to drive! 🎉', 'success');
+        return;
+      }
+      if(data.status === 'REJECTED'){
+        toast('Your driver application was not approved.', 'error');
+        return;
+      }
+      // still PENDING — check again shortly
+      setTimeout(() => pollApplicationStatus(phone), 8000);
+    }catch(e){
+      // network hiccup — try again shortly rather than giving up
+      setTimeout(() => pollApplicationStatus(phone), 8000);
+    }
+  }
+
+  // Resume checking on page load if there's an outstanding application
+  // and the local role hasn't already been marked as driver.
+  (function resumePendingApplication(){
+    var phone = localStorage.getItem('cl_applicantPhone');
+    if(phone && getRole() !== 'driver'){
+      pollApplicationStatus(phone);
+    }
+  })();
+
+  // ============================================================
+  // REAL ACCOUNT LOGIN / REGISTER (phone + PIN)
+  // ============================================================
+
+  window.clAuthRegister = async function(){
+    var phone = document.getElementById('acc-phone').value.trim();
+    var name = document.getElementById('acc-name').value.trim();
+    var pin = document.getElementById('acc-pin').value.trim();
+    if(!phone || !pin){ toast('Phone and PIN required', 'warning'); return; }
+    try{
+      const res = await fetch('/api/auth/register', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ phone, name, pin })
+      });
+      const data = await res.json();
+      if(!data.success){ toast(data.error || 'Registration failed', 'error'); return; }
+      toast('Account created — now log in', 'success');
+    }catch(e){ toast('Network error registering', 'error'); }
+  };
+
+  window.clAuthLogin = async function(){
+    var phone = document.getElementById('acc-phone').value.trim();
+    var pin = document.getElementById('acc-pin').value.trim();
+    if(!phone || !pin){ toast('Phone and PIN required', 'warning'); return; }
+    try{
+      const res = await fetch('/api/auth/login', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ phone, pin })
+      });
+      const data = await res.json();
+      if(!data.success){ toast(data.error || 'Login failed', 'error'); return; }
+      localStorage.setItem('cl_token', data.token);
+      localStorage.setItem('cl_account', JSON.stringify(data.account));
+      toast('Logged in', 'success');
+      renderAccountUI();
+    }catch(e){ toast('Network error logging in', 'error'); }
+  };
+
+  window.clAuthLogout = function(){
+    localStorage.removeItem('cl_token');
+    localStorage.removeItem('cl_account');
+    renderAccountUI();
+    toast('Logged out', 'warning');
+  };
+
+  function renderAccountUI(){
+    var accEl = document.getElementById('accountCard');
+    if(!accEl) return;
+    var raw = localStorage.getItem('cl_account');
+    var loggedOutEl = document.getElementById('accountLoggedOut');
+    var loggedInEl = document.getElementById('accountLoggedIn');
+    var profileNameEl = document.getElementById('profile-name');
+    var profileSubEl = document.getElementById('profile-sub');
+    if(raw){
+      var account = JSON.parse(raw);
+      loggedOutEl.style.display = 'none';
+      loggedInEl.style.display = 'block';
+      document.getElementById('acc-loggedin-phone').textContent = account.phone;
+      var editNameEl = document.getElementById('acc-edit-name');
+      if(editNameEl && document.activeElement !== editNameEl) editNameEl.value = account.name || '';
+      if(profileNameEl) profileNameEl.textContent = account.name || account.phone;
+      if(profileSubEl) profileSubEl.textContent = account.phone;
+      // Prefill the driver-application form with real account details
+      // so applying doesn't require retyping name/phone.
+      var applyName = document.getElementById('apply-name');
+      var applyPhone = document.getElementById('apply-phone');
+      if(applyName && !applyName.value) applyName.value = account.name;
+      if(applyPhone && !applyPhone.value) applyPhone.value = account.phone;
+      renderMyRides();
+    } else {
+      loggedOutEl.style.display = 'block';
+      loggedInEl.style.display = 'none';
+      if(profileNameEl) profileNameEl.textContent = 'Not connected';
+      if(profileSubEl) profileSubEl.textContent = 'Log in to see your profile';
+      var listEl = document.getElementById('myRidesList');
+      if(listEl) listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>';
+    }
+  }
+
+  window.clSaveProfileName = async function(){
+    var token = localStorage.getItem('cl_token');
+    if(!token){ toast('Log in first', 'warning'); return; }
+    var name = document.getElementById('acc-edit-name').value.trim();
+    if(!name){ toast('Name cannot be empty', 'warning'); return; }
+    try{
+      const res = await fetch('/api/auth/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ name })
+      });
+      const data = await res.json();
+      if(!data.success){ toast(data.error || 'Could not save name', 'error'); return; }
+      localStorage.setItem('cl_account', JSON.stringify(data.account));
+      toast('Name updated', 'success');
+      renderAccountUI();
+    }catch(e){ toast('Network error saving name', 'error'); }
+  };
+
+  function renderMyRides(){
+    var listEl = document.getElementById('myRidesList');
+    if(!listEl) return;
+    var token = localStorage.getItem('cl_token');
+    if(!token){
+      listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>';
+      return;
+    }
+    listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Loading your rides…</div>';
+    fetch('/api/rides/mine', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => r.json())
+      .then(data => {
+        if(!data.success){
+          listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Could not load ride history.</div>';
+          return;
+        }
+        if(data.rides.length === 0){
+          listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">No rides yet — request your first ride from Home.</div>';
+          return;
+        }
+        var sorted = data.rides.slice().sort(function(a,b){ return new Date(b.createdAt) - new Date(a.createdAt); });
+        listEl.innerHTML = sorted.map(function(ride){
+          var date = new Date(ride.createdAt).toLocaleDateString();
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface,rgba(255,255,255,.03));border-radius:10px">' +
+            '<div><div style="font-weight:600;font-size:13px">' + ride.pickup + ' → ' + ride.dropoff + '</div>' +
+            '<div style="font-size:11px;color:var(--muted)">' + date + ' · ' + ride.status + '</div></div>' +
+            '<div style="font-weight:700;color:var(--gold-l,var(--gold))">P' + ride.fare + '</div></div>';
+        }).join('');
+      })
+      .catch(() => {
+        listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Could not load ride history — check your connection.</div>';
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', renderAccountUI);
+  renderAccountUI();
+
+  document.addEventListener('DOMContentLoaded', function(){
+    gateDriverScreen();
+    var navDriver = document.getElementById('nav-driver');
+    if(navDriver) navDriver.addEventListener('click', function(){ setTimeout(gateDriverScreen, 60); });
+  });
+
+  console.log('CabLink role gating active — role:', getRole());
+})();
+</script>
+
 </body>
+
 </html>
 
 
+<script>
+
+// =========================================
+// CABLINK_SINGLE_RIDE_BRIDGE
+// =========================================
+
+console.log("🚕 Single ride bridge active");
+
+</script>
 
 
 
+<script>
 
+console.log("🚕 CABLINK REALITY MODE ENABLED");
 
+window.CABLINK_MODE="LIVE";
 
-
-
-
-
-
+</script>
 

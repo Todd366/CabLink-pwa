@@ -48,7 +48,7 @@ html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--
 #alertStrip button{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#241a04;font-size:16px;cursor:pointer}
 #chainWarning{background:var(--coral);color:#2a0808;cursor:pointer}
 #chainWarning.show{display:block}
-#surgeBanner{display:none;position:relative;z-index:2;background:linear-gradient(90deg,#7a4d0a,var(--gold));color:#241a04;padding:9px 18px;text-align:center;font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+#surgeBanner{display:none;position:relative;z-index:2;background:var(--surface2);border-bottom:1px solid rgba(240,185,58,.3);color:var(--gold-l);padding:9px 18px;text-align:center;font-weight:600;font-size:12px;cursor:pointer;flex-shrink:0;letter-spacing:.02em}
 #surgeBanner.show{display:block}
 #arrivedBanner{display:none;position:relative;z-index:2;background:var(--emerald);color:#04241a;padding:9px 18px;font-weight:700;font-size:12px;text-align:center;flex-shrink:0}
 #arrivedBanner.show{display:block}
@@ -61,7 +61,7 @@ html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--
 
 #screens{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 #screens::-webkit-scrollbar{display:none}
-.screen{display:none;padding:14px 18px calc(var(--nav-h) + 24px);animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+.screen{display:none;padding:14px 18px calc(var(--nav-h) + 40px);animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
 .screen.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
@@ -92,7 +92,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:var(--r-sm);font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;border:none;transition:.2s;width:100%;letter-spacing:.01em}
-.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 6px 20px -6px rgba(240,185,58,.5)}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;box-shadow:0 3px 10px -4px rgba(240,185,58,.35)}
 .btn-primary:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
 .btn-primary:disabled{background:var(--surface3);color:var(--muted2);box-shadow:none;cursor:not-allowed}
 .btn-outline{background:rgba(255,255,255,.02);border:1px solid var(--hair2);color:var(--text)}
@@ -147,9 +147,9 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
 /* modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(3,5,10,.78);backdrop-filter:blur(2px);z-index:500;align-items:flex-end;justify-content:center}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(3,5,10,.78);backdrop-filter:blur(2px);z-index:10000;align-items:flex-end;justify-content:center}
 .modal-overlay.show{display:flex}
-.modal-box{background:var(--surface2);border:1px solid var(--hair2);border-radius:22px 22px 0 0;padding:24px;width:100%;max-width:460px;max-height:82dvh;overflow-y:auto;animation:slideUp .32s cubic-bezier(.2,.8,.2,1)}
+.modal-box{background:var(--surface2);border:1px solid var(--hair2);border-radius:22px 22px 0 0;padding:24px;padding-bottom:calc(24px + var(--nav-h));width:100%;max-width:460px;max-height:82dvh;overflow-y:auto;animation:slideUp .32s cubic-bezier(.2,.8,.2,1)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-title{font-family:var(--disp);font-size:17px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
 .modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
@@ -203,7 +203,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 .scroll-hint{text-align:center;color:var(--muted2);font-size:10.5px;padding:8px 0 0}
 
-#thankYouOverlay{display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#132043,var(--ink) 65%);z-index:700;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+#thankYouOverlay{display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#132043,var(--ink) 65%);z-index:10000;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
 #thankYouOverlay.show{display:flex}
 .ty-emoji{font-size:72px;animation:bounceIn .6s ease}
 @keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
@@ -235,7 +235,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;cursor:pointer;color:var(--muted);transition:.2s;border:none;background:none;font-family:var(--data);font-size:9.5px;min-width:0;border-radius:16px}
 .nav-btn.active{color:var(--gold-l);background:rgba(240,185,58,.08)}
 .nav-btn .icon{font-size:18px}
-.nav-btn.center-btn{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#241a04;border-radius:50%;width:52px;height:52px;margin-top:-24px;padding:0;flex:none;align-self:flex-start;font-size:21px;box-shadow:0 6px 22px -4px rgba(240,185,58,.6);font-weight:700;min-width:52px}
+.nav-btn.center-btn{background:var(--surface3);color:var(--gold-l);border:1px solid var(--hair2);border-radius:50%;width:50px;height:50px;margin-top:-18px;padding:0;flex:none;align-self:flex-start;font-size:19px;box-shadow:0 4px 12px -4px rgba(0,0,0,.5);font-weight:700;min-width:50px}
 
 @media(max-height:700px){.screen{padding-bottom:calc(var(--nav-h) + 12px)}}
 </style>
@@ -267,7 +267,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 <!-- ===== HOME ===== -->
 <div class="screen active" id="s-home">
   <div class="eyebrow">Gaborone · Botswana</div>
-  <div class="greeting">Good day, <span id="greetName">Todd</span></div>
+  <div class="greeting">Good day<span id="greetName"></span></div>
 
   <div class="diamond-card">
     <div class="wallet-row">
@@ -462,12 +462,15 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 <!-- ===== DRIVER ===== -->
 <div class="screen" id="s-driver">
+  <div id="s-driver-header">
   <div class="eyebrow">Driver mode</div>
   <div class="greeting">Your shift</div>
   <div style="display:flex;gap:8px;margin-bottom:12px">
     <button class="btn btn-outline btn-sm" id="driverModeBtn" onclick="toggleDriverMode()" style="flex:1">🟢 Go online</button>
     <button class="btn btn-outline btn-sm" onclick="openModal('earningsModal')" style="flex:1">💰 Earnings</button>
   </div>
+  </div>
+  
   <div class="card">
     <div class="wallet-bar">
       <div class="bal-card"><div class="val" id="drv-requests">0</div><div class="lbl">Requests</div></div>
@@ -475,7 +478,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <div class="bal-card"><div class="val" id="drv-thb">0</div><div class="lbl">THB earned</div></div>
     </div>
   </div>
-  <div class="card-title" style="margin-bottom:10px">📋 Incoming requests</div>
+  <div class="card-title" id="driverRequestsTitle" style="margin-bottom:10px">📋 Incoming requests</div>
   <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
 </div>
 
@@ -491,12 +494,38 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <span class="chip active">Gaborone, BWA</span>
     </div>
   </div>
+  <div class="card" id="accountCard">
+    <div class="card-title" style="margin-bottom:12px">👤 Account</div>
+    <div id="accountLoggedOut">
+      <input class="input" id="acc-phone" placeholder="Phone number" style="margin-bottom:10px"/>
+      <input class="input" id="acc-name" placeholder="Full name (for new accounts)" style="margin-bottom:10px"/>
+      <input class="input" id="acc-pin" type="password" placeholder="PIN (4+ digits)" style="margin-bottom:14px"/>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" style="flex:1" onclick="clAuthLogin()">Log in</button>
+        <button class="btn btn-outline" style="flex:1" onclick="clAuthRegister()">Register</button>
+      </div>
+    </div>
+    <div id="accountLoggedIn" style="display:none">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px" id="acc-loggedin-phone"></div>
+      <input class="input" id="acc-edit-name" placeholder="Your name" style="margin-bottom:8px"/>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="btn btn-primary" style="flex:1" onclick="clSaveProfileName()">Save name</button>
+        <button class="btn btn-outline" style="flex:1" onclick="clAuthLogout()">Log out</button>
+      </div>
+    </div>
+  </div>
   <div class="card">
     <div class="card-title" style="margin-bottom:12px">📊 My KPIs</div>
     <div class="wallet-bar">
       <div class="bal-card"><div class="val" id="kpi-rides">0</div><div class="lbl">Rides</div></div>
       <div class="bal-card"><div class="val" id="kpi-thb">0</div><div class="lbl">THB</div></div>
       <div class="bal-card"><div class="val" id="kpi-rating">—</div><div class="lbl">Avg ⭐</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">🚕 My Rides</div>
+    <div id="myRidesList" style="display:flex;flex-direction:column;gap:8px">
+      <div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>
     </div>
   </div>
   <div class="card">
@@ -723,7 +752,130 @@ window.addEventListener('load', () => {
   checkOnline();
   window.addEventListener('online', () => { checkOnline(); syncOfflineQueue(); });
   window.addEventListener('offline', checkOnline);
+  registerServiceWorkerAndPush();
 });
+
+async function registerServiceWorkerAndPush(){
+  if(!('serviceWorker' in navigator)) return;
+  try{
+    await navigator.serviceWorker.register('/sw.js');
+  }catch(e){
+    console.log('Service worker registration failed', e);
+  }
+}
+
+// Call this after a driver goes online, or a passenger books a ride,
+// so they can actually receive a push when something happens even if
+// the app isn't open. Silently does nothing if the browser or user
+// doesn't support/allow notifications — this should never block the
+// core booking/driving flow.
+async function subscribeToPush(role){
+  console.log('[CabLink Push] START role=', role);
+
+  if(!('serviceWorker' in navigator)){
+    console.log('[CabLink Push] FAIL: serviceWorker unsupported');
+    return;
+  }
+
+  if(!('PushManager' in window)){
+    console.log('[CabLink Push] FAIL: PushManager unsupported');
+    return;
+  }
+
+  if(!('Notification' in window)){
+    console.log('[CabLink Push] FAIL: Notification API unsupported');
+    return;
+  }
+
+  try{
+    console.log('[CabLink Push] requesting notification permission');
+
+    const permission = await Notification.requestPermission();
+
+    console.log('[CabLink Push] permission=', permission);
+
+    if(permission !== 'granted'){
+      console.log('[CabLink Push] STOP: permission not granted');
+      return;
+    }
+
+    console.log('[CabLink Push] waiting for service worker');
+
+    const reg = await navigator.serviceWorker.ready;
+
+    console.log('[CabLink Push] service worker ready=', !!reg);
+
+    const keyRes = await fetch('/api/push/vapid-public-key');
+
+    console.log('[CabLink Push] VAPID HTTP status=', keyRes.status);
+
+    const keyData = await keyRes.json();
+
+    console.log('[CabLink Push] VAPID response success=', keyData.success);
+
+    if(!keyData.success){
+      console.log('[CabLink Push] STOP: VAPID endpoint unavailable');
+      return;
+    }
+
+    let subscription = await reg.pushManager.getSubscription();
+
+    console.log('[CabLink Push] existing subscription=', !!subscription);
+
+    if(!subscription){
+      console.log('[CabLink Push] creating PushSubscription');
+
+      subscription = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(keyData.publicKey)
+      });
+
+      console.log('[CabLink Push] PushSubscription created=', !!subscription);
+    }
+
+    const clAccountRaw = localStorage.getItem('cl_account');
+    const clAccount = clAccountRaw ? JSON.parse(clAccountRaw) : null;
+
+    console.log('[CabLink Push] accountId=', clAccount && clAccount.id ? 'PRESENT' : 'NULL');
+    console.log('[CabLink Push] posting subscription to backend');
+
+    const saveRes = await fetch('/api/push/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accountId: (clAccount && clAccount.id) || null,
+        role,
+        subscription
+      })
+    });
+
+    console.log('[CabLink Push] save HTTP status=', saveRes.status);
+
+    const saveData = await saveRes.json();
+
+    console.log('[CabLink Push] save response=', saveData);
+
+    if(!saveRes.ok){
+      console.log('[CabLink Push] BACKEND REJECTED SUBSCRIPTION');
+      return;
+    }
+
+    console.log('[CabLink Push] SUCCESS — subscription saved');
+  }catch(e){
+    console.error('[CabLink Push] ERROR:', e);
+  }
+}
+
+function urlBase64ToUint8Array(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for(let i = 0; i < rawData.length; i++){
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
 
 function renderEcosystem(){
   const el = document.getElementById('ecoGrid');
@@ -778,6 +930,8 @@ async function connectWallet(){
     estimateGas();
     document.getElementById('profile-name').textContent = shortAddr(STATE.wallet);
     document.getElementById('profile-sub').textContent = 'BSC Testnet · THoBoCoin holder';
+    const greetEl = document.getElementById('greetName');
+    if(greetEl) greetEl.textContent = ', ' + shortAddr(STATE.wallet);
   }catch(e){ toast('Could not connect: ' + (e.message || 'User rejected'), 'error'); }
 }
 async function updateWalletUI(){
@@ -988,12 +1142,19 @@ async function bookRide(){
   if(!pickup || !dropoff){ toast('Please enter pickup and drop-off locations', 'warning'); return; }
   if(STATE.inRide){ toast('Ride already in progress', 'warning'); return; }
 
+  const clAccountRaw = localStorage.getItem('cl_account');
+  const clAccount = clAccountRaw ? JSON.parse(clAccountRaw) : null;
+
   const payload = {
     pickup, dropoff,
     fare: STATE.selectedFare || 0,
     type: STATE.selectedRideType || 'standard',
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    passengerId: (clAccount && clAccount.id) || STATE.anonPassengerId || (STATE.anonPassengerId = 'ANON-' + Date.now()),
+    passengerName: (clAccount && clAccount.name) || 'Passenger'
   };
+  payload.passenger = payload.passengerId; // canonical backend field name
+  subscribeToPush('passenger');
 
   STATE.inRide = true; STATE.rideReady = false;
   updateMapRoute();
@@ -1284,7 +1445,7 @@ function voiceInput(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const rec = new SR(); rec.lang = 'en-ZA';
   rec.onresult = e => { const t=e.results[0][0].transcript; document.getElementById('dropoff').value=t; updateMapRoute(); toast('🎤 Heard: '+t, 'success'); };
-  rec.onerror = e => { const msgs={'not-allowed':'Microphone permission denied','no-speech':'No speech detected','network':'Network error'}; toast(msgs[e.error]||'Voice error', 'error'); };
+  rec.onerror = e => { const msgs={'not-allowed':'Mic blocked — tap the ⓘ next to the address bar → Permissions → Microphone → Allow, then try again','no-speech':'No speech detected','network':'Network error'}; toast(msgs[e.error]||'Voice error', 'error'); };
   try{ rec.start(); toast('🎤 Listening…', 'success'); }catch(e){ toast('Voice input failed', 'error'); }
 }
 function checkSurge(){
@@ -1403,8 +1564,13 @@ function renderIncomingRequest(r){
   const container = document.getElementById('driverRequests');
   const div = document.createElement('div');
   div.className = 'request-card pending'; div.id = 'req-' + r.id;
-  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${r.id}</strong><span style="color:var(--gold-l);font-weight:700">${r.fare||''} BWP</span></div>
+  const isMarketplace = r.source === 'digital_mall';
+  const badge = isMarketplace
+    ? `<span style="font-size:10px;font-weight:700;letter-spacing:.03em;color:var(--sapphire-l);border:1px solid var(--sapphire);border-radius:6px;padding:2px 6px;margin-right:6px">DIGITAL MALL DELIVERY</span>`
+    : '';
+  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>${badge}<strong>${r.id}</strong></span><span style="color:var(--gold-l);font-weight:700">${r.fare||''} BWP</span></div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${r.pickup||''} → 🏁 ${r.dropoff||''}</div>
+    ${r.notes ? `<div style="font-size:11px;color:var(--muted2);margin-bottom:8px">${r.notes}</div>` : ''}
     <div style="display:flex;gap:8px">
       <button class="btn btn-green btn-sm" onclick="window.acceptRideRequest('${r.id}',${r.fare||20})">✓ Accept</button>
       <button class="btn btn-outline btn-sm" onclick="document.getElementById('req-${r.id}').remove()">✗ Pass</button>
@@ -1412,8 +1578,11 @@ function renderIncomingRequest(r){
   if(container.firstChild?.textContent?.includes('online')) container.innerHTML = '';
   container.prepend(div);
   updateDriverUI();
-  toast('🚗 New ride request received', 'warning'); haptic();
+  toast(isMarketplace ? '📦 New Digital Mall delivery received' : '🚗 New ride request received', 'warning'); haptic();
 }
+
+
+
 
 
 async function completeRealRide(rideId){
@@ -1538,18 +1707,34 @@ function deleteMyData(){
 // LEADERBOARD / BADGES / FAQ
 // ============================================================
 function renderLeaderboard(){
-  const lb = [
-    {name:'Thobo A.', rides:STATE.totalRides+12, thb:STATE.totalEarned+15.5, you:true},
-    {name:'Keabetswe M.', rides:34, thb:38.2}, {name:'Oratile D.', rides:28, thb:31.0},
-    {name:'Mpho S.', rides:21, thb:24.5}, {name:'Lesego T.', rides:18, thb:20.1},
-  ].sort((a,b)=>b.thb-a.thb);
-  const medals=['gold','silver','bronze'];
   const el = document.getElementById('leaderboard'); if(!el) return;
-  el.innerHTML = lb.map((u,i)=>`
-    <div class="lb-row ${u.you?'lb-you':''}"><span class="lb-rank ${medals[i]||''}">${i+1}</span>
-      <div class="lb-info"><div class="lb-name">${u.name}${u.you?' 👈 You':''}</div><div class="lb-rides">${u.rides} rides</div></div>
-      <span class="lb-thb">${u.thb.toFixed(1)} THB</span></div>`).join('');
+  el.innerHTML = '<div style="padding:12px;color:var(--muted)">Loading leaderboard…</div>';
+
+  fetch('/api/leaderboard')
+    .then(r => r.json())
+    .then(data => {
+      const lb = (data.leaderboard || []);
+      const myAccount = JSON.parse(localStorage.getItem('cl_account') || 'null');
+
+      if(lb.length === 0){
+        el.innerHTML = '<div style="padding:12px;color:var(--muted)">No completed rides yet — be the first on the board.</div>';
+        return;
+      }
+
+      const medals = ['gold','silver','bronze'];
+      el.innerHTML = lb.map((u,i) => {
+        const isYou = myAccount && u.driverId === myAccount.id;
+        return `
+    <div class="lb-row ${isYou?'lb-you':''}"><span class="lb-rank ${medals[i]||''}">${i+1}</span>
+      <div class="lb-info"><div class="lb-name">${u.name}${isYou?' 👈 You':''}</div><div class="lb-rides">${u.rides} rides</div></div>
+      <span class="lb-thb">${u.thb.toFixed(1)} THB</span></div>`;
+      }).join('');
+    })
+    .catch(() => {
+      el.innerHTML = '<div style="padding:12px;color:var(--muted)">Could not load leaderboard — check your connection.</div>';
+    });
 }
+
 const BADGES = [
   {icon:'🚀',name:'First ride',req:()=>STATE.totalRides>=1}, {icon:'🏅',name:'5 rides',req:()=>STATE.totalRides>=5},
   {icon:'🔥',name:'3-day streak',req:()=>STATE.streak>=3}, {icon:'🌟',name:'7-day streak',req:()=>STATE.streak>=7},
@@ -1677,9 +1862,25 @@ function updateDailyBtn(){
   if(STATE.lastBonus === today){ btn.disabled=true; status.textContent='Come back tomorrow!'; } else { btn.disabled=false; status.textContent=''; }
 }
 function updateProfileKPI(){
-  document.getElementById('kpi-rides').textContent = STATE.totalRides;
   document.getElementById('kpi-thb').textContent = STATE.totalEarned.toFixed(1);
   document.getElementById('kpi-rating').textContent = STATE.avgRating || '—';
+
+  const token = localStorage.getItem('cl_token');
+  if(!token){
+    document.getElementById('kpi-rides').textContent = STATE.totalRides;
+    return;
+  }
+
+  fetch('/api/rides/mine', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(r => r.json())
+    .then(data => {
+      if(data.success){
+        document.getElementById('kpi-rides').textContent = data.count;
+      } else {
+        document.getElementById('kpi-rides').textContent = STATE.totalRides;
+      }
+    })
+    .catch(() => { document.getElementById('kpi-rides').textContent = STATE.totalRides; });
 }
 function showChangeLog(){ toast('v6.0: Real Gaborone map (Leaflet + OSM), new diamond-cut design system, BSTM Ecosystem hub, wallet + claim flow, surge, negotiation, driver mode, offline queue, chat, haptics, confetti.', 'success'); }
 function submitFeedback(){
@@ -1722,7 +1923,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if(doff) doff.addEventListener('input', recalc);
 });
 </script>
-<div id="root"></div><script type="module" src="/main.jsx"></script>
+<script src="/js/driver_accept_bridge.js"></script>
+<!-- The React app (main.jsx / App.jsx) is intentionally not
+     loaded here. It was an earlier, parallel implementation
+     that never matched what this vanilla-JS app actually
+     renders, and having both mounted caused confusing
+     duplicate UI to appear below the real screens on scroll. -->
 
 <script>
 
@@ -1875,23 +2081,51 @@ btn.className=
 "btn btn-sm btn-danger";
 
 
+const clAccountRaw = localStorage.getItem('cl_account');
+const clAccount = clAccountRaw ? JSON.parse(clAccountRaw) : null;
+
+let coords = {};
+if(navigator.geolocation){
+  coords = await new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => { toast('Could not get GPS location — using default area', 'warning'); resolve({}); },
+      { timeout: 8000 }
+    );
+  });
+}
+
 let driver={
 
 id:
+(clAccount && clAccount.id) ||
 localStorage.getItem("cablink_driver_id")
 ||
 "DRV-"+Date.now(),
 
 name:
+(clAccount && clAccount.name) ||
 "CabLink Driver",
 
 location:
 "Gaborone",
 
+lat:
+coords.lat || null,
+
+lng:
+coords.lng || null,
+
 timestamp:
 Date.now()
 
 };
+
+if(!clAccount){
+toast('Log in on the Profile tab so your rides and THB track to your real account', 'warning');
+}
+
+subscribeToPush('driver');
 
 
 localStorage.setItem(
@@ -2270,13 +2504,17 @@ return ride;
     var ds = document.getElementById('s-driver');
     if(!ds) return;
     var cta = document.getElementById('cl-drv-cta');
+    var header = document.getElementById('s-driver-header');
     var walletBar = ds.querySelector('.wallet-bar');
     var reqList = document.getElementById('driverRequests');
+    var reqTitle = document.getElementById('driverRequestsTitle');
     var goOnlineBtn = document.getElementById('driverModeBtn');
 
     if(getRole() !== 'driver'){
+      if(header) header.style.display = 'none';
       if(walletBar) walletBar.style.display = 'none';
       if(reqList) reqList.style.display = 'none';
+      if(reqTitle) reqTitle.style.display = 'none';
       if(goOnlineBtn) goOnlineBtn.style.display = 'none';
       if(!cta){
         cta = document.createElement('div');
@@ -2291,8 +2529,10 @@ return ride;
       }
     } else {
       if(cta) cta.remove();
+      if(header) header.style.display = '';
       if(walletBar) walletBar.style.display = '';
       if(reqList) reqList.style.display = '';
+      if(reqTitle) reqTitle.style.display = '';
       if(goOnlineBtn) goOnlineBtn.style.display = '';
     }
   }
@@ -2318,12 +2558,10 @@ return ride;
       });
       const data = await res.json();
       if(data.success){
-        toast('Application received — you will be notified once approved.', 'success');
+        toast('Application received — pending admin review.', 'success');
         document.getElementById('driverApplyModal').classList.remove('show');
-        // For now, approve immediately so the real gate can be tested end-to-end.
-        // Replace this with a real admin-approval check once that flow exists.
-        setRole('driver');
-        gateDriverScreen();
+        localStorage.setItem('cl_applicantPhone', phone);
+        pollApplicationStatus(phone);
       } else {
         toast(data.error || 'Application failed', 'error');
       }
@@ -2332,6 +2570,172 @@ return ride;
       toast('Could not submit application — backend unavailable', 'error');
     }
   };
+
+  async function pollApplicationStatus(phone){
+    try{
+      const res = await fetch('/api/drivers/application-status?phone=' + encodeURIComponent(phone));
+      const data = await res.json();
+      if(data.status === 'APPROVED'){
+        setRole('driver');
+        gateDriverScreen();
+        toast('You are approved to drive! 🎉', 'success');
+        return;
+      }
+      if(data.status === 'REJECTED'){
+        toast('Your driver application was not approved.', 'error');
+        return;
+      }
+      // still PENDING — check again shortly
+      setTimeout(() => pollApplicationStatus(phone), 8000);
+    }catch(e){
+      // network hiccup — try again shortly rather than giving up
+      setTimeout(() => pollApplicationStatus(phone), 8000);
+    }
+  }
+
+  // Resume checking on page load if there's an outstanding application
+  // and the local role hasn't already been marked as driver.
+  (function resumePendingApplication(){
+    var phone = localStorage.getItem('cl_applicantPhone');
+    if(phone && getRole() !== 'driver'){
+      pollApplicationStatus(phone);
+    }
+  })();
+
+  // ============================================================
+  // REAL ACCOUNT LOGIN / REGISTER (phone + PIN)
+  // ============================================================
+
+  window.clAuthRegister = async function(){
+    var phone = document.getElementById('acc-phone').value.trim();
+    var name = document.getElementById('acc-name').value.trim();
+    var pin = document.getElementById('acc-pin').value.trim();
+    if(!phone || !pin){ toast('Phone and PIN required', 'warning'); return; }
+    try{
+      const res = await fetch('/api/auth/register', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ phone, name, pin })
+      });
+      const data = await res.json();
+      if(!data.success){ toast(data.error || 'Registration failed', 'error'); return; }
+      toast('Account created — now log in', 'success');
+    }catch(e){ toast('Network error registering', 'error'); }
+  };
+
+  window.clAuthLogin = async function(){
+    var phone = document.getElementById('acc-phone').value.trim();
+    var pin = document.getElementById('acc-pin').value.trim();
+    if(!phone || !pin){ toast('Phone and PIN required', 'warning'); return; }
+    try{
+      const res = await fetch('/api/auth/login', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ phone, pin })
+      });
+      const data = await res.json();
+      if(!data.success){ toast(data.error || 'Login failed', 'error'); return; }
+      localStorage.setItem('cl_token', data.token);
+      localStorage.setItem('cl_account', JSON.stringify(data.account));
+      toast('Logged in', 'success');
+      renderAccountUI();
+    }catch(e){ toast('Network error logging in', 'error'); }
+  };
+
+  window.clAuthLogout = function(){
+    localStorage.removeItem('cl_token');
+    localStorage.removeItem('cl_account');
+    renderAccountUI();
+    toast('Logged out', 'warning');
+  };
+
+  function renderAccountUI(){
+    var accEl = document.getElementById('accountCard');
+    if(!accEl) return;
+    var raw = localStorage.getItem('cl_account');
+    var loggedOutEl = document.getElementById('accountLoggedOut');
+    var loggedInEl = document.getElementById('accountLoggedIn');
+    var profileNameEl = document.getElementById('profile-name');
+    var profileSubEl = document.getElementById('profile-sub');
+    if(raw){
+      var account = JSON.parse(raw);
+      loggedOutEl.style.display = 'none';
+      loggedInEl.style.display = 'block';
+      document.getElementById('acc-loggedin-phone').textContent = account.phone;
+      var editNameEl = document.getElementById('acc-edit-name');
+      if(editNameEl && document.activeElement !== editNameEl) editNameEl.value = account.name || '';
+      if(profileNameEl) profileNameEl.textContent = account.name || account.phone;
+      if(profileSubEl) profileSubEl.textContent = account.phone;
+      // Prefill the driver-application form with real account details
+      // so applying doesn't require retyping name/phone.
+      var applyName = document.getElementById('apply-name');
+      var applyPhone = document.getElementById('apply-phone');
+      if(applyName && !applyName.value) applyName.value = account.name;
+      if(applyPhone && !applyPhone.value) applyPhone.value = account.phone;
+      renderMyRides();
+    } else {
+      loggedOutEl.style.display = 'block';
+      loggedInEl.style.display = 'none';
+      if(profileNameEl) profileNameEl.textContent = 'Not connected';
+      if(profileSubEl) profileSubEl.textContent = 'Log in to see your profile';
+      var listEl = document.getElementById('myRidesList');
+      if(listEl) listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>';
+    }
+  }
+
+  window.clSaveProfileName = async function(){
+    var token = localStorage.getItem('cl_token');
+    if(!token){ toast('Log in first', 'warning'); return; }
+    var name = document.getElementById('acc-edit-name').value.trim();
+    if(!name){ toast('Name cannot be empty', 'warning'); return; }
+    try{
+      const res = await fetch('/api/auth/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ name })
+      });
+      const data = await res.json();
+      if(!data.success){ toast(data.error || 'Could not save name', 'error'); return; }
+      localStorage.setItem('cl_account', JSON.stringify(data.account));
+      toast('Name updated', 'success');
+      renderAccountUI();
+    }catch(e){ toast('Network error saving name', 'error'); }
+  };
+
+  function renderMyRides(){
+    var listEl = document.getElementById('myRidesList');
+    if(!listEl) return;
+    var token = localStorage.getItem('cl_token');
+    if(!token){
+      listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>';
+      return;
+    }
+    listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Loading your rides…</div>';
+    fetch('/api/rides/mine', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => r.json())
+      .then(data => {
+        if(!data.success){
+          listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Could not load ride history.</div>';
+          return;
+        }
+        if(data.rides.length === 0){
+          listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">No rides yet — request your first ride from Home.</div>';
+          return;
+        }
+        var sorted = data.rides.slice().sort(function(a,b){ return new Date(b.createdAt) - new Date(a.createdAt); });
+        listEl.innerHTML = sorted.map(function(ride){
+          var date = new Date(ride.createdAt).toLocaleDateString();
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface,rgba(255,255,255,.03));border-radius:10px">' +
+            '<div><div style="font-weight:600;font-size:13px">' + ride.pickup + ' → ' + ride.dropoff + '</div>' +
+            '<div style="font-size:11px;color:var(--muted)">' + date + ' · ' + ride.status + '</div></div>' +
+            '<div style="font-weight:700;color:var(--gold-l,var(--gold))">P' + ride.fare + '</div></div>';
+        }).join('');
+      })
+      .catch(() => {
+        listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Could not load ride history — check your connection.</div>';
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', renderAccountUI);
+  renderAccountUI();
 
   document.addEventListener('DOMContentLoaded', function(){
     gateDriverScreen();
