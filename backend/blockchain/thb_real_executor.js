@@ -48,20 +48,54 @@ wallet
 );
 
 
+try{
+
+const decimals=
+await contract.decimals();
+
+const parsedAmount=
+ethers.parseUnits(
+String(data.amount),
+decimals
+);
+
 let tx=
 await contract.transfer(
 data.wallet,
-data.amount
+parsedAmount
 );
 
+const receipt=
+await tx.wait(1);
+
+if(!receipt || receipt.status !== 1){
+
+return {
+status:"FAILED",
+hash:tx.hash,
+reason:"Transaction reverted on-chain"
+};
+
+}
 
 return {
 
-status:"SUBMITTED",
-
-hash:tx.hash
+status:"CONFIRMED",
+hash:tx.hash,
+blockNumber:receipt.blockNumber
 
 };
+
+}catch(error){
+
+return {
+
+status:"FAILED",
+reason:error.shortMessage || error.message || "Unknown blockchain error"
+
+};
+
+}
 
 }
 

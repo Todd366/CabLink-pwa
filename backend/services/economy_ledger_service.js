@@ -1,8 +1,9 @@
 
 
 const fs=require("fs");
+const path=require("path");
 
-const file="backend/data/economy_ledger.json";
+const file=path.join(__dirname,"..","data","economy_ledger.json");
 
 
 function load(){
@@ -88,11 +89,17 @@ function driverEconomy(driver){
 const db=load();
 
 const rides=db.rides.filter(
-r=>r.driver===driver
+r=>(
+    r.driverId===driver ||
+    r.driver===driver
+)
 );
 
 const transactions=db.transactions.filter(
-t=>t.driver===driver
+t=>(
+    t.driverId===driver ||
+    t.driver===driver
+)
 );
 
 return {
@@ -134,12 +141,18 @@ return {
 
 rides:
 db.rides.filter(
-r=>r.driver===driver
+r=>(
+    r.driverId===driver ||
+    r.driver===driver
+)
 ),
 
 transactions:
 db.transactions.filter(
-t=>t.driver===driver
+t=>(
+    t.driverId===driver ||
+    t.driver===driver
+)
 )
 
 };

@@ -3,6 +3,12 @@ const router = require("express").Router();
 const rideEngine =
     require("../canonical/ride_engine");
 
+const auth =
+    require("../services/auth_service");
+
+const rewardService =
+    require("../services/canonical_reward_service");
+
 const {
     STATES
 } = rideEngine;
@@ -42,6 +48,9 @@ router.post("/", async (req, res) => {
             });
         }
 
+        const callingAccount =
+            await auth.accountFromRequest(req);
+
         const ride =
             await rideEngine.createRide({
                 pickup,
@@ -51,7 +60,9 @@ router.post("/", async (req, res) => {
                 distanceKm,
                 wallet,
                 notes,
-                passenger
+                passenger,
+                passengerAccountId:
+                    callingAccount ? callingAccount.id : null
             });
 
         // Move ride into matching state.
@@ -112,12 +123,21 @@ router.patch("/:id/accept", async (req, res) => {
             });
         }
 
+        const callingDriverAccount =
+            await auth.accountFromRequest(req);
+
         const result =
             await rideEngine.acceptRide(
                 req.params.id,
                 driverId,
                 driverName
             );
+
+        if (result.success && callingDriverAccount) {
+            rideEngine
+                .attachDriverAccount(req.params.id, callingDriverAccount.id)
+                .catch(() => {});
+        }
 
         if (!result.success) {
 
@@ -159,6 +179,52 @@ router.patch("/:id/accept", async (req, res) => {
             error: "Failed to accept ride"
         });
     }
+});
+
+
+// ============================================================
+// GET /api/rides/mine
+// Real ride history for the logged-in account — as passenger
+// or as driver. Requires a valid session token.
+// ============================================================
+
+router.get("/mine", async (req, res) => {
+
+    try {
+
+        const account = await auth.accountFromRequest(req);
+
+        if (!account) {
+            return res.status(401).json({
+                success: false,
+                error: "Not logged in"
+            });
+        }
+
+        const all = await rideEngine.getAllRides();
+
+        const mine = all.filter(ride =>
+            ride.passengerAccountId === account.id ||
+            ride.driverAccountId === account.id
+        );
+
+        res.json({
+            success: true,
+            count: mine.length,
+            rides: mine
+        });
+
+    } catch (error) {
+
+        console.error("❌ Ride history error:", error);
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to load ride history"
+        });
+
+    }
+
 });
 
 
@@ -218,9 +284,14 @@ router.get("/:id", async (req, res) => {
 
     }
 
+    const reward =
+        ride.status === STATES.COMPLETED
+            ? rewardService.getRewardForRide(ride.id)
+            : null;
+
     res.json({
         success: true,
-        ride
+        ride: { ...ride, reward }
     });
 
 });
@@ -231,7 +302,7 @@ router.get("/:id", async (req, res) => {
 // Change ride state / update metadata
 // ============================================================
 
-router.patch("/:id", (req, res) => {
+router.patch("/:id", async (req, res) => {
 
     try {
 
@@ -253,7 +324,7 @@ router.patch("/:id", (req, res) => {
         }
 
         const result =
-            rideEngine.transition(
+            await rideEngine.transition(
                 req.params.id,
                 status,
                 {

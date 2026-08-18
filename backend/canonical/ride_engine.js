@@ -1,6 +1,9 @@
 const repository =
     require("./ride_repository");
 
+const push =
+    require("../services/push_service");
+
 const STATES =
     Object.freeze({
 
@@ -110,14 +113,37 @@ async function createRide(
             data.notes ||
             "",
 
+        source:
+            data.source ||
+            "app",
+
+        taskType:
+            data.taskType ||
+            "passenger",
+
+        externalRef:
+            data.externalRef ||
+            null,
+
         passenger:
             data.passenger ||
+            null,
+
+        passengerName:
+            data.passengerName ||
             null,
 
         driverId:
             null,
 
         driverName:
+            null,
+
+        passengerAccountId:
+            data.passengerAccountId ||
+            null,
+
+        driverAccountId:
             null,
 
         status:
@@ -133,9 +159,23 @@ async function createRide(
 
     };
 
-    return repository.create(
+return repository.create(
         ride
-    );
+    ).then(createdRide => {
+
+        // Fire-and-forget: notify any subscribed online drivers that a
+        // ride is available. A push failure here should never block or
+        // fail the ride creation itself.
+        push.sendToOnlineDrivers({
+            title: "🚕 New ride request",
+            body: `${createdRide.pickup} → ${createdRide.dropoff} · P${createdRide.fare}`,
+            tag: "cablink-ride-" + createdRide.id,
+            data: { rideId: createdRide.id, type: "NEW_RIDE" }
+        }).catch(() => {});
+
+        return createdRide;
+
+    });
 
 }
 
@@ -189,6 +229,39 @@ async function acceptRide(
         id,
         driverId,
         driverName
+    ).then(result => {
+
+        if (result && result.ride && result.ride.passenger) {
+
+            push.sendToAccount(result.ride.passenger, {
+                title: "🚗 Driver assigned!",
+                body: `${driverName || "A driver"} is on the way`,
+                tag: "cablink-ride-" + id,
+                data: { rideId: id, type: "DRIVER_ASSIGNED" }
+            }).catch(() => {});
+
+        }
+
+        return result;
+
+    });
+
+}
+
+
+
+async function attachDriverAccount(
+    id,
+    accountId
+) {
+
+    if (!accountId) {
+        return null;
+    }
+
+    return repository.update(
+        id,
+        { driverAccountId: accountId }
     );
 
 }
@@ -325,6 +398,7 @@ function persistenceStatus() {
 }
 
 module.exports = {
+    attachDriverAccount,
 
     STATES,
 

@@ -1,4 +1,5 @@
 const canonicalWalletResolver = require("../rewards/canonical_wallet_resolver");
+const thbExecutor = require("../blockchain/thb_real_executor");
 const fs = require("fs");
 const path = require("path");
 
@@ -94,6 +95,19 @@ function findExistingReward(
             ) === String(rideId)
 
     ) || null;
+
+}
+
+function getRewardForRide(rideId) {
+
+    if (!rideId) return null;
+
+    const ledger = loadLedger();
+
+    return findExistingReward(
+        ledger.transactions,
+        String(rideId)
+    );
 
 }
 
@@ -266,6 +280,12 @@ async function createRewardForCompletedRide(
             ride.driverId ||
             null,
 
+        amount:
+            amount,
+
+        status:
+            "PENDING_TRANSFER",
+
         wallet: canonicalWalletResolver.resolveWallet(
       ride.driverId || ride.userId,
       ride.wallet
@@ -287,6 +307,63 @@ async function createRewardForCompletedRide(
         ledger
     );
 
+    /*
+     * Attempt the actual on-chain transfer.
+     *
+     * If nothing can be resolved, or the chain call fails,
+     * the reward stays on the ledger as FAILED / SKIPPED so
+     * it can be retried later. Ride completion itself is
+     * never rolled back because of a blockchain failure —
+     * the ride happened; the payout can be recovered.
+     */
+
+    let executionResult = {
+        status: "SKIPPED",
+        reason: "No wallet resolved for driver"
+    };
+
+    if (reward.wallet && amount > 0) {
+
+        try {
+
+            executionResult =
+                await thbExecutor.executeTransfer({
+                    wallet: reward.wallet,
+                    amount: amount
+                });
+
+        } catch (error) {
+
+            executionResult = {
+                status: "FAILED",
+                reason: error.message || "Unknown executor error"
+            };
+
+        }
+
+    }
+
+    reward.status = executionResult.status;
+    reward.txHash = executionResult.hash || null;
+    reward.executionReason = executionResult.reason || null;
+
+    const persisted = loadLedger();
+
+    const persistedTx =
+        findExistingReward(
+            persisted.transactions,
+            canonicalRideId
+        );
+
+    if (persistedTx) {
+
+        persistedTx.status = reward.status;
+        persistedTx.txHash = reward.txHash;
+        persistedTx.executionReason = reward.executionReason;
+
+    }
+
+    saveLedger(persisted);
 
     return {
 
@@ -310,6 +387,8 @@ async function createRewardForCompletedRide(
 
 module.exports = {
 
-    createRewardForCompletedRide
+    createRewardForCompletedRide,
+
+    getRewardForRide
 
 };

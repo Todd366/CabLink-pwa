@@ -16,5 +16,16 @@ demand.getDemand()
 });
 
 
+router.get(
+"/driver/hotspots",
+(req,res)=>{
+
+res.json(
+demand.getHotspots()
+);
+
+});
+
+
 module.exports=router;
 

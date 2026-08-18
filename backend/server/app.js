@@ -1,7 +1,9 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 
@@ -12,20 +14,38 @@ app.use(express.json());
 const rideRoutes =
     require("../routes/rides");
 
-const userRoutes =
-    require("../routes/users");
-
 const canonicalRewardRoutes =
     require("../routes/canonical_reward_api");
 
 const completionRoutes =
     require("../routes/completion_api");
 
-const dispatchRoutes =
-    require("../routes/dispatch_api");
-
 const driverOnlineRoutes =
     require("../routes/driver_online_api");
+
+const driverWalletRoutes =
+    require("../routes/driver_wallet_api");
+
+const driverEconomyRoutes =
+    require("../routes/driver_economy_api");
+
+const driverDemandRoutes =
+    require("../routes/driver_demand_api");
+
+const authRoutes =
+    require("../routes/auth_api");
+
+const driverApplicationRoutes =
+    require("../routes/driver_applications_api");
+
+const leaderboardRoutes =
+    require("../routes/leaderboard_api");
+
+const pushRoutes =
+    require("../routes/push_api");
+
+const marketplaceRoutes =
+    require("../routes/marketplace_api");
 
 
 // ============================================================
@@ -81,11 +101,12 @@ app.use(
 // ============================================================
 // USERS
 // ============================================================
-
-app.use(
-    "/api/users",
-    userRoutes
-);
+//
+// The old /api/users route (routes/users.js) was a dead
+// duplicate identity system talking to a separate
+// user_repository that nothing else used. Archived. Real
+// identity is /api/auth/* only — see auth_service.js.
+// ============================================================
 
 
 // ============================================================
@@ -117,27 +138,15 @@ app.use(
 
 
 // ============================================================
-// DISPATCH
+// DISPATCH — REMOVED
 //
-// Dispatch is now mounted.
+// The legacy dispatch system (/api/dispatch/*) has been
+// quarantined to:
+//   archive/quarantined_dead_systems/dispatch_system_2026-08-05/
 //
-// Canonical driver polling endpoint:
-//
-// GET /api/dispatch/requests
-//
-// Passenger request:
-//
-// POST /api/dispatch/request
-//
-// Driver acceptance:
-//
-// POST /api/dispatch/accept
+// It was a disconnected parallel ride system with no completion
+// step or reward integration. The app now uses /api/rides only.
 // ============================================================
-
-app.use(
-    "/api",
-    dispatchRoutes
-);
 
 
 // ============================================================
@@ -147,6 +156,61 @@ app.use(
 app.use(
     "/api",
     driverOnlineRoutes
+);
+
+
+// ============================================================
+// DRIVER WALLET LINKING
+// ============================================================
+
+app.use(
+    "/api",
+    driverWalletRoutes
+);
+
+
+// ============================================================
+// DRIVER ECONOMY + DEMAND
+// ============================================================
+
+app.use(
+    "/api",
+    driverEconomyRoutes
+);
+
+app.use(
+    "/api",
+    driverDemandRoutes
+);
+
+
+// ============================================================
+// AUTH + DRIVER APPLICATIONS
+// ============================================================
+
+app.use(
+    "/api",
+    authRoutes
+);
+
+app.use(
+    "/api",
+    driverApplicationRoutes
+);
+
+app.use(
+    "/api",
+    leaderboardRoutes
+);
+
+app.use(
+    "/api",
+    pushRoutes
+);
+
+app.use(
+    "/api",
+    marketplaceRoutes
 );
 
 

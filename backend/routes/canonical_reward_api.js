@@ -16,12 +16,12 @@ const rewardService =
 
 router.post(
     "/ride/:rideId",
-    (req, res) => {
+    async (req, res) => {
 
         try {
 
             const result =
-                rewardService
+                await rewardService
                     .createRewardForCompletedRide(
                         req.params.rideId
                     );
