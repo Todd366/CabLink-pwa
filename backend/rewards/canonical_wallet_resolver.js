@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { ethers } = require('ethers');
+const driverWalletService = require('../services/driver_wallet_service');
 
 const USERS_FILE = path.join(__dirname, '..', 'data', 'users.json');
 const DRIVERS_FILE = path.join(__dirname, '..', 'data', 'drivers.json');
@@ -111,13 +112,12 @@ function findWalletInRecord(record) {
   return null;
 }
 
-function findLinkedWallet(identity) {
-  const id = normaliseIdentity(identity);
-
-  if (!id) {
-    return null;
-  }
-
+// PATCH 14: legacy fallback only. This used to be the ONLY place
+// findLinkedWallet looked — flat JSON files that driver_wallet_api.js
+// no longer writes to since patch 13. Kept as a read-only fallback so
+// a wallet linked before that patch still resolves, but it is no
+// longer the primary source.
+function findLinkedWalletInLegacyFiles(id) {
   const sources = [
     readJson(USERS_FILE),
     readJson(DRIVERS_FILE),
@@ -147,6 +147,30 @@ function findLinkedWallet(identity) {
   return null;
 }
 
+// PATCH 14: now async, and now checks the real, current wallet
+// store (backend/services/driver_wallet_service.js — the same
+// LOCAL/FIRESTORE dual-mode persistence driver_wallet_api.js
+// writes to since patch 13) FIRST, before falling back to the old
+// flat files for anything linked before that fix. This is the
+// change that actually makes linked wallets visible to the reward
+// pipeline again in production.
+async function findLinkedWallet(identity) {
+  const id = normaliseIdentity(identity);
+
+  if (!id) {
+    return null;
+  }
+
+  const current = await driverWalletService.getWallet(id);
+  const validCurrent = validateWallet(current);
+
+  if (validCurrent) {
+    return validCurrent;
+  }
+
+  return findLinkedWalletInLegacyFiles(id);
+}
+
 /**
  * Canonical wallet resolution.
  *
@@ -159,9 +183,12 @@ function findLinkedWallet(identity) {
  * - wallet is not a valid EVM address
  *
  * The treasury wallet is deliberately NOT used as a fallback.
+ *
+ * PATCH 14: now async — see findLinkedWallet above. Every caller
+ * of resolveWallet must now `await` it.
  */
-function resolveWallet(identity, suppliedWallet) {
-  const linkedWallet = findLinkedWallet(identity);
+async function resolveWallet(identity, suppliedWallet) {
+  const linkedWallet = await findLinkedWallet(identity);
 
   if (linkedWallet) {
     return linkedWallet;

@@ -286,7 +286,7 @@ async function createRewardForCompletedRide(
         status:
             "PENDING_TRANSFER",
 
-        wallet: canonicalWalletResolver.resolveWallet(
+        wallet: await canonicalWalletResolver.resolveWallet(
       ride.driverId || ride.userId,
       ride.wallet
     )
