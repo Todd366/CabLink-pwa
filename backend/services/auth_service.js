@@ -16,6 +16,12 @@ const crypto = require("crypto");
 // wiped whenever a new serverless instance cold-starts.
 // Defaults to LOCAL flat-file storage for local dev in
 // Termux, where a persistent filesystem is fine.
+//
+// PATCH 13: added findOrCreateAccountByPhone() — the one
+// shared way to get-or-create a passwordless account by phone
+// number. driver_application_service.js now calls this instead
+// of keeping its own separate copy of account read/write logic,
+// so there is exactly one accounts collection, always.
 // ============================================================
 
 const MODE = process.env.CABLINK_ACCOUNT_PERSISTENCE || "LOCAL";
@@ -248,6 +254,40 @@ async function accountFromRequest(req) {
     return accountFromToken(token);
 }
 
+// PATCH 13: single shared get-or-create for passwordless
+// accounts by phone number. Used by driver_application_service.js
+// so applying to drive never creates a second, disconnected
+// account outside the real accounts collection.
+async function findOrCreateAccountByPhone({ phone, name }) {
+    phone = normalizePhone(phone);
+
+    if (!phone) {
+        throw new Error("Phone number is required");
+    }
+
+    const accounts = await loadAccounts();
+    let account = accounts.find(a => a.phone === phone);
+
+    if (!account) {
+        account = {
+            id: "ACC-" + Date.now() + "-" + Math.floor(Math.random() * 10000),
+            phone,
+            name: name || phone,
+            avatarUrl: null,
+            pinSalt: null,
+            pinHash: null,
+            passwordless: true,
+            role: "PASSENGER",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        await saveAccount(account);
+    }
+
+    return publicAccount(account);
+}
+
 module.exports = {
     register,
     login,
@@ -255,5 +295,6 @@ module.exports = {
     accountFromRequest,
     getAccountById,
     updateProfile,
-    allAccounts
+    allAccounts,
+    findOrCreateAccountByPhone
 };

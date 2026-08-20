@@ -1,50 +1,30 @@
-const router = require("express").Router();
-const fs = require("fs");
-const path = require("path");
+// ============================================================
+// DRIVER WALLET LINKING API
+//
+// PATCH 13: rewired onto driver_wallet_service.js (persistent
+// LOCAL/FIRESTORE dual-mode) instead of writing directly to
+// backend/data/drivers.json. Same routes, same response shapes.
+//
+// See driver_wallet_service.js for an important known gap this
+// patch does NOT fix: canonical_wallet_resolver.js still reads
+// the old flat drivers.json directly when resolving where to
+// send a reward, so it won't see wallets linked here once this
+// runs in FIRESTORE mode. Needs its own follow-up fix.
+// ============================================================
 
+const router = require("express").Router();
+const wallets = require("../services/driver_wallet_service");
 const walletResolver = require("../rewards/canonical_wallet_resolver");
 
-const DRIVERS_FILE = path.join(__dirname, "..", "data", "drivers.json");
-
-// ============================================================
-// DRIVER WALLET LINKING
-//
-// This writes directly to backend/data/drivers.json — the same
-// file canonical_wallet_resolver.js reads when resolving where
-// to send a THB reward. Without a wallet linked here, every
-// reward for that driver is skipped, regardless of how the
-// rest of the reward pipeline is wired.
-// ============================================================
-
-function loadDrivers() {
-    if (!fs.existsSync(DRIVERS_FILE)) {
-        return { drivers: [] };
-    }
-
-    try {
-        const parsed = JSON.parse(fs.readFileSync(DRIVERS_FILE, "utf8"));
-        return {
-            drivers: Array.isArray(parsed.drivers) ? parsed.drivers : []
-        };
-    } catch (error) {
-        throw new Error("Unable to read drivers file: " + error.message);
-    }
-}
-
-function saveDrivers(data) {
-    fs.writeFileSync(DRIVERS_FILE, JSON.stringify(data, null, 2), "utf8");
-}
-
 // GET /api/driver/:id/wallet
-router.get("/driver/:id/wallet", (req, res) => {
+router.get("/driver/:id/wallet", async (req, res) => {
     try {
-        const data = loadDrivers();
-        const driver = data.drivers.find(d => String(d.id) === req.params.id);
+        const wallet = await wallets.getWallet(req.params.id);
 
         res.json({
             success: true,
             driverId: req.params.id,
-            wallet: driver?.wallet || null
+            wallet
         });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -53,7 +33,7 @@ router.get("/driver/:id/wallet", (req, res) => {
 
 // POST /api/driver/:id/wallet
 // body: { wallet: "0x..." }
-router.post("/driver/:id/wallet", (req, res) => {
+router.post("/driver/:id/wallet", async (req, res) => {
     try {
         const { wallet } = req.body || {};
 
@@ -73,20 +53,8 @@ router.post("/driver/:id/wallet", (req, res) => {
             });
         }
 
-        const data = loadDrivers();
         const driverId = req.params.id;
-
-        let driver = data.drivers.find(d => String(d.id) === driverId);
-
-        if (!driver) {
-            driver = { id: driverId };
-            data.drivers.push(driver);
-        }
-
-        driver.wallet = validWallet;
-        driver.walletLinkedAt = new Date().toISOString();
-
-        saveDrivers(data);
+        await wallets.setWallet(driverId, validWallet);
 
         res.json({
             success: true,
