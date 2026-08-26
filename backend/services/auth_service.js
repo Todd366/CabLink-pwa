@@ -22,6 +22,14 @@ const crypto = require("crypto");
 // number. driver_application_service.js now calls this instead
 // of keeping its own separate copy of account read/write logic,
 // so there is exactly one accounts collection, always.
+//
+// PATCH 16: added isValidBotswanaPhone() — a real shape check
+// (8-digit mobile starting with 7, optional 267/+267 prefix),
+// not just "is it non-empty". Before this, register() accepted
+// literally any non-empty string as a phone number — "111" would
+// create a real account. Both register() and
+// findOrCreateAccountByPhone() now enforce this, so driver
+// applications get the same protection as normal signup.
 // ============================================================
 
 const MODE = process.env.CABLINK_ACCOUNT_PERSISTENCE || "LOCAL";
@@ -136,6 +144,16 @@ function normalizePhone(phone) {
     return String(phone || "").replace(/[^\d+]/g, "");
 }
 
+// PATCH 16: real shape validation — Botswana mobile numbers are
+// 8 digits starting with 7, optionally prefixed with the country
+// code (267 or +267). Rejects anything else, including short
+// garbage strings that used to slip through as "valid" as long
+// as they were non-empty.
+function isValidBotswanaPhone(phone) {
+    const normalized = normalizePhone(phone);
+    return /^(\+?267)?7\d{7}$/.test(normalized);
+}
+
 function publicAccount(account) {
     if (!account) return null;
     const { pinHash, pinSalt, ...safe } = account;
@@ -149,8 +167,12 @@ function publicAccount(account) {
 async function register({ phone, pin, name }) {
     phone = normalizePhone(phone);
 
-    if (!phone || !pin || String(pin).length < 4) {
-        throw new Error("Phone number and a PIN of at least 4 digits are required");
+    if (!phone || !isValidBotswanaPhone(phone)) {
+        throw new Error("Enter a valid Botswana mobile number, e.g. 71234567");
+    }
+
+    if (!pin || String(pin).length < 4) {
+        throw new Error("A PIN of at least 4 digits is required");
     }
 
     const accounts = await loadAccounts();
@@ -258,11 +280,15 @@ async function accountFromRequest(req) {
 // accounts by phone number. Used by driver_application_service.js
 // so applying to drive never creates a second, disconnected
 // account outside the real accounts collection.
+//
+// PATCH 16: now enforces the same real phone validation as
+// register() — a driver application with a garbage phone number
+// is rejected instead of silently creating a bad account.
 async function findOrCreateAccountByPhone({ phone, name }) {
     phone = normalizePhone(phone);
 
-    if (!phone) {
-        throw new Error("Phone number is required");
+    if (!phone || !isValidBotswanaPhone(phone)) {
+        throw new Error("Enter a valid Botswana mobile number, e.g. 71234567");
     }
 
     const accounts = await loadAccounts();
@@ -296,5 +322,6 @@ module.exports = {
     getAccountById,
     updateProfile,
     allAccounts,
-    findOrCreateAccountByPhone
+    findOrCreateAccountByPhone,
+    isValidBotswanaPhone
 };

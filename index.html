@@ -2611,6 +2611,16 @@ return ride;
     var name = document.getElementById('acc-name').value.trim();
     var pin = document.getElementById('acc-pin').value.trim();
     if(!phone || !pin){ toast('Phone and PIN required', 'warning'); return; }
+    // PATCH 16: real shape check before hitting the network — same
+    // rule the backend enforces (8-digit Botswana mobile starting
+    // with 7, optional 267/+267 prefix). Instant feedback instead of
+    // a round-trip just to find out "111" was never a real number.
+    var clPhoneDigits = phone.replace(/[^\d+]/g, "");
+    if(!/^(\+?267)?7\d{7}$/.test(clPhoneDigits)){
+      toast("Enter a valid Botswana mobile number, e.g. 71234567", "warning");
+      return;
+    }
+    if(pin.length < 4){ toast("PIN must be at least 4 digits", "warning"); return; }
     try{
       const res = await fetch('/api/auth/register', {
         method:'POST', headers:{'Content-Type':'application/json'},
