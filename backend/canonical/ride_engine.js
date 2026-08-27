@@ -4,6 +4,9 @@ const repository =
 const push =
     require("../services/push_service");
 
+const marketplaceWebhook =
+    require("../services/marketplace_webhook_service");
+
 const STATES =
     Object.freeze({
 
@@ -376,6 +379,18 @@ async function transition(
             id,
             changes
         );
+
+    if (
+        updated &&
+        nextState === STATES.COMPLETED
+    ) {
+        // Fire-and-forget: never let a Digital Mall outage affect
+        // a real riders completion response. See
+        // marketplace_webhook_service.js for details.
+        marketplaceWebhook
+            .notifyTaskCompleted(updated)
+            .catch(() => {});
+    }
 
     return {
 
