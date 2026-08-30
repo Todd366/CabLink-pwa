@@ -233,12 +233,12 @@ router.get("/mine", async (req, res) => {
 // Get all rides
 // ============================================================
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
 
     try {
 
         const rides =
-            rideEngine.getAllRides();
+            await rideEngine.getAllRides();
 
         res.json({
             success: true,

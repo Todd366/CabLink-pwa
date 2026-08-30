@@ -1,0 +1,22 @@
+{
+  "sessions": [
+    {
+      "token": "1a5e89dad377cfea3f6b1958964a96abe03a9aae684be052e989293c3cebbbaa",
+      "accountId": "ACC-1786226370010-9224",
+      "createdAt": "2026-08-08T21:59:42.073Z",
+      "expiresAt": "2026-09-07T21:59:42.074Z"
+    },
+    {
+      "token": "9d6cf3d468d43cbe74c723563f31c27db24740865973cda5269017939674999d",
+      "accountId": "ACC-1786226370010-9224",
+      "createdAt": "2026-08-09T09:21:56.740Z",
+      "expiresAt": "2026-09-08T09:21:56.740Z"
+    },
+    {
+      "token": "d7e69fd417f77a51292702ab257cd8ffe56fbf4e1fe3731b0bf35429e14a4bd8",
+      "accountId": "ACC-1786425286742-6216",
+      "createdAt": "2026-08-11T05:14:47.048Z",
+      "expiresAt": "2026-09-10T05:14:47.048Z"
+    }
+  ]
+}

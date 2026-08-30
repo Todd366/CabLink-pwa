@@ -1,0 +1,348 @@
+# CabLink Full Repo Audit
+Generated: 2026-08-10T22:14:06.865Z
+
+Total code files scanned: 333
+
+## ORPHAN CANDIDATES (0 inbound references, not an entry point)
+These are never require()'d/imported by anything else in the live tree. Likely dead, duplicate, or legacy.
+
+- `audit_inventory.js` (99 lines)
+- `backend/admin/admin_monitor.js` (24 lines)
+- `backend/analytics/pilot_analytics.js` (26 lines)
+- `backend/analytics/pilot_failure_tracker.js` (24 lines)
+- `backend/api/cablink_gateway.js` (41 lines)
+- `backend/api/reward_api.js` (47 lines)
+- `backend/audit/production_audit.js` (28 lines)
+- `backend/auth/auth_engine.js` (37 lines)
+- `backend/auth/phone_verification_engine.js` (51 lines)
+- `backend/blockchain/thb_transaction_engine.js` (79 lines)
+- `backend/blockchain/thb_transfer_service.js` (52 lines)
+- `backend/blockchain/thb_transfer_worker.js` (50 lines)
+- `backend/blockchain/wallet_validator.js` (13 lines)
+- `backend/broadcast/ride_broadcast.js` (19 lines)
+- `backend/canonical/ride_repository_firestore_test.js` (208 lines)
+- `backend/cloud/production_adapter.js` (23 lines)
+- `backend/config/env_check.js` (28 lines)
+- `backend/database/production_schema.js` (45 lines)
+- `backend/database/ride_repository.js` (55 lines)
+- `backend/drivers/heartbeat_engine.js` (48 lines)
+- `backend/environment/readiness_check.js` (30 lines)
+- `backend/events/ride_event_bus.js` (42 lines)
+- `backend/extensions/extension_registry.js` (29 lines)
+- `backend/fare/fare_engine.js` (17 lines)
+- `backend/gps/location_stream.js` (19 lines)
+- `backend/heartbeat/device_monitor.js` (21 lines)
+- `backend/location/gps_event_engine.js` (46 lines)
+- `backend/location/location_service.js` (39 lines)
+- `backend/location/location_stream.js` (35 lines)
+- `backend/location/radar_engine.js` (15 lines)
+- `backend/logs/system_logger.js` (38 lines)
+- `backend/maps/gps_engine.js` (36 lines)
+- `backend/matching/driver_matcher.js` (35 lines)
+- `backend/matching/driver_matching_engine.js` (22 lines)
+- `backend/matching/matching_engine.js` (18 lines)
+- `backend/middleware/error_handler.js` (14 lines)
+- `backend/monitoring/system_health.js` (27 lines)
+- `backend/notifications/notification_center.js` (31 lines)
+- `backend/notifications/notification_engine.js` (23 lines)
+- `backend/notifications/push_bridge.js` (40 lines)
+- `backend/onboarding/onboarding_engine.js` (41 lines)
+- `backend/payments/payment_adapter.js` (22 lines)
+- `backend/payments/payment_provider_adapter.js` (38 lines)
+- `backend/payments/payment_transaction_layer.js` (31 lines)
+- `backend/payments/transaction_recorder.js` (19 lines)
+- `backend/pricing/fare_calculator.js` (28 lines)
+- `backend/providers/cloud_database_connector.js` (37 lines)
+- `backend/providers/maps_connector.js` (40 lines)
+- `backend/realtime/channel_manager.js` (36 lines)
+- `backend/realtime/presence_engine.js` (46 lines)
+- `backend/realtime/realtime_bridge.js` (47 lines)
+- `backend/rewards/blockchain_reward_adapter.js` (22 lines)
+- `backend/rewards/reward_claim_engine.js` (24 lines)
+- `backend/rewards/reward_engine.js` (97 lines)
+- `backend/rewards/thb_contract_adapter.js` (21 lines)
+- `backend/rewards/thb_transaction_layer.js` (24 lines)
+- `backend/rewards/thb_transfer_queue.js` (39 lines)
+- `backend/ride_api_patch.js` (87 lines)
+- `backend/rides/ride_lifecycle.js` (57 lines)
+- `backend/rides/ride_persistence.js` (18 lines)
+- `backend/rides/settlement_engine.js` (31 lines)
+- `backend/routes/driver_dashboard_api.js` (37 lines)
+- `backend/routes/driver_economy.js` (34 lines)
+- `backend/routes/driver_intelligence_api.js` (49 lines)
+- `backend/routes/driver_location_api.js` (39 lines)
+- `backend/routes/ecosystem_tasks.js` (53 lines)
+- `backend/routes/gps.js` (38 lines)
+- `backend/routes/identity_api.js` (72 lines)
+- `backend/routes/live_demand_api.js` (67 lines)
+- `backend/routes/matching_api.js` (49 lines)
+- `backend/routes/mobile.js` (49 lines)
+- `backend/routes/notification_api.js` (45 lines)
+- `backend/routes/orchestrator_api.js` (106 lines)
+- `backend/routes/passenger_intelligence_api.js` (39 lines)
+- `backend/routes/realtime.js` (72 lines)
+- `backend/routes/ride_economy_api.js` (62 lines)
+- `backend/routes/ride_state_api.js` (279 lines)
+- `backend/routes/socket_routes.js` (41 lines)
+- `backend/routes/updates_api.js` (25 lines)
+- `backend/safety/incident_report.js` (23 lines)
+- `backend/safety/safety_engine.js` (39 lines)
+- `backend/security/device_registry.js` (37 lines)
+- `backend/security/fraud_engine.js` (36 lines)
+- `backend/security/security_engine.js` (51 lines)
+- `backend/server.js` (38 lines)
+- `backend/services/driver_service.js` (43 lines)
+- `backend/services/location/location_service.js` (25 lines)
+- `backend/services/notifications/notification_service.js` (23 lines)
+- `backend/services/payment_service.js` (29 lines)
+- `backend/services/realtime/realtime_service.js` (21 lines)
+- `backend/services/reward_service.js` (27 lines)
+- `backend/services/rideService.js` (19 lines)
+- `backend/services/ride_dispatch_bridge.js` (60 lines)
+- `backend/sms/sms_engine.js` (23 lines)
+- `backend/socket/server_socket.js` (18 lines)
+- `backend/support/ticket_system.js` (28 lines)
+- `backend/testing/delivery_economy_test.js` (11 lines)
+- `backend/testing/human_ride_scenario.js` (45 lines)
+- `backend/testing/live_task_flow_test.js` (48 lines)
+- `backend/testing/marketplace_bridge_test.js` (20 lines)
+- `backend/testing/phase24_verification.js` (19 lines)
+- `backend/testing/phase28_reward_flow_test.js` (26 lines)
+- `backend/testing/phase32_dashboard_api_test.js` (28 lines)
+- `backend/testing/phase34_economy_test.js` (70 lines)
+- `backend/testing/phase35_ledger_test.js` (62 lines)
+- `backend/testing/phase37_dashboard_test.js` (30 lines)
+- `backend/testing/phase50_state_test.js` (74 lines)
+- `backend/testing/phase51_orchestrator_test.js` (107 lines)
+- `backend/testing/phase52_driver_test.js` (44 lines)
+- `backend/testing/phase53_identity_test.js` (40 lines)
+- `backend/testing/pilot_activation_test.js` (39 lines)
+- `backend/testing/reward_wallet_test.js` (39 lines)
+- `backend/testing/thb_delivery_reward_test.js` (15 lines)
+- `backend/tracking/location_session.js` (31 lines)
+- `backend/transactions/transaction_record.js` (37 lines)
+- `backend/trust/trust_engine.js` (40 lines)
+- `backend/users/user_account_engine.js` (49 lines)
+- `backend/users/wallet_manager.js` (18 lines)
+- `backend/validation/input_validator.js` (27 lines)
+- `database/production/database_health.js` (46 lines)
+- `deployment/go_live_audit.js` (49 lines)
+- `deployment/pilot_environment_check.js` (20 lines)
+- `deployment/production_readiness_check.js` (28 lines)
+- `deployment/pwa_readiness_check.js` (27 lines)
+- `deployment/reality_activation_report.js` (26 lines)
+- `frontend/api/bridge_test.js` (41 lines)
+- `frontend/components/DashboardCard.jsx` (21 lines)
+- `frontend/components/LegacyCabLink.jsx` (78 lines)
+- `frontend/components/bstm_delivery_button.js` (23 lines)
+- `frontend/components/dashboard_registry.js` (7 lines)
+- `frontend/components/delivery_earnings_panel.js` (26 lines)
+- `frontend/components/driver_demand_map.js` (19 lines)
+- `frontend/components/passenger_profile_card.jsx` (31 lines)
+- `frontend/components/passenger_trip_status.js` (25 lines)
+- `frontend/components/ride_status_card.jsx` (33 lines)
+- `frontend/components/ride_timeline.jsx` (39 lines)
+- `frontend/components/status_card.jsx` (19 lines)
+- `frontend/components/status_panel.js` (24 lines)
+- `frontend/components/thb_reward_panel.js` (24 lines)
+- `frontend/components/thb_wallet_panel.js` (29 lines)
+- `frontend/components/updates_center.js` (17 lines)
+- `frontend/config/app_config.js` (18 lines)
+- `frontend/js/app.js` (136 lines)
+- `frontend/js/bstm_hub_ui.js` (78 lines)
+- `frontend/js/core.js` (46 lines)
+- `frontend/js/driver/applicationService.js` (15 lines)
+- `frontend/js/driver/driverController.js` (22 lines)
+- `frontend/js/driver/driverModeBridge.js` (164 lines)
+- `frontend/js/driver/driverService.js` (24 lines)
+- `frontend/js/driver_accept_bridge.js` (76 lines)
+- `frontend/js/fare_engine.js` (67 lines)
+- `frontend/js/financial_intelligence.js` (62 lines)
+- `frontend/js/firebase.js` (18 lines)
+- `frontend/js/fix.js` (112 lines)
+- `frontend/js/gps/location_engine.js` (29 lines)
+- `frontend/js/operations_core.js` (85 lines)
+- `frontend/js/realtime/tracking_engine.js` (42 lines)
+- `frontend/js/ride_engine.js` (17 lines)
+- `frontend/js/rides/activeRideRegistry.js` (217 lines)
+- `frontend/js/rides/rideController.js` (56 lines)
+- `frontend/js/rides/rideService.js` (17 lines)
+- `frontend/js/role.js` (43 lines)
+- `frontend/js/role_switch.js` (33 lines)
+- `frontend/js/services/api.js` (9 lines)
+- `frontend/js/simulation_engine.js` (124 lines)
+- `frontend/js/ui/ui_bridge.js` (103 lines)
+- `frontend/js/ui/ui_runtime_extra.js` (152 lines)
+- `frontend/monitoring/ui_health.js` (28 lines)
+- `frontend/screens/driver_dashboard.js` (32 lines)
+- `frontend/screens/passenger_dashboard.js` (33 lines)
+- `frontend/services/demand_api.js` (15 lines)
+- `frontend/services/driver_dashboard_api.js` (40 lines)
+- `frontend/services/identity_api.js` (19 lines)
+- `frontend/services/role_service.js` (45 lines)
+- `frontend/services/task_service.js` (33 lines)
+- `frontend/services/updates_api.js` (15 lines)
+- `frontend/state/session_store.js` (43 lines)
+- `frontend/testing/bstm_hub_test.js` (12 lines)
+- `frontend/testing/bstm_visible_ui_test.js` (17 lines)
+- `frontend/testing/driver_economy_dashboard_test.js` (50 lines)
+- `frontend/testing/driver_economy_screen_test.js` (28 lines)
+- `frontend/testing/driver_task_dashboard_test.js` (27 lines)
+- `frontend/testing/human_interface_test.js` (46 lines)
+- `frontend/testing/live_driver_dashboard_test.js` (25 lines)
+- `frontend/testing/live_driver_economy_test.js` (18 lines)
+- `frontend/testing/phase43_ui_test.js` (35 lines)
+- `frontend/testing/phase44_page_test.js` (25 lines)
+- `frontend/testing/phase45_shell_test.js` (25 lines)
+- `patch.js` (47 lines)
+- `patch2.js` (35 lines)
+- `patch3.js` (28 lines)
+- `patch4.js` (263 lines)
+- `patch5.js` (27 lines)
+- `patch6.js` (56 lines)
+- `patch7.js` (30 lines)
+- `patch8.js` (42 lines)
+- `patch9.js` (13 lines)
+- `vite.config.js` (27 lines)
+
+## LIVE FILES (referenced at least once)
+
+- `database/production/store_engine.js` — 14 ref(s), 62 lines
+- `backend/canonical/ride_engine.js` — 6 ref(s), 398 lines
+- `backend/rewards/reward_history.js` — 5 ref(s), 43 lines
+- `backend/rewards/wallet_service.js` — 5 ref(s), 38 lines
+- `backend/canonical/ride_repository.js` — 3 ref(s), 77 lines
+- `backend/ecosystem/marketplace_bridge.js` — 3 ref(s), 27 lines
+- `backend/gps/gps_service.js` — 3 ref(s), 41 lines
+- `backend/server/app.js` — 3 ref(s), 224 lines
+- `backend/services/canonical_reward_service.js` — 3 ref(s), 395 lines
+- `backend/services/economy_ledger_service.js` — 3 ref(s), 171 lines
+- `backend/tasks/task_manager.js` — 3 ref(s), 67 lines
+- `frontend/state/ride_ui_state.js` — 3 ref(s), 39 lines
+- `backend/blockchain/thb_config.js` — 2 ref(s), 18 lines
+- `backend/blockchain/thb_real_executor.js` — 2 ref(s), 107 lines
+- `backend/config/provider_config.js` — 2 ref(s), 32 lines
+- `backend/firebase/firebase_adapter.js` — 2 ref(s), 45 lines
+- `backend/firebase/firestore_adapter.js` — 2 ref(s), 408 lines
+- `backend/payments/payment_engine.js` — 2 ref(s), 21 lines
+- `backend/rewards/canonical_wallet_resolver.js` — 2 ref(s), 179 lines
+- `backend/rewards/delivery_reward_engine.js` — 2 ref(s), 39 lines
+- `backend/services/auth_service.js` — 2 ref(s), 154 lines
+- `backend/services/driver_intelligence_service.js` — 2 ref(s), 84 lines
+- `backend/services/driver_matching_service.js` — 2 ref(s), 111 lines
+- `backend/services/identity_service.js` — 2 ref(s), 76 lines
+- `backend/services/notification_service.js` — 2 ref(s), 29 lines
+- `backend/services/push_service.js` — 2 ref(s), 110 lines
+- `backend/services/ride_event_service.js` — 2 ref(s), 66 lines
+- `backend/storage/database.js` — 2 ref(s), 74 lines
+- `frontend/api/cablink_api.js` — 2 ref(s), 35 lines
+- `frontend/api/task_api.js` — 2 ref(s), 56 lines
+- `frontend/components/LiveMap.jsx` — 2 ref(s), 173 lines
+- `frontend/components/passenger_dashboard.jsx` — 2 ref(s), 99 lines
+- `frontend/config/gaborone_locations.js` — 2 ref(s), 48 lines
+- `frontend/ecosystem/bstm_links.js` — 2 ref(s), 67 lines
+- `frontend/js/services/cablinkAPI.js` — 2 ref(s), 13 lines
+- `frontend/services/ride_service.js` — 2 ref(s), 33 lines
+- `backend/admin/operator_dashboard.js` — 1 ref(s), 28 lines
+- `backend/auth/auth_connector.js` — 1 ref(s), 40 lines
+- `backend/auth/otp_service.js` — 1 ref(s), 40 lines
+- `backend/blockchain/chain_health.js` — 1 ref(s), 30 lines
+- `backend/canonical/ride_compatibility.js` — 1 ref(s), 84 lines
+- `backend/canonical/ride_legacy_adapter.js` — 1 ref(s), 98 lines
+- `backend/canonical/ride_persistence.js` — 1 ref(s), 851 lines
+- `backend/cloud/cloud_adapter.js` — 1 ref(s), 26 lines
+- `backend/config/environment_validator.js` — 1 ref(s), 47 lines
+- `backend/database/migration_engine.js` — 1 ref(s), 20 lines
+- `backend/database/user_repository.js` — 1 ref(s), 30 lines
+- `backend/devices/device_registry.js` — 1 ref(s), 39 lines
+- `backend/drivers/driver_state.js` — 1 ref(s), 37 lines
+- `backend/economy/delivery_fare_engine.js` — 1 ref(s), 46 lines
+- `backend/fraud/reward_guard.js` — 1 ref(s), 23 lines
+- `backend/fraud/ride_validation.js` — 1 ref(s), 22 lines
+- `backend/maps/map_provider.js` — 1 ref(s), 38 lines
+- `backend/mobile/device_registry.js` — 1 ref(s), 58 lines
+- `backend/production/database_adapter.js` — 1 ref(s), 61 lines
+- `backend/providers/cloud_provider.js` — 1 ref(s), 26 lines
+- `backend/push/push_engine.js` — 1 ref(s), 23 lines
+- `backend/realtime/event_bus.js` — 1 ref(s), 37 lines
+- `backend/realtime/ride_channel.js` — 1 ref(s), 41 lines
+- `backend/rewards/auto_reward_trigger.js` — 1 ref(s), 44 lines
+- `backend/rewards/delivery_completion.js` — 1 ref(s), 19 lines
+- `backend/rewards/delivery_reward_service.js` — 1 ref(s), 20 lines
+- `backend/rewards/thb_claim_engine.js` — 1 ref(s), 90 lines
+- `backend/rewards/thb_service.js` — 1 ref(s), 25 lines
+- `backend/routes/auth_api.js` — 1 ref(s), 34 lines
+- `backend/routes/canonical_reward_api.js` — 1 ref(s), 139 lines
+- `backend/routes/completion_api.js` — 1 ref(s), 167 lines
+- `backend/routes/driver_applications_api.js` — 1 ref(s), 69 lines
+- `backend/routes/driver_demand_api.js` — 1 ref(s), 32 lines
+- `backend/routes/driver_economy_api.js` — 1 ref(s), 23 lines
+- `backend/routes/driver_online_api.js` — 1 ref(s), 101 lines
+- `backend/routes/driver_wallet_api.js` — 1 ref(s), 102 lines
+- `backend/routes/leaderboard_api.js` — 1 ref(s), 76 lines
+- `backend/routes/marketplace_api.js` — 1 ref(s), 121 lines
+- `backend/routes/push_api.js` — 1 ref(s), 25 lines
+- `backend/routes/rides.js` — 1 ref(s), 355 lines
+- `backend/routes/users.js` — 1 ref(s), 46 lines
+- `backend/safety/emergency_engine.js` — 1 ref(s), 29 lines
+- `backend/security/security_audit.js` — 1 ref(s), 31 lines
+- `backend/services/demand_service.js` — 1 ref(s), 42 lines
+- `backend/services/driver_application_service.js` — 1 ref(s), 133 lines
+- `backend/services/driver_location_service.js` — 1 ref(s), 102 lines
+- `backend/services/live_demand_service.js` — 1 ref(s), 131 lines
+- `backend/services/passenger_intelligence_service.js` — 1 ref(s), 58 lines
+- `backend/services/ride_completion_service.js` — 1 ref(s), 325 lines
+- `backend/services/ride_economy_service.js` — 1 ref(s), 19 lines
+- `backend/services/ride_orchestrator_service.js` — 1 ref(s), 203 lines
+- `backend/services/ride_state_service.js` — 1 ref(s), 108 lines
+- `backend/sessions/session_engine.js` — 1 ref(s), 39 lines
+- `backend/socket/socket_manager.js` — 1 ref(s), 58 lines
+- `backend/sync/live_sync_engine.js` — 1 ref(s), 19 lines
+- `backend/testing/two_phone_pilot.js` — 1 ref(s), 46 lines
+- `backend/tracking/location_tracker.js` — 1 ref(s), 39 lines
+- `backend/trips/trip_manager.js` — 1 ref(s), 57 lines
+- `deployment/service_readiness_check.js` — 1 ref(s), 77 lines
+- `frontend/App.jsx` — 1 ref(s), 111 lines
+- `frontend/components/BottomNavigation.jsx` — 1 ref(s), 33 lines
+- `frontend/components/CabLinkHeader.jsx` — 1 ref(s), 32 lines
+- `frontend/components/bstm_menu.js` — 1 ref(s), 22 lines
+- `frontend/components/demand_panel.js` — 1 ref(s), 23 lines
+- `frontend/components/driver_dashboard.js` — 1 ref(s), 44 lines
+- `frontend/components/driver_economy_dashboard.js` — 1 ref(s), 42 lines
+- `frontend/components/driver_economy_screen.js` — 1 ref(s), 42 lines
+- `frontend/components/driver_task_panel.js` — 1 ref(s), 34 lines
+- `frontend/components/ecosystem_card.js` — 1 ref(s), 31 lines
+- `frontend/components/live_driver_dashboard.js` — 1 ref(s), 28 lines
+- `frontend/components/mobile_dashboard.js` — 1 ref(s), 35 lines
+- `frontend/components/passenger_trip_status.jsx` — 1 ref(s), 35 lines
+- `frontend/components/thb_reward_panel.jsx` — 1 ref(s), 30 lines
+- `frontend/js/app_core.js` — 1 ref(s), 898 lines
+- `frontend/js/driver/driverLifecycleControls.js` — 1 ref(s), 283 lines
+- `frontend/js/rides/completionRewardBridge.js` — 1 ref(s), 355 lines
+- `frontend/js/rides/passengerRideStatus.js` — 1 ref(s), 78 lines
+- `frontend/js/rides/rideStateMachine.js` — 1 ref(s), 59 lines
+- `frontend/maps/live_map_component.js` — 1 ref(s), 25 lines
+- `frontend/mobile/device_permissions.js` — 1 ref(s), 22 lines
+- `frontend/mobile/mobile_entry.js` — 1 ref(s), 37 lines
+- `frontend/pages/DriverDashboard.jsx` — 1 ref(s), 275 lines
+- `frontend/pages/PassengerRide.jsx` — 1 ref(s), 157 lines
+- `frontend/pages/UpdatesCenter.jsx` — 1 ref(s), 49 lines
+- `frontend/pwa/install_manager.js` — 1 ref(s), 24 lines
+- `frontend/screens/driver_control_screen.js` — 1 ref(s), 37 lines
+- `frontend/screens/ecosystem_hub_screen.js` — 1 ref(s), 29 lines
+- `frontend/screens/passenger_ride_screen.js` — 1 ref(s), 42 lines
+- `frontend/services/driver_dashboard_live.js` — 1 ref(s), 39 lines
+- `frontend/services/driver_economy_screen_service.js` — 1 ref(s), 22 lines
+- `frontend/services/driver_economy_service.js` — 1 ref(s), 26 lines
+- `frontend/services/economy_dashboard_api.js` — 1 ref(s), 30 lines
+- `frontend/services/live_driver_economy.js` — 1 ref(s), 35 lines
+- `frontend/services/user_service.js` — 1 ref(s), 33 lines
+- `frontend/state/task_state.js` — 1 ref(s), 27 lines
+
+## ENTRY POINTS CHECKED
+- `backend/server/app.js` — found
+- `backend/server/index.js` — found
+- `api/index.js` — found
+- `frontend/main.jsx` — found
+- `frontend/App.jsx` — found
+- `sw.js` — found

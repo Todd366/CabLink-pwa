@@ -22,6 +22,10 @@
 // Legacy ride systems are NOT deleted by this alignment.
 // ============================================================
 
+// Load environment variables before any application modules are imported.
+// Push/VAPID configuration is read during module initialization.
+require("dotenv").config();
+
 const app = require("./server/app");
 
 const PORT = process.env.PORT || 3000;

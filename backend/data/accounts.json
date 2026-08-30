@@ -1,0 +1,24 @@
+{
+  "accounts": [
+    {
+      "id": "ACC-1786226370010-9224",
+      "phone": "74393675",
+      "name": "Thobo Mosanako",
+      "pinSalt": "c3520bd1c2d0ffac90ffbcfdd30c545b",
+      "pinHash": "1b3bc81e1ca80d402bb5f401214fdd309106fdc98628d4413fe1c7ae1f470dc9521c6548815e6d9c38a4cb1bacb3b5491c0a6659e69d319d355f01daa20ff1a1",
+      "role": "PASSENGER",
+      "createdAt": "2026-08-08T21:59:30.277Z"
+    },
+    {
+      "id": "ACC-1786425286742-6216",
+      "phone": "+26771111111",
+      "name": "Todd BSTM",
+      "avatarUrl": null,
+      "pinSalt": "2de67ef3e36d3af03868f4ebd7b08162",
+      "pinHash": "fe12eadd58e2f73ada6c05379c0ec02264d280d716b4a7cc10aad065e202e3a22711be2b0f55437f94fe77b0d964386791252f6feb6668df6a9816532aea9e9d",
+      "role": "PASSENGER",
+      "createdAt": "2026-08-11T05:14:46.869Z",
+      "updatedAt": "2026-08-11T05:15:54.958Z"
+    }
+  ]
+}

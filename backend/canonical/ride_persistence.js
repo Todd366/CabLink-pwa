@@ -33,6 +33,9 @@ const COLLECTION =
 let firestore =
     null;
 
+let supabase =
+    null;
+
 
 // ============================================================
 // FIRESTORE ADAPTER
@@ -50,6 +53,26 @@ function getFirestoreAdapter() {
     }
 
     return firestore;
+
+}
+
+
+// ============================================================
+// SUPABASE ADAPTER
+// ============================================================
+
+function getSupabaseAdapter() {
+
+    if (!supabase) {
+
+        supabase =
+            require(
+                "../supabase/supabase_adapter"
+            );
+
+    }
+
+    return supabase;
 
 }
 
@@ -192,6 +215,26 @@ async function create(
 
     }
 
+    if (
+        MODE ===
+        "SUPABASE"
+    ) {
+
+        const db =
+            getSupabaseAdapter();
+
+        await db.write(
+            COLLECTION,
+            String(
+                ride.id
+            ),
+            ride
+        );
+
+        return ride;
+
+    }
+
 
     const rides =
         loadLocal();
@@ -237,6 +280,26 @@ async function findById(
 
     }
 
+    if (
+        MODE ===
+        "SUPABASE"
+    ) {
+
+        const db =
+            getSupabaseAdapter();
+
+        const result =
+            await db.read(
+                COLLECTION,
+                String(id)
+            );
+
+        return result.exists
+            ? result.data
+            : null;
+
+    }
+
 
     return (
 
@@ -269,6 +332,20 @@ async function all() {
 
         const db =
             getFirestoreAdapter();
+
+        return db.list(
+            COLLECTION
+        );
+
+    }
+
+    if (
+        MODE ===
+        "SUPABASE"
+    ) {
+
+        const db =
+            getSupabaseAdapter();
 
         return db.list(
             COLLECTION
@@ -326,6 +403,24 @@ async function update(
 
         const db =
             getFirestoreAdapter();
+
+        await db.write(
+            COLLECTION,
+            String(id),
+            updated
+        );
+
+        return updated;
+
+    }
+
+    if (
+        MODE ===
+        "SUPABASE"
+    ) {
+
+        const db =
+            getSupabaseAdapter();
 
         await db.write(
             COLLECTION,
@@ -404,6 +499,39 @@ async function remove(
 
         const db =
             getFirestoreAdapter();
+
+        await db.delete(
+            COLLECTION,
+            String(id)
+        );
+
+
+        return existing;
+
+    }
+
+    if (
+        MODE ===
+        "SUPABASE"
+    ) {
+
+        const existing =
+            await findById(
+                id
+            );
+
+
+        if (
+            !existing
+        ) {
+
+            return null;
+
+        }
+
+
+        const db =
+            getSupabaseAdapter();
 
         await db.delete(
             COLLECTION,
@@ -655,6 +783,35 @@ async function accept(
 
 
     // ========================================================
+    // SUPABASE
+    // ========================================================
+    //
+    // Delegates to cablink_accept_ride(), a Postgres function
+    // that row-locks + conditionally updates in one round trip.
+    // Same first-driver-wins guarantee as the Firestore
+    // transaction above.
+    //
+    // ========================================================
+
+    if (
+        MODE ===
+        "SUPABASE"
+    ) {
+
+        const db =
+            getSupabaseAdapter();
+
+        return db.acceptDocument(
+            COLLECTION,
+            id,
+            driverId,
+            driverName
+        );
+
+    }
+
+
+    // ========================================================
     // LOCAL
     // ========================================================
 
@@ -813,7 +970,12 @@ function status() {
 
                 ? "FIRESTORE"
 
-                : "LOCAL",
+                : MODE ===
+                  "SUPABASE"
+
+                    ? "SUPABASE"
+
+                    : "LOCAL",
 
         file:
             FILE,
