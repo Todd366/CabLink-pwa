@@ -1630,6 +1630,86 @@ async function completeRealRide(rideId){
   }
 }
 
+// ============================================================
+// DRIVER ACCEPTS A REAL RIDE REQUEST
+// ============================================================
+// Wires the "Accept" button rendered by renderIncomingRequest()
+// to the real backend. This was previously called from the
+// button's onclick but never defined anywhere, so tapping Accept
+// silently did nothing.
+window.acceptRideRequest = async function(rideId, fare){
+  const driverId = localStorage.getItem('cablink_driver_id');
+  const clAccountRaw = localStorage.getItem('cl_account');
+  const clAccount = clAccountRaw ? JSON.parse(clAccountRaw) : null;
+  const driverName = (clAccount && clAccount.name) || 'CabLink Driver';
+
+  if(!driverId){
+    toast('Go online first so we know which driver is accepting', 'warning');
+    return;
+  }
+
+  try{
+    const res = await fetch('/api/rides/' + rideId + '/accept', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ driverId, driverName })
+    });
+    const data = await res.json();
+
+    const card = document.getElementById('req-' + rideId);
+
+    if(!data.success){
+      if(res.status === 409){
+        toast('Too late — another driver already accepted this ride', 'warning');
+      } else {
+        toast(data.error || 'Could not accept ride', 'error');
+      }
+      if(card) card.remove();
+      return;
+    }
+
+    if(card) card.remove();
+    STATE.driverAccepted++;
+    updateDriverUI();
+    haptic();
+    toast('✓ Ride accepted — head to pickup', 'success');
+    renderActiveTripCard(data.ride || { id: rideId, fare });
+
+  } catch(e){
+    console.error('Accept failed', e);
+    toast('Could not reach server to accept ride', 'error');
+  }
+};
+
+// ============================================================
+// ACTIVE TRIP CARD (post-accept, pre-completion)
+// ============================================================
+function renderActiveTripCard(ride){
+  const container = document.getElementById('driverRequests');
+  const div = document.createElement('div');
+  div.className = 'request-card active';
+  div.id = 'trip-' + ride.id;
+  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${ride.id}</strong><span style="color:var(--gold-l);font-weight:700">${ride.fare||''} BWP</span></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${ride.pickup||''} → 🏁 ${ride.dropoff||''}</div>
+    <div style="font-size:11px;color:var(--muted2);margin-bottom:8px">Trip in progress</div>
+    <button class="btn btn-green btn-sm" style="width:100%" onclick="window.finishActiveTrip('${ride.id}')">🏁 Complete ride</button>`;
+  container.prepend(div);
+}
+
+window.finishActiveTrip = async function(rideId){
+  const completed = await completeRealRide(rideId);
+  const card = document.getElementById('trip-' + rideId);
+  if(!completed){
+    return; // completeRealRide already toasted the error
+  }
+  if(card) card.remove();
+  STATE.driverThb = (STATE.driverThb||0) + 1;
+  STATE.totalEarned = (STATE.totalEarned||0) + 1;
+  updateDriverUI();
+  haptic();
+  toast('🎉 Ride complete — +1 THB earned', 'success');
+};
+
 function addDriverRequest(){
   if(!STATE.driverOnline) return;
   STATE.driverRequests++;
