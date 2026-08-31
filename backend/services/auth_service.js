@@ -50,6 +50,14 @@ function getFirestoreAdapter() {
     return firestore;
 }
 
+let supabase = null;
+function getSupabaseAdapter() {
+    if (!supabase) {
+        supabase = require("../supabase/supabase_adapter");
+    }
+    return supabase;
+}
+
 // ------------------------------------------------------------
 // LOCAL (flat-file) storage
 // ------------------------------------------------------------
@@ -92,12 +100,19 @@ async function loadAccounts() {
     if (MODE === "FIRESTORE") {
         return getFirestoreAdapter().list(ACCOUNTS_COLLECTION);
     }
+    if (MODE === "SUPABASE") {
+        return getSupabaseAdapter().list(ACCOUNTS_COLLECTION);
+    }
     return localLoadAccounts();
 }
 
 async function saveAccount(account) {
     if (MODE === "FIRESTORE") {
         await getFirestoreAdapter().write(ACCOUNTS_COLLECTION, account.id, account);
+        return;
+    }
+    if (MODE === "SUPABASE") {
+        await getSupabaseAdapter().write(ACCOUNTS_COLLECTION, account.id, account);
         return;
     }
     const accounts = localLoadAccounts();
@@ -111,12 +126,19 @@ async function loadSessions() {
     if (MODE === "FIRESTORE") {
         return getFirestoreAdapter().list(SESSIONS_COLLECTION);
     }
+    if (MODE === "SUPABASE") {
+        return getSupabaseAdapter().list(SESSIONS_COLLECTION);
+    }
     return localLoadSessions();
 }
 
 async function saveSession(session) {
     if (MODE === "FIRESTORE") {
         await getFirestoreAdapter().write(SESSIONS_COLLECTION, session.token, session);
+        return;
+    }
+    if (MODE === "SUPABASE") {
+        await getSupabaseAdapter().write(SESSIONS_COLLECTION, session.token, session);
         return;
     }
     const sessions = localLoadSessions();
@@ -127,6 +149,10 @@ async function saveSession(session) {
 async function findSessionByToken(token) {
     if (MODE === "FIRESTORE") {
         const result = await getFirestoreAdapter().read(SESSIONS_COLLECTION, token);
+        return result.exists ? result.data : null;
+    }
+    if (MODE === "SUPABASE") {
+        const result = await getSupabaseAdapter().read(SESSIONS_COLLECTION, token);
         return result.exists ? result.data : null;
     }
     return localLoadSessions().find(s => s.token === token) || null;

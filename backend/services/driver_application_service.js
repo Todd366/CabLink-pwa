@@ -44,6 +44,14 @@ function getFirestoreAdapter() {
     return firestore;
 }
 
+let supabase = null;
+function getSupabaseAdapter() {
+    if (!supabase) {
+        supabase = require("../supabase/supabase_adapter");
+    }
+    return supabase;
+}
+
 // ------------------------------------------------------------
 // LOCAL (flat-file) storage
 // ------------------------------------------------------------
@@ -71,12 +79,19 @@ async function loadApplications() {
     if (MODE === "FIRESTORE") {
         return getFirestoreAdapter().list(APPLICATIONS_COLLECTION);
     }
+    if (MODE === "SUPABASE") {
+        return getSupabaseAdapter().list(APPLICATIONS_COLLECTION);
+    }
     return localLoadApplications();
 }
 
 async function saveApplication(application) {
     if (MODE === "FIRESTORE") {
         await getFirestoreAdapter().write(APPLICATIONS_COLLECTION, application.id, application);
+        return application;
+    }
+    if (MODE === "SUPABASE") {
+        await getSupabaseAdapter().write(APPLICATIONS_COLLECTION, application.id, application);
         return application;
     }
 
