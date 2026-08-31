@@ -40,6 +40,15 @@ function getFirestoreAdapter() {
     return firestore;
 }
 
+let supabase = null;
+
+function getSupabaseAdapter() {
+    if (!supabase) {
+        supabase = require("../supabase/supabase_adapter");
+    }
+    return supabase;
+}
+
 // ------------------------------------------------------------
 // LOCAL STORAGE
 // ------------------------------------------------------------
@@ -105,6 +114,12 @@ async function goOnline(driver) {
         return record;
     }
 
+    if (MODE === "SUPABASE") {
+        const db = getSupabaseAdapter();
+        await db.write(COLLECTION, record.id, record);
+        return record;
+    }
+
     const drivers = loadLocal().filter(d => d.id !== record.id);
     drivers.push(record);
     saveLocal(drivers);
@@ -124,6 +139,12 @@ async function goOffline(id) {
         return true;
     }
 
+    if (MODE === "SUPABASE") {
+        const db = getSupabaseAdapter();
+        await db.delete(COLLECTION, driverId);
+        return true;
+    }
+
     const drivers = loadLocal().filter(d => d.id !== driverId);
     saveLocal(drivers);
     return true;
@@ -139,6 +160,11 @@ async function all() {
         return db.list(COLLECTION);
     }
 
+    if (MODE === "SUPABASE") {
+        const db = getSupabaseAdapter();
+        return db.list(COLLECTION);
+    }
+
     return loadLocal();
 }
 
@@ -149,7 +175,12 @@ async function all() {
 function status() {
     return {
         mode: MODE,
-        provider: MODE === "FIRESTORE" ? "FIRESTORE" : "LOCAL",
+        provider:
+            MODE === "FIRESTORE"
+                ? "FIRESTORE"
+                : MODE === "SUPABASE"
+                    ? "SUPABASE"
+                    : "LOCAL",
         file: FILE,
         collection: COLLECTION
     };

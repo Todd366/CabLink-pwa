@@ -2193,6 +2193,19 @@ data
 );
 
 
+if(!data.success){
+  // Server rejected going online (e.g. driver application not
+  // yet approved) — don't lie to the driver by showing "LIVE"
+  // when they aren't. Revert to the offline state instead of
+  // silently continuing.
+  STATE.driverOnline = false;
+  btn.textContent = "🚗 Go online";
+  btn.className = "btn btn-sm btn-outline";
+  toast(data.error || 'Could not go online', 'warning');
+  return;
+}
+
+
 toast(
 "Driver is LIVE on network",
 "success"
