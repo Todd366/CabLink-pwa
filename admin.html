@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CabLink Admin</title>
+<style>
+  :root{ --bg:#0b0e14; --panel:#141925; --border:#232b3d; --text:#e8ecf4;
+         --muted:#8891a5; --accent:#3fa7ff; --ok:#2ecc71; --bad:#ff5c5c; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--text);
+        font-family:-apple-system,Segoe UI,Roboto,sans-serif; padding:16px; }
+  h1{ font-size:20px; margin:0 0 4px; }
+  .sub{ color:var(--muted); font-size:13px; margin-bottom:20px; }
+  .keybox{ display:flex; gap:8px; margin-bottom:20px; }
+  .keybox input{ flex:1; background:var(--panel); border:1px solid var(--border);
+                 color:var(--text); padding:10px 12px; border-radius:8px; font-size:14px; }
+  .keybox button{ background:var(--accent); border:none; color:#fff; padding:10px 16px;
+                  border-radius:8px; font-size:14px; }
+  .card{ background:var(--panel); border:1px solid var(--border); border-radius:10px;
+         padding:14px; margin-bottom:12px; }
+  .row{ display:flex; justify-content:space-between; align-items:baseline; }
+  .name{ font-weight:600; font-size:15px; }
+  .status{ font-size:11px; padding:2px 8px; border-radius:999px; text-transform:uppercase; }
+  .status.PENDING{ background:#3a2f0d; color:#f0c419; }
+  .status.APPROVED{ background:#0d3a1e; color:var(--ok); }
+  .status.REJECTED{ background:#3a0d0d; color:var(--bad); }
+  .field{ color:var(--muted); font-size:13px; margin-top:6px; }
+  .field b{ color:var(--text); font-weight:500; }
+  .actions{ display:flex; gap:8px; margin-top:12px; }
+  .actions button{ flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-weight:600; }
+  .approve{ background:var(--ok); color:#04270f; }
+  .reject{ background:var(--bad); color:#2b0505; }
+  .actions button:disabled{ opacity:.4; }
+  .empty{ color:var(--muted); text-align:center; padding:40px 0; font-size:14px; }
+  .refresh{ background:none; border:1px solid var(--border); color:var(--muted);
+            padding:8px 12px; border-radius:8px; font-size:13px; margin-bottom:16px; }
+</style>
+</head>
+<body>
+
+  <h1>CabLink · Admin</h1>
+  <div class="sub">Driver application review</div>
+
+  <div class="keybox">
+    <input id="adminKey" type="password" placeholder="Admin key">
+    <button onclick="saveKeyAndLoad()">Load</button>
+  </div>
+
+  <button class="refresh" onclick="loadApplications()">↻ Refresh</button>
+
+  <div id="list"></div>
+
+<script>
+function getKey(){ return localStorage.getItem('cablink_admin_key') || ''; }
+
+function saveKeyAndLoad(){
+  const v = document.getElementById('adminKey').value.trim();
+  if(v) localStorage.setItem('cablink_admin_key', v);
+  loadApplications();
+}
+
+async function loadApplications(){
+  const key = getKey();
+  const list = document.getElementById('list');
+  if(!key){
+    list.innerHTML = '<div class="empty">Enter the admin key above to load applications.</div>';
+    return;
+  }
+  list.innerHTML = '<div class="empty">Loading…</div>';
+
+  try{
+    const r = await fetch('/api/admin/driver-applications', {
+      headers: { 'x-admin-key': key }
+    });
+    const data = await r.json();
+
+    if(r.status === 401){
+      list.innerHTML = '<div class="empty">Admin key rejected. Check the key and try again.</div>';
+      return;
+    }
+    if(!data.success){
+      list.innerHTML = '<div class="empty">Error: ' + (data.error || 'unknown') + '</div>';
+      return;
+    }
+
+    const apps = data.applications || [];
+    if(apps.length === 0){
+      list.innerHTML = '<div class="empty">No driver applications yet.</div>';
+      return;
+    }
+
+    apps.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    list.innerHTML = apps.map(app => `
+      <div class="card">
+        <div class="row">
+          <div class="name">${escapeHtml(app.name || 'Unnamed')}</div>
+          <div class="status ${app.status}">${app.status}</div>
+        </div>
+        <div class="field"><b>Phone:</b> ${escapeHtml(app.phone || '—')}</div>
+        <div class="field"><b>License:</b> ${escapeHtml(app.license || '—')}</div>
+        <div class="field"><b>Vehicle:</b> ${escapeHtml(app.vehicle || '—')}</div>
+        <div class="field"><b>Applied:</b> ${app.createdAt ? new Date(app.createdAt).toLocaleString() : '—'}</div>
+        <div class="actions">
+          <button class="approve" ${app.status !== 'PENDING' ? 'disabled' : ''}
+                  onclick="review('${app.id}','approve')">Approve</button>
+          <button class="reject" ${app.status !== 'PENDING' ? 'disabled' : ''}
+                  onclick="review('${app.id}','reject')">Reject</button>
+        </div>
+      </div>
+    `).join('');
+
+  }catch(e){
+    list.innerHTML = '<div class="empty">Network error: ' + escapeHtml(e.message) + '</div>';
+  }
+}
+
+async function review(id, action){
+  const key = getKey();
+  try{
+    const r = await fetch('/api/admin/driver-applications/' + encodeURIComponent(id) + '/' + action, {
+      method: 'POST',
+      headers: { 'x-admin-key': key }
+    });
+    const data = await r.json();
+    if(!data.success){
+      alert('Failed: ' + (data.error || 'unknown error'));
+      return;
+    }
+    loadApplications();
+  }catch(e){
+    alert('Network error: ' + e.message);
+  }
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[c]));
+}
+
+document.getElementById('adminKey').value = getKey();
+if(getKey()) loadApplications();
+</script>
+</body>
+</html>

@@ -1136,11 +1136,43 @@ function animateCarAlongRoute(totalSeconds){
 
 
 
+async function hasActiveRideOnServer(){
+  const token = localStorage.getItem('cl_token');
+  if(!token) return null; // unknown — caller falls back to local flag
+  try{
+    const r = await fetch('/api/rides/mine', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await r.json();
+    if(!data.success || !Array.isArray(data.rides)) return null;
+    return data.rides.some(ride => ride.status !== 'COMPLETED' && ride.status !== 'CANCELLED');
+  }catch(e){
+    return null; // network/error — fall back to local flag rather than block booking
+  }
+}
+
 async function bookRide(){
   const pickup = document.getElementById('pickup').value.trim();
   const dropoff = document.getElementById('dropoff').value.trim();
   if(!pickup || !dropoff){ toast('Please enter pickup and drop-off locations', 'warning'); return; }
-  if(STATE.inRide){ toast('Ride already in progress', 'warning'); return; }
+
+  // Server is the source of truth when we can reach it and the
+  // account is logged in. This replaces trusting a localStorage
+  // flag that can get stuck (e.g. after a crash or a stale tab),
+  // which used to permanently lock people out of booking.
+  const serverSaysActive = await hasActiveRideOnServer();
+  if(serverSaysActive === true){
+    STATE.inRide = true;
+    toast('Ride already in progress', 'warning');
+    return;
+  }
+  if(serverSaysActive === false){
+    STATE.inRide = false; // reconcile stale local flag
+  }
+  if(serverSaysActive === null && STATE.inRide){
+    // Not logged in, or server unreachable — fall back to the
+    // local flag rather than blocking booking entirely.
+    toast('Ride already in progress', 'warning');
+    return;
+  }
 
   const clAccountRaw = localStorage.getItem('cl_account');
   const clAccount = clAccountRaw ? JSON.parse(clAccountRaw) : null;
