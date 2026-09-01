@@ -1633,7 +1633,14 @@ async function pollForRideRequests(){
       const rides = data.rides || data;
       (Array.isArray(rides) ? rides : []).filter(r => {
         const s = (r.status||'').toLowerCase();
-        return s === 'pending' || s === 'requested' || s === '';
+        // Backend transitions a new ride from REQUESTED to MATCHING
+        // immediately on creation (see POST /api/rides in
+        // backend/routes/rides.js) — by the time it's visible here
+        // it's already MATCHING, never REQUESTED. This filter used
+        // to only match 'pending'/'requested', so drivers never saw
+        // any incoming requests at all despite rides existing and
+        // being correctly acceptable server-side.
+        return s === 'pending' || s === 'requested' || s === 'matching' || s === '';
       }).forEach(r => {
         if(document.getElementById('req-' + r.id)) return;
         renderIncomingRequest(r);
