@@ -241,6 +241,47 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 </style>
 </head>
 <body>
+<div id="authGate" style="position:fixed;inset:0;z-index:9999;background:var(--ink);
+     display:flex;flex-direction:column;align-items:center;justify-content:center;
+     padding:24px;font-family:var(--body);">
+  <div style="font-family:var(--disp);font-size:28px;font-weight:700;color:var(--gold-l);margin-bottom:4px;">CabLink</div>
+  <div style="color:var(--muted);font-size:13px;margin-bottom:28px;">Gaborone · Botswana</div>
+
+  <div style="width:100%;max-width:340px;background:var(--surface2);border:1px solid var(--hair2);
+       border-radius:var(--r-lg);padding:20px;">
+    <div id="gatePhoneWrap" style="margin-bottom:12px;">
+      <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Phone number</label>
+      <input id="gate-phone" type="tel" placeholder="71234567" autocomplete="tel"
+        style="width:100%;background:var(--surface);border:1px solid var(--hair2);color:var(--text);
+        padding:12px;border-radius:var(--r-sm);font-size:15px;box-sizing:border-box;">
+    </div>
+    <div id="gateNameWrap" style="display:none;margin-bottom:12px;">
+      <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Name</label>
+      <input id="gate-name" type="text" placeholder="Your name" autocomplete="name"
+        style="width:100%;background:var(--surface);border:1px solid var(--hair2);color:var(--text);
+        padding:12px;border-radius:var(--r-sm);font-size:15px;box-sizing:border-box;">
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">PIN</label>
+      <input id="gate-pin" type="password" inputmode="numeric" placeholder="••••" autocomplete="current-password"
+        style="width:100%;background:var(--surface);border:1px solid var(--hair2);color:var(--text);
+        padding:12px;border-radius:var(--r-sm);font-size:15px;box-sizing:border-box;">
+    </div>
+
+    <button id="gateSubmitBtn" onclick="window.gateSubmit()"
+      style="width:100%;background:var(--gold);color:#1a1400;font-weight:700;border:none;
+      padding:14px;border-radius:var(--r-sm);font-size:15px;margin-bottom:12px;">Log in</button>
+
+    <div style="text-align:center;font-size:13px;color:var(--muted);">
+      <span id="gateToggleText">New here?</span>
+      <a href="javascript:void(0)" onclick="window.gateToggleMode()" style="color:var(--sapphire-l);">
+        <span id="gateToggleLink">Create an account</span>
+      </a>
+    </div>
+    <div id="gateError" style="color:var(--coral);font-size:13px;margin-top:12px;text-align:center;"></div>
+  </div>
+</div>
+
 <div id="app">
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
@@ -576,6 +617,15 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   </div>
 </div>
 
+<div class="screen" id="s-admin">
+  <div class="eyebrow">Admin</div>
+  <div class="greeting">Driver applications</div>
+  <div class="card">
+    <button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="loadAdminApplications()">↻ Refresh</button>
+    <div id="adminAppList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+</div>
+
 </div><!-- end screens -->
 
 <nav id="nav">
@@ -583,6 +633,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <button class="nav-btn" onclick="showScreen('rewards',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>
   <button class="nav-btn center-btn" onclick="bookRide()">🚕</button>
   <button class="nav-btn" onclick="showScreen('driver',this)" id="nav-driver"><span class="icon">🚗</span><span>Driver</span></button>
+  <button class="nav-btn" style="display:none" onclick="showScreen('admin',this)" id="nav-admin"><span class="icon">🛡</span><span>Admin</span></button>
   <button class="nav-btn" onclick="showScreen('profile',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>
   <button class="nav-btn" onclick="showScreen('more',this)" id="nav-more"><span class="icon">◆</span><span>Ecosystem</span></button>
 </nav>
@@ -1967,6 +2018,7 @@ function showScreen(name, btn){
   if(name==='rewards'){ renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
   if(name==='profile') updateProfileKPI();
   if(name==='home' && MAP) setTimeout(()=>MAP.invalidateSize(), 200);
+  if(name==='admin') loadAdminApplications();
 }
 function updateDailyBtn(){
   const today = new Date().toDateString();
@@ -2907,3 +2959,189 @@ window.CABLINK_MODE="LIVE";
 
 </script>
 
+
+<script>
+// ============================================================
+// LOGIN GATE
+// ============================================================
+// Blocks the entire app (the #app div) behind #authGate until a
+// valid session is confirmed. Previously the app rendered fully
+// before login existed anywhere in the flow — this makes login
+// the actual first step, matching WELCOME -> LOGIN/REGISTER ->
+// ROLE DETECTION -> ENTER WORKSPACE from the architecture doc.
+
+window.gateMode = 'login'; // or 'register'
+
+window.gateToggleMode = function(){
+  window.gateMode = window.gateMode === 'login' ? 'register' : 'login';
+  const isRegister = window.gateMode === 'register';
+  document.getElementById('gateNameWrap').style.display = isRegister ? 'block' : 'none';
+  document.getElementById('gateSubmitBtn').textContent = isRegister ? 'Create account' : 'Log in';
+  document.getElementById('gateToggleText').textContent = isRegister ? 'Already have an account?' : 'New here?';
+  document.getElementById('gateToggleLink').textContent = isRegister ? 'Log in' : 'Create an account';
+  document.getElementById('gateError').textContent = '';
+};
+
+window.gateSubmit = async function(){
+  const phone = document.getElementById('gate-phone').value.trim();
+  const pin = document.getElementById('gate-pin').value.trim();
+  const name = document.getElementById('gate-name').value.trim();
+  const errorEl = document.getElementById('gateError');
+  errorEl.textContent = '';
+
+  if(!phone || !pin){ errorEl.textContent = 'Phone and PIN required'; return; }
+
+  const btn = document.getElementById('gateSubmitBtn');
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = 'Please wait…';
+
+  try{
+    if(window.gateMode === 'register'){
+      const res = await fetch('/api/auth/register', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ phone, name, pin })
+      });
+      const data = await res.json();
+      if(!data.success){ errorEl.textContent = data.error || 'Registration failed'; return; }
+      // Registered — now log in with the same credentials.
+      window.gateMode = 'login';
+    }
+
+    const res = await fetch('/api/auth/login', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ phone, pin })
+    });
+    const data = await res.json();
+    if(!data.success){ errorEl.textContent = data.error || 'Login failed'; return; }
+
+    localStorage.setItem('cl_token', data.token);
+    localStorage.setItem('cl_account', JSON.stringify(data.account));
+    window.gateReveal(data.account);
+
+  }catch(e){
+    errorEl.textContent = 'Network error — check your connection';
+  }finally{
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+};
+
+// Reveal the app once a valid account is confirmed, and apply
+// role-based UI (currently: show the Admin tab for ADMIN role).
+window.gateReveal = function(account){
+  document.getElementById('authGate').style.display = 'none';
+  document.getElementById('app').style.display = '';
+  window.CABLINK_ACCOUNT = account;
+  if(account && account.role === 'ADMIN'){
+    window.showAdminTab && window.showAdminTab();
+  }
+};
+
+// On load: if a token exists, verify it against the server rather
+// than trusting localStorage blindly (a token could be stale/
+// revoked). Only reveal the app on a confirmed 200 from /me.
+(async function checkSessionOnLoad(){
+  document.getElementById('app').style.display = 'none';
+  const token = localStorage.getItem('cl_token');
+  if(!token){ return; } // gate stays up, showing login/register
+
+  try{
+    const res = await fetch('/api/auth/me', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await res.json();
+    if(data.success && data.account){
+      localStorage.setItem('cl_account', JSON.stringify(data.account));
+      window.gateReveal(data.account);
+    }
+    // If not successful, leave the gate up — the stored token is
+    // stale/invalid, so treat this the same as never having logged in.
+  }catch(e){
+    // Network error checking session — fail safe by leaving the
+    // gate up rather than guessing the session is still good.
+  }
+})();
+</script>
+
+<script>
+// ============================================================
+// ADMIN TAB (in-app, session-authenticated)
+// ============================================================
+// Same driver-application review as admin.html, but living
+// inside the main app and gated on account.role === 'ADMIN'
+// instead of a typed-in key. admin.html still works standalone
+// (useful if a session is ever broken) since the backend accepts
+// either the key or an ADMIN session token.
+
+window.showAdminTab = function(){
+  const btn = document.getElementById('nav-admin');
+  if(btn) btn.style.display = '';
+};
+
+window.loadAdminApplications = async function(){
+  const list = document.getElementById('adminAppList');
+  const token = localStorage.getItem('cl_token');
+  if(!token){ list.innerHTML = '<div style="color:var(--muted);font-size:13px">Not logged in.</div>'; return; }
+
+  list.innerHTML = '<div style="color:var(--muted);font-size:13px">Loading…</div>';
+
+  try{
+    const res = await fetch('/api/admin/driver-applications', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await res.json();
+
+    if(!data.success){
+      list.innerHTML = '<div style="color:var(--coral);font-size:13px">' + (data.error || 'Could not load applications') + '</div>';
+      return;
+    }
+
+    const apps = (data.applications || []).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if(apps.length === 0){
+      list.innerHTML = '<div style="color:var(--muted);font-size:13px">No driver applications yet.</div>';
+      return;
+    }
+
+    list.innerHTML = apps.map(app => {
+      const statusColor = app.status === 'APPROVED' ? 'var(--emerald)' : app.status === 'REJECTED' ? 'var(--coral)' : 'var(--gold-l)';
+      const disabled = app.status !== 'PENDING' ? 'disabled' : '';
+      return `<div style="background:var(--surface);border:1px solid var(--hair2);border-radius:var(--r-md);padding:12px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <strong style="font-size:14px">${escapeHtmlAdmin(app.name||'Unnamed')}</strong>
+          <span style="font-size:10px;color:${statusColor};text-transform:uppercase">${app.status}</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted)">📱 ${escapeHtmlAdmin(app.phone||'—')} · 🪪 ${escapeHtmlAdmin(app.license||'—')} · 🚙 ${escapeHtmlAdmin(app.vehicle||'—')}</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-sm" style="flex:1;background:var(--emerald);color:#04270f" ${disabled} onclick="window.reviewAdminApplication('${app.id}','approve')">Approve</button>
+          <button class="btn btn-sm" style="flex:1;background:var(--coral);color:#2b0505" ${disabled} onclick="window.reviewAdminApplication('${app.id}','reject')">Reject</button>
+        </div>
+      </div>`;
+    }).join('');
+
+  }catch(e){
+    list.innerHTML = '<div style="color:var(--coral);font-size:13px">Network error</div>';
+  }
+};
+
+window.reviewAdminApplication = async function(id, action){
+  const token = localStorage.getItem('cl_token');
+  try{
+    const res = await fetch('/api/admin/driver-applications/' + encodeURIComponent(id) + '/' + action, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await res.json();
+    if(!data.success){ toast(data.error || 'Action failed', 'error'); return; }
+    toast(action === 'approve' ? 'Driver approved' : 'Application rejected', 'success');
+    window.loadAdminApplications();
+  }catch(e){
+    toast('Network error', 'error');
+  }
+};
+
+function escapeHtmlAdmin(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>

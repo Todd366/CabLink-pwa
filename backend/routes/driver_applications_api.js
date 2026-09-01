@@ -13,11 +13,25 @@ const auth = require("../services/auth_service");
 
 const ADMIN_KEY = process.env.ADMIN_KEY || "cablink-admin-dev-key";
 
-function requireAdmin(req, res, next) {
-    if (req.headers["x-admin-key"] !== ADMIN_KEY) {
-        return res.status(401).json({ success: false, error: "Admin key required" });
+// requireAdmin now accepts EITHER:
+//   - the x-admin-key header (unchanged, kept for admin.html /
+//     scripting / recovery if session auth is ever broken), OR
+//   - a valid Bearer session token whose account.role === "ADMIN"
+// This is what lets admin capability live inside the main app
+// (using the same login every other screen uses) instead of a
+// separate page with a typed-in key as the only option.
+async function requireAdmin(req, res, next) {
+    if (req.headers["x-admin-key"] === ADMIN_KEY) {
+        return next();
     }
-    next();
+
+    const account = await auth.accountFromRequest(req);
+
+    if (account && account.role === "ADMIN") {
+        return next();
+    }
+
+    return res.status(401).json({ success: false, error: "Admin access required" });
 }
 
 router.get("/drivers/application-status", async (req, res) => {
@@ -81,6 +95,34 @@ router.post("/admin/driver-applications/:id/reject", requireAdmin, async (req, r
 router.get("/admin/accounts", requireAdmin, async (req, res) => {
     try {
         res.json({ success: true, accounts: await auth.allAccounts() });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ============================================================
+// ADMIN BOOTSTRAP
+// ============================================================
+// One-time (or rare) action: promote a logged-in account to the
+// ADMIN role. Requires the raw ADMIN_KEY specifically — not just
+// an existing admin session — so granting NEW admins always
+// requires the key, the same way it always has. Once an account
+// is ADMIN, it uses its normal session token for everything else
+// above, no key needed day to day.
+router.post("/admin/bootstrap", async (req, res) => {
+    try {
+        if (req.headers["x-admin-key"] !== ADMIN_KEY) {
+            return res.status(401).json({ success: false, error: "Admin key required" });
+        }
+
+        const account = await auth.accountFromRequest(req);
+
+        if (!account) {
+            return res.status(401).json({ success: false, error: "Log in first, then bootstrap that session" });
+        }
+
+        const updated = await auth.setRole(account.id, "ADMIN");
+        res.json({ success: true, account: updated });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }

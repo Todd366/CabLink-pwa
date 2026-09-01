@@ -168,6 +168,16 @@ async function setStatus(id, status) {
     application.reviewedAt = new Date().toISOString();
 
     await saveApplication(application);
+
+    // Sync the account's role so the rest of the app (nav tabs,
+    // going online, the login gate) reflects the decision — not
+    // just this application record. Previously approval only
+    // updated the application; the account itself never changed,
+    // which is why "approved" didn't actually unlock anything.
+    if (status === "APPROVED" && application.accountId) {
+        await auth.setRole(application.accountId, "APPROVED_DRIVER");
+    }
+
     return application;
 }
 

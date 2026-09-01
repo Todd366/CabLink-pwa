@@ -290,6 +290,37 @@ async function updateProfile(accountId, profileChanges) {
     return publicAccount(account);
 }
 
+// ------------------------------------------------------------
+// SET ROLE
+// ------------------------------------------------------------
+// The single place account.role changes. Called by driver
+// application approval (PASSENGER/DRIVER_APPLICANT -> APPROVED_DRIVER)
+// and by the admin-bootstrap endpoint (-> ADMIN). Nothing else
+// should write account.role directly — that's what made role
+// meaningless before: every screen guessed instead of reading one
+// authoritative field.
+const VALID_ROLES = ["PASSENGER", "DRIVER_APPLICANT", "APPROVED_DRIVER", "ADMIN"];
+
+async function setRole(accountId, role) {
+    if (!VALID_ROLES.includes(role)) {
+        throw new Error("Invalid role: " + role);
+    }
+
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === accountId);
+
+    if (!account) {
+        throw new Error("Account not found");
+    }
+
+    account.role = role;
+    account.updatedAt = new Date().toISOString();
+
+    await saveAccount(account);
+
+    return publicAccount(account);
+}
+
 async function allAccounts() {
     const accounts = await loadAccounts();
     return accounts.map(publicAccount);
@@ -347,6 +378,7 @@ module.exports = {
     accountFromRequest,
     getAccountById,
     updateProfile,
+    setRole,
     allAccounts,
     findOrCreateAccountByPhone,
     isValidBotswanaPhone
