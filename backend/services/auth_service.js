@@ -202,8 +202,29 @@ async function register({ phone, pin, name }) {
     }
 
     const accounts = await loadAccounts();
+    const existing = accounts.find(a => a.phone === phone);
 
-    if (accounts.find(a => a.phone === phone)) {
+    // An account can already exist here without a PIN — e.g. it was
+    // created by findOrCreateAccountByPhone when someone submitted a
+    // driver application or booked a ride before ever registering.
+    // Previously this always threw "already exists", which meant
+    // that person could never log in at all: they had no PIN to log
+    // in with, and registering was blocked. Claiming the existing
+    // record (same id, same phone) instead preserves their ride and
+    // application history rather than creating a disconnected
+    // duplicate account.
+    if (existing && existing.passwordless) {
+        const salt = crypto.randomBytes(16).toString("hex");
+        existing.pinSalt = salt;
+        existing.pinHash = hashPin(pin, salt);
+        existing.passwordless = false;
+        if (name) existing.name = name;
+        existing.updatedAt = new Date().toISOString();
+        await saveAccount(existing);
+        return publicAccount(existing);
+    }
+
+    if (existing) {
         throw new Error("An account with this phone number already exists");
     }
 
@@ -216,6 +237,7 @@ async function register({ phone, pin, name }) {
         avatarUrl: null,
         pinSalt: salt,
         pinHash: hashPin(pin, salt),
+        passwordless: false,
         role: "PASSENGER",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -231,7 +253,20 @@ async function login({ phone, pin }) {
     const accounts = await loadAccounts();
     const account = accounts.find(a => a.phone === phone);
 
-    if (!account || hashPin(pin, account.pinSalt) !== account.pinHash) {
+    if (!account) {
+        throw new Error("Incorrect phone number or PIN");
+    }
+
+    if (account.passwordless || !account.pinHash) {
+        // This account exists (e.g. from a driver application or a
+        // ride booked before registering) but has never had a PIN
+        // set. hashPin() would crash on a null salt if we tried to
+        // verify against it — give a real, actionable message
+        // instead of a Node internal error.
+        throw new Error("This number has no password set yet — tap 'Create an account' to set a PIN");
+    }
+
+    if (hashPin(pin, account.pinSalt) !== account.pinHash) {
         throw new Error("Incorrect phone number or PIN");
     }
 
@@ -290,15 +325,6 @@ async function updateProfile(accountId, profileChanges) {
     return publicAccount(account);
 }
 
-// ------------------------------------------------------------
-// SET ROLE
-// ------------------------------------------------------------
-// The single place account.role changes. Called by driver
-// application approval (PASSENGER/DRIVER_APPLICANT -> APPROVED_DRIVER)
-// and by the admin-bootstrap endpoint (-> ADMIN). Nothing else
-// should write account.role directly — that's what made role
-// meaningless before: every screen guessed instead of reading one
-// authoritative field.
 const VALID_ROLES = ["PASSENGER", "DRIVER_APPLICANT", "APPROVED_DRIVER", "ADMIN"];
 
 async function setRole(accountId, role) {
