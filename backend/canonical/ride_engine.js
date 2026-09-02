@@ -116,6 +116,18 @@ async function createRide(
             data.notes ||
             "",
 
+        // Distinguishes the fare amount from how it's actually
+        // settled — matches the architecture doc's Section 20
+        // requirement that payment method never be assumed. Cash
+        // and mobile money are the two that work without a bank
+        // account, which is the real constraint here — card and
+        // business-account billing are represented but not wired
+        // to any payment processor yet.
+        paymentMethod:
+            ["cash", "mobile_money", "card", "business_account"].includes(data.paymentMethod)
+                ? data.paymentMethod
+                : "cash",
+
         source:
             data.source ||
             "app",

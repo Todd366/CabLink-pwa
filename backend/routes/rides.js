@@ -31,7 +31,8 @@ router.post("/", async (req, res) => {
             distanceKm,
             wallet,
             notes,
-            passenger
+            passenger,
+            paymentMethod
         } = req.body || {};
 
         if (!pickup) {
@@ -61,6 +62,7 @@ router.post("/", async (req, res) => {
                 wallet,
                 notes,
                 passenger,
+                paymentMethod,
                 passengerAccountId:
                     callingAccount ? callingAccount.id : null
             });
