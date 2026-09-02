@@ -204,15 +204,6 @@ async function register({ phone, pin, name }) {
     const accounts = await loadAccounts();
     const existing = accounts.find(a => a.phone === phone);
 
-    // An account can already exist here without a PIN — e.g. it was
-    // created by findOrCreateAccountByPhone when someone submitted a
-    // driver application or booked a ride before ever registering.
-    // Previously this always threw "already exists", which meant
-    // that person could never log in at all: they had no PIN to log
-    // in with, and registering was blocked. Claiming the existing
-    // record (same id, same phone) instead preserves their ride and
-    // application history rather than creating a disconnected
-    // duplicate account.
     if (existing && existing.passwordless) {
         const salt = crypto.randomBytes(16).toString("hex");
         existing.pinSalt = salt;
@@ -258,11 +249,6 @@ async function login({ phone, pin }) {
     }
 
     if (account.passwordless || !account.pinHash) {
-        // This account exists (e.g. from a driver application or a
-        // ride booked before registering) but has never had a PIN
-        // set. hashPin() would crash on a null salt if we tried to
-        // verify against it — give a real, actionable message
-        // instead of a Node internal error.
         throw new Error("This number has no password set yet — tap 'Create an account' to set a PIN");
     }
 
@@ -347,6 +333,43 @@ async function setRole(accountId, role) {
     return publicAccount(account);
 }
 
+// ------------------------------------------------------------
+// CHANGE PIN
+// ------------------------------------------------------------
+// Requires the current PIN, same as any real settings page.
+// Not usable to "claim" an account (that's register()'s job for
+// passwordless accounts) — this only rotates the PIN on an
+// account that already has one.
+async function changePin(accountId, currentPin, newPin) {
+    if (!newPin || String(newPin).length < 4) {
+        throw new Error("New PIN must be at least 4 digits");
+    }
+
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === accountId);
+
+    if (!account) {
+        throw new Error("Account not found");
+    }
+
+    if (account.passwordless || !account.pinHash) {
+        throw new Error("This account has no PIN set yet");
+    }
+
+    if (hashPin(currentPin, account.pinSalt) !== account.pinHash) {
+        throw new Error("Current PIN is incorrect");
+    }
+
+    const salt = crypto.randomBytes(16).toString("hex");
+    account.pinSalt = salt;
+    account.pinHash = hashPin(newPin, salt);
+    account.updatedAt = new Date().toISOString();
+
+    await saveAccount(account);
+
+    return publicAccount(account);
+}
+
 async function allAccounts() {
     const accounts = await loadAccounts();
     return accounts.map(publicAccount);
@@ -405,6 +428,7 @@ module.exports = {
     getAccountById,
     updateProfile,
     setRole,
+    changePin,
     allAccounts,
     findOrCreateAccountByPhone,
     isValidBotswanaPhone

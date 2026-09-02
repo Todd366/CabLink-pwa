@@ -53,4 +53,27 @@ router.patch("/auth/profile", async (req, res) => {
     }
 });
 
+// ============================================================
+// PATCH /api/auth/pin
+// Real PIN change — requires current PIN, same session-token
+// auth as the rest of the account. Nothing in the app could
+// change a PIN before this; the Profile page only offered name
+// editing.
+// ============================================================
+router.patch("/auth/pin", async (req, res) => {
+    try {
+        const account = await auth.accountFromRequest(req);
+
+        if (!account) {
+            return res.status(401).json({ success: false, error: "Not logged in" });
+        }
+
+        const { currentPin, newPin } = req.body || {};
+        const updated = await auth.changePin(account.id, currentPin, newPin);
+        res.json({ success: true, account: updated });
+    } catch (error) {
+        res.status(400).json({ success: false, error: error.message });
+    }
+});
+
 module.exports = router;
