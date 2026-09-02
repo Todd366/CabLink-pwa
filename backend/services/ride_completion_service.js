@@ -92,7 +92,7 @@ async function completeRideById(
             reward:
                 rewardService
                     .getRewardForRide
-                    ? rewardService
+                    ? await rewardService
                         .getRewardForRide(
                             ride.id
                         )
@@ -197,7 +197,7 @@ async function completeRideById(
                 "function"
         ) {
 
-            ledger.recordRide(
+            await ledger.recordRide(
                 completed
             );
 

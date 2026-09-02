@@ -286,7 +286,7 @@ router.get("/:id", async (req, res) => {
 
     const reward =
         ride.status === STATES.COMPLETED
-            ? rewardService.getRewardForRide(ride.id)
+            ? await rewardService.getRewardForRide(ride.id)
             : null;
 
     res.json({

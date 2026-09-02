@@ -7,10 +7,10 @@ const ledger=require("../services/economy_ledger_service");
 
 router.get(
 "/driver/:id/economy",
-(req,res)=>{
+async (req,res)=>{
 
 res.json(
-ledger.driverEconomy(
+await ledger.driverEconomy(
 req.params.id
 )
 );

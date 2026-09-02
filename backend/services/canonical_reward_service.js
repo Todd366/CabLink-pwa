@@ -14,68 +14,21 @@ const LEDGER_FILE =
         "economy_ledger.json"
     );
 
-function loadLedger() {
+const ledgerStore = require("./ledger_store");
 
-    if (!fs.existsSync(LEDGER_FILE)) {
+// loadLedger()/saveLedger() now delegate to the shared ledger_store
+// (see backend/services/ledger_store.js) instead of maintaining a
+// second, independent flat-file reader of the same file that
+// economy_ledger_service.js also reads/writes. Converted to async
+// since the Supabase-backed store is async; every call site below
+// (5 of them) is updated to await accordingly.
 
-        return {
-            rides: [],
-            transactions: []
-        };
-
-    }
-
-    try {
-
-        const data =
-            JSON.parse(
-                fs.readFileSync(
-                    LEDGER_FILE,
-                    "utf8"
-                )
-            );
-
-        return {
-
-            rides:
-                Array.isArray(data.rides)
-                    ? data.rides
-                    : [],
-
-            transactions:
-                Array.isArray(data.transactions)
-                    ? data.transactions
-                    : []
-
-        };
-
-    } catch (error) {
-
-        throw new Error(
-            "Unable to read economy ledger: " +
-            error.message
-        );
-
-    }
-
+async function loadLedger() {
+    return ledgerStore.loadLedger();
 }
 
-function saveLedger(data) {
-
-    fs.writeFileSync(
-
-        LEDGER_FILE,
-
-        JSON.stringify(
-            data,
-            null,
-            2
-        ),
-
-        "utf8"
-
-    );
-
+async function saveLedger(data) {
+    return ledgerStore.saveLedger(data);
 }
 
 function findExistingReward(
@@ -98,11 +51,11 @@ function findExistingReward(
 
 }
 
-function getRewardForRide(rideId) {
+async function getRewardForRide(rideId) {
 
     if (!rideId) return null;
 
-    const ledger = loadLedger();
+    const ledger = await loadLedger();
 
     return findExistingReward(
         ledger.transactions,
@@ -195,7 +148,7 @@ async function createRewardForCompletedRide(
 
 
     const ledger =
-        loadLedger();
+        await loadLedger();
 
 
     /*
@@ -303,7 +256,7 @@ async function createRewardForCompletedRide(
         reward
     );
 
-    saveLedger(
+    await saveLedger(
         ledger
     );
 
@@ -347,7 +300,7 @@ async function createRewardForCompletedRide(
     reward.txHash = executionResult.hash || null;
     reward.executionReason = executionResult.reason || null;
 
-    const persisted = loadLedger();
+    const persisted = await loadLedger();
 
     const persistedTx =
         findExistingReward(
@@ -363,7 +316,7 @@ async function createRewardForCompletedRide(
 
     }
 
-    saveLedger(persisted);
+    await saveLedger(persisted);
 
     return {
 
