@@ -725,11 +725,11 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 <div class="modal-overlay" id="earningsModal"><div class="modal-box">
   <div class="modal-title">💰 Driver earnings <button class="modal-close" onclick="closeModal('earningsModal')">×</button></div>
   <div class="wallet-bar">
-    <div class="bal-card"><div class="val" id="earn-today">0</div><div class="lbl">Today BWP</div></div>
+    <div class="bal-card"><div class="val" id="earn-today">0</div><div class="lbl">Fare BWP</div></div>
     <div class="bal-card"><div class="val" id="earn-thb">0</div><div class="lbl">THB earned</div></div>
     <div class="bal-card"><div class="val" id="earn-rides">0</div><div class="lbl">Trips</div></div>
   </div>
-  <div style="font-size:12px;color:var(--muted);margin-top:12px">Detailed earnings sync arrives with the Firebase backend in Phase 2.</div>
+  <div id="driverTripHistory" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto"></div>
   <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal('earningsModal')">Close</button>
 </div></div>
 
@@ -1848,9 +1848,22 @@ function renderTripCardBody(div, ride){
         onclick="window.advanceTrip('${ride.id}','${step.next}')">${step.label}</button>`
     : `<div style="font-size:12px;color:var(--muted)">Trip complete</div>`;
 
+  // Before pickup, navigate to the passenger. After pickup, navigate
+  // to the drop-off. Opens the phone's own Maps app via a standard
+  // Google Maps directions URL — no API key needed for this, unlike
+  // the embedded Leaflet map.
+  const pickedUp = ['PICKED_UP','STARTED'].includes(ride.status);
+  const navDest = pickedUp ? ride.dropoff : ride.pickup;
+  const navLabel = pickedUp ? '🧭 Navigate to drop-off' : '🧭 Navigate to pickup';
+  const navHtml = navDest
+    ? `<a class="btn btn-outline btn-sm" style="width:100%;display:block;text-align:center;margin-bottom:8px;text-decoration:none"
+        href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(navDest)}" target="_blank" rel="noopener">${navLabel}</a>`
+    : '';
+
   div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${ride.id}</strong><span style="color:var(--gold-l);font-weight:700">${ride.fare||''} BWP</span></div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${ride.pickup||''} → 🏁 ${ride.dropoff||''}</div>
     <div style="font-size:11px;color:var(--muted2);margin-bottom:8px">${(ride.status||'').replace('_',' ')}</div>
+    ${navHtml}
     ${buttonHtml}`;
 }
 
@@ -2075,8 +2088,53 @@ function openModal(id){
   document.getElementById(id).classList.add('show');
   if(id==='shareModal') document.getElementById('shareLink').textContent = STATE.tripShareId ? 'https://'+STATE.tripShareId : 'No active ride — book a ride first';
   if(id==='pendingModal') renderPendingTxs();
+  if(id==='earningsModal') loadDriverEarningsModal();
 }
 function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+async function loadDriverEarningsModal(){
+  const raw = localStorage.getItem('cl_account');
+  const historyEl = document.getElementById('driverTripHistory');
+  if(!raw){
+    historyEl.innerHTML = '<div style="font-size:12px;color:var(--muted)">Log in to see your earnings.</div>';
+    return;
+  }
+  const account = JSON.parse(raw);
+  historyEl.innerHTML = '<div style="font-size:12px;color:var(--muted)">Loading…</div>';
+
+  try{
+    const res = await fetch('/api/driver/' + encodeURIComponent(account.id) + '/economy');
+    const data = await res.json();
+    document.getElementById('earn-today').textContent = data.totalFare || 0;
+    document.getElementById('earn-thb').textContent = data.thbEarned || 0;
+    document.getElementById('earn-rides').textContent = data.completed || 0;
+
+    // /economy gives totals; pull the actual ride records so the
+    // driver can see WHICH trips they were paid for, not just a sum.
+    const ridesRes = await fetch('/api/rides');
+    const ridesData = await ridesRes.json();
+    const myCompleted = (ridesData.rides || [])
+      .filter(r => (r.driverId === account.id || r.driverAccountId === account.id) && r.status === 'COMPLETED')
+      .sort((a,b) => new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt));
+
+    if(myCompleted.length === 0){
+      historyEl.innerHTML = '<div style="font-size:12px;color:var(--muted)">No completed trips yet.</div>';
+      return;
+    }
+
+    historyEl.innerHTML = myCompleted.map(r => `
+      <div style="background:var(--surface);border:1px solid var(--hair2);border-radius:var(--r-sm);padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;font-size:13px">
+          <span>${r.pickup||''} → ${r.dropoff||''}</span>
+          <strong style="color:var(--gold-l)">${r.fare||0} BWP</strong>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:2px">${r.updatedAt ? new Date(r.updatedAt).toLocaleString() : ''}</div>
+      </div>
+    `).join('');
+  }catch(e){
+    historyEl.innerHTML = '<div style="font-size:12px;color:var(--coral)">Could not load earnings</div>';
+  }
+}
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('show'); }));
 });
