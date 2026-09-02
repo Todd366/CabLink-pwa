@@ -642,6 +642,34 @@ h1,h2,h3,.disp{font-family:var(--disp)}
     <button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="loadAdminApplications()">↻ Refresh</button>
     <div id="adminAppList" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
+  <div class="greeting" style="margin-top:20px">Incident reports</div>
+  <div class="card">
+    <button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="loadAdminIncidents()">↻ Refresh</button>
+    <div id="adminIncidentList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+</div>
+
+<div class="screen" id="s-safety">
+  <div class="eyebrow">Safety</div>
+  <div class="greeting">Emergency & incidents</div>
+  <div class="card" style="text-align:center">
+    <div style="font-size:44px;margin-bottom:8px">🚨</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px">
+      In immediate danger? Call emergency services first — the buttons below also log a report so CabLink support follows up.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a href="tel:999" class="btn btn-danger">📞 Call 999 — Emergency</a>
+      <button class="btn btn-danger" onclick="window.triggerSOS()">🆘 Report SOS now</button>
+      <button class="btn btn-outline" onclick="window.reportSafetyIssue()">📝 Report a non-emergency issue</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">📋 My reports</div>
+    <button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="loadMyIncidents()">↻ Refresh</button>
+    <div id="myIncidentList" style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:12px;color:var(--muted)">Log in to see your reports.</div>
+    </div>
+  </div>
 </div>
 
 </div><!-- end screens -->
@@ -651,6 +679,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <button class="nav-btn" onclick="showScreen('rewards',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>
   <button class="nav-btn center-btn" onclick="bookRide()">🚕</button>
   <button class="nav-btn" onclick="showScreen('driver',this)" id="nav-driver"><span class="icon">🚗</span><span>Driver</span></button>
+  <button class="nav-btn" onclick="showScreen('safety',this)" id="nav-safety"><span class="icon">🆘</span><span>Safety</span></button>
   <button class="nav-btn" style="display:none" onclick="showScreen('admin',this)" id="nav-admin"><span class="icon">🛡</span><span>Admin</span></button>
   <button class="nav-btn" onclick="showScreen('profile',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>
   <button class="nav-btn" onclick="showScreen('more',this)" id="nav-more"><span class="icon">◆</span><span>Ecosystem</span></button>
@@ -677,6 +706,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <div style="display:flex;flex-direction:column;gap:10px">
     <a href="tel:999" class="btn btn-danger">📞 Call 999 — Emergency</a>
     <a href="tel:911" class="btn btn-danger">📞 Call 911</a>
+    <button class="btn btn-danger" onclick="window.triggerSOS()">🆘 Log SOS report</button>
     <button class="btn btn-outline" onclick="shareLocation()">📍 Share my location</button>
     <button class="btn btn-outline" onclick="closeModal('sosModal')">Cancel</button>
   </div>
@@ -2206,7 +2236,8 @@ function showScreen(name, btn){
   if(name==='rewards'){ renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
   if(name==='profile') updateProfileKPI();
   if(name==='home' && MAP) setTimeout(()=>MAP.invalidateSize(), 200);
-  if(name==='admin') loadAdminApplications();
+  if(name==='admin') { loadAdminApplications(); loadAdminIncidents(); }
+  if(name==='safety') loadMyIncidents();
 }
 function updateDailyBtn(){
   const today = new Date().toDateString();
@@ -3394,4 +3425,130 @@ window.reviewAdminApplication = async function(id, action){
 function escapeHtmlAdmin(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+</script>
+
+<script>
+// ============================================================
+// SAFETY / INCIDENTS — real backend-recorded reports, replacing
+// the old SOS modal which only offered tel: links with nothing
+// actually logged anywhere.
+// ============================================================
+
+async function submitIncident(type, description){
+  const token = localStorage.getItem('cl_token');
+  try{
+    const res = await fetch('/api/incidents', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+      },
+      body: JSON.stringify({
+        type,
+        description,
+        rideId: STATE.rideId || null
+      })
+    });
+    const data = await res.json();
+    if(!data.success){ toast(data.error || 'Could not submit report', 'error'); return null; }
+    return data.incident;
+  }catch(e){
+    toast('Network error submitting report', 'error');
+    return null;
+  }
+}
+
+window.triggerSOS = async function(){
+  haptic();
+  const incident = await submitIncident('SOS', 'Emergency SOS triggered from the app.');
+  if(incident){
+    toast('🆘 SOS logged — ' + incident.id, 'success');
+    loadMyIncidents();
+  }
+};
+
+window.reportSafetyIssue = async function(){
+  const description = prompt('Briefly describe the issue:');
+  if(!description) return;
+  const incident = await submitIncident('SAFETY', description);
+  if(incident){
+    toast('Report submitted — ' + incident.id, 'success');
+    loadMyIncidents();
+  }
+};
+
+function incidentStatusColor(status){
+  if(status === 'RESOLVED') return 'var(--emerald)';
+  if(status === 'IN_PROGRESS') return 'var(--sapphire-l)';
+  return 'var(--gold-l)';
+}
+
+window.loadMyIncidents = async function(){
+  const list = document.getElementById('myIncidentList');
+  const token = localStorage.getItem('cl_token');
+  if(!list) return;
+  if(!token){ list.innerHTML = '<div style="font-size:12px;color:var(--muted)">Log in to see your reports.</div>'; return; }
+
+  list.innerHTML = '<div style="font-size:12px;color:var(--muted)">Loading…</div>';
+  try{
+    const res = await fetch('/api/incidents/mine', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if(!data.success){ list.innerHTML = '<div style="font-size:12px;color:var(--coral)">' + (data.error||'Could not load') + '</div>'; return; }
+    const items = (data.incidents||[]).sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt));
+    if(items.length === 0){ list.innerHTML = '<div style="font-size:12px;color:var(--muted)">No reports yet.</div>'; return; }
+    list.innerHTML = items.map(i => `
+      <div style="background:var(--surface);border:1px solid var(--hair2);border-radius:var(--r-sm);padding:10px 12px">
+        <div style="display:flex;justify-content:space-between">
+          <strong style="font-size:13px">${escapeHtmlAdmin(i.type)}</strong>
+          <span style="font-size:10px;color:${incidentStatusColor(i.status)};text-transform:uppercase">${i.status}</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">${escapeHtmlAdmin(i.description||'')}</div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:4px">${new Date(i.createdAt).toLocaleString()}</div>
+      </div>
+    `).join('');
+  }catch(e){ list.innerHTML = '<div style="font-size:12px;color:var(--coral)">Network error</div>'; }
+};
+
+window.loadAdminIncidents = async function(){
+  const list = document.getElementById('adminIncidentList');
+  const token = localStorage.getItem('cl_token');
+  if(!list || !token) return;
+
+  list.innerHTML = '<div style="font-size:12px;color:var(--muted)">Loading…</div>';
+  try{
+    const res = await fetch('/api/admin/incidents', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if(!data.success){ list.innerHTML = '<div style="font-size:12px;color:var(--coral)">' + (data.error||'Could not load') + '</div>'; return; }
+    const items = (data.incidents||[]).sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt));
+    if(items.length === 0){ list.innerHTML = '<div style="font-size:12px;color:var(--muted)">No incidents reported.</div>'; return; }
+    list.innerHTML = items.map(i => `
+      <div style="background:var(--surface);border:1px solid var(--hair2);border-radius:var(--r-sm);padding:10px 12px">
+        <div style="display:flex;justify-content:space-between">
+          <strong style="font-size:13px">${escapeHtmlAdmin(i.type)} · ${escapeHtmlAdmin(i.reporterName||'Anonymous')}</strong>
+          <span style="font-size:10px;color:${incidentStatusColor(i.status)};text-transform:uppercase">${i.status}</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">${escapeHtmlAdmin(i.description||'')}</div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:4px">${new Date(i.createdAt).toLocaleString()}</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn btn-outline btn-sm" style="flex:1" ${i.status!=='OPEN'?'disabled':''} onclick="window.markIncident('${i.id}','IN_PROGRESS')">Take</button>
+          <button class="btn btn-green btn-sm" style="flex:1" ${i.status==='RESOLVED'?'disabled':''} onclick="window.markIncident('${i.id}','RESOLVED')">Resolve</button>
+        </div>
+      </div>
+    `).join('');
+  }catch(e){ list.innerHTML = '<div style="font-size:12px;color:var(--coral)">Network error</div>'; }
+};
+
+window.markIncident = async function(id, status){
+  const token = localStorage.getItem('cl_token');
+  try{
+    const res = await fetch('/api/admin/incidents/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ status })
+    });
+    const data = await res.json();
+    if(!data.success){ toast(data.error || 'Could not update', 'error'); return; }
+    loadAdminIncidents();
+  }catch(e){ toast('Network error', 'error'); }
+};
 </script>

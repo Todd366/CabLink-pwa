@@ -47,6 +47,9 @@ const pushRoutes =
 const marketplaceRoutes =
     require("../routes/marketplace_api");
 
+const safetyRoutes =
+    require("../routes/safety_api");
+
 
 // ============================================================
 // HEALTH
@@ -211,6 +214,11 @@ app.use(
 app.use(
     "/api",
     marketplaceRoutes
+);
+
+app.use(
+    "/api",
+    safetyRoutes
 );
 
 
