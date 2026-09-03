@@ -518,6 +518,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <div id="s-driver-header">
   <div class="eyebrow">Driver mode</div>
   <div class="greeting">Your shift</div>
+  <div id="shiftTimerRow" style="display:none;font-size:12px;color:var(--muted);margin-bottom:10px">⏱ Online for <span id="shiftTimer">0:00</span></div>
   <div style="display:flex;gap:8px;margin-bottom:12px">
     <button class="btn btn-outline btn-sm" id="driverModeBtn" onclick="toggleDriverMode()" style="flex:1">🟢 Go online</button>
     <button class="btn btn-outline btn-sm" onclick="openModal('earningsModal')" style="flex:1">💰 Earnings</button>
@@ -533,11 +534,17 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   </div>
   <div class="card-title" id="driverRequestsTitle" style="margin-bottom:10px">📋 Incoming requests</div>
   <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
+
+  <div class="card-title" style="margin-top:20px;margin-bottom:10px">🕓 Recent trips</div>
+  <div id="driverRecentTrips" style="display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:12px;color:var(--muted)">Go online to load your recent trips.</div>
+  </div>
 </div>
 
 <!-- ===== PROFILE ===== -->
 <div class="screen" id="s-profile">
-  <div class="card" style="text-align:center">
+  <div class="card" style="text-align:center;position:relative">
+    <button onclick="showScreen('settings',this)" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer">⚙</button>
     <div class="avatar-ring"><div class="inner">🧍</div></div>
     <div class="card-title" id="profile-name">Not connected</div>
     <div class="card-sub" id="profile-sub">Connect wallet to see your profile</div>
@@ -589,6 +596,12 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>
     </div>
   </div>
+  <div style="text-align:center;font-size:10.5px;color:var(--muted);padding:16px 0;font-family:var(--data)">CabLink v6.0 · BSTM Ecosystem · Gaborone, Botswana</div>
+</div>
+
+<div class="screen" id="s-settings">
+  <div class="eyebrow">Profile</div>
+  <div class="greeting">Settings</div>
   <div class="card">
     <div class="card-title" style="margin-bottom:12px">🔑 Change PIN</div>
     <input class="input" id="pin-current" type="password" inputmode="numeric" placeholder="Current PIN" style="margin-bottom:10px"/>
@@ -613,7 +626,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <div>Library: <span style="color:var(--muted)">ethers.js v6</span></div>
     </div>
   </div>
-  <div style="text-align:center;font-size:10.5px;color:var(--muted);padding:16px 0;font-family:var(--data)">CabLink v6.0 · BSTM Ecosystem · Gaborone, Botswana</div>
+  <button class="btn btn-outline" style="width:100%;margin-bottom:20px" onclick="showScreen('profile',this)">← Back to profile</button>
 </div>
 
 <!-- ===== MORE / ECOSYSTEM ===== -->
@@ -2584,7 +2597,8 @@ toast(
 );
 
 pollForRideRequests();
-
+startShiftTimer();
+loadDriverRecentTrips();
 
 }catch(e){
 
@@ -2625,6 +2639,7 @@ id
 
 
 clearInterval(_driverRequestPoller);
+stopShiftTimer();
 
 toast(
 "Driver offline",
@@ -3068,11 +3083,29 @@ return ride;
   };
 
   window.clAuthLogout = function(){
+    forceDriverOffline();
     localStorage.removeItem('cl_token');
     localStorage.removeItem('cl_account');
     renderAccountUI();
     toast('Logged out', 'warning');
   };
+
+  function forceDriverOffline(){
+    if(!STATE.driverOnline) return;
+    STATE.driverOnline = false;
+    clearInterval(_driverRequestPoller);
+    stopShiftTimer();
+    const driverId = localStorage.getItem('cablink_driver_id');
+    if(driverId){
+      fetch('/api/drivers/offline', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ id: driverId })
+      }).catch(() => {});
+    }
+    const btn = document.getElementById('driverModeBtn');
+    if(btn){ btn.textContent = '🚗 Go online'; btn.className = 'btn btn-sm btn-outline'; }
+  }
 
   window.renderAccountUI = function(){ return renderAccountUI(); };
   function renderAccountUI(){
@@ -3572,4 +3605,68 @@ window.markIncident = async function(id, status){
     loadAdminIncidents();
   }catch(e){ toast('Network error', 'error'); }
 };
+</script>
+
+<script>
+// ============================================================
+// SHIFT TIMER — how long the driver has been online this session
+// ============================================================
+let _shiftTimerInterval = null;
+let _shiftStartedAt = null;
+
+function startShiftTimer(){
+  _shiftStartedAt = Date.now();
+  const row = document.getElementById('shiftTimerRow');
+  if(row) row.style.display = '';
+  clearInterval(_shiftTimerInterval);
+  _shiftTimerInterval = setInterval(() => {
+    const secs = Math.floor((Date.now() - _shiftStartedAt) / 1000);
+    const m = Math.floor(secs / 60), s = secs % 60;
+    const el = document.getElementById('shiftTimer');
+    if(el) el.textContent = m + ':' + String(s).padStart(2,'0');
+  }, 1000);
+}
+
+function stopShiftTimer(){
+  clearInterval(_shiftTimerInterval);
+  _shiftTimerInterval = null;
+  const row = document.getElementById('shiftTimerRow');
+  if(row) row.style.display = 'none';
+}
+
+// ============================================================
+// RECENT TRIPS — inline on the Driver screen, not buried in a
+// modal. Reuses the same real data source as the Earnings modal.
+// ============================================================
+async function loadDriverRecentTrips(){
+  const el = document.getElementById('driverRecentTrips');
+  const raw = localStorage.getItem('cl_account');
+  if(!el) return;
+  if(!raw){ el.innerHTML = '<div style="font-size:12px;color:var(--muted)">Log in to see your recent trips.</div>'; return; }
+  const account = JSON.parse(raw);
+  el.innerHTML = '<div style="font-size:12px;color:var(--muted)">Loading…</div>';
+
+  try{
+    const res = await fetch('/api/rides');
+    const data = await res.json();
+    const mine = (data.rides || [])
+      .filter(r => (r.driverId === account.id || r.driverAccountId === account.id) && r.status === 'COMPLETED')
+      .sort((a,b) => new Date(b.updatedAt||b.createdAt) - new Date(a.updatedAt||a.createdAt))
+      .slice(0, 5);
+
+    if(mine.length === 0){ el.innerHTML = '<div style="font-size:12px;color:var(--muted)">No completed trips yet.</div>'; return; }
+
+    el.innerHTML = mine.map(r => `
+      <div style="background:var(--surface);border:1px solid var(--hair2);border-radius:var(--r-sm);padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;font-size:13px">
+          <span>${r.pickup||''} → ${r.dropoff||''}</span>
+          <strong style="color:var(--gold-l)">${r.fare||0} BWP</strong>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:2px">${r.updatedAt ? new Date(r.updatedAt).toLocaleString() : ''} · ${paymentMethodLabel(r.paymentMethod)}</div>
+      </div>
+    `).join('');
+  }catch(e){
+    el.innerHTML = '<div style="font-size:12px;color:var(--coral)">Could not load recent trips</div>';
+  }
+}
 </script>
