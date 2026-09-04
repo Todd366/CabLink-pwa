@@ -1170,7 +1170,13 @@ function renderPendingTxs(){
 let MAP, pickupMarker, dropoffMarker, carMarker, routeLine, driverMarkers = [];
 function initMap(){
   MAP = L.map('leafletMap', {zoomControl:false, attributionControl:false}).setView([LANDMARKS.bstmHQ.lat, LANDMARKS.bstmHQ.lng], 12);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19, subdomains:'abcd'}).addTo(MAP);
+  // CARTO deprecated the sharded a/b/c/d.basemaps.cartocdn.com
+  // subdomain format (was only ever needed to get around old
+  // browsers' per-domain connection limits, irrelevant since
+  // HTTP/2). The old URL was returning a placeholder/error tile
+  // with "API KEY REQUIRED" baked into the image — this single
+  // current domain is CARTO's documented no-key format.
+  L.tileLayer('https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(MAP);
 
   const goldIcon = L.divIcon({html:'<div style="width:14px;height:14px;border-radius:50%;background:#f0b93a;border:2px solid #060911;box-shadow:0 0 8px #f0b93a"></div>', className:'', iconSize:[14,14]});
   const blueIcon = L.divIcon({html:'<div style="width:14px;height:14px;border-radius:50%;background:#2e6be6;border:2px solid #060911;box-shadow:0 0 8px #2e6be6"></div>', className:'', iconSize:[14,14]});
