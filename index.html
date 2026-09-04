@@ -72,6 +72,12 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 /* cards */
 .card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+.link-row{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--hair);transition:background .15s ease}
+.link-row:last-child{border-bottom:none}
+.link-row:active{background:var(--hair)}
+.link-icon{font-size:17px;width:22px;text-align:center;flex-shrink:0}
+.link-label{flex:1;font-size:14px;color:var(--text)}
+.link-chev{color:var(--muted2);font-size:18px;flex-shrink:0}
 .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
 .card-title{font-family:var(--disp);font-weight:600;font-size:15px}
 .card-sub{font-size:11px;color:var(--muted);font-family:var(--data)}
@@ -360,7 +366,6 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <div class="ride-type-card" data-type="premium" data-fare="35" onclick="selectRideType(this)"><div class="icon">🚙</div><div class="name">Premium</div><div class="price">35 BWP</div></div>
       <div class="ride-type-card" data-type="xl" data-fare="50" onclick="selectRideType(this)"><div class="icon">🚐</div><div class="name">XL / Van</div><div class="price">50 BWP</div></div>
       <div class="ride-type-card" data-type="moto" data-fare="12" onclick="selectRideType(this)"><div class="icon">🏍</div><div class="name">Moto</div><div class="price">12 BWP</div></div>
-      <div class="ride-type-card" data-type="eco" data-fare="15" onclick="selectRideType(this)"><div class="icon">🌿</div><div class="name">Eco</div><div class="price">15 BWP</div></div>
       <div class="ride-type-card" data-type="quiet" data-fare="22" onclick="selectRideType(this)"><div class="icon">🤫</div><div class="name">Quiet</div><div class="price">22 BWP</div></div>
     </div>
 
@@ -596,6 +601,12 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>
     </div>
   </div>
+  <div class="card" style="padding:6px 0">
+    <div class="link-row" onclick="showScreen('safety',this)"><span class="link-icon">🆘</span><span class="link-label">Safety & incident reports</span><span class="link-chev">›</span></div>
+    <div class="link-row" onclick="showScreen('more',this)"><span class="link-icon">◆</span><span class="link-label">BSTM Ecosystem</span><span class="link-chev">›</span></div>
+    <div class="link-row" id="adminLinkRow" style="display:none" onclick="showScreen('admin',this)"><span class="link-icon">🛡</span><span class="link-label">Admin</span><span class="link-chev">›</span></div>
+    <div class="link-row" onclick="showScreen('settings',this)"><span class="link-icon">⚙</span><span class="link-label">Settings</span><span class="link-chev">›</span></div>
+  </div>
   <div style="text-align:center;font-size:10.5px;color:var(--muted);padding:16px 0;font-family:var(--data)">CabLink v6.0 · BSTM Ecosystem · Gaborone, Botswana</div>
 </div>
 
@@ -700,10 +711,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <button class="nav-btn" onclick="showScreen('rewards',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>
   <button class="nav-btn center-btn" onclick="bookRide()">🚕</button>
   <button class="nav-btn" onclick="showScreen('driver',this)" id="nav-driver"><span class="icon">🚗</span><span>Driver</span></button>
-  <button class="nav-btn" onclick="showScreen('safety',this)" id="nav-safety"><span class="icon">🆘</span><span>Safety</span></button>
-  <button class="nav-btn" onclick="showScreen('admin',this)" id="nav-admin"><span class="icon">🛡</span><span>Admin</span></button>
   <button class="nav-btn" onclick="showScreen('profile',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>
-  <button class="nav-btn" onclick="showScreen('more',this)" id="nav-more"><span class="icon">◆</span><span>Ecosystem</span></button>
 </nav>
 
 </div><!-- end app -->
@@ -3150,6 +3158,8 @@ return ride;
       if(chipEl) chipEl.textContent = '—';
       var deCard = document.getElementById('driverEarningsCard');
       if(deCard) deCard.style.display = 'none';
+      var adminRow = document.getElementById('adminLinkRow');
+      if(adminRow) adminRow.style.display = 'none';
     }
   }
 
@@ -3164,6 +3174,8 @@ return ride;
     var chipEl = document.getElementById('profile-role-chip');
     if(!chipEl) return;
     chipEl.textContent = ROLE_LABELS[role] || role || 'Passenger';
+    var adminRow = document.getElementById('adminLinkRow');
+    if(adminRow) adminRow.style.display = (role === 'ADMIN') ? '' : 'none';
   }
 
   function renderDriverEarnings(account){
@@ -3416,8 +3428,8 @@ window.gateReveal = function(account){
 // either the key or an ADMIN session token.
 
 window.showAdminTab = function(){
-  const btn = document.getElementById('nav-admin');
-  if(btn) btn.style.display = '';
+  const row = document.getElementById('adminLinkRow');
+  if(row) row.style.display = '';
 };
 
 window.loadAdminApplications = async function(){
