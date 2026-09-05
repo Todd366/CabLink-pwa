@@ -289,6 +289,49 @@ async function attachDriverAccount(
 
 }
 
+// Ratings were previously entirely client-side — submitRating() in
+// the frontend updated a local array and showed a success toast,
+// but the driver never actually received the feedback and nothing
+// was ever stored. This makes a rating a real field on the ride
+// record: only allowed once, and only after the ride is COMPLETED.
+async function rateRide(
+    id,
+    rating,
+    comment
+) {
+
+    const ride =
+        await repository.findById(id);
+
+    if (!ride) {
+        return { success: false, code: "NOT_FOUND", error: "Ride not found" };
+    }
+
+    if (ride.status !== STATES.COMPLETED) {
+        return { success: false, code: "NOT_COMPLETED", error: "Ride must be completed before it can be rated" };
+    }
+
+    if (ride.rating) {
+        return { success: false, code: "ALREADY_RATED", error: "This ride has already been rated" };
+    }
+
+    const numericRating = Number(rating);
+
+    if (!Number.isInteger(numericRating) || numericRating < 1 || numericRating > 5) {
+        return { success: false, code: "INVALID_RATING", error: "Rating must be a whole number from 1 to 5" };
+    }
+
+    const updated =
+        await repository.update(id, {
+            rating: numericRating,
+            ratingComment: comment || null,
+            ratedAt: new Date().toISOString()
+        });
+
+    return { success: true, ride: updated };
+
+}
+
 async function transition(
     id,
     nextState,
@@ -434,6 +477,8 @@ function persistenceStatus() {
 
 module.exports = {
     attachDriverAccount,
+
+    rateRide,
 
     STATES,
 

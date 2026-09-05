@@ -565,6 +565,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <div class="bal-card"><div class="val" id="de-completed">0</div><div class="lbl">Completed</div></div>
       <div class="bal-card"><div class="val" id="de-fare">0</div><div class="lbl">Fare (BWP)</div></div>
       <div class="bal-card"><div class="val" id="de-thb">0</div><div class="lbl">THB earned</div></div>
+      <div class="bal-card"><div class="val" id="de-rating">—</div><div class="lbl">Avg ⭐</div></div>
     </div>
   </div>
   <div class="card" id="accountCard">
@@ -2110,11 +2111,35 @@ function setRating(val){
   ['ratingStars','modalStars'].forEach(id => { const c=document.getElementById(id); if(!c) return; c.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('lit', i<val)); });
 }
 function openRating(){ document.getElementById('driverRef').textContent = STATE.rideId || '—'; openModal('ratingModal'); }
-function submitRating(){
+async function submitRating(){
   if(ratingVal===0){ toast('Please select a rating', 'warning'); return; }
-  STATE.ratings.push(ratingVal);
+  const rideId = STATE.rideId;
+  const submittedRating = ratingVal;
+
+  // Previously this only updated local state and always showed
+  // "Rating submitted! Thanks" regardless of whether anything real
+  // happened — the driver never actually received the feedback.
+  if(rideId){
+    try{
+      const res = await fetch('/api/rides/' + rideId + '/rate', {
+        method: 'PATCH',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ rating: submittedRating })
+      });
+      const data = await res.json();
+      if(!data.success){
+        toast(data.error || 'Could not submit rating', 'error');
+        return;
+      }
+    }catch(e){
+      toast('Network error — rating not submitted', 'error');
+      return;
+    }
+  }
+
+  STATE.ratings.push(submittedRating);
   STATE.avgRating = (STATE.ratings.reduce((a,b)=>a+b,0)/STATE.ratings.length).toFixed(1);
-  if(STATE.rideHistory.length) STATE.rideHistory[0].rating = ratingVal;
+  if(STATE.rideHistory.length) STATE.rideHistory[0].rating = submittedRating;
   saveState(); updateAllUI(); closeModal('ratingModal'); closeThankyou();
   toast('Rating submitted! Thanks 🙏', 'success'); ratingVal = 0;
 }
@@ -3282,6 +3307,20 @@ return ride;
         document.getElementById('de-completed').textContent = data.completed || 0;
         document.getElementById('de-fare').textContent = data.totalFare || 0;
         document.getElementById('de-thb').textContent = data.thbEarned || 0;
+      })
+      .catch(() => {});
+
+    // Real average rating — computed from actual rated rides, not
+    // a placeholder. There was no rating aggregation anywhere
+    // before this, since ratings themselves were never sent to the
+    // backend until now.
+    fetch('/api/rides')
+      .then(r => r.json())
+      .then(data => {
+        const rated = (data.rides || []).filter(r => (r.driverId === account.id || r.driverAccountId === account.id) && r.rating);
+        const el = document.getElementById('de-rating');
+        if(!el) return;
+        el.textContent = rated.length ? (rated.reduce((a,r) => a + r.rating, 0) / rated.length).toFixed(1) : '—';
       })
       .catch(() => {});
   }

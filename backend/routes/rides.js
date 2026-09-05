@@ -436,4 +436,50 @@ router.patch("/:id/state", async (req,res)=>{
 });
 
 
+// ============================================================
+// PATCH /api/rides/:id/rate — passenger rates a completed ride.
+// Real backend record now — this used to be a client-side-only
+// array update that never left the browser.
+// ============================================================
+
+router.patch("/:id/rate", async (req, res) => {
+
+    try {
+
+        const { rating, comment } = req.body || {};
+
+        const result =
+            await rideEngine.rateRide(
+                req.params.id,
+                rating,
+                comment
+            );
+
+        if (!result.success) {
+            const status = result.code === "NOT_FOUND" ? 404 : 400;
+            return res.status(status).json(result);
+        }
+
+        events.recordEvent("RIDE_RATED", {
+            rideId: req.params.id,
+            driverId: result.ride.driverId,
+            meta: { rating: result.ride.rating }
+        });
+
+        res.json(result);
+
+    } catch (error) {
+
+        console.error("Ride rating error:", error);
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to submit rating"
+        });
+
+    }
+
+});
+
+
 module.exports = router;
