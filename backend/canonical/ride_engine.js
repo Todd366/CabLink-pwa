@@ -128,6 +128,14 @@ async function createRide(
                 ? data.paymentMethod
                 : "cash",
 
+        // Multi-stop support. Previously the "Add stop" UI adjusted
+        // the displayed fare but never sent stops to the backend at
+        // all — the driver had no way to know they existed.
+        stops:
+            Array.isArray(data.stops)
+                ? data.stops.filter(s => typeof s === "string" && s.trim()).slice(0, 3)
+                : [],
+
         source:
             data.source ||
             "app",
