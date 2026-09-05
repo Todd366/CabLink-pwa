@@ -9,6 +9,9 @@ const auth =
 const rewardService =
     require("../services/canonical_reward_service");
 
+const events =
+    require("../services/event_service");
+
 const {
     STATES
 } = rideEngine;
@@ -73,6 +76,13 @@ router.post("/", async (req, res) => {
                 ride.id,
                 STATES.MATCHING
             );
+
+        events.recordEvent("RIDE_CREATED", {
+            rideId: ride.id,
+            pickup: ride.pickup,
+            dropoff: ride.dropoff,
+            passengerAccountId: ride.passengerAccountId
+        });
 
         res.status(201).json({
             success: true,
@@ -139,6 +149,13 @@ router.patch("/:id/accept", async (req, res) => {
             rideEngine
                 .attachDriverAccount(req.params.id, callingDriverAccount.id)
                 .catch(() => {});
+        }
+
+        if (result.success) {
+            events.recordEvent("DRIVER_ASSIGNED", {
+                rideId: req.params.id,
+                driverId
+            });
         }
 
         if (!result.success) {

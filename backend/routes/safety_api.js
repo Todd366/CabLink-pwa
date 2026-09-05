@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const incidents = require("../services/incident_service");
 const auth = require("../services/auth_service");
+const events = require("../services/event_service");
 
 const ADMIN_KEY = process.env.ADMIN_KEY || "cablink-admin-dev-key";
 
@@ -33,6 +34,11 @@ router.post("/incidents", async (req, res) => {
             location: req.body?.location,
             reporterAccountId: account ? account.id : null,
             reporterName: account ? account.name : (req.body?.reporterName || "Anonymous")
+        });
+
+        events.recordEvent("INCIDENT_CREATED", {
+            rideId: incident.rideId,
+            meta: { type: incident.type }
         });
 
         res.json({ success: true, incident });
@@ -83,6 +89,19 @@ router.patch("/admin/incidents/:id", requireAdmin, async (req, res) => {
             return res.status(404).json({ success: false, error: "Incident not found" });
         }
         res.json({ success: true, incident: updated });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ============================================================
+// GET /api/admin/insights — real pattern analysis, admin only
+// ============================================================
+router.get("/admin/insights", requireAdmin, async (req, res) => {
+    try {
+        const insightsService = require("../services/insights_service");
+        const insights = await insightsService.computeInsights();
+        res.json({ success: true, insights });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }

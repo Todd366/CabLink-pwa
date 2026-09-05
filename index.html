@@ -603,8 +603,10 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   </div>
   <div class="card" style="padding:6px 0">
     <div class="link-row" onclick="showScreen('safety',this)"><span class="link-icon">🆘</span><span class="link-label">Safety & incident reports</span><span class="link-chev">›</span></div>
+    <div class="link-row" onclick="window.checkMyDriverStatus()"><span class="link-icon">📄</span><span class="link-label">Driver application status</span><span class="link-chev">›</span></div>
     <div class="link-row" onclick="showScreen('more',this)"><span class="link-icon">◆</span><span class="link-label">BSTM Ecosystem</span><span class="link-chev">›</span></div>
     <div class="link-row" id="adminLinkRow" style="display:none" onclick="showScreen('admin',this)"><span class="link-icon">🛡</span><span class="link-label">Admin</span><span class="link-chev">›</span></div>
+    <div class="link-row" onclick="showScreen('help',this)"><span class="link-icon">❓</span><span class="link-label">Help & support</span><span class="link-chev">›</span></div>
     <div class="link-row" onclick="showScreen('settings',this)"><span class="link-icon">⚙</span><span class="link-label">Settings</span><span class="link-chev">›</span></div>
   </div>
   <div style="text-align:center;font-size:10.5px;color:var(--muted);padding:16px 0;font-family:var(--data)">CabLink v6.0 · BSTM Ecosystem · Gaborone, Botswana</div>
@@ -640,6 +642,25 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <button class="btn btn-outline" style="width:100%;margin-bottom:20px" onclick="showScreen('profile',this)">← Back to profile</button>
 </div>
 
+<div class="screen" id="s-help">
+  <div class="eyebrow">Profile</div>
+  <div class="greeting">Help & support</div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:10px">Common questions</div>
+    <div style="display:flex;flex-direction:column;gap:14px;font-size:13px">
+      <div><strong style="color:var(--text)">How do I become a driver?</strong><div style="color:var(--muted);margin-top:4px">Go to the Driver tab and tap "Apply to drive." An admin reviews your application, including your license — you'll see the status update under Profile → Driver application status.</div></div>
+      <div><strong style="color:var(--text)">How do I pay for a ride?</strong><div style="color:var(--muted);margin-top:4px">Cash or Mobile Money, chosen when you book. The driver sees your selection before accepting.</div></div>
+      <div><strong style="color:var(--text)">What if I feel unsafe during a ride?</strong><div style="color:var(--muted);margin-top:4px">Use the Safety page (Profile → Safety & incident reports) to call emergency services or log a report — it's reviewed by an admin.</div></div>
+      <div><strong style="color:var(--text)">How do THB rewards work?</strong><div style="color:var(--muted);margin-top:4px">Drivers earn THB on the BSC testnet for each completed trip. Check the Rewards tab for your wallet and balance.</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:10px">Still need help?</div>
+    <div style="font-size:13px;color:var(--muted)">Report an issue through Safety → Report a non-emergency issue, and an admin will follow up.</div>
+  </div>
+  <button class="btn btn-outline" style="width:100%;margin-bottom:20px" onclick="showScreen('profile',this)">← Back to profile</button>
+</div>
+
 <!-- ===== MORE / ECOSYSTEM ===== -->
 <div class="screen" id="s-more">
   <div class="eyebrow">BSTM Ecosystem</div>
@@ -669,7 +690,12 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 <div class="screen" id="s-admin">
   <div class="eyebrow">Admin</div>
-  <div class="greeting">Driver applications</div>
+  <div class="greeting">Insights</div>
+  <div class="card">
+    <button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="loadAdminInsights()">↻ Refresh</button>
+    <div id="adminInsights"><div style="font-size:12px;color:var(--muted)">Tap refresh to load.</div></div>
+  </div>
+  <div class="greeting" style="margin-top:20px">Driver applications</div>
   <div class="card">
     <button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="loadAdminApplications()">↻ Refresh</button>
     <div id="adminAppList" style="display:flex;flex-direction:column;gap:10px"></div>
@@ -2284,7 +2310,7 @@ function showScreen(name, btn){
   if(name==='rewards'){ renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
   if(name==='profile') updateProfileKPI();
   if(name==='home' && MAP) setTimeout(()=>MAP.invalidateSize(), 200);
-  if(name==='admin') { loadAdminApplications(); loadAdminIncidents(); }
+  if(name==='admin') { loadAdminApplications(); loadAdminIncidents(); loadAdminInsights(); }
   if(name==='safety') loadMyIncidents();
 }
 function updateDailyBtn(){
@@ -3687,4 +3713,79 @@ async function loadDriverRecentTrips(){
     el.innerHTML = '<div style="font-size:12px;color:var(--coral)">Could not load recent trips</div>';
   }
 }
+</script>
+
+<script>
+window.checkMyDriverStatus = async function(){
+  const raw = localStorage.getItem('cl_account');
+  if(!raw){ toast('Log in first to check your application status', 'warning'); return; }
+  const account = JSON.parse(raw);
+  try{
+    const res = await fetch('/api/drivers/application-status?phone=' + encodeURIComponent(account.phone));
+    const data = await res.json();
+    if(!data.success || !data.status || data.status === 'NONE'){
+      toast('No driver application on file yet — apply from the Driver tab', 'warning');
+      return;
+    }
+    const statusLabel = { PENDING: 'Pending review', APPROVED: 'Approved ✅', REJECTED: 'Not approved' }[data.status] || data.status;
+    toast('Driver application: ' + statusLabel, data.status === 'APPROVED' ? 'success' : 'warning');
+  }catch(e){
+    toast('Could not check application status', 'error');
+  }
+};
+</script>
+
+<script>
+// ============================================================
+// ADMIN INSIGHTS — real pattern analysis, computed server-side
+// from actual ride/event records. No fabricated numbers: if there
+// isn't enough real data yet, this says so plainly instead of
+// padding out a confident-looking dashboard.
+// ============================================================
+window.loadAdminInsights = async function(){
+  const el = document.getElementById('adminInsights');
+  const token = localStorage.getItem('cl_token');
+  if(!el || !token) return;
+
+  el.innerHTML = '<div style="font-size:12px;color:var(--muted)">Analyzing real ride data…</div>';
+
+  try{
+    const res = await fetch('/api/admin/insights', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if(!data.success){ el.innerHTML = '<div style="font-size:12px;color:var(--coral)">' + (data.error||'Could not load') + '</div>'; return; }
+
+    const i = data.insights;
+
+    if(!i.hasEnoughData){
+      el.innerHTML = `<div style="font-size:12px;color:var(--muted)">
+        Only ${i.sampleSize} ride${i.sampleSize===1?'':'s'} recorded so far — need at least ${i.minSampleSize} before patterns are meaningful.
+        This isn't a placeholder: it's genuinely too little data yet to say anything real.
+      </div>`;
+      return;
+    }
+
+    const peakHoursHtml = i.peakHours.length
+      ? i.peakHours.map(h => `${String(h.hour).padStart(2,'0')}:00 (${h.requests} requests)`).join(' · ')
+      : '—';
+    const topPickupsHtml = i.topPickups.length
+      ? i.topPickups.map(p => `${escapeHtmlAdmin(p.location)} (${p.count})`).join('<br>')
+      : 'No data yet';
+
+    el.innerHTML = `
+      <div class="wallet-bar" style="margin-bottom:14px">
+        <div class="bal-card"><div class="val">${i.totalRides}</div><div class="lbl">Total rides</div></div>
+        <div class="bal-card"><div class="val">${i.completionRatePercent ?? '—'}%</div><div class="lbl">Completion rate</div></div>
+        <div class="bal-card"><div class="val">${i.totalIncidents}</div><div class="lbl">Incidents</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><strong style="color:var(--text)">Peak request hours:</strong> ${peakHoursHtml}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><strong style="color:var(--text)">Top pickup locations:</strong><br>${topPickupsHtml}</div>
+      ${i.avgAcceptanceSeconds !== null
+        ? `<div style="font-size:12px;color:var(--muted)"><strong style="color:var(--text)">Avg. time to driver acceptance:</strong> ${i.avgAcceptanceSeconds}s (from ${i.acceptanceSampleSize} rides)</div>`
+        : `<div style="font-size:11px;color:var(--muted2)">Not enough accept-timing data yet to compute average acceptance time.</div>`}
+      <div style="font-size:10px;color:var(--muted2);margin-top:10px">Computed ${new Date(i.computedAt).toLocaleString()} from ${i.sampleSize} real ride records.</div>
+    `;
+  }catch(e){
+    el.innerHTML = '<div style="font-size:12px;color:var(--coral)">Network error</div>';
+  }
+};
 </script>

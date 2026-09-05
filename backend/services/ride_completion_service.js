@@ -10,6 +10,9 @@ const ledger =
 const wallet =
     require("../rewards/wallet_service");
 
+const events =
+    require("./event_service");
+
 
 // ============================================================
 // COMPLETE CANONICAL RIDE
@@ -202,6 +205,14 @@ async function completeRideById(
             );
 
         }
+
+        events.recordEvent("TRIP_COMPLETED", {
+            rideId: completed.id,
+            driverId: completed.driverId,
+            pickup: completed.pickup,
+            dropoff: completed.dropoff,
+            meta: { fare: completed.fare }
+        });
 
     } catch (error) {
 
