@@ -1393,14 +1393,25 @@ async function bookRide(){
     pollRideStatus(STATE.rideId);
   } catch(e){
     console.error(e);
-    toast('Backend unavailable — could not book ride', 'error');
-    resetRideUI();
+    if(!navigator.onLine){
+      // Genuinely offline (not just a server error) — queue for
+      // real instead of pretending the ride was booked. Previously
+      // this branch didn't exist at all: offline booking attempts
+      // just failed with "Backend unavailable" and nothing was saved.
+      queueOfflineRide(payload);
+      resetRideUI();
+    } else {
+      toast('Backend unavailable — could not book ride', 'error');
+      resetRideUI();
+    }
   }
 }
 
 let _rideStatusPoller = null;
+let _arrivedShown = false;
 async function pollRideStatus(rideId){
   clearInterval(_rideStatusPoller);
+  _arrivedShown = false;
   _rideStatusPoller = setInterval(async () => {
     try{
       const res = await fetch('/api/rides/' + rideId);
@@ -1409,15 +1420,23 @@ async function pollRideStatus(rideId){
       const ride = data.ride || data;
       const status = (ride.status || '').toUpperCase();
       console.log('Ride status:', status);
-      if(status === 'ACCEPTED' || status === 'ASSIGNED'){
+      // Real backend status values (see STATES in
+      // backend/canonical/ride_engine.js) — this used to check for
+      // 'ASSIGNED'/'ARRIVED' without the DRIVER_ prefix, which never
+      // matched anything real, so passengers never saw these
+      // updates and polling stopped (wrongly) at the first ARRIVED
+      // check, before the ride could ever reach genuine completion.
+      if(status === 'DRIVER_ASSIGNED'){
         setStatusPip('green'); setStatusLabel('🚗 Driver assigned! En route…');
         showRideProgressBar('DRIVER EN ROUTE', 40);
-      } else if(status === 'ARRIVED'){
-        clearInterval(_rideStatusPoller);
-        showArrived();
+      } else if(status === 'DRIVER_ARRIVED'){
+        if(!_arrivedShown){ _arrivedShown = true; showArrived(); }
+      } else if(status === 'PICKED_UP' || status === 'STARTED'){
+        setStatusLabel('🚕 Ride in progress…');
+        showRideProgressBar('RIDE IN PROGRESS', 70);
       } else if(status === 'COMPLETED'){
         clearInterval(_rideStatusPoller);
-        completeRide();
+        completeRide(ride);
       } else if(status === 'CANCELLED'){
         clearInterval(_rideStatusPoller);
         toast('Ride was cancelled', 'warning');
@@ -1439,7 +1458,7 @@ function cancelRide(){
   resetRideUI(); toast('Ride cancelled.', 'warning');
 }
 
-function completeRide(){
+function completeRide(realRide){
   clearInterval(STATE.countdownInterval);
   STATE.inRide = false; STATE.rideReady = true; STATE.totalRides++;
   STATE.lastRideDate = new Date().toISOString();
@@ -1449,8 +1468,16 @@ function completeRide(){
     const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
     STATE.streak = (lastDay === yesterday.toDateString()) ? STATE.streak+1 : 1;
   }
-  const ride = {id:STATE.rideId, from:document.getElementById('pickup').value, to:document.getElementById('dropoff').value,
-    type:STATE.selectedRideType, fare:calcTotalFare(), thb:1, date:new Date().toLocaleString(), rating:null};
+  // Prefer the authoritative server record (passed in from
+  // pollRideStatus, which just fetched it) over re-reading whatever
+  // currently happens to be in the pickup/dropoff inputs and
+  // recalculating fare client-side — those could easily be stale
+  // or no longer reflect the ride that actually got booked.
+  const ride = realRide
+    ? {id: realRide.id, from: realRide.pickup, to: realRide.dropoff, type: realRide.vehicle||STATE.selectedRideType,
+       fare: realRide.fare, thb: 1, date: new Date().toLocaleString(), rating: null, paymentMethod: realRide.paymentMethod}
+    : {id:STATE.rideId, from:document.getElementById('pickup').value, to:document.getElementById('dropoff').value,
+       type:STATE.selectedRideType, fare:calcTotalFare(), thb:1, date:new Date().toLocaleString(), rating:null};
   STATE.rideHistory.unshift(ride);
   autoSaveFav(ride);
   saveState(); updateAllUI(); renderHistory(); renderFavourites();
@@ -1470,13 +1497,20 @@ function showArrived(){
   STATE.graceInterval = setInterval(() => {
     secs--; const m=Math.floor(secs/60), s=secs%60;
     document.getElementById('graceTimer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-    if(secs<=0){ clearInterval(STATE.graceInterval); completeRide(); }
+    // Real completion comes from pollRideStatus observing the
+    // actual backend status — this timer is purely a countdown
+    // display for the free-wait window. It used to force-complete
+    // the ride itself when it hit zero, which meant a passenger's
+    // own client could mark a ride "complete" independent of
+    // whether the driver had actually done anything.
+    if(secs<=0){ clearInterval(STATE.graceInterval); document.getElementById('graceTimer').textContent = '0:00'; }
   }, 1000);
   setTimeout(() => {
     document.getElementById('arrivedBanner').classList.remove('show');
     appendDriverMsg('Driver', "All aboard? Let's go! 🚕");
     showRideProgressBar('RIDE IN PROGRESS', 70);
-    // completeRide() now must be triggered by real backend status
+    // completeRide() is only ever called from pollRideStatus, when
+    // the backend genuinely reports COMPLETED.
   }, 10000);
 }
 
@@ -1718,13 +1752,42 @@ function acceptOffer(){
 // OFFLINE QUEUE
 // ============================================================
 function queueOfflineRide(ride){ STATE.offlineQueue.push({...ride, queued:Date.now()}); saveState(); renderOfflineQueue(); showAlert('📡 Offline — ride queued. Will book when back online.'); }
-function syncOfflineQueue(){
+
+async function syncOfflineQueue(){
   if(!navigator.onLine || !STATE.offlineQueue.length) return;
-  toast(`Syncing ${STATE.offlineQueue.length} queued ride(s)…`, 'success');
-  STATE.offlineQueue.forEach(() => { STATE.totalRides++; STATE.rideReady = true; });
-  STATE.offlineQueue = []; saveState(); renderOfflineQueue(); updateAllUI();
-  toast('Queued rides synced!', 'success');
+  const queue = STATE.offlineQueue;
+  toast(`Syncing ${queue.length} queued ride(s)…`, 'success');
+
+  const stillQueued = [];
+  let succeeded = 0;
+
+  // Previously this just incremented a counter and cleared the
+  // queue without ever contacting the server — a queued ride would
+  // silently vanish while the UI claimed it synced. Now it actually
+  // re-attempts each booking, one at a time (not in parallel, so a
+  // burst of requests doesn't hit dispatch all at once), and keeps
+  // anything that still fails queued for the next attempt instead
+  // of discarding it.
+  for(const ride of queue){
+    try{
+      await window.requestRealCabLinkRide(ride);
+      succeeded++;
+    }catch(e){
+      stillQueued.push(ride);
+    }
+  }
+
+  STATE.offlineQueue = stillQueued;
+  saveState(); renderOfflineQueue(); updateAllUI();
+
+  if(succeeded > 0) toast(`${succeeded} queued ride(s) booked`, 'success');
+  if(stillQueued.length > 0) toast(`${stillQueued.length} still could not be booked — will retry`, 'warning');
 }
+
+// Auto-sync the moment connectivity returns, not just when the
+// user happens to tap "Sync now".
+window.addEventListener('online', () => { syncOfflineQueue(); });
+
 function renderOfflineQueue(){ const el=document.getElementById('offlineQueueInfo'); if(el) el.textContent = STATE.offlineQueue.length ? `${STATE.offlineQueue.length} ride(s) queued offline` : 'No queued rides.'; }
 function checkOnline(){ const online = navigator.onLine; if(!online) showAlert('📡 Offline — rides will be queued'); else hideAlert(); document.getElementById('netPip').className = 'pip ' + (online?'green':'red'); }
 
