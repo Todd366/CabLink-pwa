@@ -3057,9 +3057,31 @@ return ride;
   'use strict';
   var K = 'cl_userRole';
 
-  function getRole(){ return localStorage.getItem(K) || 'customer'; }
+  // This used to read a separate localStorage flag ('cl_userRole')
+  // that nothing ever set except a one-time polling loop right
+  // after submitting a brand-new driver application — meaning it
+  // never reflected the real backend role for anyone who applied,
+  // closed the tab, and got approved later (the normal case, since
+  // admin approval is asynchronous). Every approved driver was
+  // stuck seeing the "Apply to drive" card forever, with the real
+  // Driver screen (Go online, incoming requests, everything built
+  // this session) permanently hidden underneath it. Now it reads
+  // the real account role set at login, same source of truth as
+  // the role badge and admin gating everywhere else in the app.
+  function getRole(){
+    try{
+      var raw = localStorage.getItem('cl_account');
+      if(!raw) return 'customer';
+      var account = JSON.parse(raw);
+      return (account.role === 'APPROVED_DRIVER' || account.role === 'ADMIN') ? 'driver' : 'customer';
+    }catch(e){
+      return 'customer';
+    }
+  }
   function setRole(r){ localStorage.setItem(K, r); if(window.STATE) window.STATE.role = r; }
   window.CL_ROLE = { get:getRole, set:setRole, isDriver:function(){ return getRole()==='driver'; } };
+
+  window.gateDriverScreen = gateDriverScreen;
 
   function gateDriverScreen(){
     var ds = document.getElementById('s-driver');
@@ -3518,6 +3540,7 @@ window.gateReveal = function(account){
   // — refresh it now so the role chip/driver-earnings card don't
   // wait for some other trigger to populate.
   if(typeof renderAccountUI === 'function') renderAccountUI();
+  window.gateDriverScreen && window.gateDriverScreen();
 };
 
 // On load: if a token exists, verify it against the server rather
