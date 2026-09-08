@@ -267,6 +267,17 @@ h1,h2,h3,.disp{font-family:var(--disp)}
         style="width:100%;background:var(--surface);border:1px solid var(--hair2);color:var(--text);
         padding:12px;border-radius:var(--r-sm);font-size:15px;box-sizing:border-box;">
     </div>
+    <div id="gateIntentWrap" style="display:none;margin-bottom:16px;">
+      <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">I want to…</label>
+      <div style="display:flex;gap:8px;">
+        <button type="button" id="gateIntentPassenger" onclick="window.gateSetIntent('passenger')"
+          style="flex:1;padding:12px;border-radius:var(--r-sm);font-size:13px;font-weight:600;
+          border:1px solid var(--gold);background:var(--gold);color:#1a1400;">🚕 Ride</button>
+        <button type="button" id="gateIntentDriver" onclick="window.gateSetIntent('driver')"
+          style="flex:1;padding:12px;border-radius:var(--r-sm);font-size:13px;font-weight:600;
+          border:1px solid var(--hair2);background:transparent;color:var(--text);">🚖 Drive</button>
+      </div>
+    </div>
     <div style="margin-bottom:16px;">
       <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">PIN</label>
       <input id="gate-pin" type="password" inputmode="numeric" placeholder="••••" autocomplete="current-password"
@@ -3507,15 +3518,38 @@ window.CABLINK_MODE="LIVE";
 // ROLE DETECTION -> ENTER WORKSPACE from the architecture doc.
 
 window.gateMode = 'login'; // or 'register'
+window.gateIntent = 'passenger'; // or 'driver' — only meaningful during register
+
+// Real role separation at signup: previously every account started
+// identical and "driver" only existed as a card buried inside the
+// Driver tab that a passenger had to stumble onto after the fact.
+// Now registering asks up front, and a "drive" choice routes straight
+// into the application flow on first entry instead of dumping the
+// person on the generic passenger Home screen. The account itself
+// still starts as PASSENGER server-side and still requires admin
+// approval to actually go online — this doesn't skip that gate, it
+// just stops hiding it.
+window.gateSetIntent = function(intent){
+  window.gateIntent = intent;
+  const passBtn = document.getElementById('gateIntentPassenger');
+  const drvBtn = document.getElementById('gateIntentDriver');
+  const active = 'border:1px solid var(--gold);background:var(--gold);color:#1a1400;';
+  const inactive = 'border:1px solid var(--hair2);background:transparent;color:var(--text);';
+  const base = 'flex:1;padding:12px;border-radius:var(--r-sm);font-size:13px;font-weight:600;';
+  passBtn.style.cssText = base + (intent === 'passenger' ? active : inactive);
+  drvBtn.style.cssText = base + (intent === 'driver' ? active : inactive);
+};
 
 window.gateToggleMode = function(){
   window.gateMode = window.gateMode === 'login' ? 'register' : 'login';
   const isRegister = window.gateMode === 'register';
   document.getElementById('gateNameWrap').style.display = isRegister ? 'block' : 'none';
+  document.getElementById('gateIntentWrap').style.display = isRegister ? 'block' : 'none';
   document.getElementById('gateSubmitBtn').textContent = isRegister ? 'Create account' : 'Log in';
   document.getElementById('gateToggleText').textContent = isRegister ? 'Already have an account?' : 'New here?';
   document.getElementById('gateToggleLink').textContent = isRegister ? 'Log in' : 'Create an account';
   document.getElementById('gateError').textContent = '';
+  if(isRegister) window.gateSetIntent('passenger');
 };
 
 window.gateSubmit = async function(){
@@ -3533,6 +3567,7 @@ window.gateSubmit = async function(){
   btn.textContent = 'Please wait…';
 
   try{
+    let justRegistered = false;
     if(window.gateMode === 'register'){
       const res = await fetch('/api/auth/register', {
         method: 'POST', headers: {'Content-Type':'application/json'},
@@ -3541,6 +3576,7 @@ window.gateSubmit = async function(){
       const data = await res.json();
       if(!data.success){ errorEl.textContent = data.error || 'Registration failed'; return; }
       // Registered — now log in with the same credentials.
+      justRegistered = true;
       window.gateMode = 'login';
     }
 
@@ -3553,7 +3589,7 @@ window.gateSubmit = async function(){
 
     localStorage.setItem('cl_token', data.token);
     localStorage.setItem('cl_account', JSON.stringify(data.account));
-    window.gateReveal(data.account);
+    window.gateReveal(data.account, justRegistered && window.gateIntent === 'driver');
 
   }catch(e){
     errorEl.textContent = 'Network error — check your connection';
@@ -3565,7 +3601,12 @@ window.gateSubmit = async function(){
 
 // Reveal the app once a valid account is confirmed, and apply
 // role-based UI (currently: show the Admin tab for ADMIN role).
-window.gateReveal = function(account){
+// `routeToDriverSignup` is true only right after a fresh registration
+// where the person picked "🚖 Drive" — takes them straight to the
+// Driver tab with the application form already open and their name/
+// phone pre-filled, instead of landing on the generic passenger Home
+// screen and leaving them to find "Apply to drive" on their own.
+window.gateReveal = function(account, routeToDriverSignup){
   document.getElementById('authGate').style.display = 'none';
   document.getElementById('app').style.display = '';
   window.CABLINK_ACCOUNT = account;
@@ -3578,6 +3619,18 @@ window.gateReveal = function(account){
   // wait for some other trigger to populate.
   if(typeof renderAccountUI === 'function') renderAccountUI();
   window.gateDriverScreen && window.gateDriverScreen();
+
+  if(routeToDriverSignup && account && account.role !== 'APPROVED_DRIVER' && account.role !== 'ADMIN'){
+    const navDriver = document.getElementById('nav-driver');
+    if(typeof showScreen === 'function') showScreen('driver', navDriver);
+    if(typeof window.showDriverRegistrationForm === 'function'){
+      window.showDriverRegistrationForm();
+      const nameField = document.getElementById('apply-name');
+      const phoneField = document.getElementById('apply-phone');
+      if(nameField && account.name) nameField.value = account.name;
+      if(phoneField && account.phone) phoneField.value = account.phone;
+    }
+  }
 };
 
 // On load: if a token exists, verify it against the server rather
