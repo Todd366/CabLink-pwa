@@ -3172,8 +3172,32 @@ return ride;
       const res = await fetch('/api/drivers/application-status?phone=' + encodeURIComponent(phone));
       const data = await res.json();
       if(data.status === 'APPROVED'){
+        // BUG FIX: this used to call setRole('driver'), which only
+        // wrote to the old dead 'cl_userRole' localStorage key (see
+        // the comment above getRole()) and never touched 'cl_account'
+        // — the key gateDriverScreen() actually reads. So the toast
+        // fired and said "approved", but the real role in
+        // localStorage was still whatever it was before, and the
+        // "Apply to drive" CTA never actually went away without a
+        // full logout/login to re-fetch the account. Now this
+        // re-fetches the real account from the server (which the
+        // backend already flipped to APPROVED_DRIVER on approval —
+        // see driver_application_service.js::setStatus) and caches
+        // that, so gateDriverScreen() sees the true current role
+        // immediately, in the same session, with no reload needed.
+        const token = localStorage.getItem('cl_token');
+        if(token){
+          try{
+            const meRes = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+            const meData = await meRes.json();
+            if(meData.success && meData.account){
+              localStorage.setItem('cl_account', JSON.stringify(meData.account));
+            }
+          }catch(e){ /* fall through — gateDriverScreen will retry on next load if this failed */ }
+        }
         setRole('driver');
         gateDriverScreen();
+        if(typeof loadMyVehicle === 'function') loadMyVehicle();
         toast('You are approved to drive! 🎉', 'success');
         return;
       }
