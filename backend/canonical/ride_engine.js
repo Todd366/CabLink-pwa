@@ -7,6 +7,9 @@ const push =
 const marketplaceWebhook =
     require("../services/marketplace_webhook_service");
 
+const elosEvents =
+    require("../services/elos_event_service");
+
 const STATES =
     Object.freeze({
 
@@ -474,6 +477,12 @@ async function transition(
         // marketplace_webhook_service.js for details.
         marketplaceWebhook
             .notifyTaskCompleted(updated)
+            .catch(() => {});
+
+        // Same fire-and-forget contract as the marketplace webhook above —
+        // never let ELOS affect a real ride completion response.
+        elosEvents
+            .notifyRideCompleted(updated)
             .catch(() => {});
     }
 
