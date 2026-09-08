@@ -3281,12 +3281,31 @@ return ride;
     }catch(e){ toast('Network error logging in', 'error'); }
   };
 
+  // BUG FIX: logout only ever cleared cl_token/cl_account, and never
+  // reloaded the page. That left three things silently stale:
+  // 1. cl6_state (rewards, ride history, driver earnings — see
+  //    saveState()) is entirely local and has nothing to do with
+  //    cl_account, so Rewards/Driver/Home kept showing old numbers
+  //    as if nothing happened.
+  // 2. cl_applicantPhone kept the old session's approval-polling
+  //    loop alive, so a NEW login on the same device could show a
+  //    stranger's application status.
+  // 3. Every in-memory JS flag (STATE.inRide, STATE.driverOnline,
+  //    etc.) simply survived untouched, since nothing ever reloaded
+  //    the page — hence "Ride already in progress" appearing for a
+  //    ride that was never actually booked this session.
+  // Now logout clears every one of those and reloads, so "logged
+  // out" means the same thing on every screen instead of only on
+  // the one screen (Profile) that happened to check cl_account
+  // directly.
   window.clAuthLogout = function(){
     forceDriverOffline();
     localStorage.removeItem('cl_token');
     localStorage.removeItem('cl_account');
-    renderAccountUI();
-    toast('Logged out', 'warning');
+    localStorage.removeItem('cl6_state');
+    localStorage.removeItem('cl_applicantPhone');
+    localStorage.removeItem('cl_userRole');
+    location.reload();
   };
 
   function forceDriverOffline(){
