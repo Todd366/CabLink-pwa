@@ -30,6 +30,7 @@
 const fs = require("fs");
 const path = require("path");
 const auth = require("./auth_service");
+const vehicles = require("./vehicle_service");
 
 const MODE = process.env.CABLINK_APPLICATION_PERSISTENCE || "LOCAL";
 
@@ -176,6 +177,21 @@ async function setStatus(id, status) {
     // which is why "approved" didn't actually unlock anything.
     if (status === "APPROVED" && application.accountId) {
         await auth.setRole(application.accountId, "APPROVED_DRIVER");
+
+        // Auto-create a real Vehicle record from whatever free-text the
+        // applicant put in the "Vehicle" field, so approval always
+        // produces something for the driver to see in Profile and for
+        // admin to verify — not just a role flip with nothing behind it.
+        // Failure here should never block the approval itself.
+        try {
+            await vehicles.createFromApplication({
+                accountId: application.accountId,
+                vehicleText: application.vehicle,
+                applicationId: application.id
+            });
+        } catch (error) {
+            console.error("⚠️ Vehicle auto-create on approval failed:", error.message);
+        }
     }
 
     return application;

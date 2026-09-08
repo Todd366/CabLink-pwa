@@ -537,6 +537,10 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <div class="bal-card"><div class="val" id="drv-thb">0</div><div class="lbl">THB earned</div></div>
     </div>
   </div>
+  <div class="card" id="myVehicleCard" style="display:none">
+    <div class="card-title" style="margin-bottom:8px">🚙 My vehicle</div>
+    <div id="myVehicleInfo" style="font-size:12px;color:var(--muted)">Loading…</div>
+  </div>
   <div class="card-title" id="driverRequestsTitle" style="margin-bottom:10px">📋 Incoming requests</div>
   <div id="driverRequests"><div style="font-size:12px;color:var(--muted)">Go online to see ride requests.</div></div>
 
@@ -705,6 +709,11 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <div class="card">
     <button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="loadAdminIncidents()">↻ Refresh</button>
     <div id="adminIncidentList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+  <div class="greeting" style="margin-top:20px">Vehicles</div>
+  <div class="card">
+    <button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="loadAdminVehicles()">↻ Refresh</button>
+    <div id="adminVehicleList" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
 </div>
 
@@ -1428,7 +1437,10 @@ async function pollRideStatus(rideId){
       // updates and polling stopped (wrongly) at the first ARRIVED
       // check, before the ride could ever reach genuine completion.
       if(status === 'DRIVER_ASSIGNED'){
-        setStatusPip('green'); setStatusLabel('🚗 Driver assigned! En route…');
+        const vLabel = ride.assignedVehicle
+          ? '🚗 ' + ride.assignedVehicle.makeModel + (ride.assignedVehicle.plate ? ' · ' + ride.assignedVehicle.plate : '') + ' is on the way'
+          : '🚗 Driver assigned! En route…';
+        setStatusPip('green'); setStatusLabel(vLabel);
         showRideProgressBar('DRIVER EN ROUTE', 40);
       } else if(status === 'DRIVER_ARRIVED'){
         if(!_arrivedShown){ _arrivedShown = true; showArrived(); }
@@ -2399,8 +2411,9 @@ function showScreen(name, btn){
   if(name==='rewards'){ renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
   if(name==='profile') updateProfileKPI();
   if(name==='home' && MAP) setTimeout(()=>MAP.invalidateSize(), 200);
-  if(name==='admin') { loadAdminApplications(); loadAdminIncidents(); loadAdminInsights(); }
+  if(name==='admin') { loadAdminApplications(); loadAdminIncidents(); loadAdminInsights(); loadAdminVehicles(); }
   if(name==='safety') loadMyIncidents();
+  if(name==='driver') loadMyVehicle();
 }
 function updateDailyBtn(){
   const today = new Date().toDateString();
@@ -3649,6 +3662,137 @@ window.reviewAdminApplication = async function(id, action){
 function escapeHtmlAdmin(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+</script>
+
+<script>
+// ============================================================
+// ADMIN — VEHICLES
+//
+// Real Vehicle records (backend/services/vehicle_service.js),
+// auto-created from an applicant's free-text "Vehicle" field on
+// approval. Admin corrects service class / capacity / plate here
+// and verifies the record, which is what lets a driver's real
+// vehicle show up on an accepted ride for the passenger.
+// ============================================================
+
+const VEHICLE_SERVICE_CLASSES = ['standard','premium','xl','moto','quiet'];
+
+function vehicleStatusColor(status){
+  if(status === 'VERIFIED') return 'var(--emerald)';
+  if(status === 'REJECTED') return 'var(--coral)';
+  return 'var(--gold-l)';
+}
+
+window.loadAdminVehicles = async function(){
+  const list = document.getElementById('adminVehicleList');
+  const token = localStorage.getItem('cl_token');
+  if(!list || !token){ if(list) list.innerHTML = '<div style="color:var(--muted);font-size:13px">Not logged in.</div>'; return; }
+
+  list.innerHTML = '<div style="color:var(--muted);font-size:13px">Loading…</div>';
+
+  try{
+    const res = await fetch('/api/admin/vehicles', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+
+    if(!data.success){
+      list.innerHTML = '<div style="color:var(--coral);font-size:13px">' + (data.error || 'Could not load vehicles') + '</div>';
+      return;
+    }
+
+    const items = (data.vehicles || []).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if(items.length === 0){
+      list.innerHTML = '<div style="color:var(--muted);font-size:13px">No vehicles yet — created automatically when a driver application is approved.</div>';
+      return;
+    }
+
+    list.innerHTML = items.map(v => {
+      const classOptions = VEHICLE_SERVICE_CLASSES.map(c =>
+        `<option value="${c}" ${v.serviceClass===c?'selected':''}>${c.charAt(0).toUpperCase()+c.slice(1)}</option>`
+      ).join('');
+      return `<div style="background:var(--surface);border:1px solid var(--hair2);border-radius:var(--r-md);padding:12px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <strong style="font-size:14px">${escapeHtmlAdmin(v.makeModel||'Unspecified')}</strong>
+          <span style="font-size:10px;color:${vehicleStatusColor(v.verificationStatus)};text-transform:uppercase">${v.verificationStatus.replace('_',' ')}</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <select class="input" id="veh-class-${v.id}" style="flex:1;font-size:12px">${classOptions}</select>
+          <input class="input" id="veh-cap-${v.id}" type="number" min="1" value="${v.capacity}" style="width:70px;font-size:12px" placeholder="Seats"/>
+        </div>
+        <input class="input" id="veh-plate-${v.id}" value="${escapeHtmlAdmin(v.plate||'')}" placeholder="Plate (optional)" style="margin-bottom:8px;font-size:12px"/>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" style="flex:1" onclick="window.saveAdminVehicle('${v.id}')">Save details</button>
+          <button class="btn btn-sm" style="flex:1;background:var(--emerald);color:#04270f" ${v.verificationStatus==='VERIFIED'?'disabled':''} onclick="window.verifyAdminVehicle('${v.id}')">Verify</button>
+        </div>
+      </div>`;
+    }).join('');
+
+  }catch(e){
+    list.innerHTML = '<div style="color:var(--coral);font-size:13px">Network error</div>';
+  }
+};
+
+window.saveAdminVehicle = async function(id){
+  const token = localStorage.getItem('cl_token');
+  const serviceClass = document.getElementById('veh-class-' + id).value;
+  const capacity = document.getElementById('veh-cap-' + id).value;
+  const plate = document.getElementById('veh-plate-' + id).value.trim();
+  try{
+    const res = await fetch('/api/admin/vehicles/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ serviceClass, capacity, plate })
+    });
+    const data = await res.json();
+    if(!data.success){ toast(data.error || 'Could not save', 'error'); return; }
+    toast('Vehicle updated', 'success');
+    window.loadAdminVehicles();
+  }catch(e){ toast('Network error', 'error'); }
+};
+
+window.verifyAdminVehicle = async function(id){
+  const token = localStorage.getItem('cl_token');
+  try{
+    const res = await fetch('/api/admin/vehicles/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ verificationStatus: 'VERIFIED' })
+    });
+    const data = await res.json();
+    if(!data.success){ toast(data.error || 'Could not verify', 'error'); return; }
+    toast('Vehicle verified', 'success');
+    window.loadAdminVehicles();
+  }catch(e){ toast('Network error', 'error'); }
+};
+
+// ============================================================
+// DRIVER — MY VEHICLE
+// ============================================================
+
+window.loadMyVehicle = async function(){
+  const card = document.getElementById('myVehicleCard');
+  const info = document.getElementById('myVehicleInfo');
+  const token = localStorage.getItem('cl_token');
+  if(!card || !info || !token) return;
+
+  try{
+    const res = await fetch('/api/vehicles/mine', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if(!data.success || !data.vehicle){ card.style.display = 'none'; return; }
+
+    const v = data.vehicle;
+    card.style.display = '';
+    const statusColor = v.verificationStatus === 'VERIFIED' ? 'var(--emerald)' : v.verificationStatus === 'REJECTED' ? 'var(--coral)' : 'var(--gold-l)';
+    info.innerHTML = `
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <strong style="color:var(--fg);font-size:13px">${escapeHtmlAdmin(v.makeModel||'Unspecified')}</strong>
+        <span style="font-size:10px;color:${statusColor};text-transform:uppercase">${v.verificationStatus.replace('_',' ')}</span>
+      </div>
+      <div>Class: ${escapeHtmlAdmin(v.serviceClass)} · Seats: ${v.capacity}${v.plate ? ' · Plate: ' + escapeHtmlAdmin(v.plate) : ''}</div>
+      ${v.verificationStatus !== 'VERIFIED' ? '<div style="margin-top:4px;color:var(--gold-l)">Pending admin verification.</div>' : ''}
+    `;
+  }catch(e){ card.style.display = 'none'; }
+};
 </script>
 
 <script>

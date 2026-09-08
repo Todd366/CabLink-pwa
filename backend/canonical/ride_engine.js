@@ -289,6 +289,28 @@ async function attachDriverAccount(
 
 }
 
+// Attaches a compact snapshot of the accepting driver's real,
+// admin-verified vehicle (see vehicle_service.js::toRideSnapshot) onto
+// the ride record, so the passenger sees what they're actually
+// getting into — not just the ride "type" they originally picked,
+// which was always just their own selection, disconnected from
+// whichever driver actually ends up accepting.
+async function attachDriverVehicle(
+    id,
+    vehicleSnapshot
+) {
+
+    if (!vehicleSnapshot) {
+        return null;
+    }
+
+    return repository.update(
+        id,
+        { assignedVehicle: vehicleSnapshot }
+    );
+
+}
+
 // Ratings were previously entirely client-side — submitRating() in
 // the frontend updated a local array and showed a success toast,
 // but the driver never actually received the feedback and nothing
@@ -477,6 +499,7 @@ function persistenceStatus() {
 
 module.exports = {
     attachDriverAccount,
+    attachDriverVehicle,
 
     rateRide,
 

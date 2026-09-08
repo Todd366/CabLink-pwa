@@ -12,6 +12,9 @@ const rewardService =
 const events =
     require("../services/event_service");
 
+const vehicleService =
+    require("../services/vehicle_service");
+
 const {
     STATES
 } = rideEngine;
@@ -151,6 +154,20 @@ router.patch("/:id/accept", async (req, res) => {
         if (result.success && callingDriverAccount) {
             rideEngine
                 .attachDriverAccount(req.params.id, callingDriverAccount.id)
+                .catch(() => {});
+
+            // Best-effort: attach the driver's real, admin-verified
+            // vehicle to the ride so the passenger sees what they're
+            // actually getting into. A driver with no vehicle record
+            // yet (or a lookup failure) should never block acceptance.
+            vehicleService
+                .getVehicleByAccountId(callingDriverAccount.id)
+                .then(vehicle => {
+                    const snapshot = vehicleService.toRideSnapshot(vehicle);
+                    if (snapshot) {
+                        return rideEngine.attachDriverVehicle(req.params.id, snapshot);
+                    }
+                })
                 .catch(() => {});
         }
 
