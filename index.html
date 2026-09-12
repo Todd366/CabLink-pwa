@@ -496,8 +496,23 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   </div>
 </div>
 
-<!-- ===== REWARDS ===== -->
-<div class="screen" id="s-rewards">
+<!-- ===== DRIVER EARNINGS ===== -->
+<div class="screen" id="s-earnings">
+  <div class="eyebrow">Driver</div>
+  <div class="greeting">Earnings</div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">💰 Real earnings</div>
+    <div class="wallet-bar">
+      <div class="bal-card"><div class="val" id="de-completed">0</div><div class="lbl">Completed</div></div>
+      <div class="bal-card"><div class="val" id="de-fare">0</div><div class="lbl">Fare (BWP)</div></div>
+      <div class="bal-card"><div class="val" id="de-thb">0</div><div class="lbl">THB earned</div></div>
+      <div class="bal-card"><div class="val" id="de-rating">—</div><div class="lbl">Avg ⭐</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px">Pulled directly from your completed rides — not an estimate.</div>
+  </div>
+</div>
+
+<!-- ===== REWARDS ===== --><div class="screen" id="s-rewards">
   <div class="eyebrow">Loyalty</div>
   <div class="greeting">Rewards dashboard</div>
   <div class="card">
@@ -586,15 +601,6 @@ h1,h2,h3,.disp{font-family:var(--disp)}
       <span class="chip" id="profile-role-chip">—</span>
       <span class="chip active">BSC Testnet</span>
       <span class="chip active">Gaborone, BWA</span>
-    </div>
-  </div>
-  <div class="card" id="driverEarningsCard" style="display:none">
-    <div class="card-title" style="margin-bottom:12px">💰 Driver earnings</div>
-    <div class="wallet-bar">
-      <div class="bal-card"><div class="val" id="de-completed">0</div><div class="lbl">Completed</div></div>
-      <div class="bal-card"><div class="val" id="de-fare">0</div><div class="lbl">Fare (BWP)</div></div>
-      <div class="bal-card"><div class="val" id="de-thb">0</div><div class="lbl">THB earned</div></div>
-      <div class="bal-card"><div class="val" id="de-rating">—</div><div class="lbl">Avg ⭐</div></div>
     </div>
   </div>
   <div class="card" id="accountCard">
@@ -2471,10 +2477,10 @@ const ROLE_NAV = {
   },
   driver: {
     home: 'driver',
-    allowed: ['driver', 'rewards', 'profile', 'settings', 'help', 'safety'],
+    allowed: ['driver', 'earnings', 'profile', 'settings', 'help', 'safety'],
     navHtml:
       '<button class="nav-btn" onclick="showScreen(\'driver\',this)" id="nav-driver"><span class="icon">🚗</span><span>Dashboard</span></button>' +
-      '<button class="nav-btn" onclick="showScreen(\'rewards\',this)" id="nav-rewards"><span class="icon">⚡</span><span>Earnings</span></button>' +
+      '<button class="nav-btn" onclick="showScreen(\'earnings\',this)" id="nav-earnings"><span class="icon">⚡</span><span>Earnings</span></button>' +
       '<button class="nav-btn" onclick="showScreen(\'profile\',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>'
   },
   admin: {
@@ -2535,6 +2541,9 @@ function showScreen(name, btn){
   btn?.classList.add('active');
   STATE.currentScreen = name;
   if(name==='rewards'){ renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
+  if(name==='earnings'){
+    try{ renderDriverEarnings(JSON.parse(localStorage.getItem('cl_account') || 'null')); }catch(e){}
+  }
   if(name==='profile') updateProfileKPI();
   if(name==='home' && MAP) setTimeout(()=>MAP.invalidateSize(), 200);
   if(name==='admin') { loadAdminApplications(); loadAdminIncidents(); loadAdminInsights(); loadAdminVehicles(); updateAdminHeader(); }
@@ -3465,7 +3474,6 @@ return ride;
       if(applyPhone && !applyPhone.value) applyPhone.value = account.phone;
       renderMyRides();
       renderRoleChip(account.role);
-      renderDriverEarnings(account);
     } else {
       loggedOutEl.style.display = 'block';
       loggedInEl.style.display = 'none';
@@ -3475,8 +3483,6 @@ return ride;
       if(listEl) listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>';
       var chipEl = document.getElementById('profile-role-chip');
       if(chipEl) chipEl.textContent = '—';
-      var deCard = document.getElementById('driverEarningsCard');
-      if(deCard) deCard.style.display = 'none';
       var adminRow = document.getElementById('adminLinkRow');
       if(adminRow) adminRow.style.display = 'none';
     }
@@ -3497,14 +3503,14 @@ return ride;
     if(adminRow) adminRow.style.display = (role === 'ADMIN') ? '' : 'none';
   }
 
+  // Populates the dedicated driver Earnings screen (s-earnings) with
+  // real numbers from the account's actual completed rides — not
+  // local demo state like passenger Rewards. Only ever called when
+  // navigating to 'earnings', which only a driver-group account can
+  // reach at all (see ROLE_NAV / showScreen's access enforcement),
+  // so there's no role check needed here anymore.
   function renderDriverEarnings(account){
-    var card = document.getElementById('driverEarningsCard');
-    if(!card) return;
-    if(account.role !== 'APPROVED_DRIVER' && account.role !== 'ADMIN'){
-      card.style.display = 'none';
-      return;
-    }
-    card.style.display = '';
+    if(!account) return;
     fetch('/api/driver/' + encodeURIComponent(account.id) + '/economy')
       .then(r => r.json())
       .then(data => {
