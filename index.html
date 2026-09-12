@@ -620,6 +620,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <div class="card" style="padding:6px 0">
     <div class="link-row" onclick="showScreen('safety',this)"><span class="link-icon">🆘</span><span class="link-label">Safety & incident reports</span><span class="link-chev">›</span></div>
     <div class="link-row" onclick="window.checkMyDriverStatus()"><span class="link-icon">📄</span><span class="link-label">Driver application status</span><span class="link-chev">›</span></div>
+    <div class="link-row" onclick="window.openApplyToDrive()"><span class="link-icon">🚖</span><span class="link-label">Apply to drive</span><span class="link-chev">›</span></div>
     <div class="link-row" onclick="showScreen('more',this)"><span class="link-icon">◆</span><span class="link-label">BSTM Ecosystem</span><span class="link-chev">›</span></div>
     <div class="link-row" id="adminLinkRow" style="display:none" onclick="showScreen('admin',this)"><span class="link-icon">🛡</span><span class="link-label">Admin</span><span class="link-chev">›</span></div>
     <div class="link-row" onclick="showScreen('help',this)"><span class="link-icon">❓</span><span class="link-label">Help & support</span><span class="link-chev">›</span></div>
@@ -664,7 +665,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <div class="card">
     <div class="card-title" style="margin-bottom:10px">Common questions</div>
     <div style="display:flex;flex-direction:column;gap:14px;font-size:13px">
-      <div><strong style="color:var(--text)">How do I become a driver?</strong><div style="color:var(--muted);margin-top:4px">Go to the Driver tab and tap "Apply to drive." An admin reviews your application, including your license — you'll see the status update under Profile → Driver application status.</div></div>
+      <div><strong style="color:var(--text)">How do I become a driver?</strong><div style="color:var(--muted);margin-top:4px">From Profile → Quick Links, tap "Apply to drive." An admin reviews your application, including your license — you'll see the status update under Profile → Driver application status.</div></div>
       <div><strong style="color:var(--text)">How do I pay for a ride?</strong><div style="color:var(--muted);margin-top:4px">Cash or Mobile Money, chosen when you book. The driver sees your selection before accepting.</div></div>
       <div><strong style="color:var(--text)">What if I feel unsafe during a ride?</strong><div style="color:var(--muted);margin-top:4px">Use the Safety page (Profile → Safety & incident reports) to call emergency services or log a report — it's reviewed by an admin.</div></div>
       <div><strong style="color:var(--text)">How do THB rewards work?</strong><div style="color:var(--muted);margin-top:4px">Drivers earn THB on the BSC testnet for each completed trip. Check the Rewards tab for your wallet and balance.</div></div>
@@ -706,6 +707,13 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 <div class="screen" id="s-admin">
   <div class="eyebrow">Admin</div>
+  <div class="card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div>
+      <div style="font-weight:700" id="adminHeaderName">Admin</div>
+      <div style="font-size:11px;color:var(--muted)" id="adminHeaderPhone"></div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="clAuthLogout()">Log out</button>
+  </div>
   <div class="greeting">Insights</div>
   <div class="card">
     <button class="btn btn-outline btn-sm" style="margin-bottom:12px" onclick="loadAdminInsights()">↻ Refresh</button>
@@ -2413,7 +2421,93 @@ function shareLocation(){
 // ============================================================
 // SCREEN NAVIGATION
 // ============================================================
+// ============================================================
+// ROLE-BASED APP SEPARATION
+//
+// Previously every account shared one nav bar and every screen
+// was reachable by everyone — role only hid a button here or
+// swapped a CTA there on top of an otherwise-identical shell.
+// That's why an approved driver could still land on the booking
+// screen, and why "Admin" was just one more link buried in the
+// same Profile every passenger sees. Login (and session restore
+// on page load) now decides which of three separate navs + home
+// screens an account gets, based on account.role — and
+// showScreen() enforces it as a hard boundary: a screen outside
+// the current role's set silently redirects home instead of
+// rendering, so this holds even if something tries to navigate
+// there directly, not just when every button is hidden correctly.
+// ============================================================
+
+const ROLE_NAV = {
+  passenger: {
+    home: 'home',
+    allowed: ['home', 'rewards', 'profile', 'settings', 'help', 'safety'],
+    navHtml:
+      '<button class="nav-btn" onclick="showScreen(\'home\',this)" id="nav-home"><span class="icon">🏠</span><span>Home</span></button>' +
+      '<button class="nav-btn" onclick="showScreen(\'rewards\',this)" id="nav-rewards"><span class="icon">⚡</span><span>Rewards</span></button>' +
+      '<button class="nav-btn center-btn" onclick="bookRide()">🚕</button>' +
+      '<button class="nav-btn" onclick="showScreen(\'profile\',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>'
+  },
+  driver: {
+    home: 'driver',
+    allowed: ['driver', 'rewards', 'profile', 'settings', 'help', 'safety'],
+    navHtml:
+      '<button class="nav-btn" onclick="showScreen(\'driver\',this)" id="nav-driver"><span class="icon">🚗</span><span>Dashboard</span></button>' +
+      '<button class="nav-btn" onclick="showScreen(\'rewards\',this)" id="nav-rewards"><span class="icon">⚡</span><span>Earnings</span></button>' +
+      '<button class="nav-btn" onclick="showScreen(\'profile\',this)" id="nav-profile"><span class="icon">👤</span><span>Profile</span></button>'
+  },
+  admin: {
+    home: 'admin',
+    allowed: ['admin'],
+    navHtml:
+      '<button class="nav-btn" onclick="showScreen(\'admin\',this)" id="nav-admin"><span class="icon">🛠️</span><span>Admin</span></button>'
+  }
+};
+
+function roleGroupFor(account){
+  if(!account) return 'passenger';
+  if(account.role === 'ADMIN') return 'admin';
+  if(account.role === 'APPROVED_DRIVER') return 'driver';
+  return 'passenger';
+}
+
+// Rebuilds the entire nav bar for the account's role (not just
+// toggling visibility on a shared one) and forces navigation to
+// that role's home screen. Called once on every login and on
+// every page-load session restore, so it's always in sync with
+// whatever the account's real role is right now.
+window.applyRoleSeparation = function(account){
+  const group = roleGroupFor(account);
+  window.CL_ROLE_GROUP = group;
+  const cfg = ROLE_NAV[group];
+  const nav = document.getElementById('nav');
+  if(nav) nav.innerHTML = cfg.navHtml;
+  showScreen(cfg.home, document.getElementById('nav-' + cfg.home));
+};
+
+function updateAdminHeader(){
+  try{
+    const account = JSON.parse(localStorage.getItem('cl_account') || 'null');
+    if(!account) return;
+    const nameEl = document.getElementById('adminHeaderName');
+    const phoneEl = document.getElementById('adminHeaderPhone');
+    if(nameEl) nameEl.textContent = account.name || 'Admin';
+    if(phoneEl) phoneEl.textContent = account.phone || '';
+  }catch(e){}
+}
+
 function showScreen(name, btn){
+  const group = window.CL_ROLE_GROUP || 'passenger';
+  const cfg = ROLE_NAV[group];
+  if(cfg && cfg.allowed.indexOf(name) === -1){
+    // Requested screen isn't part of this role's app at all —
+    // redirect to their home instead of rendering it. This is the
+    // actual enforcement; the nav only ever offering allowed
+    // screens is a convenience on top of this, not the boundary
+    // itself.
+    name = cfg.home;
+    btn = document.getElementById('nav-' + cfg.home);
+  }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('s-'+name).classList.add('active');
@@ -2422,7 +2516,7 @@ function showScreen(name, btn){
   if(name==='rewards'){ renderLeaderboard(); renderBadges(); updateDailyBtn(); renderPendingTxs(); }
   if(name==='profile') updateProfileKPI();
   if(name==='home' && MAP) setTimeout(()=>MAP.invalidateSize(), 200);
-  if(name==='admin') { loadAdminApplications(); loadAdminIncidents(); loadAdminInsights(); loadAdminVehicles(); }
+  if(name==='admin') { loadAdminApplications(); loadAdminIncidents(); loadAdminInsights(); loadAdminVehicles(); updateAdminHeader(); }
   if(name==='safety') loadMyIncidents();
   if(name==='driver') loadMyVehicle();
 }
@@ -3629,19 +3723,29 @@ window.gateReveal = function(account, routeToDriverSignup){
   document.getElementById('authGate').style.display = 'none';
   document.getElementById('app').style.display = '';
   window.CABLINK_ACCOUNT = account;
-  if(account && account.role === 'ADMIN'){
-    window.showAdminTab && window.showAdminTab();
-  }
   // renderAccountUI reads localStorage('cl_account'), already set
   // by whichever caller got us here (login/register/session check)
   // — refresh it now so the role chip/driver-earnings card don't
   // wait for some other trigger to populate.
   if(typeof renderAccountUI === 'function') renderAccountUI();
+
+  // Rebuilds the nav and forces navigation to this role's home —
+  // see ROLE_NAV / applyRoleSeparation above. This replaces the old
+  // model of one shared shell with a couple of hidden buttons.
+  window.applyRoleSeparation && window.applyRoleSeparation(account);
+
+  // Still needed for accounts that land on the driver dashboard:
+  // toggles its internal wallet-bar/requests visibility based on
+  // real approval status. Under the new hard-separation model only
+  // driver-group accounts ever see s-driver at all, so this is a
+  // no-op for passenger/admin, not a competing gating mechanism.
   window.gateDriverScreen && window.gateDriverScreen();
 
+  // The application form is a modal overlay, not a screen, so it
+  // can open on top of whichever home the role system just picked
+  // (still 'home', since a brand-new signup's role is PASSENGER
+  // until an admin approves it) without needing its own screen slot.
   if(routeToDriverSignup && account && account.role !== 'APPROVED_DRIVER' && account.role !== 'ADMIN'){
-    const navDriver = document.getElementById('nav-driver');
-    if(typeof showScreen === 'function') showScreen('driver', navDriver);
     if(typeof window.showDriverRegistrationForm === 'function'){
       window.showDriverRegistrationForm();
       const nameField = document.getElementById('apply-name');
@@ -4090,7 +4194,7 @@ window.checkMyDriverStatus = async function(){
     const res = await fetch('/api/drivers/application-status?phone=' + encodeURIComponent(account.phone));
     const data = await res.json();
     if(!data.success || !data.status || data.status === 'NONE'){
-      toast('No driver application on file yet — apply from the Driver tab', 'warning');
+      toast('No driver application on file yet — tap "Apply to drive" below', 'warning');
       return;
     }
     const statusLabel = { PENDING: 'Pending review', APPROVED: 'Approved ✅', REJECTED: 'Not approved' }[data.status] || data.status;
@@ -4098,6 +4202,26 @@ window.checkMyDriverStatus = async function(){
   }catch(e){
     toast('Could not check application status', 'error');
   }
+};
+
+// Passenger-side entry point for applying to drive. Previously this
+// only lived as a CTA card inside the driver dashboard screen — but
+// under the role-separated nav (see applyRoleSeparation above) a
+// passenger account can never navigate to that screen at all, so
+// this opens the same application modal directly from Profile
+// instead, with name/phone pre-filled. submitDriverApplication's
+// backend call is idempotent for an existing PENDING/APPROVED
+// application, so tapping this again after already applying is safe.
+window.openApplyToDrive = function(){
+  const raw = localStorage.getItem('cl_account');
+  if(!raw){ toast('Log in first to apply', 'warning'); return; }
+  const account = JSON.parse(raw);
+  if(account.role === 'APPROVED_DRIVER'){ toast('You are already an approved driver', 'success'); return; }
+  window.showDriverRegistrationForm();
+  const nameField = document.getElementById('apply-name');
+  const phoneField = document.getElementById('apply-phone');
+  if(nameField && account.name) nameField.value = account.name;
+  if(phoneField && account.phone) phoneField.value = account.phone;
 };
 </script>
 
