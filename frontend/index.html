@@ -606,13 +606,20 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   <div class="card" id="accountCard">
     <div class="card-title" style="margin-bottom:12px">👤 Account</div>
     <div id="accountLoggedOut">
-      <input class="input" id="acc-phone" placeholder="Phone number" style="margin-bottom:10px"/>
-      <input class="input" id="acc-name" placeholder="Full name (for new accounts)" style="margin-bottom:10px"/>
-      <input class="input" id="acc-pin" type="password" placeholder="PIN (4+ digits)" style="margin-bottom:14px"/>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-primary" style="flex:1" onclick="clAuthLogin()">Log in</button>
-        <button class="btn btn-outline" style="flex:1" onclick="clAuthRegister()">Register</button>
-      </div>
+      <!-- This used to be a second, parallel login/register form
+           (its own phone/name/PIN inputs, calling clAuthLogin/
+           clAuthRegister) — a leftover from before the full-screen
+           authGate existed to block #app entirely until a real
+           session is confirmed. Under the current architecture #app
+           is never visible without a valid account, so this branch
+           should be unreachable; it stayed only as a genuine safety
+           net dead-end (not a second working login path, which is
+           exactly the kind of duplicate-system confusion that caused
+           the stuck-role bug earlier). If it's ever visible, it
+           means something went wrong with the session — the correct
+           recovery is the same clean reload logout already uses. -->
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Your session looks out of sync.</div>
+      <button class="btn btn-primary" style="width:100%" onclick="location.reload()">Reload</button>
     </div>
     <div id="accountLoggedIn" style="display:none">
       <div style="font-size:12px;color:var(--muted);margin-bottom:10px" id="acc-loggedin-phone"></div>
@@ -642,7 +649,12 @@ h1,h2,h3,.disp{font-family:var(--disp)}
     <div class="link-row" onclick="window.checkMyDriverStatus()"><span class="link-icon">📄</span><span class="link-label">Driver application status</span><span class="link-chev">›</span></div>
     <div class="link-row" onclick="window.openApplyToDrive()"><span class="link-icon">🚖</span><span class="link-label">Apply to drive</span><span class="link-chev">›</span></div>
     <div class="link-row" onclick="showScreen('more',this)"><span class="link-icon">◆</span><span class="link-label">BSTM Ecosystem</span><span class="link-chev">›</span></div>
-    <div class="link-row" id="adminLinkRow" style="display:none" onclick="showScreen('admin',this)"><span class="link-icon">🛡</span><span class="link-label">Admin</span><span class="link-chev">›</span></div>
+    <!-- Admin used to get a hidden Quick Link here, revealed only
+         for role===ADMIN via the now-removed showAdminTab(). Under
+         the current hard role separation, an ADMIN account never
+         reaches this screen (s-profile) at all — its allowed-screen
+         set is just ['admin'] — so this row could never be seen by
+         anyone it was meant for. Removed rather than left hidden. -->
     <div class="link-row" onclick="showScreen('help',this)"><span class="link-icon">❓</span><span class="link-label">Help & support</span><span class="link-chev">›</span></div>
     <div class="link-row" onclick="showScreen('settings',this)"><span class="link-icon">⚙</span><span class="link-label">Settings</span><span class="link-chev">›</span></div>
   </div>
@@ -3361,49 +3373,17 @@ return ride;
   // REAL ACCOUNT LOGIN / REGISTER (phone + PIN)
   // ============================================================
 
-  window.clAuthRegister = async function(){
-    var phone = document.getElementById('acc-phone').value.trim();
-    var name = document.getElementById('acc-name').value.trim();
-    var pin = document.getElementById('acc-pin').value.trim();
-    if(!phone || !pin){ toast('Phone and PIN required', 'warning'); return; }
-    // PATCH 16: real shape check before hitting the network — same
-    // rule the backend enforces (8-digit Botswana mobile starting
-    // with 7, optional 267/+267 prefix). Instant feedback instead of
-    // a round-trip just to find out "111" was never a real number.
-    var clPhoneDigits = phone.replace(/[^\d+]/g, "");
-    if(!/^(\+?267)?7\d{7}$/.test(clPhoneDigits)){
-      toast("Enter a valid Botswana mobile number, e.g. 71234567", "warning");
-      return;
-    }
-    if(pin.length < 4){ toast("PIN must be at least 4 digits", "warning"); return; }
-    try{
-      const res = await fetch('/api/auth/register', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ phone, name, pin })
-      });
-      const data = await res.json();
-      if(!data.success){ toast(data.error || 'Registration failed', 'error'); return; }
-      toast('Account created — now log in', 'success');
-    }catch(e){ toast('Network error registering', 'error'); }
-  };
-
-  window.clAuthLogin = async function(){
-    var phone = document.getElementById('acc-phone').value.trim();
-    var pin = document.getElementById('acc-pin').value.trim();
-    if(!phone || !pin){ toast('Phone and PIN required', 'warning'); return; }
-    try{
-      const res = await fetch('/api/auth/login', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ phone, pin })
-      });
-      const data = await res.json();
-      if(!data.success){ toast(data.error || 'Login failed', 'error'); return; }
-      localStorage.setItem('cl_token', data.token);
-      localStorage.setItem('cl_account', JSON.stringify(data.account));
-      toast('Logged in', 'success');
-      renderAccountUI();
-    }catch(e){ toast('Network error logging in', 'error'); }
-  };
+  // NOTE: this used to also define window.clAuthRegister and
+  // window.clAuthLogin here — a second, parallel implementation of
+  // registration/login (its own fetch calls to /api/auth/register
+  // and /api/auth/login) that only ever populated cl_token/cl_account
+  // and called renderAccountUI(), without ever calling
+  // applyRoleSeparation() or gateReveal(). It was only ever wired to
+  // the accountLoggedOut form removed above. Removed rather than
+  // left as an unreachable duplicate — a second, incomplete copy of
+  // the real login logic is exactly the kind of thing that produces
+  // silent half-broken states later, which is what this whole
+  // session has been about fixing, not adding more of.
 
   // BUG FIX: logout only ever cleared cl_token/cl_account, and never
   // reloaded the page. That left three things silently stale:
@@ -3483,8 +3463,6 @@ return ride;
       if(listEl) listEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px">Log in to see your ride history.</div>';
       var chipEl = document.getElementById('profile-role-chip');
       if(chipEl) chipEl.textContent = '—';
-      var adminRow = document.getElementById('adminLinkRow');
-      if(adminRow) adminRow.style.display = 'none';
     }
   }
 
@@ -3499,8 +3477,6 @@ return ride;
     var chipEl = document.getElementById('profile-role-chip');
     if(!chipEl) return;
     chipEl.textContent = ROLE_LABELS[role] || role || 'Passenger';
-    var adminRow = document.getElementById('adminLinkRow');
-    if(adminRow) adminRow.style.display = (role === 'ADMIN') ? '' : 'none';
   }
 
   // Populates the dedicated driver Earnings screen (s-earnings) with
@@ -3818,11 +3794,6 @@ window.gateReveal = function(account, routeToDriverSignup){
 // instead of a typed-in key. admin.html still works standalone
 // (useful if a session is ever broken) since the backend accepts
 // either the key or an ADMIN session token.
-
-window.showAdminTab = function(){
-  const row = document.getElementById('adminLinkRow');
-  if(row) row.style.display = '';
-};
 
 window.loadAdminApplications = async function(){
   const list = document.getElementById('adminAppList');
