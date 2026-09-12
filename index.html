@@ -129,7 +129,21 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 
 /* map */
 .map-container{position:relative;background:var(--surface2);border-radius:var(--r-md);overflow:hidden;height:230px;margin-bottom:14px;border:1px solid var(--hair)}
-#leafletMap{width:100%;height:100%;filter:saturate(1.15)}
+#leafletMap{width:100%;height:100%}
+/* Dark-mode tiles: OpenStreetMap's own raster tiles are always free,
+   need no API key, and are run by the OSM Foundation (donation-funded
+   nonprofit infrastructure) rather than a company that can start
+   gating access overnight — unlike CARTO's free tier, which did
+   exactly that in August 2026 and is why this map showed an
+   "API KEY REQUIRED" watermark before this fix. Recoloring plain OSM
+   tiles into a dark look with a CSS filter (rather than depending on
+   a *pre-styled* dark tile service) means there's no third dependency
+   here that can also start requiring a key later. This exact filter
+   chain is the same one openstreetmap.org itself uses for its own
+   dark mode. Scoped to .leaflet-tile-pane only, not the whole map
+   container, so markers/icons drawn in other Leaflet panes (the
+   pickup/dropoff dots, the car emoji) don't get inverted too.        */
+#leafletMap .leaflet-tile-pane{filter:invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%) saturate(1.15)}
 .map-badge{position:absolute;top:10px;left:10px;z-index:400;background:rgba(6,9,17,.75);backdrop-filter:blur(6px);border:1px solid var(--hair);border-radius:20px;padding:5px 12px;font-size:10px;font-family:var(--data);display:flex;align-items:center;gap:6px}
 .map-recenter{position:absolute;bottom:10px;right:10px;z-index:400;background:rgba(6,9,17,.8);border:1px solid var(--hair2);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
 
@@ -1233,13 +1247,20 @@ function renderPendingTxs(){
 let MAP, pickupMarker, dropoffMarker, carMarker, routeLine, driverMarkers = [];
 function initMap(){
   MAP = L.map('leafletMap', {zoomControl:false, attributionControl:false}).setView([LANDMARKS.bstmHQ.lat, LANDMARKS.bstmHQ.lng], 12);
-  // CARTO deprecated the sharded a/b/c/d.basemaps.cartocdn.com
-  // subdomain format (was only ever needed to get around old
-  // browsers' per-domain connection limits, irrelevant since
-  // HTTP/2). The old URL was returning a placeholder/error tile
-  // with "API KEY REQUIRED" baked into the image — this single
-  // current domain is CARTO's documented no-key format.
-  L.tileLayer('https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(MAP);
+  // CARTO began requiring an API key for their free raster basemaps
+  // in late August 2026, stamping every tile "API KEY REQUIRED" for
+  // anonymous requests — this is documented and widespread (hit many
+  // unrelated projects the same week), not something specific to this
+  // app. Rather than depend on a second external key/service that
+  // could change its own terms again later, this now uses
+  // OpenStreetMap's own standard tile server directly — always free,
+  // no key, ever — and recolors it dark with a CSS filter (see
+  // #leafletMap .leaflet-tile-pane above) instead of depending on a
+  // pre-styled "dark" tile provider.
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(MAP);
 
   const goldIcon = L.divIcon({html:'<div style="width:14px;height:14px;border-radius:50%;background:#f0b93a;border:2px solid #060911;box-shadow:0 0 8px #f0b93a"></div>', className:'', iconSize:[14,14]});
   const blueIcon = L.divIcon({html:'<div style="width:14px;height:14px;border-radius:50%;background:#2e6be6;border:2px solid #060911;box-shadow:0 0 8px #2e6be6"></div>', className:'', iconSize:[14,14]});
