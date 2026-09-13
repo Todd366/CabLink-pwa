@@ -66,12 +66,19 @@ html,body{height:100%;background:var(--ink);color:var(--text);font-family:var(--
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
 h1,h2,h3,.disp{font-family:var(--disp)}
-.eyebrow{font-family:var(--data);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{font-family:var(--data);font-size:11px;color:var(--sapphire-l);display:flex;align-items:center;gap:6px}
+.eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
 .greeting{font-family:var(--disp);font-size:22px;font-weight:600;margin:2px 0 16px}
 .greeting span{color:var(--gold-l)}
 
 /* cards */
 .card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+/* Applied alongside .card (class="card card-hero") to the single most
+   important card on a screen — everything else stays the plain quiet
+   .card so that one thing actually reads as primary, instead of every
+   screen being an undifferentiated stack of identical glass cards. */
+.card-hero{background:linear-gradient(160deg,var(--surface2),var(--surface));border:1px solid rgba(240,185,58,.22);position:relative;overflow:hidden}
+.card-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--sapphire-l))}
 .link-row{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--hair);transition:background .15s ease}
 .link-row:last-child{border-bottom:none}
 .link-row:active{background:var(--hair)}
@@ -500,7 +507,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 <div class="screen" id="s-earnings">
   <div class="eyebrow">Driver</div>
   <div class="greeting">Earnings</div>
-  <div class="card">
+  <div class="card card-hero">
     <div class="card-title" style="margin-bottom:12px">💰 Real earnings</div>
     <div class="wallet-bar">
       <div class="bal-card"><div class="val" id="de-completed">0</div><div class="lbl">Completed</div></div>
@@ -515,7 +522,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
 <!-- ===== REWARDS ===== --><div class="screen" id="s-rewards">
   <div class="eyebrow">Loyalty</div>
   <div class="greeting">Rewards dashboard</div>
-  <div class="card">
+  <div class="card card-hero">
     <div class="wallet-bar">
       <div class="bal-card"><div class="val" id="r-earned">0</div><div class="lbl">THB earned</div></div>
       <div class="bal-card"><div class="val" id="r-rides">0</div><div class="lbl">Rides done</div></div>
@@ -570,7 +577,7 @@ h1,h2,h3,.disp{font-family:var(--disp)}
   </div>
   </div>
   
-  <div class="card">
+  <div class="card card-hero">
     <div class="wallet-bar">
       <div class="bal-card"><div class="val" id="drv-requests">0</div><div class="lbl">Requests</div></div>
       <div class="bal-card"><div class="val" id="drv-accepted">0</div><div class="lbl">Accepted</div></div>
