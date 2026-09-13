@@ -1865,37 +1865,13 @@ function checkOnline(){ const online = navigator.onLine; if(!online) showAlert('
 // ============================================================
 // DRIVER MODE
 // ============================================================
-async function toggleDriverMode(){
-  STATE.driverOnline = !STATE.driverOnline;
-  const btn = document.getElementById('driverModeBtn');
-  if(!STATE.driverId){
-    STATE.driverId = localStorage.getItem('cl6_driverId') || ('DRV-' + Math.random().toString(36).substr(2,8).toUpperCase());
-    localStorage.setItem('cl6_driverId', STATE.driverId);
-  }
-  try{
-    const endpoint = STATE.driverOnline ? '/api/drivers/online' : '/api/drivers/offline';
-    let coords = {};
-    if(STATE.driverOnline && navigator.geolocation){
-      coords = await new Promise((resolve) => {
-        navigator.geolocation.getCurrentPosition(
-          pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-          () => { toast('Location unavailable — using default area', 'warning'); resolve({}); },
-          { timeout: 5000 }
-        );
-      });
-    }
-    await fetch(endpoint, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ driverId: STATE.driverId, lat: coords.lat, lng: coords.lng })
-    });
-  } catch(e){ console.error('Driver status update failed', e); }
-  btn.textContent = STATE.driverOnline ? '🔴 Go offline' : '🟢 Go online';
-  btn.className = 'btn btn-sm ' + (STATE.driverOnline ? 'btn-danger' : 'btn-outline');
-  if(STATE.driverOnline){ toast('You are now online and accepting rides!', 'success'); pollForRideRequests(); }
-  else { toast('You are now offline.', 'warning'); clearInterval(_driverRequestPoller); }
-  updateDriverUI();
-}
+// NOTE: toggleDriverMode is defined once, further below, as
+// window.toggleDriverMode. A second, identically-named plain
+// function used to live here too — same disease as the earlier
+// duplicate login/register functions this session already removed:
+// whichever definition runs LAST in document order silently wins,
+// so this one was always dead regardless of what it did. Removed
+// rather than left as a confusing, unreachable second copy.
 
 let _driverRequestPoller = null;
 // Requests a driver has explicitly passed on, persisted so a
@@ -2891,12 +2867,20 @@ loadDriverRecentTrips();
 
 }catch(e){
 
-console.log(
-"Driver backend unavailable"
-);
+// BUG FIX: this used to only console.log and stop — leaving
+// STATE.driverOnline true and the button still reading "🔴 Go
+// offline" even though the request never actually reached the
+// server. The driver would sit there believing they're live and
+// waiting for ride requests that could never arrive, with nothing
+// on screen telling them otherwise. Now a network failure reverts
+// the UI back to offline and says so.
+console.log("Driver backend unavailable", e);
+STATE.driverOnline = false;
+btn.textContent = "🚗 Go online";
+btn.className = "btn btn-sm btn-outline";
+toast("Could not reach server — still offline, try again", "error");
 
 }
-
 
 }else{
 
@@ -2913,6 +2897,12 @@ localStorage.getItem(
 );
 
 
+// BUG FIX: this fired the offline request and never checked
+// whether it actually succeeded — the UI always said "Driver
+// offline" regardless. Now a failure at least warns that the
+// server might still show this driver as online (so new ride
+// requests could still route to them), instead of asserting
+// offline unconditionally.
 fetch(
 "/api/drivers/offline",
 {
@@ -2924,7 +2914,13 @@ body:JSON.stringify({
 id
 })
 }
-);
+).then(r => r.json()).then(data => {
+  if(!data.success){
+    toast(data.error || "Server may still show you as online — try again", "warning");
+  }
+}).catch(() => {
+  toast("Could not confirm offline with server — try again if you keep getting requests", "warning");
+});
 
 
 clearInterval(_driverRequestPoller);
