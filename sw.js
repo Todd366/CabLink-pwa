@@ -48,12 +48,19 @@ self.addEventListener('push', function(e) {
   try { data = e.data ? e.data.json() : {}; } catch (err) {}
 
   const title = data.title || 'CabLink';
+  // NOTE: this used to reference '/icons/icon-192.png' for both icon
+  // and badge — no icons/ folder exists anywhere in this repo, so
+  // that was a silently-broken path (browsers just fall back to a
+  // generic icon when this happens, no visible error). There is
+  // currently no real app icon asset anywhere in the project —
+  // manifest.json's icons are placeholder.com images, not a real
+  // logo. Removed the broken reference rather than invent another
+  // placeholder path; add real icon files and restore these two
+  // properties once real brand assets exist.
   const options = {
     body: data.body || '',
     tag: data.tag || 'cablink',
-    data: data.data || {},
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-192.png'
+    data: data.data || {}
   };
 
   e.waitUntil(self.registration.showNotification(title, options));
