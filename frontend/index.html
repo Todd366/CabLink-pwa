@@ -3065,78 +3065,16 @@ CABLINK_LIVE_DRIVER_BRIDGE,
 
 
 <script>
-
-async function submitDriverApplication(){
-
-const data={
-
-name:
-document.getElementById("driverName").value,
-
-phone:
-document.getElementById("driverPhone").value,
-
-license:
-document.getElementById("driverLicense").value,
-
-vehicle:
-document.getElementById("driverVehicle").value,
-
-registration:
-document.getElementById("driverReg").value
-
-};
-
-
-try{
-
-const r =
-await fetch('/api/drivers/apply',{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify(data)
-});
-
-
-const result=await r.json();
-
-
-alert(
-"🚕 Driver application submitted"
-);
-
-
-console.log(result);
-
-
-}catch(e){
-
-console.error(e);
-
-alert(
-"Driver application failed"
-);
-
-}
-
-}
-
-
-function openDriverApplication(){
-
-const modal=
-document.getElementById(
-"driverApplyModal"
-);
-
-if(modal)
-modal.style.display="flex";
-
-}
-
-
+// This script block used to contain a dead, second implementation
+// of submitDriverApplication() (referencing DOM ids — driverName,
+// driverPhone, driverLicense, driverVehicle, driverReg — that don't
+// exist in the actual apply modal, which uses apply-name/apply-phone/
+// apply-license/apply-vehicle instead) plus an openDriverApplication()
+// that was never called from anywhere. Same disease as the other
+// duplicate-function bugs fixed this session: a later, correctly-
+// wired window.submitDriverApplication (further down, using the
+// real ids) always won, making this entire block permanently dead.
+// Removed rather than left as a confusing second copy.
 </script>
 
 
