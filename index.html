@@ -1743,12 +1743,26 @@ function updateFareBreakdown(){
   document.getElementById('fb-total').textContent = total + ' BWP';
   document.getElementById('sm-normal').textContent = breakdown.total + ' BWP';
   document.getElementById('sm-surge').textContent = (breakdown.total+surgeAdd) + ' BWP';
-  // update the live price shown on each ride-type card
+  // BUG FIX: this used to only update the visible price TEXT on each
+  // card, never the underlying data-fare attribute selectRideType()
+  // reads from — so once a real, distance-based fare was calculated,
+  // the number shown on screen and the number actually booked could
+  // permanently diverge. Since "Standard" starts pre-selected and
+  // most people never re-tap an already-active card, STATE.selectedFare
+  // would silently stay stuck at the static default (20) forever,
+  // while the passenger saw and agreed to a real fare like 32 — the
+  // driver then received a request quoting a different price than
+  // what the passenger was actually charged. Now both the DOM
+  // attribute (for future taps) and the live STATE value for
+  // whichever card is currently selected are kept in sync here,
+  // every time the real fare is recalculated.
   document.querySelectorAll('.ride-type-card').forEach(card => {
     const t = card.dataset.type;
     const b = calcRealFare(t, distanceKm);
+    card.dataset.fare = b.total;
     const priceEl = card.querySelector('.price');
     if(priceEl) priceEl.textContent = b.total + ' BWP';
+    if(t === STATE.selectedRideType) STATE.selectedFare = b.total;
   });
 }
 function addStop(){
