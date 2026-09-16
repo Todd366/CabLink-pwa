@@ -338,9 +338,73 @@ async function createRewardForCompletedRide(
 }
 
 
+// Real referral bonus — 0.2 THB credited to whoever referred this
+// rider, triggered once, on the referred rider's first completed
+// ride (see ride_completion_service.js). Follows the exact same
+// wallet-resolution and on-chain-transfer path as a normal ride
+// reward above, rather than a lesser/fake version — a referral
+// bonus should be just as real as any other reward.
+async function createReferralBonus({ referrerId, referredAccountId }) {
+
+    if (!referrerId || !referredAccountId) {
+        return { success: false, status: "INVALID_REQUEST" };
+    }
+
+    const ledger = await loadLedger();
+
+    const alreadyPaid = ledger.transactions.find(
+        t => t && t.type === "REFERRAL_BONUS" && String(t.referredAccountId) === String(referredAccountId)
+    );
+
+    if (alreadyPaid) {
+        return { success: true, status: "ALREADY_PAID", created: false, bonus: alreadyPaid };
+    }
+
+    const amount = 0.2;
+
+    const bonus = {
+        id: "TX-" + Date.now(),
+        type: "REFERRAL_BONUS",
+        referrerId,
+        referredAccountId,
+        amount,
+        status: "PENDING_TRANSFER",
+        wallet: await canonicalWalletResolver.resolveWallet(referrerId)
+    };
+
+    ledger.transactions.push(bonus);
+    await saveLedger(ledger);
+
+    let executionResult = { status: "SKIPPED", reason: "No wallet resolved for referrer" };
+
+    if (bonus.wallet) {
+        try {
+            executionResult = await thbExecutor.executeTransfer({ wallet: bonus.wallet, amount });
+        } catch (error) {
+            executionResult = { status: "FAILED", reason: error.message || "Unknown executor error" };
+        }
+    }
+
+    bonus.status = executionResult.status;
+    bonus.txHash = executionResult.hash || null;
+    bonus.executionReason = executionResult.reason || null;
+
+    const persisted = await loadLedger();
+    const persistedTx = persisted.transactions.find(t => t.id === bonus.id);
+    if (persistedTx) {
+        persistedTx.status = bonus.status;
+        persistedTx.txHash = bonus.txHash;
+        persistedTx.executionReason = bonus.executionReason;
+    }
+    await saveLedger(persisted);
+
+    return { success: true, status: "BONUS_CREATED", created: true, bonus };
+}
+
 module.exports = {
 
     createRewardForCompletedRide,
+    createReferralBonus,
 
     getRewardForRide
 

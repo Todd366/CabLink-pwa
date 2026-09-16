@@ -27,7 +27,12 @@ router.get("/auth/me", async (req, res) => {
             return res.status(401).json({ success: false, error: "Not logged in" });
         }
 
-        res.json({ success: true, account });
+        // Real referral counts — computed from actual accounts that
+        // registered with this account's code, not a local counter
+        // nothing ever incremented.
+        const referralStats = await auth.getReferralStats(account.id);
+
+        res.json({ success: true, account: { ...account, referralStats } });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }

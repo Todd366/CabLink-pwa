@@ -186,11 +186,32 @@ function publicAccount(account) {
     return safe;
 }
 
+// Short, human-shareable referral code — not cryptographically
+// sensitive (it's meant to be given out), so a short alphanumeric
+// string is fine. Checked against existing accounts for uniqueness
+// rather than trusting randomness alone, since collisions would
+// silently misattribute referrals to the wrong person.
+function generateReferralCode(existingAccounts) {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I ambiguity
+    for (let attempt = 0; attempt < 20; attempt++) {
+        let code = "";
+        for (let i = 0; i < 6; i++) {
+            code += chars[Math.floor(Math.random() * chars.length)];
+        }
+        if (!existingAccounts.some(a => a.referralCode === code)) {
+            return code;
+        }
+    }
+    // Astronomically unlikely to ever reach this, but fall back to
+    // something still unique rather than loop forever.
+    return "R" + Date.now().toString(36).toUpperCase();
+}
+
 // ------------------------------------------------------------
 // PUBLIC API
 // ------------------------------------------------------------
 
-async function register({ phone, pin, name }) {
+async function register({ phone, pin, name, referralCode }) {
     phone = normalizePhone(phone);
 
     if (!phone || !isValidBotswanaPhone(phone)) {
@@ -210,6 +231,10 @@ async function register({ phone, pin, name }) {
         existing.pinHash = hashPin(pin, salt);
         existing.passwordless = false;
         if (name) existing.name = name;
+        // Backfill for accounts created before referral codes existed
+        // (e.g. via findOrCreateAccountByPhone during a driver
+        // application, before this account ever formally registered).
+        if (!existing.referralCode) existing.referralCode = generateReferralCode(accounts);
         existing.updatedAt = new Date().toISOString();
         await saveAccount(existing);
         return publicAccount(existing);
@@ -221,6 +246,18 @@ async function register({ phone, pin, name }) {
 
     const salt = crypto.randomBytes(16).toString("hex");
 
+    // A referral only attributes on genuine first registration — not
+    // on the passwordless-conversion path above, since that account
+    // already existed (e.g. from a driver application) before this
+    // registration attempt.
+    let referredBy = null;
+    if (referralCode) {
+        const referrer = accounts.find(
+            a => a.referralCode && a.referralCode.toUpperCase() === String(referralCode).trim().toUpperCase()
+        );
+        if (referrer) referredBy = referrer.id;
+    }
+
     const account = {
         id: "ACC-" + Date.now() + "-" + Math.floor(Math.random() * 10000),
         phone,
@@ -230,6 +267,13 @@ async function register({ phone, pin, name }) {
         pinHash: hashPin(pin, salt),
         passwordless: false,
         role: "PASSENGER",
+        referralCode: generateReferralCode(accounts),
+        referredBy,
+        // Tracks whether the one-time referral bonus for THIS account's
+        // first completed ride has already been paid to whoever
+        // referred them — see ride_completion_service.js. Only
+        // meaningful when referredBy is set.
+        referralBonusPaid: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
     };
@@ -420,6 +464,33 @@ async function findOrCreateAccountByPhone({ phone, name }) {
     return publicAccount(account);
 }
 
+// Real referral count — computed by counting accounts, not a local
+// counter that only ever went up if someone remembered to increment
+// it (which nothing ever did).
+async function getReferralStats(accountId) {
+    const accounts = await loadAccounts();
+    const referred = accounts.filter(a => a.referredBy === accountId);
+    return {
+        totalReferred: referred.length,
+        bonusesPaid: referred.filter(a => a.referralBonusPaid).length
+    };
+}
+
+// Marks that the one-time referral bonus for this account's first
+// completed ride has been paid out to whoever referred them — see
+// ride_completion_service.js, which calls this right after crediting
+// the referrer, so the check-then-pay is never repeated for the
+// same person.
+async function markReferralBonusPaid(accountId) {
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === accountId);
+    if (!account) return null;
+    account.referralBonusPaid = true;
+    account.updatedAt = new Date().toISOString();
+    await saveAccount(account);
+    return publicAccount(account);
+}
+
 module.exports = {
     register,
     login,
@@ -431,5 +502,7 @@ module.exports = {
     changePin,
     allAccounts,
     findOrCreateAccountByPhone,
-    isValidBotswanaPhone
+    isValidBotswanaPhone,
+    getReferralStats,
+    markReferralBonusPaid
 };

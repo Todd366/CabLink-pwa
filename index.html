@@ -299,6 +299,12 @@ h1,h2,h3,.disp{font-family:var(--disp)}
           border:1px solid var(--hair2);background:transparent;color:var(--text);">🚖 Drive</button>
       </div>
     </div>
+    <div id="gateReferralWrap" style="display:none;margin-bottom:16px;">
+      <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Referral code (optional)</label>
+      <input id="gate-referral" type="text" placeholder="e.g. K7M2QX" autocomplete="off"
+        style="width:100%;background:var(--surface);border:1px solid var(--hair2);color:var(--text);
+        padding:12px;border-radius:var(--r-sm);font-size:15px;box-sizing:border-box;text-transform:uppercase;">
+    </div>
     <div style="margin-bottom:16px;">
       <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">PIN</label>
       <input id="gate-pin" type="password" inputmode="numeric" placeholder="••••" autocomplete="current-password"
@@ -1444,7 +1450,19 @@ async function bookRide(){
     paymentMethod: STATE.selectedPaymentMethod || 'cash',
     stops: STATE.stops.map(s => s.value).filter(v => v && v.trim()),
     passengerId: (clAccount && clAccount.id) || STATE.anonPassengerId || (STATE.anonPassengerId = 'ANON-' + Date.now()),
-    passengerName: (clAccount && clAccount.name) || 'Passenger'
+    passengerName: (clAccount && clAccount.name) || 'Passenger',
+    // BUG FIX: the backend's real ride-ownership field is
+    // passengerAccountId — used by GET /api/rides/mine (the actual
+    // query behind "My Rides" in Profile) to find rides belonging to
+    // the logged-in account. This was never sent, so every ride ever
+    // booked through the real booking flow was permanently orphaned
+    // from the passenger's account — "My Rides" would stay empty
+    // forever regardless of how many rides were actually taken,
+    // even though the ride itself completed normally. `passenger`/
+    // `passengerId` below are a separate, older field that some
+    // other code paths read — kept as-is, not removed, since this
+    // is additive, not a replacement.
+    passengerAccountId: (clAccount && clAccount.id) || null
   };
   payload.passenger = payload.passengerId; // canonical backend field name
   subscribeToPush('passenger');
@@ -2606,11 +2624,47 @@ function updateAllUI(){
   document.getElementById('streakFill').style.width = Math.min(STATE.streak/7*100, 100)+'%';
   document.getElementById('streakLabel').textContent = STATE.streak + ' / 7 days for bonus badge';
   updateClaimButtons();
-  document.getElementById('refLink').textContent = 'cablink.io/ref/' + STATE.referralCode;
-  document.getElementById('ref-count').textContent = STATE.referrals;
-  document.getElementById('ref-thb').textContent = (STATE.referrals*0.2).toFixed(1);
+  renderReferralCard();
   updateFareBreakdown();
   renderBadges();
+}
+
+// Real referral data — pulled from the account's actual server-
+// generated code and actual referred-account count (see
+// GET /api/auth/me), replacing what used to be a random client-side
+// code and a "referrals" counter nothing ever incremented, alongside
+// a link to a domain (cablink.io) this app was never even deployed
+// at. Falls back to a logged-out placeholder rather than fake numbers.
+async function renderReferralCard(){
+  const linkEl = document.getElementById('refLink');
+  const countEl = document.getElementById('ref-count');
+  const thbEl = document.getElementById('ref-thb');
+  if(!linkEl || !countEl || !thbEl) return;
+  const token = localStorage.getItem('cl_token');
+  if(!token){
+    linkEl.textContent = 'Log in to get your referral code';
+    countEl.textContent = '0';
+    thbEl.textContent = '0.0';
+    return;
+  }
+  try{
+    const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if(!data.success || !data.account){
+      linkEl.textContent = 'Could not load referral code';
+      return;
+    }
+    const account = data.account;
+    STATE.referralCode = account.referralCode || STATE.referralCode;
+    linkEl.textContent = account.referralCode
+      ? location.origin + '?ref=' + account.referralCode
+      : 'No referral code yet';
+    const stats = account.referralStats || { totalReferred: 0, bonusesPaid: 0 };
+    countEl.textContent = stats.totalReferred;
+    thbEl.textContent = (stats.bonusesPaid * 0.2).toFixed(1);
+  }catch(e){
+    linkEl.textContent = 'Could not load referral code';
+  }
 }
 function startClock(){
   function tick(){ const now=new Date(); document.getElementById('clockTime').textContent = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0'); }
@@ -3611,11 +3665,35 @@ window.gateSetIntent = function(intent){
   drvBtn.style.cssText = base + (intent === 'driver' ? active : inactive);
 };
 
+// A referral link (see renderReferralCard) is this app's own URL
+// with ?ref=CODE. Without this, sharing that link would be purely
+// cosmetic — nothing read the query param, so a friend clicking it
+// would land on a normal login screen with no code pre-filled.
+document.addEventListener('DOMContentLoaded', function(){
+  try{
+    const params = new URLSearchParams(location.search);
+    const ref = params.get('ref');
+    if(ref){
+      const code = ref.trim().toUpperCase();
+      window.gatePendingReferral = code;
+      // Switch straight to the register form with the code already
+      // filled in — someone following a shared link almost certainly
+      // doesn't have an account yet, and re-typing a 6-character code
+      // by hand is exactly the kind of friction that makes a referral
+      // link not actually get used.
+      if(window.gateMode !== 'register') window.gateToggleMode();
+      const field = document.getElementById('gate-referral');
+      if(field) field.value = code;
+    }
+  }catch(e){}
+});
+
 window.gateToggleMode = function(){
   window.gateMode = window.gateMode === 'login' ? 'register' : 'login';
   const isRegister = window.gateMode === 'register';
   document.getElementById('gateNameWrap').style.display = isRegister ? 'block' : 'none';
   document.getElementById('gateIntentWrap').style.display = isRegister ? 'block' : 'none';
+  document.getElementById('gateReferralWrap').style.display = isRegister ? 'block' : 'none';
   document.getElementById('gateSubmitBtn').textContent = isRegister ? 'Create account' : 'Log in';
   document.getElementById('gateToggleText').textContent = isRegister ? 'Already have an account?' : 'New here?';
   document.getElementById('gateToggleLink').textContent = isRegister ? 'Log in' : 'Create an account';
@@ -3627,6 +3705,7 @@ window.gateSubmit = async function(){
   const phone = document.getElementById('gate-phone').value.trim();
   const pin = document.getElementById('gate-pin').value.trim();
   const name = document.getElementById('gate-name').value.trim();
+  const referralCode = document.getElementById('gate-referral').value.trim();
   const errorEl = document.getElementById('gateError');
   errorEl.textContent = '';
 
@@ -3642,7 +3721,7 @@ window.gateSubmit = async function(){
     if(window.gateMode === 'register'){
       const res = await fetch('/api/auth/register', {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ phone, name, pin })
+        body: JSON.stringify({ phone, name, pin, referralCode })
       });
       const data = await res.json();
       if(!data.success){ errorEl.textContent = data.error || 'Registration failed'; return; }
