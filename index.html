@@ -397,6 +397,17 @@ h1,h2,h3,.disp{font-family:var(--disp)}
     </div>
     <button class="btn btn-outline btn-sm" style="margin-bottom:10px" onclick="addStop()">＋ Add stop</button>
 
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <input type="checkbox" id="deliveryToggle" onchange="toggleDeliveryMode()"/>
+      <label for="deliveryToggle" style="font-size:12px;cursor:pointer">📦 This is a package delivery, not a ride for me</label>
+    </div>
+
+    <div id="deliveryFields" style="display:none;margin-bottom:12px">
+      <input class="input" id="deliveryItem" placeholder="What are you sending? (e.g. documents, small parcel)" style="margin-bottom:10px"/>
+      <input class="input" id="deliveryRecipientName" placeholder="Recipient's name" style="margin-bottom:10px"/>
+      <input class="input" id="deliveryRecipientPhone" placeholder="Recipient's phone" style="margin-bottom:10px"/>
+    </div>
+
     <div class="schedule-section" id="scheduleSection"><input type="datetime-local" class="input" id="scheduleTime" style="margin-bottom:10px"/></div>
 
     <div class="ride-type-grid" id="rideTypeGrid">
@@ -1453,6 +1464,18 @@ async function bookRide(){
   const dropoff = document.getElementById('dropoff').value.trim();
   if(!pickup || !dropoff){ toast('Please enter pickup and drop-off locations', 'warning'); return; }
 
+  let deliveryNotes = '';
+  if(STATE.isDelivery){
+    const item = document.getElementById('deliveryItem').value.trim();
+    const recipientName = document.getElementById('deliveryRecipientName').value.trim();
+    const recipientPhone = document.getElementById('deliveryRecipientPhone').value.trim();
+    if(!item || !recipientName || !recipientPhone){
+      toast('Please fill in what you\'re sending and the recipient\'s details', 'warning');
+      return;
+    }
+    deliveryNotes = 'Package: ' + item + ' — Recipient: ' + recipientName + ' (' + recipientPhone + ')';
+  }
+
   // Server is the source of truth when we can reach it and the
   // account is logged in. This replaces trusting a localStorage
   // flag that can get stuck (e.g. after a crash or a stale tab),
@@ -1496,7 +1519,13 @@ async function bookRide(){
     // `passengerId` below are a separate, older field that some
     // other code paths read — kept as-is, not removed, since this
     // is additive, not a replacement.
-    passengerAccountId: (clAccount && clAccount.id) || null
+    passengerAccountId: (clAccount && clAccount.id) || null,
+    // "Send something" — a delivery is just a ride tagged this way;
+    // see POST /api/rides' taskType handling. Only accepted as
+    // "delivery" server-side when explicitly set here, same as any
+    // other ride otherwise.
+    taskType: STATE.isDelivery ? 'delivery' : undefined,
+    notes: [deliveryNotes, document.getElementById('rideNotes')?.value.trim()].filter(Boolean).join(' · ')
   };
   payload.passenger = payload.passengerId; // canonical backend field name
   subscribeToPush('passenger');
@@ -1653,6 +1682,18 @@ function resetRideUI(keepId){
   setStatusPip(''); setStatusLabel('Enter locations to book');
   document.getElementById('chatBox').innerHTML = '';
   hideRideProgressBar();
+  // Don't leave delivery mode/fields filled in for the next booking.
+  if(STATE.isDelivery){
+    STATE.isDelivery = false;
+    const toggle = document.getElementById('deliveryToggle');
+    if(toggle) toggle.checked = false;
+    ['deliveryFields'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+    ['deliveryItem','deliveryRecipientName','deliveryRecipientPhone'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+    const pickupEl = document.getElementById('pickup'), dropoffEl = document.getElementById('dropoff'), btn = document.getElementById('bookBtn');
+    if(pickupEl) pickupEl.placeholder = 'Pickup location';
+    if(dropoffEl) dropoffEl.placeholder = 'Where to?';
+    if(btn) btn.textContent = 'Request Ride';
+  }
 }
 
 function calcRideDuration(){ return Math.min(STATE.selectedFare * 2, 90); }
@@ -1861,6 +1902,32 @@ function checkSurge(){
 function acceptSurge(){ closeModal('surgeModal'); bookRide(); }
 function toggleNego(){ STATE.negoActive = document.getElementById('negoToggle').checked; document.getElementById('negoSection').style.display = STATE.negoActive ? 'block' : 'none'; }
 
+// Lets a passenger send a package instead of booking a ride for
+// themselves — previously the only way to create a delivery was the
+// Digital Mall's server-to-server webhook (marketplace_api.js);
+// there was no "Send something" entry point inside the app at all,
+// even though the backend has fully supported delivery as a ride
+// taskType this whole time. Reuses the exact same pickup/dropoff/
+// fare/booking flow — a delivery IS a ride, just tagged differently
+// (see bookRide() and POST /api/rides' taskType handling) — rather
+// than building a second, parallel booking system.
+function toggleDeliveryMode(){
+  STATE.isDelivery = document.getElementById('deliveryToggle').checked;
+  document.getElementById('deliveryFields').style.display = STATE.isDelivery ? 'block' : 'none';
+  const pickupEl = document.getElementById('pickup');
+  const dropoffEl = document.getElementById('dropoff');
+  const btn = document.getElementById('bookBtn');
+  if(STATE.isDelivery){
+    pickupEl.placeholder = 'Collect from';
+    dropoffEl.placeholder = 'Deliver to';
+    btn.textContent = 'Send Package';
+  } else {
+    pickupEl.placeholder = 'Pickup location';
+    dropoffEl.placeholder = 'Where to?';
+    btn.textContent = 'Request Ride';
+  }
+}
+
 function selectPaymentMethod(method){
   STATE.selectedPaymentMethod = method;
   document.querySelectorAll('#paymentMethodChips .chip').forEach(chip => {
@@ -2013,8 +2080,11 @@ function renderIncomingRequest(r){
   const div = document.createElement('div');
   div.className = 'request-card pending'; div.id = 'req-' + r.id;
   const isMarketplace = r.source === 'digital_mall';
+  const isAppDelivery = !isMarketplace && r.taskType === 'delivery';
   const badge = isMarketplace
     ? `<span style="font-size:10px;font-weight:700;letter-spacing:.03em;color:var(--sapphire-l);border:1px solid var(--sapphire);border-radius:6px;padding:2px 6px;margin-right:6px">DIGITAL MALL DELIVERY</span>`
+    : isAppDelivery
+    ? `<span style="font-size:10px;font-weight:700;letter-spacing:.03em;color:var(--sapphire-l);border:1px solid var(--sapphire);border-radius:6px;padding:2px 6px;margin-right:6px">📦 DELIVERY</span>`
     : '';
   div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>${badge}<strong>${r.id}</strong></span><span style="color:var(--gold-l);font-weight:700">${r.fare||''} BWP</span></div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:8px">📍 ${r.pickup||''}${(r.stops&&r.stops.length) ? r.stops.map(s=>` → 🔹 ${s}`).join('') : ''} → 🏁 ${r.dropoff||''}</div>

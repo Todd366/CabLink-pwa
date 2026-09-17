@@ -39,7 +39,8 @@ router.post("/", async (req, res) => {
             notes,
             passenger,
             paymentMethod,
-            stops
+            stops,
+            taskType
         } = req.body || {};
 
         if (!pickup) {
@@ -73,7 +74,18 @@ router.post("/", async (req, res) => {
                 stops:
                     Array.isArray(stops) ? stops.filter(s => typeof s === "string" && s.trim()) : [],
                 passengerAccountId:
-                    callingAccount ? callingAccount.id : null
+                    callingAccount ? callingAccount.id : null,
+                // Lets a passenger book a delivery from inside the app
+                // itself, not just via the Digital Mall's server-to-
+                // server webhook (see marketplace_api.js) — same ride
+                // engine, same dispatch, same driver network, just
+                // tagged so the driver/admin UI can show it as a
+                // delivery. Only "delivery" is accepted from a
+                // passenger request; any other value is ignored so
+                // this can't be used to fake a marketplace-sourced
+                // task's source field.
+                taskType:
+                    taskType === "delivery" ? "delivery" : undefined
             });
 
         // Move ride into matching state.
