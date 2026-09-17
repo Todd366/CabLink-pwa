@@ -81,4 +81,29 @@ router.patch("/auth/pin", async (req, res) => {
     }
 });
 
+// ============================================================
+// PATCH /api/auth/wallet
+// Persists a connected wallet address to the account — the missing
+// link that made real THB rewards impossible for passengers.
+// connectWallet() on the frontend used to only keep the address in
+// local browser state; the backend had no way to know it existed,
+// so no server-side payout (referral bonus, ride-claim reward)
+// could ever find where to actually send tokens.
+// ============================================================
+router.patch("/auth/wallet", async (req, res) => {
+    try {
+        const account = await auth.accountFromRequest(req);
+
+        if (!account) {
+            return res.status(401).json({ success: false, error: "Not logged in" });
+        }
+
+        const { walletAddress } = req.body || {};
+        const updated = await auth.saveWalletAddress(account.id, walletAddress);
+        res.json({ success: true, account: updated });
+    } catch (error) {
+        res.status(400).json({ success: false, error: error.message });
+    }
+});
+
 module.exports = router;

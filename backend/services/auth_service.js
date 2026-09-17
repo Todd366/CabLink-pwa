@@ -491,6 +491,25 @@ async function markReferralBonusPaid(accountId) {
     return publicAccount(account);
 }
 
+// Persists a connected wallet address directly on the account. This
+// is what makes real THB rewards (referral bonuses, ride-claim
+// rewards) possible for a passenger at all — connectWallet() on the
+// frontend used to only ever store the address in local browser
+// state, never telling the backend, so there was no way for any
+// server-side payout to find where to actually send tokens.
+async function saveWalletAddress(accountId, walletAddress) {
+    if (!walletAddress || !/^0x[a-fA-F0-9]{40}$/.test(walletAddress)) {
+        throw new Error("Invalid wallet address");
+    }
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === accountId);
+    if (!account) return null;
+    account.walletAddress = walletAddress;
+    account.updatedAt = new Date().toISOString();
+    await saveAccount(account);
+    return publicAccount(account);
+}
+
 module.exports = {
     register,
     login,
@@ -504,5 +523,6 @@ module.exports = {
     findOrCreateAccountByPhone,
     isValidBotswanaPhone,
     getReferralStats,
-    markReferralBonusPaid
+    markReferralBonusPaid,
+    saveWalletAddress
 };

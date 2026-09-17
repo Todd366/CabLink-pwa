@@ -1160,6 +1160,18 @@ async function connectWallet(){
     document.getElementById('profile-sub').textContent = 'BSC Testnet · THoBoCoin holder';
     const greetEl = document.getElementById('greetName');
     if(greetEl) greetEl.textContent = ', ' + shortAddr(STATE.wallet);
+    // Tell the backend which address this account controls — without
+    // this, no server-side reward (referral bonus, ride-claim reward)
+    // has any way to know where to actually send THB. This used to
+    // only ever live in local browser state.
+    const token = localStorage.getItem('cl_token');
+    if(token){
+      fetch('/api/auth/wallet', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ walletAddress: STATE.wallet })
+      }).catch(() => {});
+    }
   }catch(e){ toast('Could not connect: ' + (e.message || 'User rejected'), 'error'); }
 }
 async function updateWalletUI(){
@@ -1230,31 +1242,53 @@ async function claimReward(){
     return;
   }
   if(STATE.chainId !== BSC_TESTNET){ toast('Switch to BSC Testnet first!', 'error'); switchToBSC(); return; }
+  const token = localStorage.getItem('cl_token');
+  if(!token){ toast('Log in to claim a real reward', 'warning'); return; }
+  if(!STATE.rideId){ toast('No completed ride to claim for', 'warning'); return; }
   const btn = document.getElementById('claimBtn'), btn2 = document.getElementById('r-claimBtn');
-  [btn,btn2].forEach(b => { b.disabled = true; b.textContent = '⏳ Sending tx…'; });
+  [btn,btn2].forEach(b => { b.disabled = true; b.textContent = '⏳ Claiming…'; });
   addPendingTx({status:'pending', label:'Claim 1 THB reward', time:Date.now()});
+  // BUG FIX: this used to call contract.transfer(STATE.wallet, amount)
+  // directly from the connected wallet's OWN signer — standard ERC20
+  // transfer() moves tokens OUT of the caller's balance, so that was
+  // the passenger sending THB to themselves, not receiving a reward.
+  // It could only fail ("insufficient balance", for anyone who'd
+  // never gotten THB before — i.e. everyone this button targets) or
+  // be a pointless no-op for someone who already had a balance. Now
+  // this calls the real backend, which sends the reward from the
+  // treasury wallet — the same mechanism already used for driver
+  // ride-completion rewards and referral bonuses.
   try{
-    const contract = new ethers.Contract(THB_CONTRACT, THB_ABI, STATE.signer);
-    const dec = await contract.decimals();
-    const amount = ethers.parseUnits('1', dec);
-    const tx = await contract.transfer(STATE.wallet, amount);
-    updateLastTx({status:'pending', hash:tx.hash, label:'Claim 1 THB'});
-    toast('Transaction sent! Waiting for confirmation…', 'success');
-    await tx.wait();
-    updateLastTx({status:'confirmed', hash:tx.hash, label:'Claim 1 THB ✓'});
+    const res = await fetch('/api/rewards/claim-ride', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ rideId: STATE.rideId })
+    });
+    const data = await res.json();
+    if(!data.success){
+      const msg = data.status === 'NO_WALLET' ? 'Connect a wallet first'
+        : data.status === 'RIDE_NOT_ELIGIBLE' ? 'This ride isn\'t eligible to claim'
+        : data.error || 'Claim failed';
+      updateLastTx({status:'failed', label:'Claim 1 THB ✗'});
+      toast(msg, 'error');
+      [btn,btn2].forEach(b => { b.disabled = false; b.textContent = '🔄 Retry claim'; });
+      return;
+    }
+    const claim = data.claim;
+    updateLastTx({status: claim.txHash ? 'confirmed' : 'pending', hash: claim.txHash, label:'Claim 1 THB ✓'});
     STATE.totalEarned += 1;
     STATE.thbBalance = (parseFloat(STATE.thbBalance) + 1).toFixed(2);
     STATE.rideReady = false;
     saveState(); updateAllUI(); showConfetti(); haptic(); playSound();
-    toast('🎉 1 THB claimed successfully!', 'success');
+    if(claim.status === 'SIMULATION'){
+      toast('🎉 Claimed — treasury wallet not yet configured, recorded but not on-chain', 'success');
+    } else {
+      toast('🎉 1 THB claimed successfully!', 'success');
+    }
     [btn,btn2].forEach(b => b.textContent = '✓ Claimed!');
   }catch(e){
     updateLastTx({status:'failed', label:'Claim 1 THB ✗'});
-    let msg = e?.reason || e?.shortMessage || e?.message || 'Unknown error';
-    if(msg.includes('insufficient')||msg.includes('balance')) msg = 'Treasury has insufficient THB. Contact support.';
-    if(msg.includes('rejected')||msg.includes('denied')) msg = 'Transaction rejected by user.';
-    if(msg.includes('network')||msg.includes('chain')) msg = 'Wrong network — switch to BSC Testnet.';
-    toast('Claim failed: ' + msg, 'error');
+    toast('Could not reach server — try again', 'error');
     [btn,btn2].forEach(b => { b.disabled = false; b.textContent = '🔄 Retry claim'; });
   }
 }

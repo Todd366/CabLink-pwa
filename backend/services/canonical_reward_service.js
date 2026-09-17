@@ -1,5 +1,6 @@
 const canonicalWalletResolver = require("../rewards/canonical_wallet_resolver");
 const thbExecutor = require("../blockchain/thb_real_executor");
+const auth = require("./auth_service");
 const fs = require("fs");
 const path = require("path");
 
@@ -338,6 +339,22 @@ async function createRewardForCompletedRide(
 }
 
 
+// Prefers the real wallet address saved directly on an account
+// (via PATCH /api/auth/wallet) over the driver-only resolver below,
+// since most accounts that need a wallet resolved here — passengers
+// referring friends, passengers claiming ride rewards — aren't in
+// the driver-specific data files canonicalWalletResolver reads from
+// at all.
+async function resolveWalletForAccount(accountId) {
+    try {
+        const account = await auth.getAccountById(accountId);
+        if (account && account.walletAddress) return account.walletAddress;
+    } catch (error) {
+        // fall through to the driver resolver below
+    }
+    return canonicalWalletResolver.resolveWallet(accountId);
+}
+
 // Real referral bonus — 0.2 THB credited to whoever referred this
 // rider, triggered once, on the referred rider's first completed
 // ride (see ride_completion_service.js). Follows the exact same
@@ -369,7 +386,13 @@ async function createReferralBonus({ referrerId, referredAccountId }) {
         referredAccountId,
         amount,
         status: "PENDING_TRANSFER",
-        wallet: await canonicalWalletResolver.resolveWallet(referrerId)
+        // A passenger's real wallet address (saved via PATCH
+        // /api/auth/wallet when they connect MetaMask) is the
+        // correct source here. canonicalWalletResolver only checks
+        // driver-specific data files, so it's kept only as a
+        // fallback for a referrer who happens to also be a driver
+        // with a wallet resolvable that way — not the primary path.
+        wallet: await resolveWalletForAccount(referrerId)
     };
 
     ledger.transactions.push(bonus);
@@ -401,10 +424,92 @@ async function createReferralBonus({ referrerId, referredAccountId }) {
     return { success: true, status: "BONUS_CREATED", created: true, bonus };
 }
 
+// Real per-ride passenger reward — the actual backend behind the
+// "Claim 1 THB reward" button on the passenger's Rewards screen.
+// Previously that button called contract.transfer() directly from
+// the PASSENGER's OWN connected wallet — standard ERC20 transfer()
+// moves tokens OUT of the caller's balance, so that was the
+// passenger sending THB to themselves, not receiving anything. It
+// could only ever fail (insufficient balance, for anyone who'd never
+// gotten THB before — which is everyone this button targets) or be a
+// pointless no-op. This is the real version: the treasury wallet
+// (held server-side, see thb_real_executor.js) sends the token,
+// exactly like a driver's ride-completion reward or a referral bonus
+// above — not a fundamentally-broken client-side self-transfer.
+async function createRideClaimReward({ rideId, passengerAccountId }) {
+
+    if (!rideId || !passengerAccountId) {
+        return { success: false, status: "INVALID_REQUEST" };
+    }
+
+    const ride = await rideRepository.findById(rideId);
+
+    if (!ride || ride.status !== "COMPLETED") {
+        return { success: false, status: "RIDE_NOT_ELIGIBLE" };
+    }
+
+    if (ride.passengerAccountId !== passengerAccountId) {
+        return { success: false, status: "NOT_YOUR_RIDE" };
+    }
+
+    const ledger = await loadLedger();
+
+    const alreadyClaimed = ledger.transactions.find(
+        t => t && t.type === "RIDE_CLAIM" && t.rideId === rideId
+    );
+
+    if (alreadyClaimed) {
+        return { success: true, status: "ALREADY_CLAIMED", created: false, claim: alreadyClaimed };
+    }
+
+    const amount = 1;
+
+    const claim = {
+        id: "TX-" + Date.now(),
+        type: "RIDE_CLAIM",
+        rideId,
+        passengerAccountId,
+        amount,
+        status: "PENDING_TRANSFER",
+        wallet: await resolveWalletForAccount(passengerAccountId)
+    };
+
+    if (!claim.wallet) {
+        return { success: false, status: "NO_WALLET", error: "Connect a wallet before claiming" };
+    }
+
+    ledger.transactions.push(claim);
+    await saveLedger(ledger);
+
+    let executionResult = { status: "SKIPPED", reason: "No wallet resolved" };
+
+    try {
+        executionResult = await thbExecutor.executeTransfer({ wallet: claim.wallet, amount });
+    } catch (error) {
+        executionResult = { status: "FAILED", reason: error.message || "Unknown executor error" };
+    }
+
+    claim.status = executionResult.status;
+    claim.txHash = executionResult.hash || null;
+    claim.executionReason = executionResult.reason || null;
+
+    const persisted = await loadLedger();
+    const persistedTx = persisted.transactions.find(t => t.id === claim.id);
+    if (persistedTx) {
+        persistedTx.status = claim.status;
+        persistedTx.txHash = claim.txHash;
+        persistedTx.executionReason = claim.executionReason;
+    }
+    await saveLedger(persisted);
+
+    return { success: true, status: "CLAIM_CREATED", created: true, claim };
+}
+
 module.exports = {
 
     createRewardForCompletedRide,
     createReferralBonus,
+    createRideClaimReward,
 
     getRewardForRide
 

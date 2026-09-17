@@ -4,6 +4,9 @@ const router =
 const rewardService =
     require("../services/canonical_reward_service");
 
+const auth =
+    require("../services/auth_service");
+
 
 /*
  * POST /api/rewards/ride/:rideId
@@ -136,3 +139,46 @@ router.post(
 
 module.exports =
     router;
+
+// ============================================================
+// POST /api/rewards/claim-ride
+//
+// Real backend for the passenger "Claim 1 THB reward" button —
+// see createRideClaimReward in canonical_reward_service.js for why
+// the previous client-side contract.transfer() call could never
+// actually work. Requires a valid session; the passenger's account
+// is taken from the token, never trusted from the request body, so
+// nobody can claim a reward on someone else's ride.
+// ============================================================
+router.post("/claim-ride", async (req, res) => {
+    try {
+        const account = await auth.accountFromRequest(req);
+
+        if (!account) {
+            return res.status(401).json({ success: false, error: "Not logged in" });
+        }
+
+        const { rideId } = req.body || {};
+
+        if (!rideId) {
+            return res.status(400).json({ success: false, error: "rideId is required" });
+        }
+
+        const result = await rewardService.createRideClaimReward({
+            rideId,
+            passengerAccountId: account.id
+        });
+
+        if (!result.success) {
+            const statusCode = result.status === "NOT_YOUR_RIDE" ? 403
+                : result.status === "RIDE_NOT_ELIGIBLE" ? 409
+                : 400;
+            return res.status(statusCode).json(result);
+        }
+
+        res.json(result);
+    } catch (error) {
+        console.error("❌ Ride claim error:", error);
+        res.status(500).json({ success: false, error: "Failed to process claim" });
+    }
+});
