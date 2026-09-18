@@ -14,18 +14,33 @@
 const router = require("express").Router();
 const vehicles = require("../services/vehicle_service");
 const auth = require("../services/auth_service");
+const rateLimiter = require("../services/rate_limiter_service");
 
 const ADMIN_KEY = process.env.ADMIN_KEY || "cablink-admin-dev-key";
 
 async function requireAdmin(req, res, next) {
-    if (req.headers["x-admin-key"] === ADMIN_KEY) {
-        return next();
-    }
-
+    // Session-token path first — never rate-limited, since a valid
+    // Bearer token isn't a guessable secret and a legitimate admin
+    // making many requests in a session shouldn't get throttled.
     const account = await auth.accountFromRequest(req);
 
     if (account && account.role === "ADMIN") {
         req.adminAccount = account;
+        return next();
+    }
+
+    // Only the x-admin-key path is actually guessable — one static
+    // shared secret with no other protection.
+    const limit = await rateLimiter.checkAndRecord({
+        key: "admin-key:" + req.ip,
+        maxAttempts: 10,
+        windowMs: 15 * 60 * 1000
+    });
+    if (!limit.allowed) {
+        return res.status(429).json({ success: false, error: "Too many attempts — try again later" });
+    }
+
+    if (req.headers["x-admin-key"] === ADMIN_KEY) {
         return next();
     }
 

@@ -3,6 +3,12 @@ const cors = require("cors");
 
 const app = express();
 
+// Required for req.ip to reflect the real client address rather than
+// Vercel's proxy — without this, every request looks like it comes
+// from the same internal IP, which would make any IP-based rate
+// limiting (see rate_limiter_service.js) completely meaningless.
+app.set("trust proxy", true);
+
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 

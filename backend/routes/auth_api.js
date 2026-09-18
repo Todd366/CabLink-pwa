@@ -1,8 +1,25 @@
 const router = require("express").Router();
 const auth = require("../services/auth_service");
+const rateLimiter = require("../services/rate_limiter_service");
 
 router.post("/auth/register", async (req, res) => {
     try {
+        // Cheap to spam otherwise — 10 accounts per phone number per
+        // hour is generous for a real user, restrictive for a script.
+        const phone = String((req.body || {}).phone || "").trim();
+        if (phone) {
+            const limit = await rateLimiter.checkAndRecord({
+                key: "register:" + phone,
+                maxAttempts: 10,
+                windowMs: 60 * 60 * 1000
+            });
+            if (!limit.allowed) {
+                return res.status(429).json({
+                    success: false,
+                    error: "Too many attempts — try again in " + limit.retryAfterSeconds + " seconds"
+                });
+            }
+        }
         const account = await auth.register(req.body || {});
         res.json({ success: true, account });
     } catch (error) {
@@ -12,6 +29,25 @@ router.post("/auth/register", async (req, res) => {
 
 router.post("/auth/login", async (req, res) => {
     try {
+        // A PIN can be as short as 4 digits — 10,000 combinations,
+        // trivially brute-forceable with no protection at all. 5
+        // attempts per 15 minutes per phone number is enough for a
+        // real person who fat-fingered their PIN twice, nowhere near
+        // enough to brute-force it.
+        const phone = String((req.body || {}).phone || "").trim();
+        if (phone) {
+            const limit = await rateLimiter.checkAndRecord({
+                key: "login:" + phone,
+                maxAttempts: 5,
+                windowMs: 15 * 60 * 1000
+            });
+            if (!limit.allowed) {
+                return res.status(429).json({
+                    success: false,
+                    error: "Too many attempts — try again in " + limit.retryAfterSeconds + " seconds"
+                });
+            }
+        }
         const result = await auth.login(req.body || {});
         res.json({ success: true, ...result });
     } catch (error) {

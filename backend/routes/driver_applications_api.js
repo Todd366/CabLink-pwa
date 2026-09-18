@@ -10,6 +10,7 @@
 const router = require("express").Router();
 const applications = require("../services/driver_application_service");
 const auth = require("../services/auth_service");
+const rateLimiter = require("../services/rate_limiter_service");
 
 const ADMIN_KEY = process.env.ADMIN_KEY || "cablink-admin-dev-key";
 
@@ -21,13 +22,30 @@ const ADMIN_KEY = process.env.ADMIN_KEY || "cablink-admin-dev-key";
 // (using the same login every other screen uses) instead of a
 // separate page with a typed-in key as the only option.
 async function requireAdmin(req, res, next) {
-    if (req.headers["x-admin-key"] === ADMIN_KEY) {
-        return next();
-    }
-
+    // Check the session-token path first — a valid Bearer token
+    // isn't a short guessable secret (logging in to get one is
+    // already rate-limited separately), so a legitimate admin
+    // making many requests in a session should never be throttled
+    // here.
     const account = await auth.accountFromRequest(req);
 
     if (account && account.role === "ADMIN") {
+        return next();
+    }
+
+    // Only the x-admin-key path is actually guessable — one static
+    // shared secret with no other protection — so only requests
+    // relying on it get rate-limited.
+    const limit = await rateLimiter.checkAndRecord({
+        key: "admin-key:" + req.ip,
+        maxAttempts: 10,
+        windowMs: 15 * 60 * 1000
+    });
+    if (!limit.allowed) {
+        return res.status(429).json({ success: false, error: "Too many attempts — try again later" });
+    }
+
+    if (req.headers["x-admin-key"] === ADMIN_KEY) {
         return next();
     }
 
@@ -111,6 +129,19 @@ router.get("/admin/accounts", requireAdmin, async (req, res) => {
 // above, no key needed day to day.
 router.post("/admin/bootstrap", async (req, res) => {
     try {
+        // This endpoint always requires the raw key by design (see
+        // comment above) — meaning it's always the guessable-secret
+        // path, never the session-token exception the other
+        // requireAdmin checks make for it.
+        const limit = await rateLimiter.checkAndRecord({
+            key: "admin-key:" + req.ip,
+            maxAttempts: 10,
+            windowMs: 15 * 60 * 1000
+        });
+        if (!limit.allowed) {
+            return res.status(429).json({ success: false, error: "Too many attempts — try again later" });
+        }
+
         if (req.headers["x-admin-key"] !== ADMIN_KEY) {
             return res.status(401).json({ success: false, error: "Admin key required" });
         }

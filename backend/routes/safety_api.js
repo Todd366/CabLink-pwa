@@ -2,15 +2,27 @@ const router = require("express").Router();
 const incidents = require("../services/incident_service");
 const auth = require("../services/auth_service");
 const events = require("../services/event_service");
+const rateLimiter = require("../services/rate_limiter_service");
 
 const ADMIN_KEY = process.env.ADMIN_KEY || "cablink-admin-dev-key";
 
 async function requireAdmin(req, res, next) {
-    if (req.headers["x-admin-key"] === ADMIN_KEY) {
-        return next();
-    }
+    // Session-token path first — never rate-limited (see
+    // vehicles_api.js / driver_applications_api.js for the same
+    // pattern and reasoning).
     const account = await auth.accountFromRequest(req);
     if (account && account.role === "ADMIN") {
+        return next();
+    }
+    const limit = await rateLimiter.checkAndRecord({
+        key: "admin-key:" + req.ip,
+        maxAttempts: 10,
+        windowMs: 15 * 60 * 1000
+    });
+    if (!limit.allowed) {
+        return res.status(429).json({ success: false, error: "Too many attempts — try again later" });
+    }
+    if (req.headers["x-admin-key"] === ADMIN_KEY) {
         return next();
     }
     return res.status(401).json({ success: false, error: "Admin access required" });
