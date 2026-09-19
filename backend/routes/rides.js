@@ -43,18 +43,68 @@ router.post("/", async (req, res) => {
             taskType
         } = req.body || {};
 
-        if (!pickup) {
+        if (typeof pickup !== "string" || !pickup.trim()) {
             return res.status(400).json({
                 success: false,
                 error: "Pickup location is required"
             });
         }
 
-        if (!dropoff) {
+        if (pickup.length > 300) {
+            return res.status(400).json({
+                success: false,
+                error: "Pickup location is too long"
+            });
+        }
+
+        if (typeof dropoff !== "string" || !dropoff.trim()) {
             return res.status(400).json({
                 success: false,
                 error: "Drop-off location is required"
             });
+        }
+
+        if (dropoff.length > 300) {
+            return res.status(400).json({
+                success: false,
+                error: "Drop-off location is too long"
+            });
+        }
+
+        // fare arrives as a client-calculated estimate (see
+        // updateFareBreakdown() on the frontend) — trusted for the
+        // amount itself, since the real charge is cash/mobile-money
+        // collected by the driver, not processed through this API.
+        // But nothing previously checked it was even a sane number:
+        // a negative fare would pass straight through, since
+        // ride_engine.js's own fallback (Number(data.fare) || 20)
+        // only catches falsy values, and a negative number is
+        // truthy. A negative fare here would flow into the driver's
+        // reward calculation (a percentage of fare) and could send a
+        // negative amount toward a real token transfer.
+        if (fare !== undefined && fare !== null) {
+            const fareNum = Number(fare);
+            if (!Number.isFinite(fareNum) || fareNum < 0 || fareNum > 5000) {
+                return res.status(400).json({
+                    success: false,
+                    error: "Fare must be a reasonable positive amount"
+                });
+            }
+        }
+
+        if (notes !== undefined && notes !== null) {
+            if (typeof notes !== "string") {
+                return res.status(400).json({
+                    success: false,
+                    error: "Notes must be text"
+                });
+            }
+            if (notes.length > 500) {
+                return res.status(400).json({
+                    success: false,
+                    error: "Notes are too long"
+                });
+            }
         }
 
         const callingAccount =

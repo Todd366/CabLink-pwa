@@ -121,6 +121,22 @@ async function apply({ name, phone, license, vehicle }) {
         throw new Error("Name, phone, license number, and vehicle are all required");
     }
 
+    // Same truthy-only gap as ride creation used to have — nothing
+    // stopped a huge string (or a non-string entirely) being stored
+    // as someone's name/license/vehicle. These fields end up
+    // rendered directly in the admin table (admin.html) and the
+    // driver's own "My vehicle" card, so an oversized value isn't
+    // just wasted storage, it's a real display/usability problem.
+    const fields = { name, phone, license, vehicle };
+    for (const [field, value] of Object.entries(fields)) {
+        if (typeof value !== "string") {
+            throw new Error(field + " must be text");
+        }
+        if (value.length > 200) {
+            throw new Error(field + " is too long");
+        }
+    }
+
     // Same accounts collection as real login/registration — no
     // more separate, disconnected copy of account logic here.
     const account = await auth.findOrCreateAccountByPhone({ name, phone });
