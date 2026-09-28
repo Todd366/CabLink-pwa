@@ -1565,6 +1565,26 @@ async function bookRide(){
 
 let _rideStatusPoller = null;
 let _arrivedShown = false;
+// Looks up the ride's assigned driver in the live online-drivers
+// registry (kept fresh by each driver's startLocationHeartbeat) and
+// moves the car marker to their real reported position. Fails quietly
+// if the driver can't be found (went offline, no location shared) —
+// leaving the marker where it was is better than hiding it or
+// snapping it somewhere arbitrary.
+async function updateCarMarkerFromDriver(ride){
+  if(!ride || !ride.driverAccountId || !carMarker) return;
+  try{
+    const res = await fetch('/api/drivers/online');
+    if(!res.ok) return;
+    const drivers = await res.json();
+    const list = Array.isArray(drivers) ? drivers : (drivers.drivers || []);
+    const match = list.find(d => d.id === ride.driverAccountId);
+    if(match && typeof match.lat === 'number' && typeof match.lng === 'number'){
+      carMarker.setLatLng([match.lat, match.lng]);
+    }
+  }catch(e){ /* keep polling quietly */ }
+}
+
 async function pollRideStatus(rideId){
   clearInterval(_rideStatusPoller);
   _arrivedShown = false;
@@ -1576,6 +1596,15 @@ async function pollRideStatus(rideId){
       const ride = data.ride || data;
       const status = (ride.status || '').toUpperCase();
       console.log('Ride status:', status);
+      // Move the car marker to the assigned driver's actual last
+      // reported position, for as long as the ride is active. Before
+      // this, carMarker never moved at all during a real ride — it
+      // sat wherever it was last placed (a fixed landmark on load, or
+      // the pickup point once booking started) for the entire trip,
+      // regardless of where the driver actually was.
+      if(['DRIVER_ASSIGNED','DRIVER_ARRIVED','PICKED_UP','STARTED'].includes(status)){
+        updateCarMarkerFromDriver(ride);
+      }
       // Real backend status values (see STATES in
       // backend/canonical/ride_engine.js) — this used to check for
       // 'ASSIGNED'/'ARRIVED' without the DRIVER_ prefix, which never
@@ -2924,6 +2953,39 @@ console.log(
 const originalToggleDriverMode = window.toggleDriverMode;
 
 
+// Real live GPS tracking for an online driver. Previously a driver's
+// position was only ever sent once, at the exact moment they tapped
+// "Go online" — nothing ever updated it again, so the position shown
+// to passengers went stale the instant the driver actually started
+// driving. Re-sends fresh coordinates on a timer via the same
+// POST /api/drivers/online endpoint (which already upserts), so no
+// new backend route is needed — this just calls the existing one
+// repeatedly instead of once.
+window._locationHeartbeat = null;
+function startLocationHeartbeat(driverId){
+  if(window._locationHeartbeat) clearInterval(window._locationHeartbeat);
+  if(!navigator.geolocation) return;
+  window._locationHeartbeat = setInterval(() => {
+    if(!STATE.driverOnline){ clearInterval(window._locationHeartbeat); window._locationHeartbeat = null; return; }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        fetch('/api/drivers/online', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: driverId,
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            timestamp: Date.now()
+          })
+        }).catch(() => {}); // best-effort — a missed heartbeat isn't worth alarming the driver over
+      },
+      () => {}, // silent — same reasoning, this is a background refresh not a user action
+      { timeout: 8000 }
+    );
+  }, 20000);
+}
+
 window.toggleDriverMode = async function(){
 
 
@@ -3043,6 +3105,7 @@ toast(
 pollForRideRequests();
 startShiftTimer();
 loadDriverRecentTrips();
+startLocationHeartbeat(driver.id);
 
 }catch(e){
 
@@ -3069,6 +3132,7 @@ btn.textContent="🚗 Go online";
 btn.className=
 "btn btn-sm btn-outline";
 
+if(window._locationHeartbeat){ clearInterval(window._locationHeartbeat); window._locationHeartbeat = null; }
 
 let id=
 localStorage.getItem(
@@ -3529,6 +3593,7 @@ return ride;
     if(!STATE.driverOnline) return;
     STATE.driverOnline = false;
     clearInterval(_driverRequestPoller);
+    if(window._locationHeartbeat){ clearInterval(window._locationHeartbeat); window._locationHeartbeat = null; }
     stopShiftTimer();
     const driverId = localStorage.getItem('cablink_driver_id');
     if(driverId){
