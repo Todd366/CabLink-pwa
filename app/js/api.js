@@ -31,7 +31,9 @@ export async function api(path, { method = "GET", body, auth = true, timeout = 1
                 throw new ApiError("Please log in again", 401);
             }
             if (!res.ok || (data && data.success === false)) {
-                throw new ApiError((data && data.error) || "Something went wrong", res.status);
+                const raw = data && data.error;
+                const msg = typeof raw === "string" ? raw : raw && (raw.message || raw.error || JSON.stringify(raw));
+                throw new ApiError(msg || "Server error (" + res.status + ")", res.status);
             }
             return data || {};
         } catch (e) {

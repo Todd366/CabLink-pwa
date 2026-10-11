@@ -89,3 +89,14 @@ export function ago(iso) {
     return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 export const dayKey = iso => new Date(iso).toISOString().slice(0, 10);
+
+export function logo(size = 36, word = true) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 48 48"); svg.setAttribute("width", size); svg.setAttribute("height", size); svg.setAttribute("aria-hidden", "true");
+    svg.innerHTML = '<rect width="48" height="48" rx="12" fill="#ffc21a"/><path d="M13 24h22" stroke="#241a00" stroke-width="3.5" stroke-linecap="round"/><circle cx="13" cy="24" r="4.5" fill="#241a00"/><rect x="30.5" y="19.5" width="9" height="9" rx="2" fill="#241a00"/>';
+    return h("span", { class: "logo" }, svg, word ? h("span", { class: "wordmark" }, "Cab", h("b", null, "Link")) : null);
+}
+export const skeleton = (n = 3) => h("div", { class: "list", "aria-busy": "true" }, Array.from({ length: n }, () => h("div", { class: "item" }, h("span", { class: "skel", style: "width:40px;height:40px;border-radius:12px" }), h("span", { class: "grow" }, h("span", { class: "skel", style: "width:60%;height:14px;display:block;margin-bottom:8px" }), h("span", { class: "skel", style: "width:35%;height:11px;display:block" })))));
+export const initials = name => String(name || "?").trim().split(/\s+/).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+export const avatar = name => h("span", { class: "avatar", "aria-hidden": "true" }, initials(name));
+export const plate = text => h("span", { class: "plate" }, String(text || "").toUpperCase());

@@ -1,4 +1,4 @@
-import { h, icon } from "../ui.js";
+import { h, icon, logo } from "../ui.js";
 import { t, LANGS } from "../i18n.js";
 import { store } from "../store.js";
 import { go, render } from "../router.js";
@@ -14,16 +14,15 @@ export function langSwitch() {
 
 export function welcome() {
     const choose = intent => { store.setIntent(intent); go("/auth/login"); };
-    const el = screen({
-        right: langSwitch(),
-        body: h("div", { class: "hero" },
-            h("div", { class: "mark" }, icon("car", 34)),
-            h("h1", null, t("welcomeTitle")),
-            h("p", { class: "muted" }, t("welcomeSub"))),
-        actions: [
+    const el = h("div", { class: "screen" },
+        h("div", { class: "panel" },
+            h("div", { style: "display:flex;justify-content:space-between;align-items:center" }, logo(36), langSwitch()),
+            h("h1", null, t("welcomeTitle")), h("p", null, t("welcomeSub")), h("div", { class: "roadline" })),
+        h("main", { class: "page" }, h("ul", { class: "trust" },
+            [["shield", "Drivers are approved by CabLink"], ["wallet", "Pay cash or mobile money"], ["pin", "Works for villages, towns and cities"], ["phone", "Light on data, works on weak signal"]]
+                .map(([ic, tx]) => h("li", null, h("span", { class: "lead" }, icon(ic)), tx)))),
+        h("div", { class: "actions" },
             h("button", { class: "btn go", onClick: () => choose("rider") }, t("getRide")),
-            h("button", { class: "btn ghost", onClick: () => choose("driver") }, t("driveWith"))
-        ]
-    });
+            h("button", { class: "btn ghost", onClick: () => choose("driver") }, t("driveWith"))));
     return { el };
 }

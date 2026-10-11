@@ -1,4 +1,4 @@
-import { h, icon, money, toast, busy, spinner, ago, dayKey } from "../ui.js";
+import { h, icon, money, toast, busy, spinner, ago, dayKey, skeleton } from "../ui.js";
 import { t } from "../i18n.js";
 import { store } from "../store.js";
 import { api, poll } from "../api.js";
@@ -148,7 +148,7 @@ export function job({ id }) {
 
 // ------------------------------------------------------------- earnings
 export async function earnings() {
-    const me = store.account, body = h("div", null, spinner());
+    const me = store.account, body = h("div", null, skeleton(4));
     const el = screen({ title: t("earnings"), body, tabs: driverTabs() });
     api("/rides/mine").then(({ rides }) => {
         const done = completedBy(rides, me).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

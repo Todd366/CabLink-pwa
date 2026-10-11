@@ -1,4 +1,4 @@
-import { h, icon, money, toast, busy, spinner, ago } from "../ui.js";
+import { h, icon, money, toast, busy, spinner, ago, logo, avatar, plate, skeleton } from "../ui.js";
 import { t } from "../i18n.js";
 import { store } from "../store.js";
 import { api, poll } from "../api.js";
@@ -20,7 +20,8 @@ export async function home() {
     const body = h("div", null);
     const el = screen({ body, tabs: riderTabs() });
     put(body, 
-        h("h1", null, t("hello", { name: (me.name || "").split(" ")[0] })),
+        h("div", { class: "brandbar", style: "padding:0 0 10px" }, logo(32)),
+        h("h1", { style: "margin-top:6px" }, t("hello", { name: (me.name || "").split(" ")[0] })),
         h("button", { class: "item", style: "background:var(--surface);border:2px solid var(--line);border-radius:18px;min-height:68px;font-size:20px;font-weight:700", onClick: () => { draft.task = "ride"; go("/rider/where/dest"); } },
             icon("search", 26), h("span", { class: "grow" }, t("whereTo"))),
         h("div", { id: "active" }));
@@ -100,7 +101,8 @@ export function trip() {
     const paint = () => {
         const km = kmNow();
         body.replaceChildren();
-        put(body, routeBlock(draft.pickup ? draft.pickup.name : t("setPickup"), placeLabel(draft.dest), () => go("/rider/where/pickup"), () => go("/rider/where/dest")));
+        put(body, routeBlock(draft.pickup ? draft.pickup.name : t("setPickup"), placeLabel(draft.dest), () => go("/rider/where/pickup"), () => go("/rider/where/dest")),
+            km != null ? h("div", { class: "rline", style: "margin-top:12px" }, h("span", { class: "a" }), h("i"), km + " " + t("km"), h("i"), h("span", { class: "b" })) : null);
         if (km == null) {
             put(body, h("h3", null, t("howFar")), h("div", { class: "chips" }, KM_CHOICES.map(k => h("button", { class: "chip", onClick: () => { draft.km = k; paint(); } }, k + " " + t("km")))));
             actions.replaceChildren();
@@ -175,8 +177,8 @@ export function ride({ id }) {
             const lvl = { DRIVER_ASSIGNED: 1, DRIVER_ARRIVED: 2, PICKED_UP: 3, STARTED: 3 }[r.status];
             put(holder, h("h1", null, head),
                 h("div", { class: "steps" }, [t("status_DRIVER_ASSIGNED"), t("status_DRIVER_ARRIVED"), t("status_STARTED")].map((s, i) => h("div", { class: i + 1 <= lvl ? "on" : "" }, s))),
-                h("div", { class: "list", style: "margin-bottom:16px" }, h("div", { class: "item" }, h("span", { class: "lead" }, icon("user")),
-                    h("span", { class: "grow" }, h("b", null, r.driverName || t("driver")), h("small", null, r.assignedVehicle ? r.assignedVehicle.makeModel + " · " + r.assignedVehicle.plate : "")))),
+                h("div", { class: "list", style: "margin-bottom:16px" }, h("div", { class: "item", style: "cursor:default" }, avatar(r.driverName),
+                    h("span", { class: "grow" }, h("b", null, r.driverName || t("driver")), h("small", null, r.assignedVehicle ? r.assignedVehicle.makeModel : "")), r.assignedVehicle ? plate(r.assignedVehicle.plate) : null)),
                 route, h("div", { style: "margin-top:18px" }, ticket(r.fare, [h("b", null, money(r.fare)), r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")])));
             put(actions, h("button", { class: "btn", onClick: callOther }, icon("phone"), t("callDriver")),
                 h("button", { class: "btn quiet", onClick: () => sosSheet(r) }, icon("shield"), t("safety")));
@@ -230,7 +232,7 @@ export function ride({ id }) {
 
 // --------------------------------------------------------------- trips
 export async function trips() {
-    const body = h("div", null, spinner());
+    const body = h("div", null, skeleton(4));
     const el = screen({ title: t("trips"), body, tabs: riderTabs() });
     api("/rides/mine").then(({ rides }) => {
         const mine = rides.filter(r => r.passengerAccountId === store.account.id).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
