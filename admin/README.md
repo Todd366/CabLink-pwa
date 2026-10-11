@@ -1,1 +1,0 @@
-CabLink administration dashboard area

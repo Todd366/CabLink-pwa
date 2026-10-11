@@ -1,32 +1,20 @@
 {
-  "name": "CabLink \u2014 BSTM Ecosystem",
+  "name": "CabLink — rides across Botswana",
   "short_name": "CabLink",
-  "description": "Blockchain ride-hailing for Gaborone. Earn THoBoCoin.",
-  "start_url": "/",
+  "description": "Book a trusted driver in Gaborone, towns and villages across Botswana.",
+  "id": "/",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0a0a0f",
-  "theme_color": "#f5c518",
-  "categories": [
-    "travel",
-    "transportation"
-  ],
+  "background_color": "#f4f7fa",
+  "theme_color": "#1769aa",
   "lang": "en-BW",
+  "categories": ["travel", "transportation"],
   "icons": [
-    {
-      "src": "https://via.placeholder.com/192/0a0a0f/f5c518?text=CL",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://via.placeholder.com/512/0a0a0f/f5c518?text=CL",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "related_applications": [],
-  "prefer_related_applications": false
+    { "src": "/app/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/app/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/app/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/app/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
 }

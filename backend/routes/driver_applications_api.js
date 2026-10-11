@@ -8,11 +8,12 @@
 // ============================================================
 
 const router = require("express").Router();
+const sec = require("../middleware/security");
 const applications = require("../services/driver_application_service");
 const auth = require("../services/auth_service");
 const rateLimiter = require("../services/rate_limiter_service");
 
-const ADMIN_KEY = process.env.ADMIN_KEY || "cablink-admin-dev-key";
+const { adminKeyValid } = require("../middleware/security");
 
 // requireAdmin now accepts EITHER:
 //   - the x-admin-key header (unchanged, kept for admin.html /
@@ -45,16 +46,16 @@ async function requireAdmin(req, res, next) {
         return res.status(429).json({ success: false, error: "Too many attempts — try again later" });
     }
 
-    if (req.headers["x-admin-key"] === ADMIN_KEY) {
+    if (adminKeyValid(req)) {
         return next();
     }
 
     return res.status(401).json({ success: false, error: "Admin access required" });
 }
 
-router.get("/drivers/application-status", async (req, res) => {
+router.get("/drivers/application-status", sec.requireAuth, async (req, res) => {
     try {
-        const phone = String(req.query.phone || "").replace(/[^\d+]/g, "");
+        const phone = String(req.account.phone || "").replace(/[^\d+]/g, "");
 
         if (!phone) {
             return res.status(400).json({ success: false, error: "phone query param required" });
@@ -74,9 +75,9 @@ router.get("/drivers/application-status", async (req, res) => {
     }
 });
 
-router.post("/drivers/apply", async (req, res) => {
+router.post("/drivers/apply", sec.requireAuth, sec.limit("driver-apply", 3, 24 * 60 * 60 * 1000), async (req, res) => {
     try {
-        const application = await applications.apply(req.body || {});
+        const application = await applications.apply(Object.assign({}, req.body || {}, { name: req.account.name, phone: req.account.phone }));
         res.json({ success: true, application });
     } catch (error) {
         res.status(400).json({ success: false, error: error.message });
@@ -142,7 +143,7 @@ router.post("/admin/bootstrap", async (req, res) => {
             return res.status(429).json({ success: false, error: "Too many attempts — try again later" });
         }
 
-        if (req.headers["x-admin-key"] !== ADMIN_KEY) {
+        if (!adminKeyValid(req)) {
             return res.status(401).json({ success: false, error: "Admin key required" });
         }
 

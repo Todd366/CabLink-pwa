@@ -1,5 +1,6 @@
 const express = require("express");
-const cors = require("cors");
+const path = require("path");
+const sec = require("../middleware/security");
 
 const app = express();
 
@@ -9,8 +10,13 @@ const app = express();
 // limiting (see rate_limiter_service.js) completely meaningless.
 app.set("trust proxy", true);
 
-app.use(cors({ origin: "*" }));
-app.use(express.json());
+app.disable("x-powered-by");
+app.use(sec.requestId);
+app.use(sec.securityHeaders);
+app.use(sec.cors);
+app.use(express.json({ limit: "100kb" }));
+app.use("/api", sec.attachAccount);
+app.use("/api", sec.limit("api", 240, 60 * 1000));
 
 
 // ============================================================
@@ -67,13 +73,10 @@ const vehicleRoutes =
 function healthResponse(req, res) {
 
     res.json({
-
         system: "CabLink API",
-
         status: "ONLINE",
-
+        version: require("../../package.json").version,
         time: new Date().toISOString()
-
     });
 
 }
@@ -89,6 +92,16 @@ app.get(
     "/api/health",
     healthResponse
 );
+
+app.get("/api/ready", (req, res) => {
+    const problems = [];
+    if (sec.IS_PROD) {
+        if ((process.env.ADMIN_KEY || "").length < 16) problems.push("ADMIN_KEY missing or shorter than 16 characters");
+        if (process.env.CABLINK_RIDE_PERSISTENCE !== "FIRESTORE" && process.env.CABLINK_RIDE_PERSISTENCE !== "SUPABASE") problems.push("Rides are not using durable storage");
+        if (process.env.CABLINK_ACCOUNT_PERSISTENCE !== "FIRESTORE" && process.env.CABLINK_ACCOUNT_PERSISTENCE !== "SUPABASE") problems.push("Accounts are not using durable storage");
+    }
+    res.status(problems.length ? 503 : 200).json({ ready: problems.length === 0, problems });
+});
 
 
 // ============================================================
@@ -244,5 +257,14 @@ app.use(
 // ============================================================
 // EXPORT
 // ============================================================
+
+// Local development only: serve the app when running `npm start`.
+// On Vercel the static files are served by the platform.
+if (!process.env.VERCEL) {
+    app.use(express.static(path.join(__dirname, "..", "..")));
+}
+
+app.use("/api", sec.notFound);
+app.use(sec.errorHandler);
 
 module.exports = app;

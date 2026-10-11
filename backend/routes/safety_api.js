@@ -4,7 +4,7 @@ const auth = require("../services/auth_service");
 const events = require("../services/event_service");
 const rateLimiter = require("../services/rate_limiter_service");
 
-const ADMIN_KEY = process.env.ADMIN_KEY || "cablink-admin-dev-key";
+const { adminKeyValid } = require("../middleware/security");
 
 async function requireAdmin(req, res, next) {
     // Session-token path first — never rate-limited (see
@@ -22,7 +22,7 @@ async function requireAdmin(req, res, next) {
     if (!limit.allowed) {
         return res.status(429).json({ success: false, error: "Too many attempts — try again later" });
     }
-    if (req.headers["x-admin-key"] === ADMIN_KEY) {
+    if (adminKeyValid(req)) {
         return next();
     }
     return res.status(401).json({ success: false, error: "Admin access required" });
@@ -35,7 +35,7 @@ async function requireAdmin(req, res, next) {
 // mid-emergency shouldn't be blocked by an auth check. If a
 // session token is present, the report gets attached to that
 // account; otherwise it's still recorded, just anonymous.
-router.post("/incidents", async (req, res) => {
+router.post("/incidents", require("../middleware/security").requireAuth, require("../middleware/security").limit("incident", 10, 60 * 60 * 1000), async (req, res) => {
     try {
         const account = await auth.accountFromRequest(req);
 
@@ -45,7 +45,7 @@ router.post("/incidents", async (req, res) => {
             rideId: req.body?.rideId,
             location: req.body?.location,
             reporterAccountId: account ? account.id : null,
-            reporterName: account ? account.name : (req.body?.reporterName || "Anonymous")
+            reporterName: account.name
         });
 
         events.recordEvent("INCIDENT_CREATED", {

@@ -14,6 +14,18 @@ const completion =
 
 router.patch(
     "/rides/:id/complete",
+    require("../middleware/security").requireAuth,
+    async (req, res, next) => {
+        const eng = require("../canonical/ride_engine");
+        const ride = await eng.getRide(req.params.id);
+        if (!ride) return res.status(404).json({ success: false, error: "Ride not found" });
+        const a = req.account;
+        const mine = ride.driverId === a.id || ride.driverAccountId === a.id;
+        if (!mine && a.role !== "ADMIN") {
+            return res.status(403).json({ success: false, error: "Only the assigned driver can complete this ride" });
+        }
+        next();
+    },
     async (req, res) => {
 
         try {
@@ -79,88 +91,10 @@ router.patch(
 // Internally it resolves the canonical ride.
 // ============================================================
 
-router.post(
-    "/ride/complete",
-    async (req, res) => {
-
-        try {
-
-            const {
-                id,
-                driverId,
-                driverName
-            } = req.body || {};
-
-
-            if (!id) {
-
-                return res
-                    .status(400)
-                    .json({
-
-                        success: false,
-
-                        error:
-                            "Ride ID is required"
-
-                    });
-
-            }
-
-
-            const result =
-                await completion.completeRideById(
-                    id,
-                    {
-                        driverId,
-                        driverName
-                    }
-                );
-
-
-            if (!result.success) {
-
-                if (
-                    result.code === "NOT_FOUND"
-                ) {
-
-                    return res
-                        .status(404)
-                        .json(result);
-
-                }
-
-                return res
-                    .status(400)
-                    .json(result);
-
-            }
-
-
-            return res.json(result);
-
-        } catch (error) {
-
-            console.error(
-                "❌ Legacy completion error:",
-                error
-            );
-
-            return res
-                .status(500)
-                .json({
-
-                    success: false,
-
-                    error:
-                        "Failed to complete ride"
-
-                });
-
-        }
-
-    }
-);
-
+// Legacy unauthenticated completion endpoint removed: it let anyone
+// finish any ride and trigger rewards. Use PATCH /api/rides/:id/complete.
+router.post("/ride/complete", (req, res) => {
+    res.status(410).json({ success: false, error: "This endpoint was retired. Use PATCH /api/rides/:id/complete" });
+});
 
 module.exports = router;

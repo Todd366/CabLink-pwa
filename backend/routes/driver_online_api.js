@@ -20,10 +20,10 @@ const applications = require("../services/driver_application_service");
 
 // GET ONLINE DRIVERS
 
-router.get("/drivers/online", async (req, res) => {
+router.get("/drivers/online", sec.requireAuth, async (req, res) => {
     try {
         const drivers = await registry.all();
-        res.json({ __CANARY_0817: "patch12-verify", drivers });
+        res.json({ success: true, drivers });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
@@ -47,9 +47,9 @@ router.get("/drivers/online", async (req, res) => {
 // when nobody is logged in) will correctly fail this check, since
 // no driver application will exist for it.
 
-router.post("/drivers/online", async (req, res) => {
+router.post("/drivers/online", sec.requireRole("APPROVED_DRIVER"), async (req, res) => {
     try {
-        const driver = req.body || {};
+        const driver = Object.assign({}, req.body || {}, { id: req.account.id, name: req.account.name });
 
         if (!driver.id) {
             return res.status(400).json({
@@ -76,9 +76,9 @@ router.post("/drivers/online", async (req, res) => {
 
 // DRIVER GO OFFLINE
 
-router.post("/drivers/offline", async (req, res) => {
+router.post("/drivers/offline", sec.requireAuth, async (req, res) => {
     try {
-        const id = req.body && req.body.id;
+        const id = req.account.id;
 
         if (!id) {
             return res.status(400).json({ success: false, error: "id is required" });

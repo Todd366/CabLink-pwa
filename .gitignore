@@ -30,3 +30,11 @@ node_modules/
 dist/
 .vercel
 .env*
+
+# Secrets and personal data — never commit
+.env
+.env.*
+!.env.example
+.vercel/
+backend/data/
+node_modules/

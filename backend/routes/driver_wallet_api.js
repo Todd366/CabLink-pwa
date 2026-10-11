@@ -13,11 +13,12 @@
 // ============================================================
 
 const router = require("express").Router();
+const sec = require("../middleware/security");
 const wallets = require("../services/driver_wallet_service");
 const walletResolver = require("../rewards/canonical_wallet_resolver");
 
 // GET /api/driver/:id/wallet
-router.get("/driver/:id/wallet", async (req, res) => {
+router.get("/driver/:id/wallet", sec.selfOrAdmin("id"), async (req, res) => {
     try {
         const wallet = await wallets.getWallet(req.params.id);
 
@@ -33,7 +34,7 @@ router.get("/driver/:id/wallet", async (req, res) => {
 
 // POST /api/driver/:id/wallet
 // body: { wallet: "0x..." }
-router.post("/driver/:id/wallet", async (req, res) => {
+router.post("/driver/:id/wallet", sec.selfOrAdmin("id"), async (req, res) => {
     try {
         const { wallet } = req.body || {};
 

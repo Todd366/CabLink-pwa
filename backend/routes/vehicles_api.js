@@ -16,7 +16,7 @@ const vehicles = require("../services/vehicle_service");
 const auth = require("../services/auth_service");
 const rateLimiter = require("../services/rate_limiter_service");
 
-const ADMIN_KEY = process.env.ADMIN_KEY || "cablink-admin-dev-key";
+const { adminKeyValid } = require("../middleware/security");
 
 async function requireAdmin(req, res, next) {
     // Session-token path first — never rate-limited, since a valid
@@ -40,7 +40,7 @@ async function requireAdmin(req, res, next) {
         return res.status(429).json({ success: false, error: "Too many attempts — try again later" });
     }
 
-    if (req.headers["x-admin-key"] === ADMIN_KEY) {
+    if (adminKeyValid(req)) {
         return next();
     }
 

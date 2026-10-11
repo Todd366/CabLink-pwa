@@ -84,7 +84,8 @@ async function createRide(
         id:
             data.id ||
             "RIDE-" +
-            Date.now(),
+            Date.now() + "-" +
+            require("crypto").randomBytes(3).toString("hex"),
 
         pickup:
             data.pickup ||

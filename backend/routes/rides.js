@@ -19,13 +19,66 @@ const {
     STATES
 } = rideEngine;
 
+const sec = require("../middleware/security");
+const { calcFare } = require("../pricing/fare");
+
+const DRIVER_STEPS = ["DRIVER_ARRIVED", "PICKED_UP", "STARTED", "COMPLETED", "CANCELLED"];
+
+// Who may move which ride to which state. Passengers can only
+// cancel their own ride; the assigned driver runs the trip;
+// admins can do anything. Everyone else is refused.
+async function authorizeTransition(req, res, next) {
+    try {
+        const ride = await rideEngine.getRide(req.params.id);
+        if (!ride) return res.status(404).json({ success: false, error: "Ride not found" });
+        const a = req.account;
+        const target = (req.body || {}).status || (req.body || {}).state;
+        if (a.role === "ADMIN") return next();
+        const isOwner = ride.passengerAccountId === a.id;
+        const isDriver = ride.driverId === a.id || ride.driverAccountId === a.id;
+        if (isOwner && target === "CANCELLED") return next();
+        if (isDriver && DRIVER_STEPS.includes(target)) {
+            // never let a client choose who the driver is
+            if (req.body) { delete req.body.driverId; delete req.body.driverName; }
+            return next();
+        }
+        return res.status(403).json({ success: false, error: "You cannot change this ride" });
+    } catch (e) {
+        return res.status(500).json({ success: false, error: "Failed to check ride access" });
+    }
+}
+
+// Passengers never choose their identity or price.
+function bindPassengerAndFare(req, res, next) {
+    const b = req.body || {};
+    const stops = Array.isArray(b.stops) ? b.stops.filter(x => typeof x === "string" && x.trim()).slice(0, 3) : [];
+    const f = calcFare({ vehicle: b.vehicle, distanceKm: b.distanceKm, stops });
+    req.body = Object.assign({}, b, {
+        passenger: req.account.id,
+        fare: f.total,
+        distanceKm: f.distanceKm,
+        stops
+    });
+    next();
+}
+
+// What a driver may see about an open request: no phone numbers.
+function publicRide(r) {
+    return {
+        id: r.id, pickup: r.pickup, dropoff: r.dropoff, fare: r.fare,
+        distanceKm: r.distanceKm, vehicle: r.vehicle, notes: r.notes,
+        paymentMethod: r.paymentMethod, stops: r.stops || [],
+        taskType: r.taskType || null, status: r.status, createdAt: r.createdAt
+    };
+}
+
 
 // ============================================================
 // POST /api/rides
 // Create new ride
 // ============================================================
 
-router.post("/", async (req, res) => {
+router.post("/", sec.requireAuth, sec.limit("ride-create", 6, 10 * 60 * 1000), bindPassengerAndFare, async (req, res) => {
 
     try {
 
@@ -84,7 +137,7 @@ router.post("/", async (req, res) => {
         // negative amount toward a real token transfer.
         if (fare !== undefined && fare !== null) {
             const fareNum = Number(fare);
-            if (!Number.isFinite(fareNum) || fareNum < 0 || fareNum > 5000) {
+            if (!Number.isFinite(fareNum) || fareNum < 0 || fareNum > 20000) {
                 return res.status(400).json({
                     success: false,
                     error: "Fare must be a reasonable positive amount"
@@ -186,7 +239,10 @@ router.post("/", async (req, res) => {
 // A second acceptance returns HTTP 409.
 // ============================================================
 
-router.patch("/:id/accept", async (req, res) => {
+router.patch("/:id/accept", sec.requireRole("APPROVED_DRIVER"), (req, res, next) => {
+    req.body = Object.assign({}, req.body, { driverId: req.account.id, driverName: req.account.name });
+    next();
+}, async (req, res) => {
 
     try {
 
@@ -289,7 +345,17 @@ router.patch("/:id/accept", async (req, res) => {
 // or as driver. Requires a valid session token.
 // ============================================================
 
-router.get("/mine", async (req, res) => {
+router.get("/open", sec.requireRole("APPROVED_DRIVER", "ADMIN"), async (req, res) => {
+    try {
+        const all = await rideEngine.getAllRides();
+        const open = all.filter(r => r.status === "MATCHING").map(publicRide);
+        res.json({ success: true, count: open.length, rides: open });
+    } catch (e) {
+        res.status(500).json({ success: false, error: "Failed to load requests" });
+    }
+});
+
+router.get("/mine", sec.requireAuth, async (req, res) => {
 
     try {
 
@@ -334,7 +400,7 @@ router.get("/mine", async (req, res) => {
 // Get all rides
 // ============================================================
 
-router.get("/", async (req, res) => {
+router.get("/", sec.requireAdmin, async (req, res) => {
 
     try {
 
@@ -369,7 +435,29 @@ router.get("/", async (req, res) => {
 // Get one ride
 // ============================================================
 
-router.get("/:id", async (req, res) => {
+// Phone number of the other person on an ACTIVE trip only —
+// so riders and drivers can call each other, but numbers are
+// never exposed on open requests or finished trips.
+router.get("/:id/contact", sec.requireAuth, async (req, res) => {
+    try {
+        const ride = await rideEngine.getRide(req.params.id);
+        if (!ride) return res.status(404).json({ success: false, error: "Ride not found" });
+        const me = req.account;
+        const live = ["DRIVER_ASSIGNED", "DRIVER_ARRIVED", "PICKED_UP", "STARTED"].includes(ride.status);
+        if (!live) return res.status(409).json({ success: false, error: "This trip is not active" });
+        let otherId = null;
+        if (ride.passengerAccountId === me.id) otherId = ride.driverAccountId || ride.driverId;
+        else if (ride.driverId === me.id || ride.driverAccountId === me.id) otherId = ride.passengerAccountId;
+        if (!otherId) return res.status(403).json({ success: false, error: "You cannot contact this person" });
+        const other = await auth.getAccountById(otherId);
+        if (!other) return res.status(404).json({ success: false, error: "Contact not found" });
+        res.json({ success: true, name: other.name, phone: other.phone });
+    } catch (e) {
+        res.status(500).json({ success: false, error: "Failed to load contact" });
+    }
+});
+
+router.get("/:id", sec.requireAuth, async (req, res) => {
 
     const ride =
         await rideEngine.getRide(
@@ -383,6 +471,16 @@ router.get("/:id", async (req, res) => {
             error: "Ride not found"
         });
 
+    }
+
+    const me = req.account;
+    const involved = me.role === "ADMIN" || ride.passengerAccountId === me.id ||
+        ride.driverId === me.id || ride.driverAccountId === me.id;
+    if (!involved) {
+        if (me.role === "APPROVED_DRIVER" && ride.status === "MATCHING") {
+            return res.json({ success: true, ride: publicRide(ride) });
+        }
+        return res.status(403).json({ success: false, error: "You cannot view this ride" });
     }
 
     const reward =
@@ -403,7 +501,7 @@ router.get("/:id", async (req, res) => {
 // Change ride state / update metadata
 // ============================================================
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", sec.requireAuth, authorizeTransition, async (req, res) => {
 
     try {
 
@@ -475,7 +573,7 @@ router.patch("/:id", async (req, res) => {
 // Canonical lifecycle transition bridge
 // ============================================================
 
-router.patch("/:id/state", async (req,res)=>{
+router.patch("/:id/state", sec.requireAuth, authorizeTransition, async (req,res)=>{
 
     try {
 
@@ -521,7 +619,14 @@ router.patch("/:id/state", async (req,res)=>{
 // array update that never left the browser.
 // ============================================================
 
-router.patch("/:id/rate", async (req, res) => {
+router.patch("/:id/rate", sec.requireAuth, async (req, res, next) => {
+    const ride = await rideEngine.getRide(req.params.id);
+    if (!ride) return res.status(404).json({ success: false, error: "Ride not found" });
+    if (ride.passengerAccountId !== req.account.id) {
+        return res.status(403).json({ success: false, error: "Only the passenger can rate this ride" });
+    }
+    next();
+}, async (req, res) => {
 
     try {
 
