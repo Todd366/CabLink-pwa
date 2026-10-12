@@ -14,6 +14,7 @@
 
 const express = require("express");
 const router = express.Router();
+const sec = require("../middleware/security");
 
 const registry = require("../services/driver_registry_service");
 const applications = require("../services/driver_application_service");
