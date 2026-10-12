@@ -182,7 +182,7 @@ function isValidBotswanaPhone(phone) {
 
 function publicAccount(account) {
     if (!account) return null;
-    const { pinHash, pinSalt, ...safe } = account;
+    const { pinHash, pinSalt, pushSubscriptions, ...safe } = account;
     return safe;
 }
 
@@ -348,11 +348,50 @@ async function updateProfile(accountId, profileChanges) {
         account.avatarUrl = profileChanges.avatarUrl.trim() || null;
     }
 
+    if (typeof profileChanges.payoutNumber === "string") {
+        const raw = profileChanges.payoutNumber.replace(/\D/g, "");
+        const digits = raw.length === 11 && raw.startsWith("267") ? raw.slice(3) : raw;
+        if (digits && !/^7\d{7}$/.test(digits)) {
+            throw new Error("Mobile money number must be a Botswana number like 71 234 567");
+        }
+        account.payoutNumber = digits || null;
+    }
+
     account.updatedAt = new Date().toISOString();
 
     await saveAccount(account);
 
     return publicAccount(account);
+}
+
+// Push subscriptions live on the account so they survive on durable
+// storage (Vercel has no permanent disk). Max 3 devices per account.
+async function addPushSubscription(accountId, subscription) {
+    if (!subscription || typeof subscription.endpoint !== "string") throw new Error("Invalid push subscription");
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === accountId);
+    if (!account) throw new Error("Account not found");
+    const list = (account.pushSubscriptions || []).filter(x => x.endpoint !== subscription.endpoint);
+    list.push(subscription);
+    account.pushSubscriptions = list.slice(-3);
+    await saveAccount(account);
+}
+async function getPushSubscriptions(accountId) {
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === accountId);
+    return (account && account.pushSubscriptions) || [];
+}
+async function removePushSubscription(accountId, endpoint) {
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === accountId);
+    if (!account || !account.pushSubscriptions) return;
+    account.pushSubscriptions = account.pushSubscriptions.filter(x => x.endpoint !== endpoint);
+    await saveAccount(account);
+}
+async function getPayoutNumber(accountId) {
+    const accounts = await loadAccounts();
+    const account = accounts.find(a => a.id === accountId);
+    return (account && account.payoutNumber) || null;
 }
 
 const VALID_ROLES = ["PASSENGER", "DRIVER_APPLICANT", "APPROVED_DRIVER", "ADMIN"];
@@ -524,5 +563,9 @@ module.exports = {
     isValidBotswanaPhone,
     getReferralStats,
     markReferralBonusPaid,
-    saveWalletAddress
+    saveWalletAddress,
+    addPushSubscription,
+    getPushSubscriptions,
+    removePushSubscription,
+    getPayoutNumber
 };

@@ -2,11 +2,11 @@
 // - App shell is cached on install so the app opens with no signal.
 // - Static files: serve from cache, refresh in the background.
 // - API calls are never cached (ride data must be live).
-const VERSION = "cablink-v7";
+const VERSION = "cablink-v8";
 const SHELL = [
     "/", "/index.html", "/manifest.json", "/app/css/app.css",
     "/app/js/main.js", "/app/js/store.js", "/app/js/api.js", "/app/js/i18n.js", "/app/js/ui.js",
-    "/app/js/router.js", "/app/js/shell.js", "/app/js/places.js", "/app/js/fare.js",
+    "/app/js/router.js", "/app/js/push.js", "/app/js/shell.js", "/app/js/places.js", "/app/js/fare.js",
     "/app/js/screens/welcome.js", "/app/js/screens/auth.js", "/app/js/screens/common.js",
     "/app/js/screens/rider.js", "/app/js/screens/driver.js", "/app/js/screens/account.js", "/app/js/screens/admin.js",
     "/app/icons/icon.svg", "/app/icons/icon-192.png", "/app/icons/icon-512.png"

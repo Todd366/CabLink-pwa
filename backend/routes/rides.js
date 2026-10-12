@@ -22,6 +22,20 @@ const {
 const sec = require("../middleware/security");
 const { calcFare } = require("../pricing/fare");
 
+const STALE_MS = 45 * 60 * 1000;
+
+// A request nobody accepted within 45 minutes is closed automatically,
+// so drivers never see ghost requests and riders are never stuck.
+async function expireStale(req, res, next) {
+    try {
+        const ride = await rideEngine.getRide(req.params.id);
+        if (ride && ride.status === "MATCHING" && Date.now() - new Date(ride.createdAt).getTime() > STALE_MS) {
+            await rideEngine.transition(ride.id, "CANCELLED", { reason: "No driver was available" });
+        }
+    } catch (e) { /* never block the read */ }
+    next();
+}
+
 const DRIVER_STEPS = ["DRIVER_ARRIVED", "PICKED_UP", "STARTED", "COMPLETED", "CANCELLED"];
 
 // Who may move which ride to which state. Passengers can only
@@ -348,7 +362,7 @@ router.patch("/:id/accept", sec.requireRole("APPROVED_DRIVER"), (req, res, next)
 router.get("/open", sec.requireRole("APPROVED_DRIVER", "ADMIN"), async (req, res) => {
     try {
         const all = await rideEngine.getAllRides();
-        const open = all.filter(r => r.status === "MATCHING").map(publicRide);
+        const open = all.filter(r => r.status === "MATCHING" && Date.now() - new Date(r.createdAt).getTime() < STALE_MS && Number(r.distanceKm) > 0).map(publicRide);
         res.json({ success: true, count: open.length, rides: open });
     } catch (e) {
         res.status(500).json({ success: false, error: "Failed to load requests" });
@@ -438,6 +452,19 @@ router.get("/", sec.requireAdmin, async (req, res) => {
 // Phone number of the other person on an ACTIVE trip only —
 // so riders and drivers can call each other, but numbers are
 // never exposed on open requests or finished trips.
+// How to pay the driver by mobile money (Orange Money / MyZaka / Smega).
+router.get("/:id/payment", sec.requireAuth, async (req, res) => {
+    try {
+        const ride = await rideEngine.getRide(req.params.id);
+        if (!ride || ride.passengerAccountId !== req.account.id) return res.status(404).json({ success: false, error: "Ride not found" });
+        if (ride.paymentMethod !== "mobile_money") return res.json({ success: true, method: ride.paymentMethod });
+        const number = await auth.getPayoutNumber(ride.driverAccountId || ride.driverId);
+        res.json({ success: true, method: "mobile_money", driverName: ride.driverName || null, number });
+    } catch (e) {
+        res.status(500).json({ success: false, error: "Failed to load payment details" });
+    }
+});
+
 router.get("/:id/contact", sec.requireAuth, async (req, res) => {
     try {
         const ride = await rideEngine.getRide(req.params.id);
@@ -457,7 +484,7 @@ router.get("/:id/contact", sec.requireAuth, async (req, res) => {
     }
 });
 
-router.get("/:id", sec.requireAuth, async (req, res) => {
+router.get("/:id", sec.requireAuth, expireStale, async (req, res) => {
 
     const ride =
         await rideEngine.getRide(

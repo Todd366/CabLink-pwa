@@ -4,6 +4,7 @@ import { store } from "../store.js";
 import { api, poll } from "../api.js";
 import { go } from "../router.js";
 import { screen, driverTabs } from "../shell.js";
+import { enablePush } from "../push.js";
 import { put, ticket, routeBlock, isActive, sosSheet, openSheet } from "./common.js";
 
 const coordsIn = text => { const m = /\((-?\d+\.\d+),(-?\d+\.\d+)\)/.exec(text || ""); return m ? m[1] + "," + m[2] : null; };
@@ -71,6 +72,7 @@ export async function home() {
         try {
             if (on) { await api("/drivers/online", { method: "POST", body: {} }); heartbeat(); } else { await api("/drivers/offline", { method: "POST", body: {} }); }
             online = on; paintToggle();
+            if (on) enablePush();
             if (stopPoll) { stopPoll(); stopPoll = null; } if (beat) { clearInterval(beat); beat = null; }
             if (on) { stopPoll = poll(loadRequests, 5000); beat = setInterval(heartbeat, 30000); } else requests.replaceChildren();
         } catch (e) { toast(e.message, "error"); }

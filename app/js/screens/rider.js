@@ -6,6 +6,7 @@ import { go } from "../router.js";
 import { screen, riderTabs } from "../shell.js";
 import { search, roadKm, describeGps } from "../places.js";
 import { estimateFare } from "../fare.js";
+import { enablePush } from "../push.js";
 import { put, ticket, routeBlock, statusLabel, isActive, sosSheet, stars, openSheet } from "./common.js";
 
 // The trip being built. Lives in memory so each screen only asks one thing.
@@ -131,7 +132,7 @@ export function trip() {
                 const { ride } = await api("/rides", { method: "POST", body: {
                     pickup: draft.pickup.name, dropoff: placeLabel(draft.dest), vehicle: draft.vehicle, distanceKm: km,
                     notes: draft.notes, paymentMethod: draft.pay, taskType: draft.task === "delivery" ? "delivery" : undefined } });
-                store.setActiveRide(ride.id); resetDraft(); go("/rider/ride/" + ride.id, true);
+                store.setActiveRide(ride.id); resetDraft(); enablePush(); go("/rider/ride/" + ride.id, true);
             } catch (e) { toast(e.message, "error"); }
         });
         actions.replaceChildren(go2);
@@ -188,8 +189,17 @@ export function ride({ id }) {
             let rating = 0, comment = "";
             const note = h("textarea", { rows: "2", maxlength: "200", placeholder: "Add a comment (optional)", style: "width:100%;border-radius:14px;border:2px solid var(--line);padding:12px 16px;background:var(--surface)" });
             note.addEventListener("input", () => { comment = note.value; });
+            const payBox = h("div", { style: "margin-top:14px" });
+            if (r.paymentMethod === "mobile_money") {
+                api("/rides/" + encodeURIComponent(id) + "/payment").then(p => {
+                    put(payBox, p.number
+                        ? h("div", { class: "list" }, h("a", { class: "item", href: "tel:" + p.number }, h("span", { class: "lead" }, icon("wallet")),
+                            h("span", { class: "grow" }, h("b", null, "+267 " + p.number.slice(0, 2) + " " + p.number.slice(2, 5) + " " + p.number.slice(5)), h("small", null, t("payThisNumber", { fare: money(r.fare) })))))
+                        : h("p", { class: "muted" }, t("noPayoutNumber")));
+                }).catch(() => put(payBox, h("p", { class: "muted" }, t("noPayoutNumber"))));
+            }
             put(holder, h("h1", null, t("tripDone")), h("p", { class: "muted" }, t("payDriver")),
-                ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")), r.paymentMethod === "cash" ? "" : t("askDriverNumber")]),
+                ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")), r.paymentMethod === "cash" ? "" : "via mobile money"]), payBox,
                 r.reward && r.reward.amount ? h("p", { class: "small muted", style: "margin-top:12px" }, "Reward earned: " + r.reward.amount + " THB") : null,
                 r.rating ? h("p", { class: "muted", style: "margin-top:16px" }, t("thanks")) : [h("h3", null, t("rateDriver")), stars(n => { rating = n; }), note]);
             if (!r.rating) {
@@ -238,7 +248,7 @@ export async function trips() {
         const mine = rides.filter(r => r.passengerAccountId === store.account.id).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         body.replaceChildren(mine.length ? h("div", { class: "list" }, mine.map(r => h("button", { class: "item", onClick: () => go("/rider/ride/" + r.id) },
             h("span", { class: "lead" }, icon(r.taskType === "delivery" ? "box" : "car")),
-            h("span", { class: "grow" }, h("b", null, r.dropoff), h("small", null, statusLabel(r.status) + " · " + ago(r.createdAt))), h("b", null, money(r.fare)))))
+            h("span", { class: "grow" }, h("b", null, r.dropoff), h("small", null, (r.status === "MATCHING" && Date.now() - new Date(r.createdAt) > 45 * 60 * 1000 ? t("expired") : statusLabel(r.status)) + " · " + ago(r.createdAt))), h("b", null, money(r.fare)))))
             : h("div", { class: "empty" }, h("b", null, t("noTrips")), t("noTripsSub")));
     }).catch(e => body.replaceChildren(h("div", { class: "empty" }, h("b", null, e.message), h("button", { class: "link", onClick: () => location.reload() }, t("retry")))));
     return { el };

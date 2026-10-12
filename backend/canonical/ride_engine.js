@@ -469,6 +469,20 @@ async function transition(
             changes
         );
 
+    if (updated) {
+        const rideId = updated.id;
+        const tell = (accountId, title, body, type) => accountId && push.sendToAccount(accountId, {
+            title, body, tag: "cablink-ride-" + rideId, data: { rideId, type }
+        }).catch(() => {});
+        const driverAcct = updated.driverAccountId || updated.driverId;
+        if (nextState === STATES.DRIVER_ARRIVED) tell(updated.passenger, "Your driver has arrived", (updated.driverName || "Your driver") + " is waiting for you", "DRIVER_ARRIVED");
+        if (nextState === STATES.COMPLETED) tell(updated.passenger, "Trip complete", "Please rate your trip", "COMPLETED");
+        if (nextState === STATES.CANCELLED) {
+            tell(updated.passenger, "Ride cancelled", "This ride was cancelled", "CANCELLED");
+            tell(driverAcct, "Ride cancelled", "The passenger cancelled this ride", "CANCELLED");
+        }
+    }
+
     if (
         updated &&
         nextState === STATES.COMPLETED

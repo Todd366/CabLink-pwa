@@ -66,7 +66,8 @@ export function register() {
     const el = screen({
         back: () => go("/auth/login"),
         body: [h("h1", null, t("register")),
-            h("div", { class: "field" }, h("label", { for: "name" }, t("name")), name, nameErr), phone.el, pin.el, pin2.el],
+            h("div", { class: "field" }, h("label", { for: "name" }, t("name")), name, nameErr), phone.el, pin.el, pin2.el,
+            h("p", { class: "muted small" }, t("agree") + " ", h("a", { href: "/legal.html", target: "_blank", rel: "noopener" }, t("terms")), ".")],
         actions: [submit, h("button", { class: "link", onClick: () => go("/auth/login") }, t("haveAccount"))]
     });
     return { el };

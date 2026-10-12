@@ -18,7 +18,7 @@ export async function account() {
     const el = screen({ title: t("account"), body, tabs: isAdmin ? null : isDriver ? driverTabs() : riderTabs(), back: isAdmin ? () => go("/admin") : null });
     const row = (ic, title, sub, fn) => h("button", { class: "item", onClick: fn }, h("span", { class: "lead" }, icon(ic)), h("span", { class: "grow" }, h("b", null, title), sub ? h("small", null, sub) : null));
 
-    body.append(h("h1", null, me.name), h("p", { class: "muted" }, "+267 " + showPhone(me.phone) + (isDriver ? " · " + t("drive") : "")),
+    body.append(h("h1", null, me.name), h("p", { class: "muted" }, "+267 " + showPhone(me.phone) + (isDriver ? " · " + t("driver") : "")),
         h("div", { class: "list" },
             row("user", t("name"), me.name, () => {
                 const f = field("nm", t("name"), { value: me.name, maxlength: "60" });
@@ -35,6 +35,15 @@ export async function account() {
                     try { await api("/auth/pin", { method: "PATCH", body: { currentPin: a.input.value, newPin: b.input.value } }); toast(t("saved"), "ok"); close(); } catch (e) { toast(e.message, "error"); }
                 });
             }),
+            isDriver ? row("phone", t("payoutNumber"), me.payoutNumber ? "+267 " + showPhone(me.payoutNumber) : t("payoutSub"), () => {
+                const f = field("po", t("payoutNumber"), { type: "tel", inputmode: "numeric", value: me.payoutNumber || "" });
+                const save = h("button", { class: "btn" }, t("save"));
+                const close = openSheet(h("h2", null, t("payoutNumber")), h("p", { class: "muted small" }, t("payoutSub")), f.el, save);
+                save.onclick = () => busy(save, async () => {
+                    try { const r = await api("/auth/profile", { method: "PATCH", body: { payoutNumber: f.input.value } }); store.setAccount(r.account); toast(t("saved"), "ok"); close(); location.reload(); }
+                    catch (e) { toast(e.message, "error"); }
+                });
+            }) : null,
             row("wallet", t("wallet"), me.walletAddress ? me.walletAddress.slice(0, 8) + "…" + me.walletAddress.slice(-4) : t("walletHint"), () => {
                 const f = field("w", t("walletHint"), { value: me.walletAddress || "", autocomplete: "off", spellcheck: "false" });
                 const save = h("button", { class: "btn" }, t("save"));

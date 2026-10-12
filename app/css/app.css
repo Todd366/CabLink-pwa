@@ -149,3 +149,5 @@ p { margin: 0 0 12px; } .muted { color: var(--muted); } .small { font-size: 14px
 .tabs a[aria-current="page"] svg { background: var(--flag-soft); border-radius: 12px; padding: 4px; width: 40px; height: 30px; box-sizing: border-box; }
 .panel + .page { padding-top: 22px; }
 .panel .lang button { min-height: 36px; padding: 0 12px; font-size: 14px; } .panel .wordmark { font-size: 20px; }
+
+[tabindex="-1"]:focus { outline: none; }

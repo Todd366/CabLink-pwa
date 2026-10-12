@@ -23,6 +23,7 @@ export function welcome() {
                 .map(([ic, tx]) => h("li", null, h("span", { class: "lead" }, icon(ic)), tx)))),
         h("div", { class: "actions" },
             h("button", { class: "btn go", onClick: () => choose("rider") }, t("getRide")),
-            h("button", { class: "btn ghost", onClick: () => choose("driver") }, t("driveWith"))));
+            h("button", { class: "btn ghost", onClick: () => choose("driver") }, t("driveWith")),
+            h("a", { class: "link small", style: "text-align:center", href: "/legal.html", target: "_blank", rel: "noopener" }, t("terms"))));
     return { el };
 }

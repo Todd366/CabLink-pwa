@@ -9,6 +9,7 @@ import * as rider from "./screens/rider.js";
 import * as driver from "./screens/driver.js";
 import { account } from "./screens/account.js";
 import { admin } from "./screens/admin.js";
+import { enablePush } from "./push.js";
 
 // Every protected screen declares who may see it. A driver account
 // can never open a rider screen (and so can never book a ride).
@@ -57,6 +58,7 @@ async function boot() {
     }
     if (!location.hash || location.hash === "#") location.hash = "#/";
     await render();
+    if (store.token) enablePush({ ask: false });
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
 }
 boot();

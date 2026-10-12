@@ -52,6 +52,9 @@ const EN = {
     status_DRIVER_ARRIVED: "Driver arrived", status_PICKED_UP: "Picked up", status_STARTED: "On trip",
     status_COMPLETED: "Completed", status_CANCELLED: "Cancelled", status_REQUESTED: "Requested",
     admin: "Admin", applications: "Driver applications", approve: "Approve", reject: "Reject", incidents: "Safety reports",
+    driver: "Driver", expired: "Expired", payoutNumber: "Mobile money number", payoutSub: "Orange Money, MyZaka or Smega. Riders paying by mobile money will see this.",
+    payThisNumber: "Send {fare} to this number", noPayoutNumber: "Ask your driver for their mobile money number.", terms: "Terms and privacy", agree: "By continuing you agree to our",
+    alertsOn: "Ride alerts are on", alertsOff: "Turn on ride alerts so you never miss a request",
     overview: "Overview", nothingHere: "Nothing here yet", install: "Install CabLink", installSub: "Add to your home screen for faster access"
 };
 
