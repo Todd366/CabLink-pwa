@@ -452,6 +452,27 @@ router.get("/", sec.requireAdmin, async (req, res) => {
 // Phone number of the other person on an ACTIVE trip only —
 // so riders and drivers can call each other, but numbers are
 // never exposed on open requests or finished trips.
+// Where the assigned driver is right now. Only the passenger or the driver
+// of an ACTIVE trip can ask; nobody can browse driver locations.
+router.get("/:id/driver-location", sec.requireAuth, async (req, res) => {
+    try {
+        const ride = await rideEngine.getRide(req.params.id);
+        if (!ride) return res.status(404).json({ success: false, error: "Ride not found" });
+        const me = req.account;
+        const involved = ride.passengerAccountId === me.id || ride.driverId === me.id || ride.driverAccountId === me.id;
+        const live = ["DRIVER_ASSIGNED", "DRIVER_ARRIVED", "PICKED_UP", "STARTED"].includes(ride.status);
+        if (!involved || !live) return res.status(403).json({ success: false, error: "Not available" });
+        const registry = require("../services/driver_registry_service");
+        const id = ride.driverAccountId || ride.driverId;
+        const d = (await registry.all()).find(x => x.id === id);
+        const lat = d && Number(d.lat ?? d.latitude), lng = d && Number(d.lng ?? d.longitude);
+        if (!d || !Number.isFinite(lat) || !Number.isFinite(lng)) return res.json({ success: true, location: null });
+        res.json({ success: true, location: { lat, lng, updatedAt: d.updatedAt || d.lastSeen || null } });
+    } catch (e) {
+        res.status(500).json({ success: false, error: "Failed to load location" });
+    }
+});
+
 // How to pay the driver by mobile money (Orange Money / MyZaka / Smega).
 router.get("/:id/payment", sec.requireAuth, async (req, res) => {
     try {

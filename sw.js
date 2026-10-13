@@ -2,11 +2,11 @@
 // - App shell is cached on install so the app opens with no signal.
 // - Static files: serve from cache, refresh in the background.
 // - API calls are never cached (ride data must be live).
-const VERSION = "cablink-v8";
+const VERSION = "cablink-v9";
 const SHELL = [
     "/", "/index.html", "/manifest.json", "/app/css/app.css",
     "/app/js/main.js", "/app/js/store.js", "/app/js/api.js", "/app/js/i18n.js", "/app/js/ui.js",
-    "/app/js/router.js", "/app/js/push.js", "/app/js/shell.js", "/app/js/places.js", "/app/js/fare.js",
+    "/app/js/router.js", "/app/js/push.js", "/app/js/map.js", "/app/js/shell.js", "/app/js/places.js", "/app/js/fare.js",
     "/app/js/screens/welcome.js", "/app/js/screens/auth.js", "/app/js/screens/common.js",
     "/app/js/screens/rider.js", "/app/js/screens/driver.js", "/app/js/screens/account.js", "/app/js/screens/admin.js",
     "/app/icons/icon.svg", "/app/icons/icon-192.png", "/app/icons/icon-512.png"
@@ -16,10 +16,28 @@ self.addEventListener("install", e => {
     e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });
 self.addEventListener("activate", e => {
-    e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+    e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== VERSION && k !== "cablink-maps").map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
+// Map tiles and the map library: cache as they are used so places you have
+// already seen still show with no signal. Capped so it never fills the phone.
+const MAP_CACHE = "cablink-maps";
+async function cacheFirst(req) {
+    const c = await caches.open(MAP_CACHE);
+    const hit = await c.match(req);
+    if (hit) return hit;
+    const res = await fetch(req);
+    if (res.ok || res.type === "opaque") {
+        c.put(req, res.clone());
+        c.keys().then(keys => { if (keys.length > 300) c.delete(keys[0]); });
+    }
+    return res;
+}
 self.addEventListener("fetch", e => {
     const url = new URL(e.request.url);
+    if (e.request.method === "GET" && (url.hostname === "tile.openstreetmap.org" || (url.hostname === "cdnjs.cloudflare.com" && url.pathname.includes("/leaflet/")))) {
+        e.respondWith(cacheFirst(e.request).catch(() => Response.error()));
+        return;
+    }
     if (e.request.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/api/")) return;
     e.respondWith(caches.match(e.request, { ignoreSearch: true }).then(hit => {
         const net = fetch(e.request).then(res => {

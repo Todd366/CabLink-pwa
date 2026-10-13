@@ -55,6 +55,10 @@ const EN = {
     driver: "Driver", expired: "Expired", payoutNumber: "Mobile money number", payoutSub: "Orange Money, MyZaka or Smega. Riders paying by mobile money will see this.",
     payThisNumber: "Send {fare} to this number", noPayoutNumber: "Ask your driver for their mobile money number.", terms: "Terms and privacy", agree: "By continuing you agree to our",
     alertsOn: "Ride alerts are on", alertsOff: "Turn on ride alerts so you never miss a request",
+    showMap: "Show map", hideMap: "Hide map", dropPin: "Drop a pin on the map", dropPinSub: "For places with no address", useSpot: "Use this spot", pinHint: "Tap the map or drag the pin to the exact spot",
+    mapsPref: "Show maps", mapsPrefSub: "Maps use more mobile data. Off by default.", leaderboard: "Top drivers", leaderboardSub: "Most completed trips in the last 30 days", busyAreas: "Busy areas", openRequestsNow: "{n} open requests now",
+    vehicleMissing: "Your vehicle is not registered yet. An admin will verify it.", vehiclePending: "Your vehicle is waiting for verification.", invite: "Invite friends", inviteSub: "Share your code. Friends join CabLink with it.",
+    referralCode: "Referral code (optional)", claimThb: "Claim your THB reward", claimed: "Reward claimed", needWallet: "Add your wallet in Account first", rank: "#",
     overview: "Overview", nothingHere: "Nothing here yet", install: "Install CabLink", installSub: "Add to your home screen for faster access"
 };
 

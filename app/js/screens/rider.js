@@ -4,7 +4,8 @@ import { store } from "../store.js";
 import { api, poll } from "../api.js";
 import { go } from "../router.js";
 import { screen, riderTabs } from "../shell.js";
-import { search, roadKm, describeGps } from "../places.js";
+import { search, roadKm, describeGps, describePin, coordsFromLabel } from "../places.js";
+import { routeMap, pinPicker } from "../map.js";
 import { estimateFare } from "../fare.js";
 import { enablePush } from "../push.js";
 import { put, ticket, routeBlock, statusLabel, isActive, sosSheet, stars, openSheet } from "./common.js";
@@ -78,6 +79,7 @@ export function where({ kind }) {
     const draw = () => {
         const q = input.value.trim();
         results.replaceChildren();
+        if (!q) results.append(h("button", { class: "item", onClick: () => go("/rider/pin/" + kind) }, h("span", { class: "lead" }, icon("pin")), h("span", { class: "grow" }, h("b", null, t("dropPin")), h("small", null, t("dropPinSub")))));
         if (!isDest && !q) results.append(h("button", { class: "item", onClick: useGps }, h("span", { class: "lead" }, icon("nav")), h("span", { class: "grow" }, h("b", null, t("useMyLocation")))));
         search(q).forEach(p => results.append(h("button", { class: "item", onClick: () => choose(p) },
             h("span", { class: "lead" }, icon("pin")), h("span", { class: "grow" }, h("b", null, p.name), h("small", null, p.region)))));
@@ -88,6 +90,25 @@ export function where({ kind }) {
     draw();
     const el = screen({ title: isDest ? t("dropoff") : t("setPickup"), back: () => (isDest ? go("/rider/home") : go("/rider/trip")), body });
     return { el };
+}
+
+// ----------------------------------------------------------------- pin
+export function pin({ kind }) {
+    const isDest = kind === "dest";
+    const box = h("div", { class: "map" }, spinner());
+    let ctl = null, spot = null;
+    const use = h("button", { class: "btn go" }, t("useSpot"));
+    use.onclick = () => {
+        if (!spot) return;
+        const place = { name: describePin(spot.lat, spot.lng), lat: spot.lat, lng: spot.lng };
+        draft.km = null;
+        if (isDest) { draft.dest = place; store.addRecent(place); } else draft.pickup = place;
+        go("/rider/trip", true);
+    };
+    const el = screen({ title: isDest ? t("dropoff") : t("pickup"), back: () => go("/rider/where/" + kind), body: [h("p", { class: "muted" }, t("pinHint")), box], actions: use });
+    const start = (isDest ? draft.dest : draft.pickup);
+    pinPicker(box, start && start.lat != null ? start : null, p => { spot = p; }).then(c => { ctl = c; if (!c) use.disabled = true; });
+    return { el, dispose: () => ctl && ctl.destroy() };
 }
 
 // ---------------------------------------------------------------- trip
@@ -110,6 +131,15 @@ export function trip() {
             return;
         }
         const fare = estimateFare({ vehicle: draft.vehicle, km });
+        const a = draft.pickup && draft.pickup.lat != null ? draft.pickup : null, b = draft.dest && draft.dest.lat != null ? draft.dest : null;
+        if (a && b) {
+            const mapBox = h("div", { class: "map", hidden: !store.maps });
+            const toggle = h("button", { class: "link" }, store.maps ? t("hideMap") : t("showMap"));
+            let ctl = null;
+            const open = () => { mapBox.hidden = false; if (!ctl) routeMap(mapBox, { from: a, to: b }).then(c => { ctl = c; }); };
+            toggle.onclick = () => { const on = mapBox.hidden; if (on) open(); else mapBox.hidden = true; toggle.textContent = on ? t("hideMap") : t("showMap"); if (on) store.setMaps(true); };
+            put(body, toggle, mapBox); if (store.maps) open();
+        }
         put(body, h("div", { style: "margin:18px 0" }, ticket(fare, [h("b", null, t("estimate")), "≈ " + km + " " + t("km")])));
         if (draft.task === "ride") {
             put(body, h("h3", null, t("rideType")), h("div", { class: "opts" },
@@ -154,7 +184,16 @@ export function ride({ id }) {
     const holder = h("div", null);
     const actions = h("div", { style: "display:grid;gap:10px" });
     const el = screen({ title: t("ride"), back: () => go("/rider/home"), body: holder, actions });
-    let lastKey = "", startedAt = Date.now(), banner = null;
+    let lastKey = "", startedAt = Date.now(), banner = null, mapCtl = null, locTimer = null;
+    const stopMap = () => { if (locTimer) clearInterval(locTimer); locTimer = null; if (mapCtl) { mapCtl.destroy(); mapCtl = null; } };
+    const startMap = (r, box) => {
+        const from = coordsFromLabel(r.pickup), to = coordsFromLabel(r.dropoff);
+        routeMap(box, { from, to }).then(c => {
+            mapCtl = c;
+            const tick = async () => { try { const { location } = await api("/rides/" + encodeURIComponent(id) + "/driver-location"); c.update({ from, to, driver: location }); } catch (e) { /* keep last position */ } };
+            tick(); locTimer = setInterval(tick, 8000);
+        });
+    };
 
     const callOther = async () => {
         try { const c = await api("/rides/" + encodeURIComponent(id) + "/contact"); location.href = "tel:" + c.phone; }
@@ -167,7 +206,7 @@ export function ride({ id }) {
     };
 
     const draw = r => {
-        holder.replaceChildren(); actions.replaceChildren();
+        stopMap(); holder.replaceChildren(); actions.replaceChildren();
         const route = routeBlock(r.pickup, r.dropoff);
         if (r.status === "MATCHING" || r.status === "REQUESTED") {
             put(holder, h("div", { class: "status", style: "margin-bottom:16px" }, h("span", { class: "pulse" }), t("finding")),
@@ -176,11 +215,15 @@ export function ride({ id }) {
         } else if (["DRIVER_ASSIGNED", "DRIVER_ARRIVED", "PICKED_UP", "STARTED"].includes(r.status)) {
             const head = r.status === "DRIVER_ASSIGNED" ? t("driverComing") : r.status === "DRIVER_ARRIVED" ? t("driverArrived") : t("onTrip");
             const lvl = { DRIVER_ASSIGNED: 1, DRIVER_ARRIVED: 2, PICKED_UP: 3, STARTED: 3 }[r.status];
+            const liveBox = h("div", { class: "map", hidden: !store.maps });
+            const mapBtn = h("button", { class: "link", style: "margin-bottom:8px" }, store.maps ? t("hideMap") : t("showMap"));
+            mapBtn.onclick = () => { if (liveBox.hidden) { liveBox.hidden = false; store.setMaps(true); mapBtn.textContent = t("hideMap"); if (!mapCtl) startMap(r, liveBox); } else { liveBox.hidden = true; mapBtn.textContent = t("showMap"); } };
+            if (store.maps) startMap(r, liveBox);
             put(holder, h("h1", null, head),
                 h("div", { class: "steps" }, [t("status_DRIVER_ASSIGNED"), t("status_DRIVER_ARRIVED"), t("status_STARTED")].map((s, i) => h("div", { class: i + 1 <= lvl ? "on" : "" }, s))),
                 h("div", { class: "list", style: "margin-bottom:16px" }, h("div", { class: "item", style: "cursor:default" }, avatar(r.driverName),
                     h("span", { class: "grow" }, h("b", null, r.driverName || t("driver")), h("small", null, r.assignedVehicle ? r.assignedVehicle.makeModel : "")), r.assignedVehicle ? plate(r.assignedVehicle.plate) : null)),
-                route, h("div", { style: "margin-top:18px" }, ticket(r.fare, [h("b", null, money(r.fare)), r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")])));
+                mapBtn, liveBox, route, h("div", { style: "margin-top:18px" }, ticket(r.fare, [h("b", null, money(r.fare)), r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")])));
             put(actions, h("button", { class: "btn", onClick: callOther }, icon("phone"), t("callDriver")),
                 h("button", { class: "btn quiet", onClick: () => sosSheet(r) }, icon("shield"), t("safety")));
             if (r.status === "DRIVER_ASSIGNED" || r.status === "DRIVER_ARRIVED") put(actions, h("button", { class: "link", onClick: cancel }, t("cancelRide")));
@@ -202,6 +245,12 @@ export function ride({ id }) {
                 ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")), r.paymentMethod === "cash" ? "" : "via mobile money"]), payBox,
                 r.reward && r.reward.amount ? h("p", { class: "small muted", style: "margin-top:12px" }, "Reward earned: " + r.reward.amount + " THB") : null,
                 r.rating ? h("p", { class: "muted", style: "margin-top:16px" }, t("thanks")) : [h("h3", null, t("rateDriver")), stars(n => { rating = n; }), note]);
+            const claim = h("button", { class: "btn quiet" }, t("claimThb"));
+            claim.onclick = () => busy(claim, async () => {
+                try { await api("/rewards/claim-ride", { method: "POST", body: { rideId: id } }); toast(t("claimed"), "ok"); claim.disabled = true; }
+                catch (e) { toast(/wallet/i.test(e.message) ? t("needWallet") : e.message, "error"); }
+            });
+            put(actions, claim);
             if (!r.rating) {
                 const send = h("button", { class: "btn" }, t("sendRating"));
                 send.onclick = () => busy(send, async () => {
@@ -237,7 +286,7 @@ export function ride({ id }) {
             throw e;
         }
     }, 4000);
-    return { el, dispose: stop };
+    return { el, dispose: () => { stop(); stopMap(); } };
 }
 
 // --------------------------------------------------------------- trips

@@ -1,31 +1,15 @@
+const router = require("express").Router();
+const sec = require("../middleware/security");
+const rideEngine = require("../canonical/ride_engine");
+const stats = require("../services/community_stats");
 
-
-const router=require("express").Router();
-
-const demand=require("../services/demand_service");
-
-
-router.get(
-"/driver/demand",
-(req,res)=>{
-
-res.json(
-demand.getDemand()
-);
-
+const guard = sec.requireRole("APPROVED_DRIVER", "ADMIN");
+router.get("/driver/demand", guard, async (req, res) => {
+    try { res.json({ success: true, ...stats.hotspots(await rideEngine.getAllRides()) }); }
+    catch (e) { res.status(500).json({ success: false, error: "Failed to load demand" }); }
 });
-
-
-router.get(
-"/driver/hotspots",
-(req,res)=>{
-
-res.json(
-demand.getHotspots()
-);
-
+router.get("/driver/hotspots", guard, async (req, res) => {
+    try { res.json({ success: true, ...stats.hotspots(await rideEngine.getAllRides()) }); }
+    catch (e) { res.status(500).json({ success: false, error: "Failed to load hotspots" }); }
 });
-
-
-module.exports=router;
-
+module.exports = router;

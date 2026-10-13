@@ -26,6 +26,11 @@ export async function account() {
                 const close = openSheet(h("h2", null, t("name")), f.el, save);
                 save.onclick = () => busy(save, async () => { try { const r = await api("/auth/profile", { method: "PATCH", body: { name: f.input.value } }); store.setAccount(r.account); close(); go("/account", true); setTimeout(() => location.reload(), 0); } catch (e) { toast(e.message, "error"); } });
             }),
+            row("share", t("invite"), me.referralCode ? t("referralCode").replace(" (optional)", "") + ": " + me.referralCode : t("inviteSub"), () => {
+                const link = location.origin + "/?ref=" + (me.referralCode || "");
+                window.open("https://wa.me/?text=" + encodeURIComponent("Join me on CabLink, rides across Botswana. Use my code " + (me.referralCode || "") + ": " + link), "_blank", "noopener");
+            }),
+            row("pin", t("mapsPref"), store.maps ? "On" : t("mapsPrefSub"), () => { store.setMaps(!store.maps); go("/account", true); location.reload(); }),
             row("shield", t("changePin"), "", () => {
                 const a = field("p1", t("currentPin"), { type: "password", inputmode: "numeric", maxlength: "6" }), b = field("p2", t("newPin"), { type: "password", inputmode: "numeric", maxlength: "6" });
                 const save = h("button", { class: "btn" }, t("save"));

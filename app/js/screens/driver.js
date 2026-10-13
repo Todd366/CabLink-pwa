@@ -5,6 +5,8 @@ import { api, poll } from "../api.js";
 import { go } from "../router.js";
 import { screen, driverTabs } from "../shell.js";
 import { enablePush } from "../push.js";
+import { routeMap } from "../map.js";
+import { coordsFromLabel } from "../places.js";
 import { put, ticket, routeBlock, isActive, sosSheet, openSheet } from "./common.js";
 
 const coordsIn = text => { const m = /\((-?\d+\.\d+),(-?\d+\.\d+)\)/.exec(text || ""); return m ? m[1] + "," + m[2] : null; };
@@ -51,7 +53,20 @@ export async function home() {
     const jobSlot = h("div"), requests = h("div", { style: "margin-top:12px" });
     const statsEl = h("div", { class: "big-stat" });
     const toggle = h("button", { class: "switch" });
-    put(body, toggle, jobSlot, statsEl, requests);
+    const infoSlot = h("div", { style: "margin-top:14px" });
+    put(body, toggle, jobSlot, infoSlot, statsEl, requests);
+    (async () => {
+        try {
+            const { vehicle } = await api("/vehicles/mine");
+            if (!vehicle) put(infoSlot, h("div", { class: "status", style: "background:#fff3e0;color:var(--warn);margin-bottom:10px" }, icon("alert"), t("vehicleMissing")));
+            else if (vehicle.verificationStatus !== "VERIFIED") put(infoSlot, h("div", { class: "status", style: "background:#fff3e0;color:var(--warn);margin-bottom:10px" }, icon("alert"), t("vehiclePending")));
+        } catch (e) { /* optional */ }
+        try {
+            const d = await api("/driver/hotspots");
+            if (d.places && d.places.length) put(infoSlot, h("div", { class: "list" }, h("div", { class: "item", style: "cursor:default" }, h("span", { class: "lead" }, icon("pin")),
+                h("span", { class: "grow" }, h("b", null, t("busyAreas")), h("small", null, d.places.map(p => p.place).join(" · ") + (d.openRequests ? " — " + t("openRequestsNow", { n: d.openRequests }) : ""))))));
+        } catch (e) { /* optional */ }
+    })();
 
     const position = () => new Promise(res => navigator.geolocation ? navigator.geolocation.getCurrentPosition(p => res({ lat: p.coords.latitude, lng: p.coords.longitude }), () => res({}), { timeout: 8000, maximumAge: 60000 }) : res({}));
     const heartbeat = async () => { try { await api("/drivers/online", { method: "POST", body: await position() }); } catch (e) { /* retry next beat */ } };
@@ -100,7 +115,13 @@ const NEXT = {
 export function job({ id }) {
     const holder = h("div"), actions = h("div", { style: "display:grid;gap:10px" });
     const el = screen({ title: t("drive"), back: () => go("/driver/home"), body: holder, actions });
-    let lastKey = "", banner = null;
+    let lastKey = "", banner = null, mapCtl = null, beat = null;
+    const stopMap = () => { if (mapCtl) { mapCtl.destroy(); mapCtl = null; } };
+    const here = () => new Promise(res => navigator.geolocation ? navigator.geolocation.getCurrentPosition(p => res({ lat: p.coords.latitude, lng: p.coords.longitude }), () => res(null), { timeout: 8000, maximumAge: 20000 }) : res(null));
+    const startMap = (r, box) => {
+        const from = coordsFromLabel(r.pickup), to = coordsFromLabel(r.dropoff);
+        routeMap(box, { from, to }).then(c => { mapCtl = c; const tick = async () => { const me = await here(); if (me) { c.update({ from, to, driver: me }); api("/drivers/online", { method: "POST", body: me }).catch(() => {}); } }; tick(); beat = setInterval(tick, 15000); });
+    };
     const callPassenger = async () => { try { const c = await api("/rides/" + encodeURIComponent(id) + "/contact"); location.href = "tel:" + c.phone; } catch (e) { toast(e.message, "error"); } };
 
     const advance = async (r, btn) => {
@@ -118,15 +139,19 @@ export function job({ id }) {
     };
 
     const draw = r => {
-        holder.replaceChildren(); actions.replaceChildren();
+        stopMap(); if (beat) { clearInterval(beat); beat = null; } holder.replaceChildren(); actions.replaceChildren();
         if (r.status === "COMPLETED") {
             put(holder, h("h1", null, t("tripDone")), ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? "Collect cash" : "Mobile money"), r.paymentMethod === "cash" ? "from the passenger" : "ask the passenger to pay your number"]));
             put(actions, h("button", { class: "btn", onClick: () => go("/driver/home") }, t("done"))); return;
         }
         if (r.status === "CANCELLED") { put(holder, h("div", { class: "empty" }, h("b", null, t("status_CANCELLED")))); put(actions, h("button", { class: "btn", onClick: () => go("/driver/home") }, t("done"))); return; }
         const toPickup = ["DRIVER_ASSIGNED", "DRIVER_ARRIVED"].includes(r.status);
+        const liveBox = h("div", { class: "map", hidden: !store.maps });
+        const mapBtn = h("button", { class: "link", style: "margin-bottom:8px" }, store.maps ? t("hideMap") : t("showMap"));
+        mapBtn.onclick = () => { if (liveBox.hidden) { liveBox.hidden = false; store.setMaps(true); mapBtn.textContent = t("hideMap"); if (!mapCtl) startMap(r, liveBox); } else { liveBox.hidden = true; mapBtn.textContent = t("showMap"); } };
+        if (store.maps) startMap(r, liveBox);
         put(holder, h("div", { class: "status", style: "margin-bottom:14px" }, h("span", { class: "pulse" }), t("status_" + r.status)),
-            routeBlock(r.pickup, r.dropoff), r.notes ? h("p", { class: "muted", style: "margin-top:12px" }, "“" + r.notes + "”") : null,
+            mapBtn, liveBox, routeBlock(r.pickup, r.dropoff), r.notes ? h("p", { class: "muted", style: "margin-top:12px" }, "“" + r.notes + "”") : null,
             h("div", { style: "margin-top:16px" }, ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")), r.distanceKm + " " + t("km")])));
         const [, labelKey] = NEXT[r.status] || [];
         if (labelKey) { const b = h("button", { class: "btn go" }, t(labelKey)); b.onclick = () => busy(b, () => advance(r, b)); put(actions, b); }
@@ -145,7 +170,7 @@ export function job({ id }) {
         try { const r = await refresh(); if (["COMPLETED", "CANCELLED"].includes(r.status)) stop(); }
         catch (e) { if (!banner) { banner = h("div", { class: "banner" }, t("weakConnection")); el.querySelector("#net").append(banner); } throw e; }
     }, 5000);
-    return { el, dispose: stop };
+    return { el, dispose: () => { stop(); stopMap(); if (beat) clearInterval(beat); } };
 }
 
 // ------------------------------------------------------------- earnings
@@ -160,6 +185,15 @@ export async function earnings() {
             h("div", null, h("b", null, money(sum(done))), h("small", { class: "muted" }, t("allTime"))), h("div", null, h("b", null, String(done.length)), h("small", { class: "muted" }, t("tripsDone")))),
             done.length ? h("div", { class: "list" }, done.slice(0, 30).map(r => h("div", { class: "item" }, h("span", { class: "grow" }, h("b", null, r.dropoff), h("small", null, ago(r.createdAt))), h("b", null, money(r.fare)))))
                 : h("div", { class: "empty" }, h("b", null, t("noTrips")), t("noTripsSub")));
+        api("/leaderboard").then(({ drivers }) => {
+            if (!drivers.length) return;
+            const rows = drivers.map(d => h("div", { class: "item", style: "cursor:default" },
+                h("span", { class: "lead" }, "#" + d.rank),
+                h("span", { class: "grow" },
+                    h("b", null, d.name + (d.driverId === me.id ? " (you)" : "")),
+                    h("small", null, d.rides + " " + t("tripsDone") + (d.rating ? " · ★ " + d.rating : "")))));
+            put(body, h("h3", null, t("leaderboard")), h("p", { class: "muted small" }, t("leaderboardSub")), h("div", { class: "list" }, rows));
+        }).catch(() => {});
     }).catch(e => body.replaceChildren(h("div", { class: "empty" }, h("b", null, e.message))));
     return { el };
 }

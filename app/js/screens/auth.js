@@ -48,6 +48,7 @@ export function register() {
     const name = h("input", { id: "name", autocomplete: "name", maxlength: "60" });
     const nameErr = h("div", { class: "err", role: "alert" });
     const phone = phoneField(), pin = pinField("pin", t("pin")), pin2 = pinField("pin2", t("pinConfirm"));
+    const refIn = h("input", { id: "ref", maxlength: "12", autocomplete: "off", value: store.ref, style: "text-transform:uppercase" });
     const submit = h("button", { class: "btn", type: "button" }, t("register"));
     submit.onclick = () => busy(submit, async () => {
         [nameErr, phone.err, pin.err, pin2.err].forEach(e => e.textContent = "");
@@ -57,7 +58,7 @@ export function register() {
         if (!validPin(pin.input.value)) return void (pin.err.textContent = t("pinShort"));
         if (pin.input.value !== pin2.input.value) return void (pin2.err.textContent = t("pinMismatch"));
         try {
-            await api("/auth/register", { method: "POST", body: { name: name.value.trim(), phone: p, pin: pin.input.value }, auth: false });
+            await api("/auth/register", { method: "POST", body: { name: name.value.trim(), phone: p, pin: pin.input.value, referralCode: refIn.value.trim().toUpperCase() || undefined }, auth: false });
             const r = await api("/auth/login", { method: "POST", body: { phone: p, pin: pin.input.value }, auth: false });
             store.setSession(r.token, r.account);
             await afterLogin(r.account);
@@ -66,7 +67,7 @@ export function register() {
     const el = screen({
         back: () => go("/auth/login"),
         body: [h("h1", null, t("register")),
-            h("div", { class: "field" }, h("label", { for: "name" }, t("name")), name, nameErr), phone.el, pin.el, pin2.el,
+            h("div", { class: "field" }, h("label", { for: "name" }, t("name")), name, nameErr), phone.el, pin.el, pin2.el, h("div", { class: "field" }, h("label", { for: "ref" }, t("referralCode")), refIn),
             h("p", { class: "muted small" }, t("agree") + " ", h("a", { href: "/legal.html", target: "_blank", rel: "noopener" }, t("terms")), ".")],
         actions: [submit, h("button", { class: "link", onClick: () => go("/auth/login") }, t("haveAccount"))]
     });

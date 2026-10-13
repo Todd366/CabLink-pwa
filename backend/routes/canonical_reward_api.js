@@ -19,6 +19,7 @@ const auth =
 
 router.post(
     "/ride/:rideId",
+    require("../middleware/security").requireAdmin,
     async (req, res) => {
 
         try {

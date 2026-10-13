@@ -92,3 +92,18 @@ export function describeGps(lat, lng) {
     const coords = lat.toFixed(5) + "," + lng.toFixed(5);
     return (near ? "My location, near " + near.name : "My location") + " (" + coords + ")";
 }
+
+// Recover coordinates from a ride label: either "(lat,lng)" written by GPS or
+// pin pickup, or a known place name from the gazetteer.
+export function coordsFromLabel(label) {
+    const text = String(label || "");
+    const m = /\((-?\d+\.\d+),\s*(-?\d+\.\d+)\)/.exec(text);
+    if (m) return { lat: +m[1], lng: +m[2] };
+    let best = null;
+    for (const p of PLACES) if (text.toLowerCase().includes(p.name.toLowerCase()) && (!best || p.name.length > best.name.length)) best = p;
+    return best ? { lat: best.lat, lng: best.lng } : null;
+}
+export function describePin(lat, lng) {
+    const near = nearest({ lat, lng }, 25);
+    return (near ? "Pin near " + near.name : "Pin") + " (" + lat.toFixed(5) + "," + lng.toFixed(5) + ")";
+}

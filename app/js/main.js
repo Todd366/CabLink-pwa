@@ -37,6 +37,7 @@ route("/auth/login", login);
 route("/auth/register", register);
 route("/rider/home", guard(["PASSENGER"], rider.home));
 route("/rider/where/:kind", guard(["PASSENGER"], rider.where));
+route("/rider/pin/:kind", guard(["PASSENGER"], rider.pin));
 route("/rider/trip", guard(["PASSENGER"], rider.trip));
 route("/rider/ride/:id", guard(["PASSENGER"], rider.ride));
 route("/rider/trips", guard(["PASSENGER"], rider.trips));
@@ -52,6 +53,8 @@ window.addEventListener("offline", () => toast(t("offline"), "error"));
 window.addEventListener("online", () => toast(t("online"), "ok"));
 
 async function boot() {
+    const ref = new URLSearchParams(location.search).get("ref");
+    if (ref && /^[A-Za-z0-9]{4,12}$/.test(ref)) store.setRef(ref.toUpperCase());
     document.documentElement.lang = store.lang === "tn" ? "tn" : "en";
     if (store.token) {
         try { store.setAccount((await api("/auth/me")).account); } catch (e) { /* offline: keep cached account */ }
