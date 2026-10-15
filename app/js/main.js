@@ -1,3 +1,4 @@
+import "./reporter.js";
 import { store } from "./store.js";
 import { api } from "./api.js";
 import { route, go, render } from "./router.js";

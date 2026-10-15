@@ -5,7 +5,7 @@ import { go } from "../router.js";
 import { screen } from "../shell.js";
 import { statusLabel, isActive } from "./common.js";
 
-const TABS = [["apps", "applications"], ["news", "updates"], ["veh", "vehicles"], ["rides", "rides"], ["safety", "incidents"], ["people", "people"], ["stats", "overview"]];
+const TABS = [["apps", "applications"], ["news", "updates"], ["veh", "vehicles"], ["rides", "rides"], ["safety", "incidents"], ["people", "people"], ["errors", "errors"], ["stats", "overview"]];
 const card = (...kids) => h("div", { class: "list", style: "margin-bottom:14px" }, ...kids);
 const row = (...kids) => h("div", { class: "item", style: "cursor:default" }, ...kids);
 const pair = (a, b) => h("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px" }, a, b);
@@ -68,6 +68,11 @@ export function admin() {
             return h("div", null, h("h3", { style: "margin-top:0" }, t("postUpdate")), title, msg, aud, post,
                 announcements.length ? h("div", { style: "margin-top:20px" }, announcements.map(a => card(row(h("span", { class: "grow" }, h("b", null, a.title), h("small", null, a.message), h("small", null, a.audience + " · " + ago(a.createdAt))),
                     h("button", { class: "chip", onClick: () => act(() => api("/admin/announcements/" + encodeURIComponent(a.id), { method: "DELETE" })) }, t("remove")))))) : null);
+        },
+        async errors() {
+            const { errors } = await api("/admin/client-errors");
+            if (!errors.length) return empty();
+            return card(errors.map(e => row(h("span", { class: "grow" }, h("b", null, e.message), h("small", null, e.where + " " + e.page), h("small", null, e.account + " · " + ago(e.createdAt)), h("small", { style: "word-break:break-all" }, e.agent)))));
         },
         async stats() {
             const { insights } = await api("/admin/insights");

@@ -31,6 +31,11 @@ export async function home() {
         h("button", { class: "item", onClick: () => { draft.task = "delivery"; go("/rider/where/dest"); } },
             h("span", { class: "lead" }, icon("box")), h("span", { class: "grow" }, h("b", null, t("sendParcel")), h("small", null, t("parcelSub")))));
     put(body, list);
+    const saved = store.saved;
+    if (saved.home || saved.work) {
+        put(body, h("div", { class: "chips", style: "margin-top:16px" }, [["home", "home"], ["work", "work"]].filter(([k]) => saved[k]).map(([k, l]) =>
+            h("button", { class: "chip", onClick: () => { draft.task = "ride"; draft.dest = saved[k]; draft.km = saved[k].km || null; go("/rider/trip"); } }, t(l) + " · " + saved[k].name))));
+    }
     const recents = store.recents;
     if (recents.length) {
         put(body, h("h3", null, t("recent")), h("div", { class: "list" }, recents.map(r =>
@@ -133,6 +138,13 @@ export function trip() {
             return;
         }
         const fare = estimateFare({ vehicle: draft.vehicle, km, task: draft.task });
+        if (draft.dest) {
+            put(body, h("div", { class: "chips", style: "margin-top:10px" }, [["home", "home"], ["work", "work"]].map(([k, l]) => {
+                const b = h("button", { class: "chip", style: "min-height:40px;font-size:14px" }, t("saveAs", { label: t(l) }));
+                b.onclick = () => { store.setSaved(k, draft.dest); b.textContent = "✓ " + t("savedAs", { label: t(l) }); b.disabled = true; };
+                return b;
+            })));
+        }
         const a = draft.pickup && draft.pickup.lat != null ? draft.pickup : null, b = draft.dest && draft.dest.lat != null ? draft.dest : null;
         if (a && b) {
             const mapBox = h("div", { class: "map", hidden: !store.maps });
@@ -253,6 +265,14 @@ export function ride({ id }) {
                 catch (e) { toast(/wallet/i.test(e.message) ? t("needWallet") : e.message, "error"); }
             });
             put(actions, claim);
+            const share = h("button", { class: "btn ghost" }, icon("share"), t("receipt"));
+            share.onclick = () => {
+                const text = "CabLink receipt\n" + r.pickup.replace(/\s*\(-?\d+\.\d+,-?\d+\.\d+\)/, "") + " → " + r.dropoff + "\nFare: " + money(r.fare) + " (" + (r.paymentMethod === "cash" ? "cash" : "mobile money") + ")" +
+                    (r.driverName ? "\nDriver: " + r.driverName : "") + (r.assignedVehicle ? " · " + r.assignedVehicle.makeModel + " " + r.assignedVehicle.plate : "") +
+                    "\n" + new Date(r.completedAt || r.updatedAt || Date.now()).toLocaleString("en-GB") + "\nTrip ID: " + r.id;
+                window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener");
+            };
+            put(actions, share);
             if (!r.rating) {
                 const send = h("button", { class: "btn" }, t("sendRating"));
                 send.onclick = () => busy(send, async () => {

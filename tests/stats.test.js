@@ -30,3 +30,14 @@ test("announcements are filtered by audience, expiry and retirement", () => {
     assert.deepEqual(visibleTo("APPROVED_DRIVER", list, n).map(x => x.title).sort(), ["all", "drivers"]);
     assert.deepEqual(visibleTo("PASSENGER", list, n).map(x => x.title).sort(), ["all", "riders"]);
 });
+
+const rules = require("../backend/services/ride_rules");
+test("ride rules: stale app rides vanish, Digital Mall deliveries wait longer and need no distance", () => {
+    const now = Date.parse("2026-10-14T12:00:00Z");
+    const mk = (o) => Object.assign({ status: "MATCHING", createdAt: "2026-10-14T11:30:00Z", distanceKm: 5, source: "app" }, o);
+    assert.equal(rules.isOpenForDrivers(mk({}), now), true);
+    assert.equal(rules.isOpenForDrivers(mk({ createdAt: "2026-10-14T10:00:00Z" }), now), false);
+    assert.equal(rules.isOpenForDrivers(mk({ distanceKm: 0 }), now), false);
+    assert.equal(rules.isOpenForDrivers(mk({ source: "digital_mall", distanceKm: 0, createdAt: "2026-10-14T09:00:00Z" }), now), true);
+    assert.equal(rules.isOpenForDrivers(mk({ status: "REQUESTED" }), now), false);
+});

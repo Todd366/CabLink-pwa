@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const rideEngine = require("../canonical/ride_engine");
+const geo = require("../geo/geo");
+const { calcFare } = require("../pricing/fare");
 
 // ============================================================
 // DIGITAL MALL (bstm-marketplace-app) INTEGRATION
@@ -71,10 +73,21 @@ router.post("/marketplace/tasks", requireMarketplaceAuth, async (req, res) => {
             });
         }
 
-        const ride = await rideEngine.createRide({
+        // Work out the distance from known places / coordinates so the driver sees
+        // a real fare and distance. Falls back to the shop's own fare if unknown.
+        const a = geo.coordsFromLabel(pickup), b = geo.coordsFromLabel(dropoff);
+        const straight = a && b ? geo.haversineKm(a, b) : 0;
+        const km = straight ? Math.max(1, Math.round(straight * (straight < 12 ? 1.4 : 1.25) * 10) / 10) : 0;
+        const given = Number(fare);
+        const price = given > 0 && given <= 20000 ? Math.round(given) : (km ? calcFare({ distanceKm: km, taskType: "delivery" }).total : 25);
+        const phone = String(customerPhone || "").replace(/[^\d+]/g, "").slice(0, 16) || null;
+
+        const created = await rideEngine.createRide({
             pickup,
             dropoff,
-            fare: fare || 25,
+            distanceKm: km,
+            customerPhone: phone,
+            fare: price,
             notes: [itemDescription, notes].filter(Boolean).join(" — "),
             source: "digital_mall",
             taskType: "delivery",
@@ -82,6 +95,10 @@ router.post("/marketplace/tasks", requireMarketplaceAuth, async (req, res) => {
             passenger: customerName || "Digital Mall customer",
             passengerName: customerName || null
         });
+
+        // Put the order in front of drivers (the app does the same for its own rides).
+        const moved = await rideEngine.transition(created.id, "MATCHING");
+        const ride = moved && moved.success ? moved.ride : created;
 
         res.json({
             success: true,

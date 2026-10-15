@@ -59,12 +59,13 @@ const EN = {
     mapsPref: "Show maps", mapsPrefSub: "Maps use more mobile data. Off by default.", leaderboard: "Top drivers", leaderboardSub: "Most completed trips in the last 30 days", busyAreas: "Busy areas", openRequestsNow: "{n} open requests now",
     vehicleMissing: "Your vehicle is not registered yet. An admin will verify it.", vehiclePending: "Your vehicle is waiting for verification.", invite: "Invite friends", inviteSub: "Share your code. Friends join CabLink with it.",
     referralCode: "Referral code (optional)", claimThb: "Claim your THB reward", claimed: "Reward claimed", needWallet: "Add your wallet in Account first", rank: "#",
-    vehicles: "Vehicles", rides: "Rides", people: "People",
+    errors: "App errors", vehicles: "Vehicles", rides: "Rides", people: "People",
     ecosystem: "BSTM ecosystem", ecosystemSub: "Other BSTM apps and services", help: "Help and report a problem", helpSub: "Safety, lost items, payment or driver issues",
     helpTitle: "How can we help?", helpSend: "Send to CabLink", helpSent: "Thank you. The CabLink team will look into it.", helpPlaceholder: "Tell us what happened",
     earnsYou: "You earn", kmAway: "{km} km from you", driversOnline: "{n} drivers online", oneDriverOnline: "1 driver online", noDriversOnline: "No drivers online right now",
     yourStats: "Your trips", spent: "spent", rating: "Rating", ratings: "ratings", updates: "Updates", postUpdate: "Post an update", audience: "Who sees it", everyone: "Everyone", riders: "Riders", drivers: "Drivers",
     updateTitle: "Title", updateMessage: "Message", publish: "Publish", remove: "Remove", close: "Close",
+    home: "Home", work: "Work", saveAs: "Save as {label}", savedAs: "Saved as {label}", receipt: "Share receipt", digitalMall: "Digital Mall delivery", distanceUnknown: "distance not set",
     overview: "Overview", nothingHere: "Nothing here yet", install: "Install CabLink", installSub: "Add to your home screen for faster access"
 };
 

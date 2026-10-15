@@ -22,6 +22,7 @@ const {
 const sec = require("../middleware/security");
 const { calcFare, splitFare } = require("../pricing/fare");
 const geo = require("../geo/geo");
+const rules = require("../services/ride_rules");
 
 const STALE_MS = 45 * 60 * 1000;
 
@@ -30,7 +31,7 @@ const STALE_MS = 45 * 60 * 1000;
 async function expireStale(req, res, next) {
     try {
         const ride = await rideEngine.getRide(req.params.id);
-        if (ride && ride.status === "MATCHING" && Date.now() - new Date(ride.createdAt).getTime() > STALE_MS) {
+        if (ride && ride.status === "MATCHING" && rules.isStale(ride)) {
             await rideEngine.transition(ride.id, "CANCELLED", { reason: "No driver was available" });
         }
     } catch (e) { /* never block the read */ }
@@ -83,7 +84,7 @@ function publicRide(r) {
         id: r.id, pickup: r.pickup, dropoff: r.dropoff, fare: r.fare,
         distanceKm: r.distanceKm, vehicle: r.vehicle, notes: r.notes,
         paymentMethod: r.paymentMethod, stops: r.stops || [],
-        taskType: r.taskType || null, status: r.status, createdAt: r.createdAt,
+        taskType: r.taskType || null, source: r.source || "app", status: r.status, createdAt: r.createdAt,
         driverEarns: splitFare(r.fare, r.taskType).driverEarns
     };
 }
@@ -364,7 +365,11 @@ router.patch("/:id/accept", sec.requireRole("APPROVED_DRIVER"), (req, res, next)
 router.get("/open", sec.requireRole("APPROVED_DRIVER", "ADMIN"), async (req, res) => {
     try {
         const all = await rideEngine.getAllRides();
-        let open = all.filter(r => r.status === "MATCHING" && Date.now() - new Date(r.createdAt).getTime() < STALE_MS && Number(r.distanceKm) > 0);
+        // Housekeeping: close requests nobody took (max 20 per call).
+        for (const old of all.filter(r => r.status === "MATCHING" && rules.isStale(r)).slice(0, 20)) {
+            rideEngine.transition(old.id, "CANCELLED", { reason: "No driver was available" }).catch(() => {});
+        }
+        let open = all.filter(r => rules.isOpenForDrivers(r));
         // Nearest first: distance from this driver's last known position to each pickup.
         const registry = require("../services/driver_registry_service");
         const mine = (await registry.all()).find(d => d.id === req.account.id);
@@ -504,6 +509,10 @@ router.get("/:id/contact", sec.requireAuth, async (req, res) => {
         const me = req.account;
         const live = ["DRIVER_ASSIGNED", "DRIVER_ARRIVED", "PICKED_UP", "STARTED"].includes(ride.status);
         if (!live) return res.status(409).json({ success: false, error: "This trip is not active" });
+        const isDriver = ride.driverId === me.id || ride.driverAccountId === me.id;
+        if (isDriver && !ride.passengerAccountId && ride.customerPhone) {
+            return res.json({ success: true, name: ride.passengerName || "Customer", phone: ride.customerPhone });
+        }
         let otherId = null;
         if (ride.passengerAccountId === me.id) otherId = ride.driverAccountId || ride.driverId;
         else if (ride.driverId === me.id || ride.driverAccountId === me.id) otherId = ride.passengerAccountId;

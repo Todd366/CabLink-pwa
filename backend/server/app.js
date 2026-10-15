@@ -213,6 +213,11 @@ app.use(
     require("../routes/announcements_api")
 );
 
+app.use(
+    "/api",
+    require("../routes/client_errors_api")
+);
+
 
 // ============================================================
 // AUTH + DRIVER APPLICATIONS

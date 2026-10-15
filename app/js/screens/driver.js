@@ -77,7 +77,7 @@ export async function home() {
         const { rides } = await api("/rides/open");
         requests.replaceChildren(rides.length ? h("div", null, rides.map(r => {
             const b = h("button", { class: "btn go" }, t("accept") + " · " + money(r.fare));
-            const meta = (r.pickupKm != null ? t("kmAway", { km: r.pickupKm }) + " · " : "") + r.distanceKm + " " + t("km") + " · " + t("earnsYou") + " " + money(r.driverEarns) + " · " + (r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")) + (r.taskType === "delivery" ? " · " + t("sendParcel") : "") + (r.notes ? " · " + r.notes : "");
+            const meta = (r.source === "digital_mall" ? t("digitalMall") + " · " : "") + (r.pickupKm != null ? t("kmAway", { km: r.pickupKm }) + " · " : "") + (r.distanceKm > 0 ? r.distanceKm + " " + t("km") : t("distanceUnknown")) + " · " + t("earnsYou") + " " + money(r.driverEarns) + " · " + (r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")) + (r.taskType === "delivery" ? " · " + t("sendParcel") : "") + (r.notes ? " · " + r.notes : "");
             b.onclick = () => busy(b, async () => {
                 try { await api("/rides/" + encodeURIComponent(r.id) + "/accept", { method: "PATCH", body: {} }); go("/driver/job/" + r.id); }
                 catch (e) { toast(e.status === 409 ? "Another driver took this ride" : e.message, "error"); loadRequests().catch(() => {}); }

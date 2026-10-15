@@ -159,6 +159,9 @@ async function createRide(
         passengerName:
             data.passengerName ||
             null,
+        customerPhone:
+            data.customerPhone ||
+            null,
 
         driverId:
             null,
