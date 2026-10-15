@@ -7,7 +7,7 @@ import { screen, driverTabs } from "../shell.js";
 import { enablePush } from "../push.js";
 import { routeMap } from "../map.js";
 import { coordsFromLabel } from "../places.js";
-import { put, ticket, routeBlock, isActive, sosSheet, openSheet } from "./common.js";
+import { announcements, put, ticket, routeBlock, isActive, sosSheet, openSheet } from "./common.js";
 
 const coordsIn = text => { const m = /\((-?\d+\.\d+),(-?\d+\.\d+)\)/.exec(text || ""); return m ? m[1] + "," + m[2] : null; };
 const navUrl = place => "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(coordsIn(place) || place + ", Botswana");
@@ -55,6 +55,7 @@ export async function home() {
     const toggle = h("button", { class: "switch" });
     const infoSlot = h("div", { style: "margin-top:14px" });
     put(body, toggle, jobSlot, infoSlot, statsEl, requests);
+    announcements().then(box => body.prepend(box));
     (async () => {
         try {
             const { vehicle } = await api("/vehicles/mine");
@@ -76,11 +77,12 @@ export async function home() {
         const { rides } = await api("/rides/open");
         requests.replaceChildren(rides.length ? h("div", null, rides.map(r => {
             const b = h("button", { class: "btn go" }, t("accept") + " · " + money(r.fare));
+            const meta = (r.pickupKm != null ? t("kmAway", { km: r.pickupKm }) + " · " : "") + r.distanceKm + " " + t("km") + " · " + t("earnsYou") + " " + money(r.driverEarns) + " · " + (r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")) + (r.taskType === "delivery" ? " · " + t("sendParcel") : "") + (r.notes ? " · " + r.notes : "");
             b.onclick = () => busy(b, async () => {
                 try { await api("/rides/" + encodeURIComponent(r.id) + "/accept", { method: "PATCH", body: {} }); go("/driver/job/" + r.id); }
                 catch (e) { toast(e.status === 409 ? "Another driver took this ride" : e.message, "error"); loadRequests().catch(() => {}); }
             });
-            return h("div", { style: "margin-bottom:18px" }, routeBlock(r.pickup, r.dropoff), h("div", { style: "margin:10px 0", class: "small muted" }, r.distanceKm + " " + t("km") + " · " + (r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")) + (r.taskType === "delivery" ? " · " + t("sendParcel") : "") + (r.notes ? " · " + r.notes : "")), b);
+            return h("div", { style: "margin-bottom:18px" }, routeBlock(r.pickup, r.dropoff), h("div", { style: "margin:10px 0", class: "small muted" }, meta), b);
         })) : h("div", { class: "empty" }, h("b", null, t("noRequests")), t("waitingRequests")));
     };
     const setOnline = async on => {
@@ -180,7 +182,8 @@ export async function earnings() {
     api("/rides/mine").then(({ rides }) => {
         const done = completedBy(rides, me).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         const now = Date.now(), week = done.filter(r => now - new Date(r.createdAt) < 7 * 864e5), todayKey = dayKey(new Date().toISOString()), today = done.filter(r => dayKey(r.createdAt) === todayKey);
-        body.replaceChildren(h("div", { class: "big-stat" },
+        const rated = done.filter(r => Number(r.rating) > 0), avg = rated.length ? (rated.reduce((a, r) => a + Number(r.rating), 0) / rated.length).toFixed(1) : null;
+        body.replaceChildren(avg ? h("p", { class: "muted", style: "margin:0 0 6px" }, "★ " + avg + " · " + rated.length + " " + t("ratings")) : "", h("div", { class: "big-stat" },
             h("div", null, h("b", null, money(sum(today))), h("small", { class: "muted" }, t("today"))), h("div", null, h("b", null, money(sum(week))), h("small", { class: "muted" }, t("thisWeek"))),
             h("div", null, h("b", null, money(sum(done))), h("small", { class: "muted" }, t("allTime"))), h("div", null, h("b", null, String(done.length)), h("small", { class: "muted" }, t("tripsDone")))),
             done.length ? h("div", { class: "list" }, done.slice(0, 30).map(r => h("div", { class: "item" }, h("span", { class: "grow" }, h("b", null, r.dropoff), h("small", null, ago(r.createdAt))), h("b", null, money(r.fare)))))

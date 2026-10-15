@@ -5,7 +5,7 @@ import { go } from "../router.js";
 import { screen } from "../shell.js";
 import { statusLabel, isActive } from "./common.js";
 
-const TABS = [["apps", "applications"], ["veh", "vehicles"], ["rides", "rides"], ["safety", "incidents"], ["people", "people"], ["stats", "overview"]];
+const TABS = [["apps", "applications"], ["news", "updates"], ["veh", "vehicles"], ["rides", "rides"], ["safety", "incidents"], ["people", "people"], ["stats", "overview"]];
 const card = (...kids) => h("div", { class: "list", style: "margin-bottom:14px" }, ...kids);
 const row = (...kids) => h("div", { class: "item", style: "cursor:default" }, ...kids);
 const pair = (a, b) => h("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px" }, a, b);
@@ -56,6 +56,18 @@ export function admin() {
             const by = {}; accounts.forEach(a => { by[a.role] = (by[a.role] || 0) + 1; });
             return h("div", null, h("p", { class: "muted" }, Object.entries(by).map(([k, v]) => v + " " + k.toLowerCase().replace("_", " ")).join(" · ")),
                 card(accounts.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(a => row(h("span", { class: "grow" }, h("b", null, a.name), h("small", null, "+267 " + showPhone(a.phone) + " · " + a.role.toLowerCase().replace("_", " ") + " · " + ago(a.createdAt)))))));
+        },
+        async news() {
+            const { announcements } = await api("/admin/announcements");
+            const title = h("input", { placeholder: t("updateTitle"), maxlength: "80", style: "width:100%;min-height:50px;padding:0 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);margin-bottom:8px" });
+            const msg = h("textarea", { rows: "3", maxlength: "400", placeholder: t("updateMessage"), style: "width:100%;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);margin-bottom:8px" });
+            const aud = h("select", { style: "width:100%;min-height:50px;padding:0 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);margin-bottom:10px" },
+                [["ALL", t("everyone")], ["RIDERS", t("riders")], ["DRIVERS", t("drivers")]].map(([v, l]) => h("option", { value: v }, l)));
+            const post = h("button", { class: "btn" }, t("publish"));
+            post.onclick = () => act(() => api("/admin/announcements", { method: "POST", body: { title: title.value, message: msg.value, audience: aud.value, days: 14 } }));
+            return h("div", null, h("h3", { style: "margin-top:0" }, t("postUpdate")), title, msg, aud, post,
+                announcements.length ? h("div", { style: "margin-top:20px" }, announcements.map(a => card(row(h("span", { class: "grow" }, h("b", null, a.title), h("small", null, a.message), h("small", null, a.audience + " · " + ago(a.createdAt))),
+                    h("button", { class: "chip", onClick: () => act(() => api("/admin/announcements/" + encodeURIComponent(a.id), { method: "DELETE" })) }, t("remove")))))) : null);
         },
         async stats() {
             const { insights } = await api("/admin/insights");

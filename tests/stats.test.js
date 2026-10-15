@@ -21,3 +21,12 @@ test("hotspots count open requests and group pickup places", () => {
     assert.ok(!h.places.some(p => p.place === "Ghost" || p.place === "Zero"));
 });
 test("placeOf strips coordinates and the 'My location' prefix", () => assert.equal(placeOf("My location, near Kanye (-24.9,25.3)".replace("-24.9,25.3", "-24.90000,25.30000")), "Kanye"));
+
+const { visibleTo } = require("../backend/services/announcement_service");
+test("announcements are filtered by audience, expiry and retirement", () => {
+    const n = Date.parse("2026-10-14T00:00:00Z");
+    const a = (o) => Object.assign({ id: o.title, message: "m", createdAt: "2026-10-13T00:00:00Z", audience: "ALL" }, o);
+    const list = [a({ title: "all" }), a({ title: "drivers", audience: "DRIVERS" }), a({ title: "riders", audience: "RIDERS" }), a({ title: "old", expiresAt: "2026-10-01T00:00:00Z" }), a({ title: "gone", active: false })];
+    assert.deepEqual(visibleTo("APPROVED_DRIVER", list, n).map(x => x.title).sort(), ["all", "drivers"]);
+    assert.deepEqual(visibleTo("PASSENGER", list, n).map(x => x.title).sort(), ["all", "riders"]);
+});

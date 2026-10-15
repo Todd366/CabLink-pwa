@@ -19,12 +19,28 @@ export async function account() {
     const row = (ic, title, sub, fn) => h("button", { class: "item", onClick: fn }, h("span", { class: "lead" }, icon(ic)), h("span", { class: "grow" }, h("b", null, title), sub ? h("small", null, sub) : null));
 
     body.append(h("h1", null, me.name), h("p", { class: "muted" }, "+267 " + showPhone(me.phone) + (isDriver ? " · " + t("driver") : "")),
+        h("div", { id: "stats", style: "margin:-4px 0 12px" }),
         h("div", { class: "list" },
             row("user", t("name"), me.name, () => {
                 const f = field("nm", t("name"), { value: me.name, maxlength: "60" });
                 const save = h("button", { class: "btn" }, t("save"));
                 const close = openSheet(h("h2", null, t("name")), f.el, save);
                 save.onclick = () => busy(save, async () => { try { const r = await api("/auth/profile", { method: "PATCH", body: { name: f.input.value } }); store.setAccount(r.account); close(); go("/account", true); setTimeout(() => location.reload(), 0); } catch (e) { toast(e.message, "error"); } });
+            }),
+            row("box", t("ecosystem"), t("ecosystemSub"), () => go("/ecosystem")),
+            row("alert", t("help"), t("helpSub"), () => {
+                const types = [["SAFETY", "Safety concern"], ["DRIVER_ISSUE", "Driver issue"], ["PASSENGER_ISSUE", "Passenger issue"], ["LOST_PROPERTY", "Lost item"], ["PAYMENT_DISPUTE", "Payment problem"], ["SUPPORT", "Something else"]];
+                let kind = "SUPPORT";
+                const sel = h("select", { id: "kind", style: "width:100%;min-height:54px;padding:0 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface)" }, types.map(([v, l]) => h("option", { value: v }, l)));
+                sel.value = kind; sel.onchange = () => { kind = sel.value; };
+                const msg = h("textarea", { rows: "4", maxlength: "400", placeholder: t("helpPlaceholder"), style: "width:100%;border-radius:14px;border:2px solid var(--line);padding:12px 16px;background:var(--surface)" });
+                const send = h("button", { class: "btn" }, t("helpSend"));
+                const close = openSheet(h("h2", null, t("helpTitle")), sel, msg, send);
+                send.onclick = () => busy(send, async () => {
+                    if (msg.value.trim().length < 5) return toast(t("required"), "error");
+                    try { await api("/incidents", { method: "POST", body: { type: kind, description: msg.value.trim() } }); toast(t("helpSent"), "ok"); close(); }
+                    catch (e) { toast(e.message, "error"); }
+                });
             }),
             row("share", t("invite"), me.referralCode ? t("referralCode").replace(" (optional)", "") + ": " + me.referralCode : t("inviteSub"), () => {
                 const link = location.origin + "/?ref=" + (me.referralCode || "");
@@ -72,5 +88,13 @@ export async function account() {
         h("h3", null, t("language")), langSwitch(),
         installEvent ? h("button", { class: "btn quiet", style: "margin-top:20px", onClick: async () => { installEvent.prompt(); installEvent = null; } }, t("install")) : null,
         h("button", { class: "btn ghost", style: "margin-top:28px", onClick: () => { store.clear(); go("/welcome"); } }, t("logout")));
+    if (me.role === "PASSENGER") {
+        api("/rides/mine").then(({ rides }) => {
+            const done = rides.filter(r => r.passengerAccountId === me.id && r.status === "COMPLETED");
+            if (!done.length) return;
+            const total = done.reduce((a, r) => a + (Number(r.fare) || 0), 0);
+            el.querySelector("#stats").append(h("div", { class: "big-stat" }, h("div", null, h("b", null, String(done.length)), h("small", { class: "muted" }, t("trips"))), h("div", null, h("b", null, "P" + Math.round(total)), h("small", { class: "muted" }, t("spent")))));
+        }).catch(() => {});
+    }
     return { el };
 }

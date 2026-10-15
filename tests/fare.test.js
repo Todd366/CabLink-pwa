@@ -13,3 +13,10 @@ test("hostile input cannot produce negative or absurd fares", () => {
     assert.equal(calcFare({ distanceKm: -50 }).total, 15);
     assert.ok(calcFare({ distanceKm: 1e9 }).total < 20000);
 });
+
+const { splitFare } = require("../backend/pricing/fare");
+test("delivery follows the BSTM rule: P20 + P5/km, 80% to the driver", () => {
+    assert.equal(calcFare({ distanceKm: 10, taskType: "delivery" }).total, 70);
+    assert.deepEqual(splitFare(70, "delivery"), { driverEarns: 56, platformFee: 14 });
+    const r = splitFare(100, "ride"); assert.ok(r.driverEarns > 85 && r.driverEarns + r.platformFee === 100);
+});

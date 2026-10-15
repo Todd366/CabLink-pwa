@@ -92,4 +92,17 @@ router.post("/drivers/offline", sec.requireAuth, async (req, res) => {
     }
 });
 
+// How many drivers are online (optionally within 25 km of a point).
+// Counts only: no identities or exact positions are shared with riders.
+router.get("/drivers/nearby-count", sec.requireAuth, async (req, res) => {
+    try {
+        const geo = require("../geo/geo");
+        const all = (await registry.all()).filter(d => d.status === "ONLINE");
+        const lat = Number(req.query.lat), lng = Number(req.query.lng);
+        const point = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+        const near = point ? all.filter(d => Number.isFinite(Number(d.lat)) && geo.haversineKm(point, { lat: Number(d.lat), lng: Number(d.lng) }) <= 25) : all;
+        res.json({ success: true, count: near.length, total: all.length });
+    } catch (e) { res.status(500).json({ success: false, error: "Failed to count drivers" }); }
+});
+
 module.exports = router;

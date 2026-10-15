@@ -8,7 +8,7 @@ import { search, roadKm, describeGps, describePin, coordsFromLabel } from "../pl
 import { routeMap, pinPicker } from "../map.js";
 import { estimateFare } from "../fare.js";
 import { enablePush } from "../push.js";
-import { put, ticket, routeBlock, statusLabel, isActive, sosSheet, stars, openSheet } from "./common.js";
+import { announcements, put, ticket, routeBlock, statusLabel, isActive, sosSheet, stars, openSheet } from "./common.js";
 
 // The trip being built. Lives in memory so each screen only asks one thing.
 export const draft = { task: "ride", dest: null, pickup: null, km: null, vehicle: "standard", pay: "cash", notes: "" };
@@ -26,7 +26,7 @@ export async function home() {
         h("h1", { style: "margin-top:6px" }, t("hello", { name: (me.name || "").split(" ")[0] })),
         h("button", { class: "item", style: "background:var(--surface);border:2px solid var(--line);border-radius:18px;min-height:68px;font-size:20px;font-weight:700", onClick: () => { draft.task = "ride"; go("/rider/where/dest"); } },
             icon("search", 26), h("span", { class: "grow" }, t("whereTo"))),
-        h("div", { id: "active" }));
+        h("div", { id: "active" }), h("p", { class: "muted small", id: "online", style: "margin:10px 4px 0" }));
     const list = h("div", { class: "list", style: "margin-top:16px" },
         h("button", { class: "item", onClick: () => { draft.task = "delivery"; go("/rider/where/dest"); } },
             h("span", { class: "lead" }, icon("box")), h("span", { class: "grow" }, h("b", null, t("sendParcel")), h("small", null, t("parcelSub")))));
@@ -37,6 +37,8 @@ export async function home() {
             h("button", { class: "item", onClick: () => { draft.task = "ride"; draft.dest = r; draft.km = r.km || null; go("/rider/trip"); } },
                 h("span", { class: "lead" }, icon("pin")), h("span", { class: "grow" }, h("b", null, r.name), h("small", null, r.region))))));
     }
+    announcements().then(box => body.prepend(box));
+    api("/drivers/nearby-count").then(({ total }) => { el.querySelector("#online").textContent = total === 0 ? t("noDriversOnline") : total === 1 ? t("oneDriverOnline") : t("driversOnline", { n: total }); }).catch(() => {});
     // Resume an unfinished ride.
     const rid = store.activeRide;
     if (rid) {
@@ -130,7 +132,7 @@ export function trip() {
             actions.replaceChildren();
             return;
         }
-        const fare = estimateFare({ vehicle: draft.vehicle, km });
+        const fare = estimateFare({ vehicle: draft.vehicle, km, task: draft.task });
         const a = draft.pickup && draft.pickup.lat != null ? draft.pickup : null, b = draft.dest && draft.dest.lat != null ? draft.dest : null;
         if (a && b) {
             const mapBox = h("div", { class: "map", hidden: !store.maps });
@@ -145,7 +147,7 @@ export function trip() {
             put(body, h("h3", null, t("rideType")), h("div", { class: "opts" },
                 [["standard", "standardSub"], ["premium", "premiumSub"], ["xl", "xlSub"]].map(([v, sub]) =>
                     h("button", { class: "opt", "aria-pressed": draft.vehicle === v ? "true" : "false", onClick: () => { draft.vehicle = v; paint(); } },
-                        icon("car"), h("span", { class: "grow" }, h("b", null, t(v)), h("small", null, t(sub))), h("b", null, money(estimateFare({ vehicle: v, km })))))));
+                        icon("car"), h("span", { class: "grow" }, h("b", null, t(v)), h("small", null, t(sub))), h("b", null, money(estimateFare({ vehicle: v, km, task: draft.task })))))));
         }
         put(body, h("h3", null, t("payWith")), h("div", { class: "opts" },
             [["cash", "cash", "cashSub"], ["mobile_money", "mobileMoney", "mobileMoneySub"]].map(([v, l, s]) =>

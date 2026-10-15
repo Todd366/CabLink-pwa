@@ -9,6 +9,7 @@ import * as rider from "./screens/rider.js";
 import * as driver from "./screens/driver.js";
 import { account } from "./screens/account.js";
 import { admin } from "./screens/admin.js";
+import { ecosystem } from "./screens/ecosystem.js";
 import { enablePush } from "./push.js";
 
 // Every protected screen declares who may see it. A driver account
@@ -47,6 +48,7 @@ route("/driver/job/:id", guard(["APPROVED_DRIVER"], driver.job));
 route("/driver/earnings", guard(["APPROVED_DRIVER"], driver.earnings));
 route("/admin", guard(["ADMIN"], admin));
 route("/account", guard(null, account));
+route("/ecosystem", guard(null, ecosystem));
 
 // Connection awareness: say so plainly when the phone drops offline.
 window.addEventListener("offline", () => toast(t("offline"), "error"));

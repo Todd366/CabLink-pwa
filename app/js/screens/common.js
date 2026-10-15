@@ -65,3 +65,19 @@ export function stars(onPick) {
 
 // append() that skips null/false (native append would print "null").
 export const put = (el, ...kids) => el.append(...kids.flat(Infinity).filter(x => x != null && x !== false));
+
+// Team announcements (pilot news, safety notices). Dismissible per device.
+export async function announcements() {
+    const box = h("div", { style: "margin:4px 0 8px" });
+    try {
+        const { announcements: list } = await api("/announcements");
+        const gone = store.dismissed;
+        list.filter(a => !gone.includes(a.id)).slice(0, 2).forEach(a => {
+            const card = h("div", { class: "status", style: "align-items:flex-start;margin-bottom:10px;background:var(--taxi);color:var(--taxi-ink)" },
+                icon("alert"), h("span", { style: "flex:1" }, h("b", null, a.title), h("br"), a.message),
+                h("button", { class: "icon-btn", style: "width:36px;height:36px;margin:-6px -8px 0 0", "aria-label": t("close"), onClick: () => { store.dismiss(a.id); card.remove(); } }, icon("x", 18)));
+            box.append(card);
+        });
+    } catch (e) { /* announcements are optional */ }
+    return box;
+}

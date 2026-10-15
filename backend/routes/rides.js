@@ -20,7 +20,8 @@ const {
 } = rideEngine;
 
 const sec = require("../middleware/security");
-const { calcFare } = require("../pricing/fare");
+const { calcFare, splitFare } = require("../pricing/fare");
+const geo = require("../geo/geo");
 
 const STALE_MS = 45 * 60 * 1000;
 
@@ -66,7 +67,7 @@ async function authorizeTransition(req, res, next) {
 function bindPassengerAndFare(req, res, next) {
     const b = req.body || {};
     const stops = Array.isArray(b.stops) ? b.stops.filter(x => typeof x === "string" && x.trim()).slice(0, 3) : [];
-    const f = calcFare({ vehicle: b.vehicle, distanceKm: b.distanceKm, stops });
+    const f = calcFare({ vehicle: b.vehicle, distanceKm: b.distanceKm, stops, taskType: b.taskType });
     req.body = Object.assign({}, b, {
         passenger: req.account.id,
         fare: f.total,
@@ -82,7 +83,8 @@ function publicRide(r) {
         id: r.id, pickup: r.pickup, dropoff: r.dropoff, fare: r.fare,
         distanceKm: r.distanceKm, vehicle: r.vehicle, notes: r.notes,
         paymentMethod: r.paymentMethod, stops: r.stops || [],
-        taskType: r.taskType || null, status: r.status, createdAt: r.createdAt
+        taskType: r.taskType || null, status: r.status, createdAt: r.createdAt,
+        driverEarns: splitFare(r.fare, r.taskType).driverEarns
     };
 }
 
@@ -362,7 +364,16 @@ router.patch("/:id/accept", sec.requireRole("APPROVED_DRIVER"), (req, res, next)
 router.get("/open", sec.requireRole("APPROVED_DRIVER", "ADMIN"), async (req, res) => {
     try {
         const all = await rideEngine.getAllRides();
-        const open = all.filter(r => r.status === "MATCHING" && Date.now() - new Date(r.createdAt).getTime() < STALE_MS && Number(r.distanceKm) > 0).map(publicRide);
+        let open = all.filter(r => r.status === "MATCHING" && Date.now() - new Date(r.createdAt).getTime() < STALE_MS && Number(r.distanceKm) > 0);
+        // Nearest first: distance from this driver's last known position to each pickup.
+        const registry = require("../services/driver_registry_service");
+        const mine = (await registry.all()).find(d => d.id === req.account.id);
+        const here = mine && Number.isFinite(Number(mine.lat ?? mine.latitude)) ? { lat: Number(mine.lat ?? mine.latitude), lng: Number(mine.lng ?? mine.longitude) } : null;
+        open = open.map(r => {
+            const p = geo.coordsFromLabel(r.pickup);
+            const km = here && p ? Math.round(geo.haversineKm(here, p) * 10) / 10 : null;
+            return Object.assign(publicRide(r), { pickupKm: km });
+        }).sort((a, b) => (a.pickupKm ?? 1e9) - (b.pickupKm ?? 1e9));
         res.json({ success: true, count: open.length, rides: open });
     } catch (e) {
         res.status(500).json({ success: false, error: "Failed to load requests" });

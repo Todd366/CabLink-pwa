@@ -36,7 +36,8 @@ const VALID_TYPES = [
     "LOST_PROPERTY",
     "DELIVERY_FAILURE",
     "PAYMENT_DISPUTE",
-    "VEHICLE_PROBLEM"
+    "VEHICLE_PROBLEM",
+    "SUPPORT"
 ];
 
 // Matches the INCIDENT MANAGEMENT shape from the architecture doc

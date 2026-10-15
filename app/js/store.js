@@ -16,6 +16,8 @@ export const store = {
     get contact() { return json("cl.contact", null); },
     get activeRide() { return ls.get("cl.ride"); },
     get intent() { return ls.get("cl.intent") || "rider"; },
+    get dismissed() { return json("cl.dismissed", []); },
+    dismiss(id) { ls.set("cl.dismissed", JSON.stringify([...this.dismissed, id].slice(-30))); },
     get maps() { return ls.get("cl.maps") === "1"; },
     get ref() { return ls.get("cl.ref") || ""; },
     get asPassenger() { return ls.get("cl.asPassenger") === "1"; },

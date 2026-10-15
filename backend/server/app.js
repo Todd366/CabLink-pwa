@@ -208,6 +208,11 @@ app.use(
     driverDemandRoutes
 );
 
+app.use(
+    "/api",
+    require("../routes/announcements_api")
+);
+
 
 // ============================================================
 // AUTH + DRIVER APPLICATIONS
