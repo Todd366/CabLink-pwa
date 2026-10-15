@@ -59,6 +59,7 @@ const EN = {
     mapsPref: "Show maps", mapsPrefSub: "Maps use more mobile data. Off by default.", leaderboard: "Top drivers", leaderboardSub: "Most completed trips in the last 30 days", busyAreas: "Busy areas", openRequestsNow: "{n} open requests now",
     vehicleMissing: "Your vehicle is not registered yet. An admin will verify it.", vehiclePending: "Your vehicle is waiting for verification.", invite: "Invite friends", inviteSub: "Share your code. Friends join CabLink with it.",
     referralCode: "Referral code (optional)", claimThb: "Claim your THB reward", claimed: "Reward claimed", needWallet: "Add your wallet in Account first", rank: "#",
+    vehicles: "Vehicles", rides: "Rides", people: "People",
     overview: "Overview", nothingHere: "Nothing here yet", install: "Install CabLink", installSub: "Add to your home screen for faster access"
 };
 
