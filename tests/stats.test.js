@@ -41,3 +41,25 @@ test("ride rules: stale app rides vanish, Digital Mall deliveries wait longer an
     assert.equal(rules.isOpenForDrivers(mk({ source: "digital_mall", distanceKm: 0, createdAt: "2026-10-14T09:00:00Z" }), now), true);
     assert.equal(rules.isOpenForDrivers(mk({ status: "REQUESTED" }), now), false);
 });
+
+const { balances, metrics } = require("../backend/services/community_stats");
+test("balances: fees owed = fees on completed rides minus payments recorded", () => {
+    const rides = [ride({ driverId: "A", driverName: "Todd Mosanako", fare: 100 }), ride({ driverId: "A", fare: 100, platformFee: 10 }), ride({ driverId: "B", status: "CANCELLED", fare: 50 }), ride({ driverId: "A", taskType: "delivery", fare: 70 })];
+    const b = balances(rides, [{ driverId: "A", amount: 5 }]);
+    assert.equal(b.length, 1);
+    assert.equal(b[0].rides, 3);
+    assert.equal(b[0].fees, 11 + 10 + 14);       // P100 ride (P11), stored P10, delivery 20% of P70
+    assert.equal(b[0].owed, 30);
+});
+test("metrics: completion rate, wait time and money", () => {
+    const n = Date.parse("2026-10-14T12:00:00Z");
+    const m = metrics([
+        ride({ createdAt: "2026-10-14T09:00:00Z", fare: 100, acceptedAt: "2026-10-14T09:04:00Z" }),
+        ride({ createdAt: "2026-10-13T09:00:00Z", status: "CANCELLED" }),
+        ride({ createdAt: "2026-10-14T08:00:00Z", status: "MATCHING" }),
+        ride({ createdAt: "2026-10-14T11:50:00Z", status: "MATCHING" })
+    ], n);
+    assert.equal(m.week.requested, 4); assert.equal(m.week.completed, 1); assert.equal(m.week.unanswered, 1);
+    assert.equal(m.completionRate, 33); assert.equal(m.avgWaitMin, 4); assert.equal(m.openNow, 1); assert.equal(m.grossFares, 100);
+    assert.equal(m.days.length, 7);
+});

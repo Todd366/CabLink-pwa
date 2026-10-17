@@ -188,6 +188,12 @@ export async function earnings() {
             h("div", null, h("b", null, money(sum(done))), h("small", { class: "muted" }, t("allTime"))), h("div", null, h("b", null, String(done.length)), h("small", { class: "muted" }, t("tripsDone")))),
             done.length ? h("div", { class: "list" }, done.slice(0, 30).map(r => h("div", { class: "item" }, h("span", { class: "grow" }, h("b", null, r.dropoff), h("small", null, ago(r.createdAt))), h("b", null, money(r.fare)))))
                 : h("div", { class: "empty" }, h("b", null, t("noTrips")), t("noTripsSub")));
+        api("/driver/balance").then(b => {
+            if (!b.rides) return;
+            body.prepend(h("div", { class: "list", style: "margin-bottom:14px" },
+                h("div", { class: "item", style: "cursor:default" }, h("span", { class: "lead" }, icon("wallet")),
+                    h("span", { class: "grow" }, h("b", null, b.owed > 0 ? t("feesOwed") + ": " + money(b.owed) : t("feesClear")), h("small", null, t("feesNote"))))));
+        }).catch(() => {});
         api("/leaderboard").then(({ drivers }) => {
             if (!drivers.length) return;
             const rows = drivers.map(d => h("div", { class: "item", style: "cursor:default" },

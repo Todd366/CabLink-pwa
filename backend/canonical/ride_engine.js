@@ -463,6 +463,11 @@ async function transition(
         changes.completedAt =
             new Date()
                 .toISOString();
+        // Snapshot the split at completion so later tariff changes never
+        // rewrite what a driver already owes or earned.
+        const split = require("../pricing/fare").splitFare(ride.fare, ride.taskType);
+        changes.platformFee = split.platformFee;
+        changes.driverEarns = split.driverEarns;
 
     }
 

@@ -3,9 +3,9 @@ import { t } from "../i18n.js";
 import { api } from "../api.js";
 import { go } from "../router.js";
 import { screen } from "../shell.js";
-import { statusLabel, isActive } from "./common.js";
+import { statusLabel, isActive, openSheet } from "./common.js";
 
-const TABS = [["apps", "applications"], ["news", "updates"], ["veh", "vehicles"], ["rides", "rides"], ["safety", "incidents"], ["people", "people"], ["errors", "errors"], ["stats", "overview"]];
+const TABS = [["apps", "applications"], ["news", "updates"], ["veh", "vehicles"], ["rides", "rides"], ["safety", "incidents"], ["people", "people"], ["fees", "fees"], ["errors", "errors"], ["stats", "overview"]];
 const card = (...kids) => h("div", { class: "list", style: "margin-bottom:14px" }, ...kids);
 const row = (...kids) => h("div", { class: "item", style: "cursor:default" }, ...kids);
 const pair = (a, b) => h("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px" }, a, b);
@@ -74,10 +74,35 @@ export function admin() {
             if (!errors.length) return empty();
             return card(errors.map(e => row(h("span", { class: "grow" }, h("b", null, e.message), h("small", null, e.where + " " + e.page), h("small", null, e.account + " · " + ago(e.createdAt)), h("small", { style: "word-break:break-all" }, e.agent)))));
         },
+        async fees() {
+            const { balances } = await api("/admin/balances");
+            if (!balances.length) return empty();
+            const pay = b => {
+                const amt = h("input", { type: "number", inputmode: "decimal", min: "0", step: "0.5", value: b.owed > 0 ? String(b.owed) : "", style: "width:100%;min-height:54px;padding:0 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface)" });
+                const note = h("input", { maxlength: "120", placeholder: t("note"), style: "width:100%;min-height:54px;padding:0 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface)" });
+                const save = h("button", { class: "btn" }, t("recordPayment"));
+                const close = openSheet(h("h2", null, b.name), h("p", { class: "muted" }, t("feesOwed") + ": " + money(b.owed)), h("div", { class: "field" }, h("label", null, t("amount")), amt), h("div", { class: "field" }, h("label", null, t("note")), note), save);
+                save.onclick = () => act(async () => { await api("/admin/settlements", { method: "POST", body: { driverId: b.driverId, driverName: b.name, amount: amt.value, note: note.value } }); close(); });
+            };
+            return card(balances.map(b => row(h("span", { class: "grow" }, h("b", null, b.name), h("small", null, b.rides + " " + t("tripsDone") + " · " + money(b.fees) + " fees · " + money(b.settled) + " paid")),
+                h("button", { class: b.owed > 0 ? "chip" : "chip", style: b.owed > 0 ? "border-color:var(--bad);color:var(--bad)" : "", onClick: () => pay(b) }, money(b.owed)))));
+        },
         async stats() {
-            const { insights } = await api("/admin/insights");
-            const flat = Object.entries(insights || {}).filter(([, v]) => typeof v !== "object");
-            return flat.length ? card(flat.map(([k, v]) => row(h("span", { class: "grow" }, h("small", null, k.replace(/([A-Z])/g, " $1")), h("b", null, String(v)))))) : empty();
+            const { metrics: m, hotspots } = await api("/admin/metrics");
+            const max = Math.max(1, ...m.days.map(d => d.requested));
+            const tile = (v, label) => h("div", null, h("b", null, v), h("small", { class: "muted" }, label));
+            const bars = h("div", { style: "display:flex;gap:6px;align-items:flex-end;height:110px;margin:6px 0 4px" }, m.days.map(d => h("div", { style: "flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;align-items:center", title: d.date + ": " + d.requested },
+                h("div", { style: "width:100%;border-radius:6px 6px 2px 2px;background:var(--flag-soft);height:" + Math.round(d.requested / max * 100) + "%;position:relative;min-height:3px" },
+                    h("div", { style: "position:absolute;bottom:0;left:0;right:0;border-radius:6px 6px 2px 2px;background:var(--flag);height:" + (d.requested ? Math.round(d.completed / d.requested * 100) : 0) + "%" })))));
+            const labels = h("div", { style: "display:flex;gap:6px;font-size:12px;color:var(--muted);text-align:center" }, m.days.map(d => h("span", { style: "flex:1" }, d.date.slice(8))));
+            return h("div", null,
+                h("h3", { style: "margin-top:0" }, t("lastWeek")),
+                h("div", { class: "big-stat" }, tile(String(m.week.requested), t("requests")), tile(String(m.week.completed), t("tripsDone")),
+                    tile(m.completionRate == null ? "—" : m.completionRate + "%", t("completionRate")), tile(m.avgWaitMin == null ? "—" : m.avgWaitMin + " " + t("minutes"), t("avgWait")),
+                    tile(money(m.grossFares), t("grossFares")), tile(money(m.platformFees), t("platformFees")),
+                    tile(String(m.openNow), t("openNow")), tile(String(m.activeNow), t("activeNow"))),
+                bars, labels,
+                hotspots && hotspots.places.length ? h("p", { class: "muted small", style: "margin-top:16px" }, t("busyAreas") + ": " + hotspots.places.map(p => p.place).join(" · ")) : null);
         }
     };
 

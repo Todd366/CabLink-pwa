@@ -218,6 +218,11 @@ app.use(
     require("../routes/client_errors_api")
 );
 
+app.use(
+    "/api",
+    require("../routes/settlements_api")
+);
+
 
 // ============================================================
 // AUTH + DRIVER APPLICATIONS
