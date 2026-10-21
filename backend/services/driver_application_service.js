@@ -27,6 +27,7 @@
 //    Defaults to LOCAL flat-file storage for local Termux dev.
 // ============================================================
 
+const { newId } = require("../util/ids");
 const fs = require("fs");
 const path = require("path");
 const auth = require("./auth_service");
@@ -153,7 +154,7 @@ async function apply({ name, phone, license, vehicle }) {
     }
 
     const application = {
-        id: "APP-" + Date.now(),
+        id: newId("APP"),
         accountId: account.id,
         name,
         phone: normalizePhone(phone),

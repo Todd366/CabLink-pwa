@@ -177,7 +177,10 @@ export function trip() {
                     pickup: draft.pickup.name, dropoff: placeLabel(draft.dest), vehicle: draft.vehicle, distanceKm: km,
                     notes: draft.notes, paymentMethod: draft.pay, taskType: draft.task === "delivery" ? "delivery" : undefined } });
                 store.setActiveRide(ride.id); resetDraft(); enablePush(); go("/rider/ride/" + ride.id, true);
-            } catch (e) { toast(e.message, "error"); }
+            } catch (e) {
+                if (e.status === 409 && e.data && e.data.rideId) { store.setActiveRide(e.data.rideId); toast(e.message, "info"); return go("/rider/ride/" + e.data.rideId, true); }
+                toast(e.message, "error");
+            }
         });
         actions.replaceChildren(go2);
     };
@@ -268,7 +271,7 @@ export function ride({ id }) {
             const share = h("button", { class: "btn ghost" }, icon("share"), t("receipt"));
             share.onclick = () => {
                 const text = "CabLink receipt\n" + r.pickup.replace(/\s*\(-?\d+\.\d+,-?\d+\.\d+\)/, "") + " → " + r.dropoff + "\nFare: " + money(r.fare) + " (" + (r.paymentMethod === "cash" ? "cash" : "mobile money") + ")" +
-                    (r.driverName ? "\nDriver: " + r.driverName : "") + (r.assignedVehicle ? " · " + r.assignedVehicle.makeModel + " " + r.assignedVehicle.plate : "") +
+                    (r.driverName ? "\nDriver: " + r.driverName : "") + (r.assignedVehicle ? " · " + r.assignedVehicle.makeModel + (r.assignedVehicle.plate ? " " + r.assignedVehicle.plate : "") : "") +
                     "\n" + new Date(r.completedAt || r.updatedAt || Date.now()).toLocaleString("en-GB") + "\nTrip ID: " + r.id;
                 window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener");
             };

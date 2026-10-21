@@ -109,6 +109,16 @@ function normalizeServiceClass(value) {
 // not a serviceClass. Idempotent: an account can only ever have one
 // vehicle record, so re-approving (or any other caller) never creates
 // duplicates.
+// "Toyota Corolla B 123 ABC" -> { makeModel: "Toyota Corolla", plate: "B 123 ABC" }
+function splitPlate(text) {
+    const t = String(text || "").trim();
+    const m = /\b([A-Z]{1,3}\s?\d{2,4}\s?[A-Z]{1,3})\b/i.exec(t);
+    if (!m) return { makeModel: t || "Not specified", plate: null };
+    const plate = m[1].toUpperCase().replace(/\s+/g, "").replace(/^([A-Z]+)(\d+)([A-Z]+)$/, "$1 $2 $3");
+    const make = t.replace(m[0], "").replace(/[-,()]+\s*$/, "").replace(/\s{2,}/g, " ").trim();
+    return { makeModel: make || t, plate };
+}
+
 async function createFromApplication({ accountId, vehicleText, applicationId }) {
     if (!accountId) {
         throw new Error("accountId is required to create a vehicle record");
@@ -125,8 +135,8 @@ async function createFromApplication({ accountId, vehicleText, applicationId }) 
         id: "VEH-" + Date.now() + "-" + Math.floor(Math.random() * 10000),
         accountId,
         applicationId: applicationId || null,
-        makeModel: vehicleText || "Not specified",
-        plate: null,
+        makeModel: splitPlate(vehicleText).makeModel,
+        plate: splitPlate(vehicleText).plate,
         serviceClass,
         capacity: defaultCapacityFor(serviceClass),
         verificationStatus: "PENDING_VERIFICATION",
@@ -213,6 +223,7 @@ module.exports = {
     SERVICE_CLASSES,
     VERIFICATION_STATUSES,
     createFromApplication,
+    splitPlate,
     getVehicleByAccountId,
     getVehicleById,
     listVehicles,

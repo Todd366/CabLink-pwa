@@ -49,12 +49,15 @@ function balances(rides, settlements = []) {
 }
 
 // Pilot health: volume, completion, how long riders wait, money.
+const TZ_MIN = Number(process.env.TZ_OFFSET_MIN ?? 120);   // Botswana is UTC+2, no daylight saving
+const localDay = t => new Date(new Date(t).getTime() + TZ_MIN * 60000).toISOString().slice(0, 10);
+
 function metrics(rides, now = Date.now()) {
     const days = [];
-    for (let i = 6; i >= 0; i--) { const d = new Date(now - i * DAY).toISOString().slice(0, 10); days.push({ date: d, requested: 0, completed: 0, cancelled: 0 }); }
+    for (let i = 6; i >= 0; i--) { const d = localDay(now - i * DAY); days.push({ date: d, requested: 0, completed: 0, cancelled: 0 }); }
     const idx = Object.fromEntries(days.map((d, i) => [d.date, i]));
     const week = rides.filter(r => now - new Date(r.createdAt) < 7 * DAY);
-    for (const r of week) { const d = days[idx[new Date(r.createdAt).toISOString().slice(0, 10)]]; if (!d) continue; d.requested++; if (r.status === "COMPLETED") d.completed++; if (r.status === "CANCELLED") d.cancelled++; }
+    for (const r of week) { const d = days[idx[localDay(r.createdAt)]]; if (!d) continue; d.requested++; if (r.status === "COMPLETED") d.completed++; if (r.status === "CANCELLED") d.cancelled++; }
     const done = week.filter(r => r.status === "COMPLETED");
     const stale = r => r.status === "MATCHING" && now - new Date(r.createdAt) > 45 * 60000;
     const resolved = week.filter(r => ["COMPLETED", "CANCELLED"].includes(r.status) || stale(r));

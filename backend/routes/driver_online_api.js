@@ -97,7 +97,7 @@ router.post("/drivers/offline", sec.requireAuth, async (req, res) => {
 router.get("/drivers/nearby-count", sec.requireAuth, async (req, res) => {
     try {
         const geo = require("../geo/geo");
-        const all = (await registry.all()).filter(d => d.status === "ONLINE");
+        const all = (await registry.all()).filter(d => d.status === "ONLINE" && Date.now() - new Date(d.updatedAt || 0).getTime() < 10 * 60000);
         const lat = Number(req.query.lat), lng = Number(req.query.lng);
         const point = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
         const near = point ? all.filter(d => Number.isFinite(Number(d.lat)) && geo.haversineKm(point, { lat: Number(d.lat), lng: Number(d.lng) }) <= 25) : all;

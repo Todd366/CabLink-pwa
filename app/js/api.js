@@ -1,7 +1,7 @@
 import { store } from "./store.js";
 
 export class ApiError extends Error {
-    constructor(message, status) { super(message); this.status = status; }
+    constructor(message, status, data) { super(message); this.status = status; this.data = data || null; }
 }
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -33,7 +33,7 @@ export async function api(path, { method = "GET", body, auth = true, timeout = 1
             if (!res.ok || (data && data.success === false)) {
                 const raw = data && data.error;
                 const msg = typeof raw === "string" ? raw : raw && (raw.message || raw.error || JSON.stringify(raw));
-                throw new ApiError(msg || "Server error (" + res.status + ")", res.status);
+                throw new ApiError(msg || "Server error (" + res.status + ")", res.status, data);
             }
             return data || {};
         } catch (e) {

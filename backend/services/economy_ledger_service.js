@@ -1,3 +1,4 @@
+const { newId } = require("../util/ids");
 const store = require("./ledger_store");
 
 async function recordRide(ride) {
@@ -11,7 +12,7 @@ async function recordReward(reward) {
     const db = await store.loadLedger();
 
     const tx = {
-        id: "TX-" + Date.now(),
+        id: newId("TX"),
         type: "THB_REWARD",
         ...reward,
         created: new Date().toISOString()

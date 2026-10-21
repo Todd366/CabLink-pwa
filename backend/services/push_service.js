@@ -46,7 +46,8 @@ async function sendToAccount(accountId, payload) {
 async function sendToOnlineDrivers(payload) {
     if (!configured) return { sent: 0, skipped: "not configured" };
     const registry = require("./driver_registry_service");
-    const drivers = (await registry.all()).filter(d => d.status === "ONLINE");
+    // 6 hours: backgrounded drivers still get alerts; drivers who forgot to go offline stop after that.
+    const drivers = (await registry.all()).filter(d => d.status === "ONLINE" && Date.now() - new Date(d.updatedAt || 0).getTime() < 6 * 3600000);
     let sent = 0;
     for (const d of drivers.slice(0, 50)) sent += (await sendToAccount(d.id, payload)).sent || 0;
     return { sent };

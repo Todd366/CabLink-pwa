@@ -68,6 +68,7 @@ const EN = {
     home: "Home", work: "Work", saveAs: "Save as {label}", savedAs: "Saved as {label}", receipt: "Share receipt", digitalMall: "Digital Mall delivery", distanceUnknown: "distance not set",
     fees: "Fees", feesOwed: "Fees owed to CabLink", feesNote: "CabLink takes a small fee on each trip. You are paid directly by the rider, so fees are settled with CabLink.", feesClear: "You owe nothing right now", recordPayment: "Record payment", amount: "Amount (P)", note: "Note (optional)",
     lastWeek: "Last 7 days", completionRate: "Completion rate", avgWait: "Average wait", minutes: "min", avgFare: "Average fare", grossFares: "Fares", platformFees: "CabLink fees", openNow: "Open now", activeNow: "On trip now", unanswered: "Unanswered",
+    vehicleMake: "Car make and model", plateNumber: "Number plate",
     overview: "Overview", nothingHere: "Nothing here yet", install: "Install CabLink", installSub: "Add to your home screen for faster access"
 };
 

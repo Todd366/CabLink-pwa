@@ -88,7 +88,8 @@ export function ago(iso) {
     if (s < 86400) return Math.floor(s / 3600) + " h ago";
     return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
-export const dayKey = iso => new Date(iso).toISOString().slice(0, 10);
+// Local calendar day (Botswana is UTC+2), not the UTC day.
+export const dayKey = iso => { const d = new Date(iso); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
 
 export function logo(size = 36, word = true) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -99,4 +100,4 @@ export function logo(size = 36, word = true) {
 export const skeleton = (n = 3) => h("div", { class: "list", "aria-busy": "true" }, Array.from({ length: n }, () => h("div", { class: "item" }, h("span", { class: "skel", style: "width:40px;height:40px;border-radius:12px" }), h("span", { class: "grow" }, h("span", { class: "skel", style: "width:60%;height:14px;display:block;margin-bottom:8px" }), h("span", { class: "skel", style: "width:35%;height:11px;display:block" })))));
 export const initials = name => String(name || "?").trim().split(/\s+/).slice(0, 2).map(w => w[0]).join("").toUpperCase();
 export const avatar = name => h("span", { class: "avatar", "aria-hidden": "true" }, initials(name));
-export const plate = text => h("span", { class: "plate" }, String(text || "").toUpperCase());
+export const plate = text => !String(text || "").trim() ? null : h("span", { class: "plate" }, String(text || "").toUpperCase());

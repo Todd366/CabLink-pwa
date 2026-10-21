@@ -156,3 +156,5 @@ p { margin: 0 0 12px; } .muted { color: var(--muted); } .small { font-size: 14px
 .map[hidden] { display: none; } .map.map-off { padding: 20px; font-weight: 600; }
 .mk span { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--flag); color: #fff; font: 800 13px/1 var(--font); border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.35); }
 .mk-b span { background: #0d1b2a; border-radius: 6px; } .mk-car span { background: #ffc21a; color: #241a00; }
+
+.chips::-webkit-scrollbar { display: none; } .chip { white-space: nowrap; flex: none; }

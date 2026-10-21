@@ -23,6 +23,7 @@ const sec = require("../middleware/security");
 const { calcFare, splitFare } = require("../pricing/fare");
 const geo = require("../geo/geo");
 const rules = require("../services/ride_rules");
+const rideRelease = require("../services/ride_release");
 
 const STALE_MS = 45 * 60 * 1000;
 
@@ -52,7 +53,16 @@ async function authorizeTransition(req, res, next) {
         if (a.role === "ADMIN") return next();
         const isOwner = ride.passengerAccountId === a.id;
         const isDriver = ride.driverId === a.id || ride.driverAccountId === a.id;
+        // Only an admin may close a trip once the passenger is in the car.
+        if (target === "CANCELLED" && !rules.PRE_PICKUP.includes(ride.status)) {
+            return res.status(409).json({ success: false, error: "This trip is already under way. Contact CabLink to close it." });
+        }
         if (isOwner && target === "CANCELLED") return next();
+        // A driver who backs out before pickup puts the request back to other drivers.
+        if (isDriver && target === "CANCELLED" && ["DRIVER_ASSIGNED", "DRIVER_ARRIVED"].includes(ride.status)) {
+            const updated = await rideRelease.release(ride, "Your driver cancelled");
+            return res.json({ success: true, released: true, ride: updated });
+        }
         if (isDriver && DRIVER_STEPS.includes(target)) {
             // never let a client choose who the driver is
             if (req.body) { delete req.body.driverId; delete req.body.driverName; }
@@ -95,7 +105,15 @@ function publicRide(r) {
 // Create new ride
 // ============================================================
 
-router.post("/", sec.requireAuth, sec.limit("ride-create", 6, 10 * 60 * 1000), bindPassengerAndFare, async (req, res) => {
+async function oneRideAtATime(req, res, next) {
+    try {
+        const mine = (await rideEngine.getAllRides()).find(r => r.passengerAccountId === req.account.id && rules.isActiveForRider(r));
+        if (mine) return res.status(409).json({ success: false, error: "You already have a ride in progress", rideId: mine.id });
+    } catch (e) { /* if the check fails, do not block booking */ }
+    next();
+}
+
+router.post("/", sec.requireAuth, sec.limit("ride-create", 6, 10 * 60 * 1000), oneRideAtATime, bindPassengerAndFare, async (req, res) => {
 
     try {
 
@@ -256,7 +274,27 @@ router.post("/", sec.requireAuth, sec.limit("ride-create", 6, 10 * 60 * 1000), b
 // A second acceptance returns HTTP 409.
 // ============================================================
 
-router.patch("/:id/accept", sec.requireRole("APPROVED_DRIVER"), (req, res, next) => {
+async function oneJobAtATime(req, res, next) {
+    try {
+        const all = await rideEngine.getAllRides();
+        if (all.find(r => (r.driverId === req.account.id || r.driverAccountId === req.account.id) && rules.isActiveForDriver(r))) {
+            return res.status(409).json({ success: false, error: "Finish your current trip before taking another" });
+        }
+        if (process.env.REQUIRE_VERIFIED_VEHICLE !== "false") {
+            const veh = await require("../services/vehicle_service").getVehicleByAccountId(req.account.id);
+            if (!veh || veh.verificationStatus !== "VERIFIED") {
+                return res.status(403).json({ success: false, error: "Your vehicle has not been verified yet. CabLink will contact you." });
+            }
+        }
+        const target = all.find(r => r.id === req.params.id);
+        if (target && (target.declinedBy || []).includes(req.account.id)) {
+            return res.status(409).json({ success: false, error: "You cancelled this ride earlier" });
+        }
+    } catch (e) { /* never block on a failed check */ }
+    next();
+}
+
+router.patch("/:id/accept", sec.requireRole("APPROVED_DRIVER"), oneJobAtATime, (req, res, next) => {
     req.body = Object.assign({}, req.body, { driverId: req.account.id, driverName: req.account.name });
     next();
 }, async (req, res) => {
@@ -369,7 +407,10 @@ router.get("/open", sec.requireRole("APPROVED_DRIVER", "ADMIN"), async (req, res
         for (const old of all.filter(r => r.status === "MATCHING" && rules.isStale(r)).slice(0, 20)) {
             rideEngine.transition(old.id, "CANCELLED", { reason: "No driver was available" }).catch(() => {});
         }
-        let open = all.filter(r => rules.isOpenForDrivers(r));
+        for (const noShow of all.filter(r => rules.isNoShow(r)).slice(0, 10)) {
+            rideRelease.release(noShow, "Your driver did not arrive in time").catch(() => {});
+        }
+        let open = all.filter(r => rules.isOpenForDrivers(r) && !(r.declinedBy || []).includes(req.account.id));
         // Nearest first: distance from this driver's last known position to each pickup.
         const registry = require("../services/driver_registry_service");
         const mine = (await registry.all()).find(d => d.id === req.account.id);

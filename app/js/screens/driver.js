@@ -6,6 +6,7 @@ import { go } from "../router.js";
 import { screen, driverTabs } from "../shell.js";
 import { enablePush } from "../push.js";
 import { routeMap } from "../map.js";
+import { prime, ping, keepAwake, release } from "../alerts.js";
 import { coordsFromLabel } from "../places.js";
 import { announcements, put, ticket, routeBlock, isActive, sosSheet, openSheet } from "./common.js";
 
@@ -29,14 +30,14 @@ export async function apply() {
         } else {
             if (status === "REJECTED") put(body, h("h1", null, t("rejectedTitle")), h("p", { class: "muted" }, t("rejectedSub")),
                 h("button", { class: "btn ghost", onClick: () => { store.setAsPassenger(true); go("/", true); } }, t("useAsPassenger")), h("h3", null, t("applyAgain")));
-            const lic = h("input", { id: "lic", maxlength: "40", autocomplete: "off" }), veh = h("input", { id: "veh", maxlength: "80", autocomplete: "off" });
+            const lic = h("input", { id: "lic", maxlength: "40", autocomplete: "off" }), veh = h("input", { id: "veh", maxlength: "60", autocomplete: "off", placeholder: "e.g. Toyota Corolla" }), plateIn = h("input", { id: "plate", maxlength: "14", autocomplete: "off", placeholder: "e.g. B 123 ABC", style: "text-transform:uppercase" });
             const send = h("button", { class: "btn" }, t("submitApplication"));
             send.onclick = () => busy(send, async () => {
-                if (!lic.value.trim() || !veh.value.trim()) return toast(t("required"), "error");
-                try { await api("/drivers/apply", { method: "POST", body: { license: lic.value.trim(), vehicle: veh.value.trim() } }); toast(t("saved"), "ok"); draw(); }
+                if (!lic.value.trim() || !veh.value.trim() || !plateIn.value.trim()) return toast(t("required"), "error");
+                try { await api("/drivers/apply", { method: "POST", body: { license: lic.value.trim(), vehicle: veh.value.trim() + " " + plateIn.value.trim().toUpperCase() } }); toast(t("saved"), "ok"); draw(); }
                 catch (e) { toast(e.message, "error"); }
             });
-            put(body, h("div", { class: "field" }, h("label", { for: "lic" }, t("license")), lic), h("div", { class: "field" }, h("label", { for: "veh" }, t("vehicle")), veh), send,
+            put(body, h("div", { class: "field" }, h("label", { for: "lic" }, t("license")), lic), h("div", { class: "field" }, h("label", { for: "veh" }, t("vehicleMake")), veh), h("div", { class: "field" }, h("label", { for: "plate" }, t("plateNumber")), plateIn), send,
                 h("button", { class: "link", onClick: () => { store.setAsPassenger(true); go("/", true); } }, t("useAsPassenger")));
         }
     };
@@ -73,8 +74,12 @@ export async function home() {
     const heartbeat = async () => { try { await api("/drivers/online", { method: "POST", body: await position() }); } catch (e) { /* retry next beat */ } };
     const paintToggle = () => { toggle.className = "switch" + (online ? " on" : ""); toggle.replaceChildren(icon("power", 30), online ? t("youAreOnline") : t("goOnline")); };
 
+    let known = null;
     const loadRequests = async () => {
         const { rides } = await api("/rides/open");
+        const ids = new Set(rides.map(r => r.id));
+        if (known && rides.some(r => !known.has(r.id))) ping();
+        known = ids;
         requests.replaceChildren(rides.length ? h("div", null, rides.map(r => {
             const b = h("button", { class: "btn go" }, t("accept") + " · " + money(r.fare));
             const meta = (r.source === "digital_mall" ? t("digitalMall") + " · " : "") + (r.pickupKm != null ? t("kmAway", { km: r.pickupKm }) + " · " : "") + (r.distanceKm > 0 ? r.distanceKm + " " + t("km") : t("distanceUnknown")) + " · " + t("earnsYou") + " " + money(r.driverEarns) + " · " + (r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")) + (r.taskType === "delivery" ? " · " + t("sendParcel") : "") + (r.notes ? " · " + r.notes : "");
@@ -89,12 +94,14 @@ export async function home() {
         try {
             if (on) { await api("/drivers/online", { method: "POST", body: {} }); heartbeat(); } else { await api("/drivers/offline", { method: "POST", body: {} }); }
             online = on; paintToggle();
-            if (on) enablePush();
+            if (on) { enablePush(); keepAwake(); } else { release(); known = null; }
             if (stopPoll) { stopPoll(); stopPoll = null; } if (beat) { clearInterval(beat); beat = null; }
             if (on) { stopPoll = poll(loadRequests, 5000); beat = setInterval(heartbeat, 30000); } else requests.replaceChildren();
         } catch (e) { toast(e.message, "error"); }
     };
-    toggle.onclick = () => busy(toggle, () => setOnline(!online));
+    toggle.onclick = () => { prime(); return busy(toggle, () => setOnline(!online)); };
+    const onVisible = () => { if (!document.hidden && online) heartbeat(); };
+    document.addEventListener("visibilitychange", onVisible);
     paintToggle();
 
     try {
@@ -106,7 +113,7 @@ export async function home() {
         if (active) jobSlot.append(h("button", { class: "status", style: "margin-top:14px;width:100%;border:0;cursor:pointer", onClick: () => go("/driver/job/" + active.id) }, h("span", { class: "pulse" }), t("status_" + active.status)));
         else if ((drivers || []).some(d => d.id === me.id && d.status === "ONLINE")) setOnline(true);
     } catch (e) { toast(e.message, "error"); }
-    return { el, dispose: () => { if (stopPoll) stopPoll(); if (beat) clearInterval(beat); } };
+    return { el, dispose: () => { if (stopPoll) stopPoll(); if (beat) clearInterval(beat); document.removeEventListener("visibilitychange", onVisible); release(); } };
 }
 
 // ------------------------------------------------------------------ job

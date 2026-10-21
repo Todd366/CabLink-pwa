@@ -20,6 +20,7 @@
 // this in production, exactly like the ride store.
 // ============================================================
 
+const { newId } = require("../util/ids");
 const fs = require("fs");
 const path = require("path");
 
@@ -98,7 +99,7 @@ async function goOnline(driver) {
         // logged-in account id (see CABLINK_DRIVER_REALITY_PATCH in
         // frontend/index.html). This branch just stops a malformed
         // request from crashing the endpoint.
-        driver.id = "DRV-" + Date.now();
+        driver.id = newId("DRV");
     }
 
     const record = {

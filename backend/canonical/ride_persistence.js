@@ -599,7 +599,16 @@ async function remove(
 //
 // ============================================================
 
-async function accept(
+// Local (dev/test) mode has no database to lock rows, so serialise accepts here.
+let localLock = Promise.resolve();
+async function accept(id, driverId, driverName) {
+    if (MODE === "FIRESTORE" || MODE === "SUPABASE") return acceptInner(id, driverId, driverName);
+    const run = localLock.then(() => acceptInner(id, driverId, driverName));
+    localLock = run.catch(() => {});
+    return run;
+}
+
+async function acceptInner(
     id,
     driverId,
     driverName

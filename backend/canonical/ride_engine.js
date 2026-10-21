@@ -62,11 +62,13 @@ const TRANSITIONS = {
     ],
 
     PICKED_UP: [
-        "STARTED"
+        "STARTED",
+        "CANCELLED"
     ],
 
     STARTED: [
-        "COMPLETED"
+        "COMPLETED",
+        "CANCELLED"
     ],
 
     COMPLETED: [],

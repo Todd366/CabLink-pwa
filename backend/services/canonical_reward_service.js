@@ -1,3 +1,4 @@
+const { newId } = require("../util/ids");
 const canonicalWalletResolver = require("../rewards/canonical_wallet_resolver");
 const thbExecutor = require("../blockchain/thb_real_executor");
 const auth = require("./auth_service");
@@ -380,7 +381,7 @@ async function createReferralBonus({ referrerId, referredAccountId }) {
     const amount = 0.2;
 
     const bonus = {
-        id: "TX-" + Date.now(),
+        id: newId("TX"),
         type: "REFERRAL_BONUS",
         referrerId,
         referredAccountId,
@@ -465,7 +466,7 @@ async function createRideClaimReward({ rideId, passengerAccountId }) {
     const amount = 1;
 
     const claim = {
-        id: "TX-" + Date.now(),
+        id: newId("TX"),
         type: "RIDE_CLAIM",
         rideId,
         passengerAccountId,

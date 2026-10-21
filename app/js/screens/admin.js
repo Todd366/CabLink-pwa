@@ -13,7 +13,7 @@ const empty = () => h("div", { class: "empty" }, h("b", null, t("nothingHere")))
 
 export function admin() {
     let tab = "apps";
-    const body = h("div"), chips = h("div", { class: "chips", style: "margin-bottom:16px" });
+    const body = h("div"), chips = h("div", { class: "chips", style: "margin-bottom:16px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch" });
     const el = screen({ title: t("admin"), body: [chips, body], right: h("button", { class: "icon-btn", "aria-label": t("account"), onClick: () => go("/account") }, icon("user")) });
 
     const act = async (fn, again = true) => { try { await fn(); toast(t("saved"), "ok"); if (again) draw(); } catch (e) { toast(e.message, "error"); } };
