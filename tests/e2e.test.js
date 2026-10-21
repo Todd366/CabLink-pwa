@@ -186,6 +186,9 @@ test("full lifecycle and abuse scenarios against the real backend", async () => 
   const v3 = (await call(D3t.token, "GET", "/api/vehicles/mine")).body.vehicle;
   log(v3 && v3.plate === "B 333 CCC" && v3.makeModel === "Honda Fit", "number plate is split from the car description", JSON.stringify(v3 && { m: v3.makeModel, p: v3.plate }));
 
+  const cfg = await call(null, "GET", "/api/config");
+  log(cfg.status === 200 && cfg.body.success === true, "public config reachable without login", JSON.stringify(cfg.body));
+
   be.restore();
   assert.deepEqual(failures, [], "These real-world checks failed:\n  " + failures.join("\n  "));
 });

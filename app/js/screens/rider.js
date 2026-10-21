@@ -8,6 +8,7 @@ import { search, roadKm, describeGps, describePin, coordsFromLabel } from "../pl
 import { routeMap, pinPicker } from "../map.js";
 import { estimateFare } from "../fare.js";
 import { enablePush } from "../push.js";
+import { etaMinutes } from "../eta.js";
 import { announcements, put, ticket, routeBlock, statusLabel, isActive, sosSheet, stars, openSheet } from "./common.js";
 
 // The trip being built. Lives in memory so each screen only asks one thing.
@@ -201,8 +202,14 @@ export function ride({ id }) {
     const holder = h("div", null);
     const actions = h("div", { style: "display:grid;gap:10px" });
     const el = screen({ title: t("ride"), back: () => go("/rider/home"), body: holder, actions });
-    let lastKey = "", startedAt = Date.now(), banner = null, mapCtl = null, locTimer = null;
-    const stopMap = () => { if (locTimer) clearInterval(locTimer); locTimer = null; if (mapCtl) { mapCtl.destroy(); mapCtl = null; } };
+    let lastKey = "", startedAt = Date.now(), banner = null, mapCtl = null, locTimer = null, etaTimer = null;
+    const startEta = (r, line) => {
+        const to = coordsFromLabel(r.pickup);
+        if (!to) return;
+        const tick = async () => { try { const { location } = await api("/rides/" + encodeURIComponent(id) + "/driver-location"); const m = etaMinutes(location, to); line.textContent = m ? t("etaAbout", { n: m }) : ""; } catch (e) { /* keep last value */ } };
+        tick(); etaTimer = setInterval(tick, 10000);
+    };
+    const stopMap = () => { if (etaTimer) clearInterval(etaTimer); etaTimer = null; if (locTimer) clearInterval(locTimer); locTimer = null; if (mapCtl) { mapCtl.destroy(); mapCtl = null; } };
     const startMap = (r, box) => {
         const from = coordsFromLabel(r.pickup), to = coordsFromLabel(r.dropoff);
         routeMap(box, { from, to }).then(c => {
@@ -236,7 +243,9 @@ export function ride({ id }) {
             const mapBtn = h("button", { class: "link", style: "margin-bottom:8px" }, store.maps ? t("hideMap") : t("showMap"));
             mapBtn.onclick = () => { if (liveBox.hidden) { liveBox.hidden = false; store.setMaps(true); mapBtn.textContent = t("hideMap"); if (!mapCtl) startMap(r, liveBox); } else { liveBox.hidden = true; mapBtn.textContent = t("showMap"); } };
             if (store.maps) startMap(r, liveBox);
-            put(holder, h("h1", null, head),
+            const etaLine = h("p", { class: "muted", style: "margin:-2px 0 10px", id: "eta" });
+            if (r.status === "DRIVER_ASSIGNED") startEta(r, etaLine);
+            put(holder, h("h1", null, head), etaLine,
                 h("div", { class: "steps" }, [t("status_DRIVER_ASSIGNED"), t("status_DRIVER_ARRIVED"), t("status_STARTED")].map((s, i) => h("div", { class: i + 1 <= lvl ? "on" : "" }, s))),
                 h("div", { class: "list", style: "margin-bottom:16px" }, h("div", { class: "item", style: "cursor:default" }, avatar(r.driverName),
                     h("span", { class: "grow" }, h("b", null, r.driverName || t("driver")), h("small", null, r.assignedVehicle ? r.assignedVehicle.makeModel : "")), r.assignedVehicle ? plate(r.assignedVehicle.plate) : null)),

@@ -223,6 +223,11 @@ app.use(
     require("../routes/settlements_api")
 );
 
+app.use(
+    "/api",
+    require("../routes/config_api")
+);
+
 
 // ============================================================
 // AUTH + DRIVER APPLICATIONS

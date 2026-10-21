@@ -44,12 +44,15 @@ export function sosSheet(ride) {
             toast("CabLink has been alerted", "ok"); close();
         } catch (e) { toast(e.message, "error"); }
     });
+    const sup = h("div", { style: "display:grid;gap:12px" });
+    supportButtons().then(b => sup.append(...b));
     close = openSheet(
         h("h2", null, t("emergency")),
         h("a", { class: "btn sos", href: "tel:999" }, icon("phone"), "Police 999"),
         h("a", { class: "btn ghost", href: "tel:997" }, icon("phone"), "Ambulance 997"),
         ride ? h("button", { class: "btn quiet", onClick: wa }, icon("share"), t("shareTrip")) : null,
         alertBtn,
+        sup,
         h("button", { class: "link", onClick: () => close() }, t("cancel")));
 }
 
@@ -80,4 +83,19 @@ export async function announcements() {
         });
     } catch (e) { /* announcements are optional */ }
     return box;
+}
+
+let cfg = null;
+export async function getConfig() {
+    if (cfg) return cfg;
+    try { cfg = await api("/config", { auth: false }); } catch (e) { cfg = {}; }
+    return cfg;
+}
+// "Call CabLink" / "WhatsApp CabLink" buttons, shown only if a support number is configured.
+export async function supportButtons(kind = "ghost") {
+    const c = await getConfig();
+    const out = [];
+    if (c.supportPhone) out.push(h("a", { class: "btn " + kind, href: "tel:+" + c.supportPhone }, icon("phone"), "Call CabLink"));
+    if (c.supportWhatsapp) out.push(h("a", { class: "btn " + kind, href: "https://wa.me/" + c.supportWhatsapp, target: "_blank", rel: "noopener" }, icon("share"), "WhatsApp CabLink"));
+    return out;
 }

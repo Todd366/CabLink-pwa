@@ -63,3 +63,11 @@ test("metrics: completion rate, wait time and money", () => {
     assert.equal(m.completionRate, 33); assert.equal(m.avgWaitMin, 4); assert.equal(m.openNow, 1); assert.equal(m.grossFares, 100);
     assert.equal(m.days.length, 7);
 });
+
+test("driver ETA is a sensible estimate", async () => {
+    const { etaMinutes } = await import("../app/js/eta.js");
+    assert.equal(etaMinutes({ lat: -24.65, lng: 25.91 }, { lat: -24.65, lng: 25.91 }), 1);
+    const m = etaMinutes({ lat: -24.4, lng: 26.1 }, { lat: -24.65, lng: 25.91 });   // ~35 km apart
+    assert.ok(m >= 40 && m <= 90, "got " + m);
+    assert.equal(etaMinutes(null, { lat: 0, lng: 0 }), null);
+});

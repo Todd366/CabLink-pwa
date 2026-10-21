@@ -4,7 +4,7 @@ import { store } from "../store.js";
 import { api } from "../api.js";
 import { go } from "../router.js";
 import { screen, riderTabs, driverTabs } from "../shell.js";
-import { openSheet } from "./common.js";
+import { openSheet, supportButtons } from "./common.js";
 import { langSwitch } from "./welcome.js";
 
 let installEvent = null;
@@ -35,7 +35,8 @@ export async function account() {
                 sel.value = kind; sel.onchange = () => { kind = sel.value; };
                 const msg = h("textarea", { rows: "4", maxlength: "400", placeholder: t("helpPlaceholder"), style: "width:100%;border-radius:14px;border:2px solid var(--line);padding:12px 16px;background:var(--surface)" });
                 const send = h("button", { class: "btn" }, t("helpSend"));
-                const close = openSheet(h("h2", null, t("helpTitle")), sel, msg, send);
+                const sup = h("div", { style: "display:grid;gap:12px" }); supportButtons("quiet").then(b => sup.append(...b));
+                const close = openSheet(h("h2", null, t("helpTitle")), sup, sel, msg, send);
                 send.onclick = () => busy(send, async () => {
                     if (msg.value.trim().length < 5) return toast(t("required"), "error");
                     try { await api("/incidents", { method: "POST", body: { type: kind, description: msg.value.trim() } }); toast(t("helpSent"), "ok"); close(); }

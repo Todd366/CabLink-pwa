@@ -20,7 +20,15 @@ export const store = {
     setSaved(key, place) { const v = this.saved; v[key] = { name: place.name, region: place.region || "", lat: place.lat ?? null, lng: place.lng ?? null, km: place.km ?? null }; ls.set("cl.saved", JSON.stringify(v)); },
     get dismissed() { return json("cl.dismissed", []); },
     dismiss(id) { ls.set("cl.dismissed", JSON.stringify([...this.dismissed, id].slice(-30))); },
-    get maps() { return ls.get("cl.maps") === "1"; },
+    // Maps are on by default on a good connection and off on 2G or Data Saver;
+    // an explicit choice in Account always wins.
+    get maps() {
+        const v = ls.get("cl.maps");
+        if (v === "1") return true;
+        if (v === "0") return false;
+        const c = navigator.connection;
+        return !(c && (c.saveData || /(^|-)2g/.test(c.effectiveType || "")));
+    },
     get ref() { return ls.get("cl.ref") || ""; },
     get asPassenger() { return ls.get("cl.asPassenger") === "1"; },
     setSession(token, account) { ls.set("cl.token", token); ls.set("cl.account", JSON.stringify(account)); },
@@ -28,7 +36,7 @@ export const store = {
     setLang(l) { ls.set("cl.lang", l); },
     setActiveRide(id) { id ? ls.set("cl.ride", id) : ls.del("cl.ride"); },
     setContact(c) { ls.set("cl.contact", JSON.stringify(c)); },
-    setMaps(v) { v ? ls.set("cl.maps", "1") : ls.del("cl.maps"); },
+    setMaps(v) { ls.set("cl.maps", v ? "1" : "0"); },
     setRef(v) { v ? ls.set("cl.ref", v) : ls.del("cl.ref"); },
     setIntent(v) { ls.set("cl.intent", v); },
     setAsPassenger(v) { v ? ls.set("cl.asPassenger", "1") : ls.del("cl.asPassenger"); },
