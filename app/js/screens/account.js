@@ -27,6 +27,7 @@ export async function account() {
                 const close = openSheet(h("h2", null, t("name")), f.el, save);
                 save.onclick = () => busy(save, async () => { try { const r = await api("/auth/profile", { method: "PATCH", body: { name: f.input.value } }); store.setAccount(r.account); close(); go("/account", true); setTimeout(() => location.reload(), 0); } catch (e) { toast(e.message, "error"); } });
             }),
+            isAdmin ? null : row("star", t("rewards"), "THB, streak, referrals", () => go("/rewards")),
             row("box", t("ecosystem"), t("ecosystemSub"), () => go("/ecosystem")),
             row("alert", t("help"), t("helpSub"), () => {
                 const types = [["SAFETY", "Safety concern"], ["DRIVER_ISSUE", "Driver issue"], ["PASSENGER_ISSUE", "Passenger issue"], ["LOST_PROPERTY", "Lost item"], ["PAYMENT_DISPUTE", "Payment problem"], ["SUPPORT", "Something else"]];

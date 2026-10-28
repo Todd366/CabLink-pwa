@@ -15,14 +15,27 @@ export const ticket = (amount, lines) => h("div", { class: "ticket", role: "grou
     h("div", { class: "amt" }, money(amount)),
     h("div", { class: "rest" }, lines.map(l => h("div", null, l))));
 
-export function routeBlock(from, to, onFrom, onTo) {
+export function routeBlock(from, to, onFrom, onTo, stops) {
+    const mid = (stops || []).filter(Boolean).map((s, i) => h("div", { class: "stop" }, h("span", { class: "dot", style: "width:12px;height:12px;margin:3px;background:var(--muted)" }), h("span", null, h("small", null, "Stop " + (i + 1)), h("b", null, s))));
     const row = (cls, label, value, fn) => h(fn ? "button" : "div", { class: "stop", onClick: fn || null },
         h("span", { class: cls }), h("span", null, h("small", null, label), h("b", null, String(value || "—").replace(/\s*\(-?\d+\.\d+,-?\d+\.\d+\)/, ""))));
-    return h("div", { class: "route" }, row("dot", t("pickup"), from, onFrom), row("sq", t("dropoff"), to, onTo));
+    return h("div", { class: "route" }, row("dot", t("pickup"), from, onFrom), ...mid, row("sq", t("dropoff"), to, onTo));
 }
 
 export const statusLabel = s => t("status_" + s);
 export const isActive = s => ["REQUESTED", "MATCHING", "DRIVER_ASSIGNED", "DRIVER_ARRIVED", "PICKED_UP", "STARTED"].includes(s);
+
+// Shares a link family can open to watch the trip live (riders only), with a
+// plain-text fallback for drivers or when sharing is not set up.
+export async function shareTrip(ride) {
+    const contact = store.contact;
+    let link = "";
+    try { const r = await api("/rides/" + encodeURIComponent(ride.id) + "/share", { method: "POST" }); link = location.origin + r.path; } catch (e) { /* fall back to text only */ }
+    const text = "I'm on a CabLink trip from " + String(ride.pickup).replace(/\s*\(-?\d+\.\d+,-?\d+\.\d+\)/, "") + " to " + ride.dropoff +
+        (ride.driverName ? ". Driver: " + ride.driverName : "") + (ride.assignedVehicle ? " (" + ride.assignedVehicle.makeModel + (ride.assignedVehicle.plate ? ", " + ride.assignedVehicle.plate : "") + ")" : "") +
+        (link ? "\nFollow my trip live: " + link : "\nTrip ID: " + ride.id);
+    window.open("https://wa.me/" + (contact && contact.phone ? "267" + contact.phone : "") + "?text=" + encodeURIComponent(text), "_blank", "noopener");
+}
 
 // Safety sheet shared by riders and drivers.
 export function sosSheet(ride) {
@@ -33,10 +46,7 @@ export function sosSheet(ride) {
           (ride.assignedVehicle ? " (" + ride.assignedVehicle.makeModel + ", " + ride.assignedVehicle.plate + ")" : "") + ". Trip ID: " + ride.id
         : "";
     const contact = store.contact;
-    const wa = () => {
-        const num = contact && contact.phone ? "267" + contact.phone : "";
-        window.open("https://wa.me/" + num + "?text=" + encodeURIComponent(shareText), "_blank", "noopener");
-    };
+    const wa = () => shareTrip(ride);
     const alertBtn = h("button", { class: "btn sos" }, icon("alert"), "Alert CabLink");
     alertBtn.onclick = () => busy(alertBtn, async () => {
         try {

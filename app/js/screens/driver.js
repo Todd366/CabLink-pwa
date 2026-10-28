@@ -87,7 +87,7 @@ export async function home() {
                 try { await api("/rides/" + encodeURIComponent(r.id) + "/accept", { method: "PATCH", body: {} }); go("/driver/job/" + r.id); }
                 catch (e) { toast(e.status === 409 ? "Another driver took this ride" : e.message, "error"); loadRequests().catch(() => {}); }
             });
-            return h("div", { style: "margin-bottom:18px" }, routeBlock(r.pickup, r.dropoff), h("div", { style: "margin:10px 0", class: "small muted" }, meta), b);
+            return h("div", { style: "margin-bottom:18px" }, routeBlock(r.pickup, r.dropoff, null, null, r.stops), h("div", { style: "margin:10px 0", class: "small muted" }, meta), b);
         })) : h("div", { class: "empty" }, h("b", null, t("noRequests")), t("waitingRequests")));
     };
     const setOnline = async on => {
@@ -150,7 +150,7 @@ export function job({ id }) {
     const draw = r => {
         stopMap(); if (beat) { clearInterval(beat); beat = null; } holder.replaceChildren(); actions.replaceChildren();
         if (r.status === "COMPLETED") {
-            put(holder, h("h1", null, t("tripDone")), ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? "Collect cash" : "Mobile money"), r.paymentMethod === "cash" ? "from the passenger" : "ask the passenger to pay your number"]));
+            put(holder, h("h1", null, t("tripDone")), ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? "Collect cash" : "Mobile money"), r.paymentMethod === "cash" ? "from the passenger" : "ask the passenger to pay your number"]), r.reward && r.reward.amount ? h("p", { class: "muted", style: "margin-top:12px" }, "THB reward for this trip: " + r.reward.amount + " THB. See Rewards in Account.") : null);
             put(actions, h("button", { class: "btn", onClick: () => go("/driver/home") }, t("done"))); return;
         }
         if (r.status === "CANCELLED") { put(holder, h("div", { class: "empty" }, h("b", null, t("status_CANCELLED")))); put(actions, h("button", { class: "btn", onClick: () => go("/driver/home") }, t("done"))); return; }
@@ -160,7 +160,7 @@ export function job({ id }) {
         mapBtn.onclick = () => { if (liveBox.hidden) { liveBox.hidden = false; store.setMaps(true); mapBtn.textContent = t("hideMap"); if (!mapCtl) startMap(r, liveBox); } else { liveBox.hidden = true; mapBtn.textContent = t("showMap"); } };
         if (store.maps) startMap(r, liveBox);
         put(holder, h("div", { class: "status", style: "margin-bottom:14px" }, h("span", { class: "pulse" }), t("status_" + r.status)),
-            mapBtn, liveBox, routeBlock(r.pickup, r.dropoff), r.notes ? h("p", { class: "muted", style: "margin-top:12px" }, "“" + r.notes + "”") : null,
+            mapBtn, liveBox, routeBlock(r.pickup, r.dropoff, null, null, r.stops), r.notes ? h("p", { class: "muted", style: "margin-top:12px" }, "“" + r.notes + "”") : null,
             h("div", { style: "margin-top:16px" }, ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")), r.distanceKm + " " + t("km")])));
         const [, labelKey] = NEXT[r.status] || [];
         if (labelKey) { const b = h("button", { class: "btn go" }, t(labelKey)); b.onclick = () => busy(b, () => advance(r, b)); put(actions, b); }

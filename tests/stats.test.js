@@ -71,3 +71,24 @@ test("driver ETA is a sensible estimate", async () => {
     assert.ok(m >= 40 && m <= 90, "got " + m);
     assert.equal(etaMinutes(null, { lat: 0, lng: 0 }), null);
 });
+
+const { streak, rewardSummary } = require("../backend/services/community_stats");
+test("streak counts consecutive local days ending today or yesterday", () => {
+    const now = Date.parse("2026-10-14T12:00:00Z");
+    assert.equal(streak(["2026-10-14T08:00:00Z", "2026-10-13T08:00:00Z", "2026-10-12T20:00:00Z"], now), 3);
+    assert.equal(streak(["2026-10-13T08:00:00Z", "2026-10-12T08:00:00Z"], now), 2);   // no ride yet today
+    assert.equal(streak(["2026-10-10T08:00:00Z"], now), 0);
+    assert.equal(streak([], now), 0);
+});
+test("reward summary only counts this person's payouts, by status", () => {
+    const tx = [
+        { id: "1", type: "RIDE_CLAIM", passengerAccountId: "A", amount: 1, status: "CONFIRMED" },
+        { id: "2", type: "RIDE_CLAIM", passengerAccountId: "A", amount: 1, status: "PENDING_TRANSFER" },
+        { id: "3", type: "REFERRAL_BONUS", referrerId: "A", amount: 0.2, status: "FAILED" },
+        { id: "4", type: "THB_REWARD", driverId: "B", amount: 7, status: "CONFIRMED" },
+        { id: "5", type: "RIDE_CLAIM", passengerAccountId: "A", amount: 1, status: "SIMULATION" }
+    ];
+    const s = rewardSummary(tx, "A");
+    assert.deepEqual([s.confirmed, s.pending, s.testMode, s.problem, s.waiting, s.items.length], [1, 1, 1, 0.2, 0, 4]);
+    assert.equal(rewardSummary(tx, "B").confirmed, 7);
+});

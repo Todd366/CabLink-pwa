@@ -228,6 +228,16 @@ app.use(
     require("../routes/config_api")
 );
 
+app.use(
+    "/api",
+    require("../routes/rewards_summary_api")
+);
+
+app.use(
+    "/api",
+    require("../routes/track_api")
+);
+
 
 // ============================================================
 // AUTH + DRIVER APPLICATIONS

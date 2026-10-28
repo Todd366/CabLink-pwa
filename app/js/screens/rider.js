@@ -9,11 +9,11 @@ import { routeMap, pinPicker } from "../map.js";
 import { estimateFare } from "../fare.js";
 import { enablePush } from "../push.js";
 import { etaMinutes } from "../eta.js";
-import { announcements, put, ticket, routeBlock, statusLabel, isActive, sosSheet, stars, openSheet } from "./common.js";
+import { shareTrip, announcements, put, ticket, routeBlock, statusLabel, isActive, sosSheet, stars, openSheet } from "./common.js";
 
 // The trip being built. Lives in memory so each screen only asks one thing.
-export const draft = { task: "ride", dest: null, pickup: null, km: null, vehicle: "standard", pay: "cash", notes: "" };
-const resetDraft = () => Object.assign(draft, { task: "ride", dest: null, pickup: null, km: null, vehicle: "standard", pay: "cash", notes: "" });
+export const draft = { task: "ride", dest: null, pickup: null, km: null, vehicle: "standard", pay: "cash", notes: "", stops: [] };
+const resetDraft = () => Object.assign(draft, { task: "ride", dest: null, pickup: null, km: null, vehicle: "standard", pay: "cash", notes: "", stops: [] });
 const placeLabel = p => p ? (p.region ? p.name + ", " + p.region : p.name) : "";
 const KM_CHOICES = [2, 5, 10, 20, 40, 80];
 
@@ -138,7 +138,13 @@ export function trip() {
             actions.replaceChildren();
             return;
         }
-        const fare = estimateFare({ vehicle: draft.vehicle, km, task: draft.task });
+        if (draft.task === "ride") {
+            const rows = draft.stops.map((st, i) => h("div", { style: "display:flex;gap:8px;margin-top:8px" },
+                h("input", { value: st, maxlength: "60", placeholder: "Stop " + (i + 1) + " (place or landmark)", "aria-label": "Stop " + (i + 1), style: "flex:1;min-height:50px;border-radius:14px;border:2px solid var(--line);padding:0 14px;background:var(--surface)", onChange: e => { draft.stops[i] = e.target.value.trim(); } }),
+                h("button", { class: "icon-btn", "aria-label": "Remove stop", onClick: () => { draft.stops.splice(i, 1); paint(); } }, icon("x", 18))));
+            put(body, h("div", { style: "margin-top:10px" }, rows, draft.stops.length < 2 ? h("button", { class: "link", onClick: () => { draft.stops.push(""); paint(); } }, "+ Add a stop (P5 each)") : null));
+        }
+        const fare = estimateFare({ vehicle: draft.vehicle, km, task: draft.task, stops: draft.stops.length });
         if (draft.dest) {
             put(body, h("div", { class: "chips", style: "margin-top:10px" }, [["home", "home"], ["work", "work"]].map(([k, l]) => {
                 const b = h("button", { class: "chip", style: "min-height:40px;font-size:14px" }, t("saveAs", { label: t(l) }));
@@ -160,7 +166,7 @@ export function trip() {
             put(body, h("h3", null, t("rideType")), h("div", { class: "opts" },
                 [["standard", "standardSub"], ["premium", "premiumSub"], ["xl", "xlSub"]].map(([v, sub]) =>
                     h("button", { class: "opt", "aria-pressed": draft.vehicle === v ? "true" : "false", onClick: () => { draft.vehicle = v; paint(); } },
-                        icon("car"), h("span", { class: "grow" }, h("b", null, t(v)), h("small", null, t(sub))), h("b", null, money(estimateFare({ vehicle: v, km, task: draft.task })))))));
+                        icon("car"), h("span", { class: "grow" }, h("b", null, t(v)), h("small", null, t(sub))), h("b", null, money(estimateFare({ vehicle: v, km, task: draft.task, stops: draft.stops.length })))))));
         }
         put(body, h("h3", null, t("payWith")), h("div", { class: "opts" },
             [["cash", "cash", "cashSub"], ["mobile_money", "mobileMoney", "mobileMoneySub"]].map(([v, l, s]) =>
@@ -175,7 +181,7 @@ export function trip() {
             if (!draft.pickup) return go("/rider/where/pickup");
             try {
                 const { ride } = await api("/rides", { method: "POST", body: {
-                    pickup: draft.pickup.name, dropoff: placeLabel(draft.dest), vehicle: draft.vehicle, distanceKm: km,
+                    pickup: draft.pickup.name, dropoff: placeLabel(draft.dest), vehicle: draft.vehicle, distanceKm: km, stops: draft.stops.filter(x => x && x.trim()),
                     notes: draft.notes, paymentMethod: draft.pay, taskType: draft.task === "delivery" ? "delivery" : undefined } });
                 store.setActiveRide(ride.id); resetDraft(); enablePush(); go("/rider/ride/" + ride.id, true);
             } catch (e) {
@@ -231,7 +237,7 @@ export function ride({ id }) {
 
     const draw = r => {
         stopMap(); holder.replaceChildren(); actions.replaceChildren();
-        const route = routeBlock(r.pickup, r.dropoff);
+        const route = routeBlock(r.pickup, r.dropoff, null, null, r.stops);
         if (r.status === "MATCHING" || r.status === "REQUESTED") {
             put(holder, h("div", { class: "status", style: "margin-bottom:16px" }, h("span", { class: "pulse" }), t("finding")),
                 h("p", { class: "muted", id: "wait" }, t("findingSub")), route, h("div", { style: "margin-top:18px" }, ticket(r.fare, [h("b", null, money(r.fare)), r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")])));
@@ -251,6 +257,7 @@ export function ride({ id }) {
                     h("span", { class: "grow" }, h("b", null, r.driverName || t("driver")), h("small", null, r.assignedVehicle ? r.assignedVehicle.makeModel : "")), r.assignedVehicle ? plate(r.assignedVehicle.plate) : null)),
                 mapBtn, liveBox, route, h("div", { style: "margin-top:18px" }, ticket(r.fare, [h("b", null, money(r.fare)), r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")])));
             put(actions, h("button", { class: "btn", onClick: callOther }, icon("phone"), t("callDriver")),
+                h("button", { class: "btn quiet", onClick: () => shareTrip(r) }, icon("share"), t("shareTrip")),
                 h("button", { class: "btn quiet", onClick: () => sosSheet(r) }, icon("shield"), t("safety")));
             if (r.status === "DRIVER_ASSIGNED" || r.status === "DRIVER_ARRIVED") put(actions, h("button", { class: "link", onClick: cancel }, t("cancelRide")));
         } else if (r.status === "COMPLETED") {
@@ -269,7 +276,7 @@ export function ride({ id }) {
             }
             put(holder, h("h1", null, t("tripDone")), h("p", { class: "muted" }, t("payDriver")),
                 ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? t("cash") : t("mobileMoney")), r.paymentMethod === "cash" ? "" : "via mobile money"]), payBox,
-                r.reward && r.reward.amount ? h("p", { class: "small muted", style: "margin-top:12px" }, "Reward earned: " + r.reward.amount + " THB") : null,
+                
                 r.rating ? h("p", { class: "muted", style: "margin-top:16px" }, t("thanks")) : [h("h3", null, t("rateDriver")), stars(n => { rating = n; }), note]);
             const claim = h("button", { class: "btn quiet" }, t("claimThb"));
             claim.onclick = () => busy(claim, async () => {

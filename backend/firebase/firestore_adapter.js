@@ -387,7 +387,20 @@ function status() {
 // EXPORTS
 // ============================================================
 
+async function insertOnce(collection, id, data) {
+    if (!collection || !id) throw new Error("Firestore collection and document ID are required");
+    try {
+        await db().collection(collection).doc(String(id)).create(data);
+        return true;
+    } catch (error) {
+        if (error && (error.code === 6 || /already exists/i.test(error.message || ""))) return false;
+        throw error;
+    }
+}
+
 module.exports = {
+
+    insertOnce,
 
     initialize,
 

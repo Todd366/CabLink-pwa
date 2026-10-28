@@ -83,6 +83,19 @@ async function write(collection, id, data) {
 // READ
 // ============================================================
 
+// Atomic "first one wins": inserts only if (collection, id) does not exist yet.
+// Returns true for the single winner, false for everyone else. The database's
+// primary key makes this safe across any number of simultaneous servers.
+async function insertOnce(collection, id, data) {
+    if (!collection || !id) throw new Error("Supabase collection and document ID are required");
+    const { error } = await db()
+        .from("cablink_store")
+        .insert({ collection, id: String(id), data, updated_at: new Date().toISOString() });
+    if (!error) return true;
+    if (error.code === "23505") return false;
+    throw new Error("Supabase insert failed: " + error.message);
+}
+
 async function read(collection, id) {
 
     if (!collection || !id) {
@@ -204,6 +217,7 @@ function status() {
 
 module.exports = {
     write,
+    insertOnce,
     read,
     list,
     delete: remove,

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CabLink trip</title><meta name="robots" content="noindex">
+<link rel="icon" href="/app/icons/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/app/css/app.css">
+</head><body>
+<div id="app"><div class="screen"><main class="page" id="root"><div class="busy"><span class="dot"></span> Loading trip…</div></main></div></div>
+<script type="module">
+import { h, logo, plate } from "/app/js/ui.js";
+import { routeMap } from "/app/js/map.js";
+import { coordsFromLabel } from "/app/js/places.js";
+import { etaMinutes } from "/app/js/eta.js";
+const q = new URLSearchParams(location.search), root = document.getElementById("root");
+const STEP = { MATCHING: "Finding a driver", DRIVER_ASSIGNED: "Driver is on the way to pick up", DRIVER_ARRIVED: "Driver has arrived at the pickup", PICKED_UP: "Rider is in the car", STARTED: "On the trip", COMPLETED: "Trip finished safely", CANCELLED: "Trip was cancelled" };
+let map = null, mapBox = null;
+async function tick() {
+  let d;
+  try { const r = await fetch("/api/track?r=" + encodeURIComponent(q.get("r") || "") + "&k=" + encodeURIComponent(q.get("k") || "")); d = await r.json(); if (!r.ok) throw new Error(d.error || "Not available"); }
+  catch (e) { root.replaceChildren(logo(32), h("h1", null, "Link not available"), h("p", { class: "muted" }, e.message)); return false; }
+  const from = coordsFromLabel(d.pickupRaw), to = coordsFromLabel(d.dropoffRaw);
+  const eta = d.status === "DRIVER_ASSIGNED" ? etaMinutes(d.driverLocation, from) : null;
+  if (!mapBox) {
+    mapBox = h("div", { class: "map" });
+    root.replaceChildren(logo(32), h("h1", { id: "h" }), h("p", { class: "muted", id: "who" }), mapBox, h("div", { class: "route", id: "route" }), h("p", { class: "small muted", id: "veh", style: "margin-top:14px" }), h("p", { class: "small muted" }, "Shared from CabLink. This page updates by itself."));
+    routeMap(mapBox, { from, to }).then(c => { map = c; });
+  }
+  document.getElementById("h").textContent = STEP[d.status] || d.status;
+  document.getElementById("who").textContent = (d.rider ? d.rider + " is travelling" : "Trip") + (eta ? " · driver about " + eta + " min away" : "");
+  document.getElementById("route").replaceChildren(h("div", { class: "stop" }, h("span", { class: "dot" }), h("span", null, h("small", null, "From"), h("b", null, d.pickup))), h("div", { class: "stop" }, h("span", { class: "sq" }, ""), h("span", null, h("small", null, "To"), h("b", null, d.dropoff))));
+  const v = d.vehicle ? [d.driver ? "Driver: " + d.driver : "", d.vehicle.makeModel, d.vehicle.plate ? "Plate " + d.vehicle.plate : ""].filter(Boolean).join(" · ") : "";
+  document.getElementById("veh").textContent = v;
+  if (map) map.update({ from, to, driver: d.driverLocation });
+  return !d.ended;
+}
+(async function loop() { if (await tick()) setTimeout(loop, 8000); })();
+</script></body></html>

@@ -1,4 +1,5 @@
 const { newId } = require("../util/ids");
+const once = require("../util/once");
 const canonicalWalletResolver = require("../rewards/canonical_wallet_resolver");
 const thbExecutor = require("../blockchain/thb_real_executor");
 const auth = require("./auth_service");
@@ -222,8 +223,7 @@ async function createRewardForCompletedRide(
     const reward = {
 
         id:
-            "TX-" +
-            Date.now(),
+            newId("TX"),
 
         type:
             "THB_REWARD",
@@ -254,7 +254,14 @@ async function createRewardForCompletedRide(
      * the current ledger operation.
      */
 
-    ledger.transactions.push(
+    // Exactly one reward per ride, even if the ride is completed twice at once.
+    if (!(await once.acquire("THB_REWARD:" + canonicalRideId))) {
+        const ledgerNow = await loadLedger();
+        const winner = findExistingReward(ledgerNow.transactions, canonicalRideId);
+        return { success: true, status: "ALREADY_REWARDED", created: false, reward: winner };
+    }
+
+        ledger.transactions.push(
         reward
     );
 
@@ -396,8 +403,14 @@ async function createReferralBonus({ referrerId, referredAccountId }) {
         wallet: await resolveWalletForAccount(referrerId)
     };
 
-    ledger.transactions.push(bonus);
-    await saveLedger(ledger);
+    // One referral bonus per referred person, even under simultaneous requests.
+    if (!(await once.acquire("REFERRAL_BONUS:" + referredAccountId))) {
+        const l = await loadLedger();
+        return { success: true, status: "ALREADY_PAID", created: false, bonus: l.transactions.find(t => t && t.type === "REFERRAL_BONUS" && String(t.referredAccountId) === String(referredAccountId)) || null };
+    }
+    const fresh = await loadLedger();
+    fresh.transactions.push(bonus);
+    await saveLedger(fresh);
 
     let executionResult = { status: "SKIPPED", reason: "No wallet resolved for referrer" };
 
@@ -479,8 +492,15 @@ async function createRideClaimReward({ rideId, passengerAccountId }) {
         return { success: false, status: "NO_WALLET", error: "Connect a wallet before claiming" };
     }
 
-    ledger.transactions.push(claim);
-    await saveLedger(ledger);
+    // THE payout guard: only the single winner may send THB for this ride.
+    if (!(await once.acquire("RIDE_CLAIM:" + rideId, { rideId, passengerAccountId }))) {
+        const l = await loadLedger();
+        const existing = l.transactions.find(t => t && t.type === "RIDE_CLAIM" && t.rideId === rideId);
+        return { success: true, status: "ALREADY_CLAIMED", created: false, claim: existing || null };
+    }
+    const fresh = await loadLedger();
+    fresh.transactions.push(claim);
+    await saveLedger(fresh);
 
     let executionResult = { status: "SKIPPED", reason: "No wallet resolved" };
 

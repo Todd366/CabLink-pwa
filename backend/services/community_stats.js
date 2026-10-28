@@ -76,4 +76,27 @@ function metrics(rides, now = Date.now()) {
     };
 }
 
-module.exports = { leaderboard, hotspots, placeOf, firstNameInitial, balances, metrics };
+// Consecutive local days (ending today or yesterday) with at least one completed ride.
+function streak(isoDates, now = Date.now()) {
+    const days = new Set(isoDates.map(localDay));
+    let d = now, run = 0;
+    if (!days.has(localDay(d))) d -= DAY;           // today may not have a ride yet
+    while (days.has(localDay(d))) { run++; d -= DAY; }
+    return run;
+}
+
+// What THB this person has, from the payout ledger (statuses as written by the executor).
+function rewardSummary(transactions, accountId) {
+    const mine = transactions.filter(t => t && (t.passengerAccountId === accountId || t.referrerId === accountId || (t.type === "THB_REWARD" && t.driverId === accountId)));
+    const sum = f => Math.round(mine.filter(f).reduce((a, t) => a + (Number(t.amount) || 0), 0) * 100) / 100;
+    return {
+        confirmed: sum(t => t.status === "CONFIRMED"),
+        pending: sum(t => t.status === "PENDING_TRANSFER"),
+        testMode: sum(t => t.status === "SIMULATION"),
+        waiting: sum(t => t.status === "SKIPPED"),
+        problem: sum(t => t.status === "FAILED"),
+        items: mine.map(t => ({ id: t.id, type: t.type, amount: Number(t.amount) || 0, status: t.status, rideId: t.rideId || null, txHash: t.txHash || null, reason: t.executionReason || null })).slice(-20).reverse()
+    };
+}
+
+module.exports = { streak, rewardSummary, leaderboard, hotspots, placeOf, firstNameInitial, balances, metrics };
