@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { safeEqual } = require("../middleware/security");
 const rideEngine = require("../canonical/ride_engine");
 const geo = require("../geo/geo");
 const { calcFare } = require("../pricing/fare");
@@ -31,7 +32,7 @@ function requireMarketplaceAuth(req, res, next) {
         });
     }
 
-    if (req.headers["x-marketplace-key"] !== MARKETPLACE_API_KEY) {
+    if (!safeEqual(req.headers["x-marketplace-key"], MARKETPLACE_API_KEY)) {
         return res.status(401).json({ success: false, error: "Invalid marketplace API key" });
     }
 

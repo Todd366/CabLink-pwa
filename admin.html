@@ -87,10 +87,10 @@ async function loadApplications(){
       <td>${escapeHtml(app.name)}</td>
       <td>${escapeHtml(app.phone)}</td>
       <td>${escapeHtml(app.vehicle)}</td>
-      <td><span class="status ${app.status}">${app.status}</span></td>
+      <td><span class="status ${escapeHtml(app.status)}">${escapeHtml(app.status)}</span></td>
       <td>${app.status === 'PENDING' ? `
-        <button class="btn-approve" onclick="review('${app.id}','approve')">Approve</button>
-        <button class="btn-reject" onclick="review('${app.id}','reject')">Reject</button>
+        <button class="btn-approve" onclick="review('${escapeHtml(app.id)}','approve')">Approve</button>
+        <button class="btn-reject" onclick="review('${escapeHtml(app.id)}','reject')">Reject</button>
       ` : ''}</td>
     `;
     tbody.appendChild(tr);
