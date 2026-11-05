@@ -36,11 +36,9 @@ router.post("/auth/login", async (req, res) => {
         // enough to brute-force it.
         const phone = String((req.body || {}).phone || "").trim();
         if (phone) {
-            const limit = await rateLimiter.checkAndRecord({
-                key: "login:" + phone,
-                maxAttempts: 5,
-                windowMs: 15 * 60 * 1000
-            });
+            const perDevice = await rateLimiter.checkAndRecord({ key: "login:" + phone + ":" + req.ip, maxAttempts: 5, windowMs: 15 * 60 * 1000 });
+            const perPhone = perDevice.allowed ? await rateLimiter.checkAndRecord({ key: "login-phone:" + phone, maxAttempts: 10, windowMs: 60 * 60 * 1000 }) : perDevice;
+            const limit = perDevice.allowed ? perPhone : perDevice;
             if (!limit.allowed) {
                 return res.status(429).json({
                     success: false,
