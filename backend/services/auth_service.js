@@ -42,6 +42,9 @@ const SESSIONS_COLLECTION = process.env.CABLINK_SESSION_FIRESTORE_COLLECTION || 
 
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
+// Sessions are stored by SHA-256 of the token, never the token itself.
+const sha = t => crypto.createHash("sha256").update(String(t)).digest("hex");
+
 let firestore = null;
 function getFirestoreAdapter() {
     if (!firestore) {
@@ -134,11 +137,11 @@ async function loadSessions() {
 
 async function saveSession(session) {
     if (MODE === "FIRESTORE") {
-        await getFirestoreAdapter().write(SESSIONS_COLLECTION, session.token, session);
+        await getFirestoreAdapter().write(SESSIONS_COLLECTION, session.tokenHash, session);
         return;
     }
     if (MODE === "SUPABASE") {
-        await getSupabaseAdapter().write(SESSIONS_COLLECTION, session.token, session);
+        await getSupabaseAdapter().write(SESSIONS_COLLECTION, session.tokenHash, session);
         return;
     }
     const sessions = localLoadSessions();
@@ -147,6 +150,7 @@ async function saveSession(session) {
 }
 
 async function findSessionByToken(token) {
+    token = sha(token);
     if (MODE === "FIRESTORE") {
         const result = await getFirestoreAdapter().read(SESSIONS_COLLECTION, token);
         return result.exists ? result.data : null;
@@ -155,7 +159,7 @@ async function findSessionByToken(token) {
         const result = await getSupabaseAdapter().read(SESSIONS_COLLECTION, token);
         return result.exists ? result.data : null;
     }
-    return localLoadSessions().find(s => s.token === token) || null;
+    return localLoadSessions().find(s => s.tokenHash === token) || null;
 }
 
 // ------------------------------------------------------------
@@ -303,7 +307,7 @@ async function login({ phone, pin }) {
     const token = crypto.randomBytes(32).toString("hex");
 
     const session = {
-        token,
+        tokenHash: sha(token),
         accountId: account.id,
         createdAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + SESSION_TTL_MS).toISOString()
