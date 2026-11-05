@@ -145,6 +145,13 @@ async function list(collection) {
 // DELETE
 // ============================================================
 
+// Atomic merge-by-id into a ledger document (row-locked in Postgres); concurrent appends are never lost.
+async function ledgerMerge(collection, id, data) {
+    const { data: merged, error } = await db().rpc("cablink_ledger_merge", { p_collection: collection, p_id: id, p_data: data });
+    if (error) throw new Error("ledgerMerge failed: " + error.message);
+    return merged;
+}
+
 async function remove(collection, id) {
 
     if (!collection || !id) {
@@ -222,5 +229,6 @@ module.exports = {
     list,
     delete: remove,
     acceptDocument,
+    ledgerMerge,
     status
 };

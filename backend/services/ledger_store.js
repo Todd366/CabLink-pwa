@@ -59,7 +59,7 @@ async function loadLedger() {
 
 async function saveLedger(data) {
     if (MODE === "SUPABASE") {
-        await getSupabaseAdapter().write(COLLECTION, DOC_ID, data);
+        await getSupabaseAdapter().ledgerMerge(COLLECTION, DOC_ID, data);
         return;
     }
     localSave(data);
