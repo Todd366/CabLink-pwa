@@ -33,7 +33,7 @@ router.patch(
             const result =
                 await completion.completeRideById(
                     req.params.id,
-                    req.body || {}
+                    {}
                 );
 
             if (!result.success) {

@@ -39,7 +39,7 @@ async function expireStale(req, res, next) {
     next();
 }
 
-const DRIVER_STEPS = ["DRIVER_ARRIVED", "PICKED_UP", "STARTED", "COMPLETED", "CANCELLED"];
+const DRIVER_STEPS = ["DRIVER_ARRIVED", "PICKED_UP", "STARTED", "CANCELLED"];
 
 // Who may move which ride to which state. Passengers can only
 // cancel their own ride; the assigned driver runs the trip;
@@ -51,6 +51,8 @@ async function authorizeTransition(req, res, next) {
         const a = req.account;
         const target = (req.body || {}).status || (req.body || {}).state;
         if (a.role === "ADMIN") return next();
+        if (target === "COMPLETED") return res.status(403).json({ success: false, error: "Use the complete endpoint to finish a trip" });
+        if (req.body) { delete req.body.rating; delete req.body.comment; delete req.body.driverId; delete req.body.driverName; }
         const isOwner = ride.passengerAccountId === a.id;
         const isDriver = ride.driverId === a.id || ride.driverAccountId === a.id;
         // Only an admin may close a trip once the passenger is in the car.
