@@ -468,6 +468,15 @@ async function changePin(accountId, currentPin, newPin) {
     return publicAccount(account);
 }
 
+// True only if `pin` is this account's current PIN (constant-time compare).
+async function verifyPin(accountId, pin) {
+    const account = await loadAccountById(accountId);
+    if (!account || account.passwordless || !account.pinHash || !account.pinSalt || pin === undefined || pin === null) return false;
+    const given = Buffer.from(hashPin(pin, account.pinSalt), "hex");
+    const want = Buffer.from(account.pinHash, "hex");
+    return given.length === want.length && crypto.timingSafeEqual(given, want);
+}
+
 async function allAccounts() {
     const accounts = await loadAccounts();
     return accounts.map(publicAccount);
@@ -573,6 +582,7 @@ module.exports = {
     updateProfile,
     setRole,
     changePin,
+    verifyPin,
     allAccounts,
     findOrCreateAccountByPhone,
     isValidBotswanaPhone,

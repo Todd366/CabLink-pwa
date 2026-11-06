@@ -34,9 +34,12 @@ router.get("/driver/:id/wallet", sec.selfOrAdmin("id"), async (req, res) => {
 
 // POST /api/driver/:id/wallet
 // body: { wallet: "0x..." }
-router.post("/driver/:id/wallet", sec.selfOrAdmin("id"), async (req, res) => {
+router.post("/driver/:id/wallet", sec.limit("wallet-pin", 5, 15 * 60 * 1000), sec.selfOrAdmin("id"), async (req, res) => {
     try {
-        const { wallet } = req.body || {};
+        const { wallet, pin } = req.body || {};
+        if (req.account && req.account.role !== "ADMIN" && !(await require("../services/auth_service").verifyPin(req.account.id, pin))) {
+            return res.status(403).json({ success: false, error: "Enter your PIN to change your wallet" });
+        }
 
         if (!wallet) {
             return res.status(400).json({

@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const auth = require("../services/auth_service");
 const rateLimiter = require("../services/rate_limiter_service");
+const sec = require("../middleware/security");
 
 router.post("/auth/register", async (req, res) => {
     try {
@@ -124,7 +125,7 @@ router.patch("/auth/pin", async (req, res) => {
 // so no server-side payout (referral bonus, ride-claim reward)
 // could ever find where to actually send tokens.
 // ============================================================
-router.patch("/auth/wallet", async (req, res) => {
+router.patch("/auth/wallet", sec.limit("wallet-pin", 5, 15 * 60 * 1000), async (req, res) => {
     try {
         const account = await auth.accountFromRequest(req);
 
@@ -132,7 +133,10 @@ router.patch("/auth/wallet", async (req, res) => {
             return res.status(401).json({ success: false, error: "Not logged in" });
         }
 
-        const { walletAddress } = req.body || {};
+        const { walletAddress, pin } = req.body || {};
+        if (!(await auth.verifyPin(account.id, pin))) {
+            return res.status(403).json({ success: false, error: "Enter your PIN to change your wallet" });
+        }
         const updated = await auth.saveWalletAddress(account.id, walletAddress);
         res.json({ success: true, account: updated });
     } catch (error) {

@@ -26,7 +26,7 @@ test("simultaneous reward claims pay out exactly once", async () => {
 
     const before = await call(R.token, "POST", "/api/rewards/claim-ride", { rideId: ride.id });
     assert.equal(before.body.status, "NO_WALLET", "claiming without a wallet must not use up the claim");
-    await call(R.token, "PATCH", "/api/auth/wallet", { walletAddress: "0x" + "ab".repeat(20) });
+    await call(R.token, "PATCH", "/api/auth/wallet", { walletAddress: "0x" + "ab".repeat(20), pin: "1234" });
     const results = await Promise.all([1, 2, 3, 4, 5, 6].map(() => call(R.token, "POST", "/api/rewards/claim-ride", { rideId: ride.id })));
     assert.equal(results.filter(r => r.body.created === true).length, 1, "exactly one claim may create a payout");
 

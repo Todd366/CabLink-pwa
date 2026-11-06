@@ -70,13 +70,14 @@ export async function account() {
             row("wallet", t("wallet"), me.walletAddress ? me.walletAddress.slice(0, 8) + "…" + me.walletAddress.slice(-4) : t("walletHint"), () => {
                 const f = field("w", t("walletHint"), { value: me.walletAddress || "", autocomplete: "off", spellcheck: "false" });
                 const save = h("button", { class: "btn" }, t("save"));
-                const close = openSheet(h("h2", null, t("wallet")), h("p", { class: "muted small" }, t("rewards") + ": THB"), f.el, save);
+                const pf = field("wp", t("currentPin"), { type: "password", inputmode: "numeric", maxlength: "6" });
+                const close = openSheet(h("h2", null, t("wallet")), h("p", { class: "muted small" }, t("rewards") + ": THB"), f.el, pf.el, save);
                 save.onclick = () => busy(save, async () => {
                     const w = f.input.value.trim();
                     if (!/^0x[a-fA-F0-9]{40}$/.test(w)) return toast("Wallet address must start with 0x and be 42 characters", "error");
                     try {
-                        if (isDriver) await api("/driver/" + encodeURIComponent(me.id) + "/wallet", { method: "POST", body: { wallet: w } });
-                        else await api("/auth/wallet", { method: "PATCH", body: { walletAddress: w } });
+                        if (isDriver) await api("/driver/" + encodeURIComponent(me.id) + "/wallet", { method: "POST", body: { wallet: w, pin: pf.input.value } });
+                        else await api("/auth/wallet", { method: "PATCH", body: { walletAddress: w, pin: pf.input.value } });
                         store.setAccount(Object.assign({}, me, { walletAddress: w })); toast(t("saved"), "ok"); close();
                     } catch (e) { toast(e.message, "error"); }
                 });

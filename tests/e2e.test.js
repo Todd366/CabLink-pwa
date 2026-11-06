@@ -103,7 +103,7 @@ test("full lifecycle and abuse scenarios against the real backend", async () => 
   log(r3.status >= 400, "rating 99 refused", r3.status);
   const cl0 = await call(R.tok, "POST", "/api/rewards/claim-ride", { rideId: ride.id });
   log("INFO", "claim without wallet", cl0.status + " " + (cl0.body.error || JSON.stringify(cl0.body).slice(0, 80)));
-  const wal = await call(R.tok, "PATCH", "/api/auth/wallet", { walletAddress: "0x" + "ab".repeat(20) });
+  const wal = await call(R.tok, "PATCH", "/api/auth/wallet", { walletAddress: "0x" + "ab".repeat(20), pin: "1234" });
   const cl1 = await call(R.tok, "POST", "/api/rewards/claim-ride", { rideId: ride.id });
   const cl2 = await call(R.tok, "POST", "/api/rewards/claim-ride", { rideId: ride.id });
   log("INFO", "claim #1 / #2", cl1.status + " " + JSON.stringify(cl1.body).slice(0, 90) + " | " + cl2.status + " " + JSON.stringify(cl2.body).slice(0, 70));
