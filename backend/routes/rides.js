@@ -80,7 +80,13 @@ async function authorizeTransition(req, res, next) {
 function bindPassengerAndFare(req, res, next) {
     const b = req.body || {};
     const stops = Array.isArray(b.stops) ? b.stops.filter(x => typeof x === "string" && x.trim()).slice(0, 3) : [];
-    const f = calcFare({ vehicle: b.vehicle, distanceKm: b.distanceKm, stops, taskType: b.taskType });
+    // straight-line floor: the fare can never be priced on less than the crow-flies distance
+    let km = b.distanceKm;
+    try {
+        const A = geo.coordsFromLabel(b.pickup), B = geo.coordsFromLabel(b.dropoff);
+        if (A && B) { const d = geo.haversineKm(A, B); if (!(Number(km) >= d)) km = d; }
+    } catch (e) { /* never block booking on a geo hiccup */ }
+    const f = calcFare({ vehicle: b.vehicle, distanceKm: km, stops, taskType: b.taskType });
     req.body = Object.assign({}, b, {
         passenger: req.account.id,
         fare: f.total,
