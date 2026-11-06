@@ -58,6 +58,14 @@ export async function account() {
                     try { await api("/auth/pin", { method: "PATCH", body: { currentPin: a.input.value, newPin: b.input.value } }); toast(t("saved"), "ok"); close(); } catch (e) { toast(e.message, "error"); }
                 });
             }),
+            row("shield", "Delete my account", "", () => {
+                const a = field("dp", t("currentPin"), { type: "password", inputmode: "numeric", maxlength: "6" });
+                const del = h("button", { class: "btn" }, "Delete my account");
+                const close = openSheet(h("h2", null, "Delete my account"), h("p", { class: "muted small" }, "This removes your name, phone number and wallet and logs you out everywhere. Past trip records stay without your details. This cannot be undone."), a.el, del);
+                del.onclick = () => busy(del, async () => {
+                    try { await api("/auth/account", { method: "DELETE", body: { pin: a.input.value } }); close(); store.clear(); go("/welcome"); } catch (e) { toast(e.message, "error"); }
+                });
+            }),
             isDriver ? row("phone", t("payoutNumber"), me.payoutNumber ? "+267 " + showPhone(me.payoutNumber) : t("payoutSub"), () => {
                 const f = field("po", t("payoutNumber"), { type: "tel", inputmode: "numeric", value: me.payoutNumber || "" });
                 const save = h("button", { class: "btn" }, t("save"));

@@ -473,6 +473,27 @@ async function changePin(accountId, currentPin, newPin) {
     return publicAccount(account);
 }
 
+// Right to erasure: anonymise the account (trip and ledger records keep only the id), end every session.
+async function deleteAccount(accountId, pin) {
+    const account = await loadAccountById(accountId);
+    if (!account) throw new Error("Account not found");
+    if (account.role === "ADMIN") throw new Error("Admin accounts cannot be deleted here");
+    if (!(await verifyPin(accountId, pin))) throw new Error("Enter your PIN to delete your account");
+    account.name = "Deleted user";
+    account.phone = "deleted-" + account.id;
+    account.pinHash = null; account.pinSalt = null; account.passwordless = true;
+    account.walletAddress = null; account.payoutNumber = null;
+    account.deletedAt = new Date().toISOString();
+    await saveAccount(account);
+    if (MODE === "FIRESTORE" || MODE === "SUPABASE") {
+        const ad = MODE === "FIRESTORE" ? getFirestoreAdapter() : getSupabaseAdapter();
+        for (const s of await loadSessions()) if (s && s.accountId === accountId) await ad.delete(SESSIONS_COLLECTION, s.tokenHash || s.token);
+    } else {
+        localSaveSessions(localLoadSessions().filter(s => s.accountId !== accountId));
+    }
+    return true;
+}
+
 // True only if `pin` is this account's current PIN (constant-time compare).
 async function verifyPin(accountId, pin) {
     const account = await loadAccountById(accountId);
@@ -588,6 +609,7 @@ module.exports = {
     setRole,
     changePin,
     verifyPin,
+    deleteAccount,
     allAccounts,
     findOrCreateAccountByPhone,
     isValidBotswanaPhone,

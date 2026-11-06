@@ -144,4 +144,15 @@ router.patch("/auth/wallet", sec.limit("wallet-pin", 5, 15 * 60 * 1000), async (
     }
 });
 
+router.delete("/auth/account", sec.limit("account-delete", 3, 60 * 60 * 1000), async (req, res) => {
+    try {
+        const account = await auth.accountFromRequest(req);
+        if (!account) return res.status(401).json({ success: false, error: "Not logged in" });
+        await auth.deleteAccount(account.id, (req.body || {}).pin);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(400).json({ success: false, error: error.message });
+    }
+});
+
 module.exports = router;
