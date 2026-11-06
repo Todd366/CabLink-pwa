@@ -158,3 +158,5 @@ p { margin: 0 0 12px; } .muted { color: var(--muted); } .small { font-size: 14px
 .mk-b span { background: #0d1b2a; border-radius: 6px; } .mk-car span { background: #ffc21a; color: #241a00; }
 
 .chips::-webkit-scrollbar { display: none; } .chip { white-space: nowrap; flex: none; }
+
+.ecosystem { display: flex; justify-content: center; margin: 14px 0 2px; } .ecosystem img { height: auto; max-width: 140px; border-radius: 12px; background: #fff; padding: 6px; }
