@@ -109,6 +109,19 @@ async function loadAccounts() {
     return localLoadAccounts();
 }
 
+// Single-account lookup by id (no full table scan on cloud stores).
+async function loadAccountById(id) {
+    if (MODE === "FIRESTORE") {
+        const r = await getFirestoreAdapter().read(ACCOUNTS_COLLECTION, id);
+        return r.exists ? r.data : null;
+    }
+    if (MODE === "SUPABASE") {
+        const r = await getSupabaseAdapter().read(ACCOUNTS_COLLECTION, id);
+        return r.exists ? r.data : null;
+    }
+    return (await localLoadAccounts()).find(a => a.id === id) || null;
+}
+
 async function saveAccount(account) {
     if (MODE === "FIRESTORE") {
         await getFirestoreAdapter().write(ACCOUNTS_COLLECTION, account.id, account);
@@ -324,15 +337,13 @@ async function accountFromToken(token) {
     const session = await findSessionByToken(token);
     if (!session || new Date(session.expiresAt) < new Date()) return null;
 
-    const accounts = await loadAccounts();
-    const account = accounts.find(a => a.id === session.accountId);
+    const account = await loadAccountById(session.accountId);
 
     return publicAccount(account);
 }
 
 async function getAccountById(id) {
-    const accounts = await loadAccounts();
-    return publicAccount(accounts.find(a => a.id === id));
+    return publicAccount(await loadAccountById(id));
 }
 
 async function updateProfile(accountId, profileChanges) {
