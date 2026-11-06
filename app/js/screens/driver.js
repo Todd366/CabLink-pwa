@@ -201,6 +201,13 @@ export async function earnings() {
                 h("div", { class: "item", style: "cursor:default" }, h("span", { class: "lead" }, icon("wallet")),
                     h("span", { class: "grow" }, h("b", null, b.owed > 0 ? t("feesOwed") + ": " + money(b.owed) : t("feesClear")), h("small", null, t("feesNote"))))));
         }).catch(() => {});
+        api("/driver/" + encodeURIComponent(me.id) + "/economy").then(e => {
+            if (!e || !e.rides) return;
+            body.prepend(h("div", { class: "list", style: "margin-bottom:14px" },
+                h("div", { class: "item", style: "cursor:default" }, h("span", { class: "lead" }, icon("wallet")),
+                    h("span", { class: "grow" }, h("b", null, t("rewards") + ": " + Number(e.thbEarned || 0) + " THB"), h("small", null, e.completed + " / " + e.rides + " " + t("trips"))),
+                    h("b", null, money(e.totalFare || 0)))));
+        }).catch(() => {});
         api("/leaderboard").then(({ drivers }) => {
             if (!drivers.length) return;
             const rows = drivers.map(d => h("div", { class: "item", style: "cursor:default" },

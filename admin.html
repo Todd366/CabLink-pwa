@@ -45,6 +45,11 @@
   </div>
 
   <div class="card">
+    <strong>Insights</strong>
+    <div id="insightsBox" class="sub">Loading…</div>
+  </div>
+
+  <div class="card">
     <strong>Accounts</strong>
     <table id="accountsTable"><thead><tr><th>Name</th><th>Phone</th><th>Role</th><th>Created</th></tr></thead><tbody></tbody></table>
   </div>
@@ -72,6 +77,7 @@ async function loadAll(){
   try{
     await loadApplications();
     await loadAccounts();
+    loadInsights();
     document.getElementById('gate').style.display = 'none';
     document.getElementById('dash').style.display = 'block';
   }catch(e){}
@@ -119,6 +125,18 @@ async function review(id, action){
     headers: { 'x-admin-key': ADMIN_KEY }
   });
   loadApplications();
+}
+
+async function loadInsights(){
+  const box = document.getElementById('insightsBox');
+  try{
+    const r = await api('/api/admin/insights');
+    const i = r.insights || {};
+    if(!i.hasEnoughData){ box.textContent = 'Not enough rides yet (' + (i.sampleSize||0) + ' of ' + (i.minSampleSize||'?') + ') for reliable patterns.'; return; }
+    const list = a => (a||[]).map(x => escapeHtml(x.location||x.hour) + ' (' + escapeHtml(x.count||x.requests) + ')').join(', ') || '-';
+    box.innerHTML = 'Rides: ' + escapeHtml(i.totalRides) + ' · completed ' + escapeHtml(i.completionRatePercent) + '% · avg accept ' + escapeHtml(i.avgAcceptanceSeconds==null?'-':i.avgAcceptanceSeconds+'s') + ' · incidents ' + escapeHtml(i.totalIncidents)
+      + '<br>Top pickups: ' + list(i.topPickups) + '<br>Top dropoffs: ' + list(i.topDropoffs) + '<br>Peak hours: ' + list((i.peakHours||[]).map(p => ({location: p.hour + ':00', count: p.requests})));
+  }catch(e){ box.textContent = 'Insights unavailable.'; }
 }
 
 function escapeHtml(s){

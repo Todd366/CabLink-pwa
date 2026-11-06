@@ -5,7 +5,10 @@
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "db:health": "node database/production/database_health.js",
+    "treasury:rotate": "node scripts/rotate_treasury_wallet_safe.js",
+    "treasury:rotate:legacy": "node scripts/rotate_treasury_wallet.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
