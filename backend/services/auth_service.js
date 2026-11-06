@@ -41,6 +41,7 @@ const ACCOUNTS_COLLECTION = process.env.CABLINK_ACCOUNT_FIRESTORE_COLLECTION || 
 const SESSIONS_COLLECTION = process.env.CABLINK_SESSION_FIRESTORE_COLLECTION || "cablink_sessions";
 
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+const CONSENT_VERSION = "2026-11-06"; // version of /legal.html the person accepted
 
 // Sessions are stored by SHA-256 of the token, never the token itself.
 const sha = t => crypto.createHash("sha256").update(String(t)).digest("hex");
@@ -228,7 +229,7 @@ function generateReferralCode(existingAccounts) {
 // PUBLIC API
 // ------------------------------------------------------------
 
-async function register({ phone, pin, name, referralCode }) {
+async function register({ phone, pin, name, referralCode, consent }) {
     phone = normalizePhone(phone);
 
     if (!phone || !isValidBotswanaPhone(phone)) {
@@ -248,6 +249,7 @@ async function register({ phone, pin, name, referralCode }) {
         existing.pinHash = hashPin(pin, salt);
         existing.passwordless = false;
         if (name) existing.name = name;
+        if (consent) { existing.consentAt = new Date().toISOString(); existing.consentVersion = CONSENT_VERSION; }
         // Backfill for accounts created before referral codes existed
         // (e.g. via findOrCreateAccountByPhone during a driver
         // application, before this account ever formally registered).
@@ -276,13 +278,15 @@ async function register({ phone, pin, name, referralCode }) {
     }
 
     const account = {
-        id: "ACC-" + Date.now() + "-" + Math.floor(Math.random() * 10000),
+        id: "ACC-" + Date.now() + "-" + crypto.randomInt(10000, 99999999),
         phone,
         name: name || phone,
         avatarUrl: null,
         pinSalt: salt,
         pinHash: hashPin(pin, salt),
         passwordless: false,
+        consentAt: consent ? new Date().toISOString() : null,
+        consentVersion: consent ? CONSENT_VERSION : null,
         role: "PASSENGER",
         referralCode: generateReferralCode(accounts),
         referredBy,
@@ -313,7 +317,8 @@ async function login({ phone, pin }) {
         throw new Error("This number has no password set yet — tap 'Create an account' to set a PIN");
     }
 
-    if (hashPin(pin, account.pinSalt) !== account.pinHash) {
+    const _given = Buffer.from(hashPin(pin, account.pinSalt), "hex"), _want = Buffer.from(account.pinHash, "hex");
+    if (_given.length !== _want.length || !crypto.timingSafeEqual(_given, _want)) {
         throw new Error("Incorrect phone number or PIN");
     }
 
@@ -509,7 +514,7 @@ async function findOrCreateAccountByPhone({ phone, name }) {
 
     if (!account) {
         account = {
-            id: "ACC-" + Date.now() + "-" + Math.floor(Math.random() * 10000),
+            id: "ACC-" + Date.now() + "-" + crypto.randomInt(10000, 99999999),
             phone,
             name: name || phone,
             avatarUrl: null,

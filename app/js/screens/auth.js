@@ -58,7 +58,7 @@ export function register() {
         if (!validPin(pin.input.value)) return void (pin.err.textContent = t("pinShort"));
         if (pin.input.value !== pin2.input.value) return void (pin2.err.textContent = t("pinMismatch"));
         try {
-            await api("/auth/register", { method: "POST", body: { name: name.value.trim(), phone: p, pin: pin.input.value, referralCode: refIn.value.trim().toUpperCase() || undefined }, auth: false });
+            await api("/auth/register", { method: "POST", body: { name: name.value.trim(), phone: p, pin: pin.input.value, consent: true, referralCode: refIn.value.trim().toUpperCase() || undefined }, auth: false });
             const r = await api("/auth/login", { method: "POST", body: { phone: p, pin: pin.input.value }, auth: false });
             store.setSession(r.token, r.account);
             await afterLogin(r.account);
