@@ -24,6 +24,6 @@ export function welcome() {
         h("div", { class: "actions" },
             h("button", { class: "btn go", onClick: () => choose("rider") }, t("getRide")),
             h("button", { class: "btn ghost", onClick: () => choose("driver") }, t("driveWith")),
-            h("a", { class: "link small", style: "text-align:center", href: "/legal.html", target: "_blank", rel: "noopener" }, t("terms")), h("div", { class: "ecosystem" }, h("img", { src: "/app/icons/bstm-ecosystem.webp", alt: "BSTM Ecosystem", width: "140", height: "71", loading: "lazy" }))));
+            h("a", { class: "link small", style: "text-align:center", href: "/legal.html", target: "_blank", rel: "noopener" }, t("terms")), h("p", { class: "muted small", style: "text-align:center;margin:10px 0 0" }, "A BSTM Ecosystem app")));
     return { el };
 }
