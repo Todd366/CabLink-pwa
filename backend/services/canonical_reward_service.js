@@ -484,6 +484,7 @@ async function createRideClaimReward({ rideId, passengerAccountId }) {
         rideId,
         passengerAccountId,
         amount,
+        createdAt: new Date().toISOString(),
         status: "PENDING_TRANSFER",
         wallet: await resolveWalletForAccount(passengerAccountId)
     };
@@ -491,6 +492,15 @@ async function createRideClaimReward({ rideId, passengerAccountId }) {
     if (!claim.wallet) {
         return { success: false, status: "NO_WALLET", error: "Connect a wallet before claiming" };
     }
+
+    // Abuse limits (checked before the payout lock, so a refusal never burns the ride's claim).
+    const _today = new Date().toISOString().slice(0, 10);
+    const _cap = Number(process.env.REWARD_DAILY_CAP) || 5;
+    const _mine = ledger.transactions.filter(t => t && t.type === "RIDE_CLAIM" && t.passengerAccountId === passengerAccountId && String(t.createdAt || "").slice(0, 10) === _today).length;
+    if (_mine >= _cap) return { success: false, status: "DAILY_LIMIT", error: "Daily reward limit reached. Try again tomorrow." };
+    const _lw = String(claim.wallet).toLowerCase();
+    const _others = new Set(ledger.transactions.filter(t => t && t.type === "RIDE_CLAIM" && t.wallet && String(t.wallet).toLowerCase() === _lw && t.passengerAccountId !== passengerAccountId).map(t => t.passengerAccountId));
+    if (_others.size >= 2) return { success: false, status: "WALLET_IN_USE", error: "This wallet is already linked to other accounts. Use your own wallet." };
 
     // THE payout guard: only the single winner may send THB for this ride.
     if (!(await once.acquire("RIDE_CLAIM:" + rideId, { rideId, passengerAccountId }))) {
