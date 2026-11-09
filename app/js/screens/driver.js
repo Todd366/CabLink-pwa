@@ -151,7 +151,16 @@ export function job({ id }) {
         stopMap(); if (beat) { clearInterval(beat); beat = null; } holder.replaceChildren(); actions.replaceChildren();
         if (r.status === "COMPLETED") {
             put(holder, h("h1", null, t("tripDone")), ticket(r.fare, [h("b", null, r.paymentMethod === "cash" ? "Collect cash" : "Mobile money"), r.paymentMethod === "cash" ? "from the passenger" : "ask the passenger to pay your number"]), r.reward && r.reward.amount ? h("p", { class: "muted", style: "margin-top:12px" }, "THB reward for this trip: " + r.reward.amount + " THB. See Rewards in Account.") : null);
-            put(actions, h("button", { class: "btn", onClick: () => go("/driver/home") }, t("done"))); return;
+            put(actions, h("button", { class: "btn", onClick: () => go("/driver/home") }, t("done")));
+            if (r.passengerAccountId) {
+                const nb = h("button", { class: "btn quiet" }, "Never match me with this passenger");
+                nb.onclick = () => busy(nb, async () => {
+                    try { await api("/auth/block", { method: "POST", body: { accountId: r.passengerAccountId, blocked: true } }); toast("Done. You will not be matched with this passenger again.", "ok"); nb.disabled = true; }
+                    catch (e) { toast(e.message, "error"); }
+                });
+                put(actions, nb);
+            }
+            return;
         }
         if (r.status === "CANCELLED") { put(holder, h("div", { class: "empty" }, h("b", null, t("status_CANCELLED")))); put(actions, h("button", { class: "btn", onClick: () => go("/driver/home") }, t("done"))); return; }
         const toPickup = ["DRIVER_ASSIGNED", "DRIVER_ARRIVED"].includes(r.status);

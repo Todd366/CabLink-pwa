@@ -473,6 +473,19 @@ async function changePin(accountId, currentPin, newPin) {
     return publicAccount(account);
 }
 
+// "Never match me with this person": stored both ways so either side's matching skips the pair.
+async function setBlock(accountId, otherId, blocked) {
+    if (!otherId || accountId === otherId) throw new Error("Invalid request");
+    const me = await loadAccountById(accountId), other = await loadAccountById(otherId);
+    if (!me || !other) throw new Error("Account not found");
+    const add = (arr, id) => Array.from(new Set([...(arr || []), id])).slice(-100);
+    const del = (arr, id) => (arr || []).filter(x => x !== id);
+    me.blocked = blocked ? add(me.blocked, otherId) : del(me.blocked, otherId);
+    other.blockedBy = blocked ? add(other.blockedBy, accountId) : del(other.blockedBy, accountId);
+    await saveAccount(me); await saveAccount(other);
+    return true;
+}
+
 // Right to erasure: anonymise the account (trip and ledger records keep only the id), end every session.
 async function deleteAccount(accountId, pin) {
     const account = await loadAccountById(accountId);
@@ -610,6 +623,7 @@ module.exports = {
     changePin,
     verifyPin,
     deleteAccount,
+    setBlock,
     allAccounts,
     findOrCreateAccountByPhone,
     isValidBotswanaPhone,

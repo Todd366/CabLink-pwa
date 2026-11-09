@@ -325,6 +325,12 @@ router.patch("/:id/accept", sec.requireRole("APPROVED_DRIVER"), oneJobAtATime, (
         const callingDriverAccount =
             await auth.accountFromRequest(req);
 
+        const _blk = new Set([...(callingDriverAccount && callingDriverAccount.blocked || []), ...(callingDriverAccount && callingDriverAccount.blockedBy || [])]);
+        if (_blk.size) {
+            const _r = await rideEngine.getRide(req.params.id);
+            if (_r && _blk.has(_r.passengerAccountId)) return res.status(403).json({ success: false, error: "This request is not available" });
+        }
+
         const result =
             await rideEngine.acceptRide(
                 req.params.id,
@@ -418,7 +424,8 @@ router.get("/open", sec.requireRole("APPROVED_DRIVER", "ADMIN"), async (req, res
         for (const noShow of all.filter(r => rules.isNoShow(r)).slice(0, 10)) {
             rideRelease.release(noShow, "Your driver did not arrive in time").catch(() => {});
         }
-        let open = all.filter(r => rules.isOpenForDrivers(r) && !(r.declinedBy || []).includes(req.account.id));
+        const blk = new Set([...(req.account.blocked || []), ...(req.account.blockedBy || [])]);
+        let open = all.filter(r => rules.isOpenForDrivers(r) && !(r.declinedBy || []).includes(req.account.id) && !blk.has(r.passengerAccountId));
         // Nearest first: distance from this driver's last known position to each pickup.
         const registry = require("../services/driver_registry_service");
         const mine = (await registry.all()).find(d => d.id === req.account.id);

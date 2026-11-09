@@ -144,6 +144,18 @@ router.patch("/auth/wallet", sec.limit("wallet-pin", 5, 15 * 60 * 1000), async (
     }
 });
 
+router.post("/auth/block", sec.limit("block", 20, 60 * 60 * 1000), async (req, res) => {
+    try {
+        const account = await auth.accountFromRequest(req);
+        if (!account) return res.status(401).json({ success: false, error: "Not logged in" });
+        const { accountId, blocked } = req.body || {};
+        await auth.setBlock(account.id, String(accountId || ""), blocked !== false);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(400).json({ success: false, error: error.message });
+    }
+});
+
 router.delete("/auth/account", sec.limit("account-delete", 3, 60 * 60 * 1000), async (req, res) => {
     try {
         const account = await auth.accountFromRequest(req);

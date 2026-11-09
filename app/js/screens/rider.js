@@ -292,6 +292,14 @@ export function ride({ id }) {
                 window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener");
             };
             put(actions, share);
+            if (r.driverId) {
+                const nb = h("button", { class: "btn quiet" }, "Never match me with this driver");
+                nb.onclick = () => busy(nb, async () => {
+                    try { await api("/auth/block", { method: "POST", body: { accountId: r.driverId, blocked: true } }); toast("Done. You will not be matched with this driver again.", "ok"); nb.disabled = true; }
+                    catch (e) { toast(e.message, "error"); }
+                });
+                put(actions, nb);
+            }
             if (!r.rating) {
                 const send = h("button", { class: "btn" }, t("sendRating"));
                 send.onclick = () => busy(send, async () => {

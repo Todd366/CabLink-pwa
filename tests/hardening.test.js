@@ -58,6 +58,17 @@ test("launch hardening: completion, wallet PIN, delete account, fare floor", asy
   assert.equal((await call(R.tok, "PATCH", "/api/auth/wallet", { walletAddress: w, pin: "9999" })).status, 403);
   assert.equal((await call(R.tok, "PATCH", "/api/auth/wallet", { walletAddress: w, pin: "1234" })).status, 200);
 
+  // never-match block list works both ways (hidden from open list, accept refused, unblock restores)
+  const bl = await call(R.tok, "POST", "/api/rides", { ...trip, distanceKm: 36 });
+  assert.equal(bl.status, 201);
+  assert.ok(((await call(Dl.token, "GET", "/api/rides/open")).body.rides || []).some(x => x.id === bl.body.ride.id), "driver sees the request before blocking");
+  assert.equal((await call(R.tok, "POST", "/api/auth/block", { accountId: Dl.account.id, blocked: true })).status, 200);
+  assert.ok(!((await call(Dl.token, "GET", "/api/rides/open")).body.rides || []).some(x => x.id === bl.body.ride.id), "blocked driver no longer sees the request");
+  assert.equal((await call(Dl.token, "PATCH", "/api/rides/" + bl.body.ride.id + "/accept", {})).status, 403, "blocked driver cannot accept");
+  assert.equal((await call(R.tok, "POST", "/api/auth/block", { accountId: Dl.account.id, blocked: false })).status, 200);
+  assert.ok(((await call(Dl.token, "GET", "/api/rides/open")).body.rides || []).some(x => x.id === bl.body.ride.id), "unblock restores matching");
+  await call(R.tok, "PATCH", "/api/rides/" + bl.body.ride.id, { status: "CANCELLED" });
+
   // consent is recorded at registration
   const rc = await call(null, "POST", "/api/auth/register", { name: "Consent", phone: "71100077", pin: "1234", consent: true });
   assert.ok(rc.status < 300);
