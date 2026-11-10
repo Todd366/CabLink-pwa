@@ -83,6 +83,10 @@ router.post("/marketplace/tasks", requireMarketplaceAuth, async (req, res) => {
         const price = given > 0 && given <= 20000 ? Math.round(given) : (km ? calcFare({ distanceKm: km, taskType: "delivery" }).total : 25);
         const phone = String(customerPhone || "").replace(/[^\d+]/g, "").slice(0, 16) || null;
 
+        // Idempotent: a retry or double click for the same Mall order returns the ride that already exists.
+        const prior = (await rideEngine.getAllRides()).find(r => r && r.source === "digital_mall" && String(r.externalRef) === String(orderId) && r.status !== "CANCELLED");
+        if (prior) return res.json({ success: true, ride: prior, statusUrl: `/api/marketplace/tasks/${prior.id}/status`, duplicate: true });
+
         const created = await rideEngine.createRide({
             pickup,
             dropoff,

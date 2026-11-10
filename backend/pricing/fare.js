@@ -32,7 +32,7 @@ function calcFare({ vehicle, distanceKm, stops, taskType }) {
         const total = Math.round(DELIVERY.base + DELIVERY.perKm * km);
         return { total, distanceKm: +km.toFixed(2), platformFee: +(total * (1 - DELIVERY.driverShare)).toFixed(2), driverShare: +(total * DELIVERY.driverShare).toFixed(2), currency: "BWP" };
     }
-    const kmpl = KM_PER_LITRE[vehicle] || KM_PER_LITRE.standard;
+    const kmpl = Object.prototype.hasOwnProperty.call(KM_PER_LITRE, vehicle) ? KM_PER_LITRE[vehicle] : KM_PER_LITRE.standard;
     const e = ECONOMY;
     const operating = (km / kmpl) * e.fuelPrice + km * (e.maintenancePerKm + e.tyresPerKm + e.servicePerKm);
     const rural = km > 40 ? (km - 40) * e.ruralPerKmUplift : 0;

@@ -6,6 +6,14 @@ const { request, loadRealBackend } = require("./helpers/mini_express.js");
 const ADMINKEY = "e2e-admin-key-0123456789";
 let ip = 1;
 
+test("fare calculator never returns NaN for hostile vehicle names", () => {
+  const { calcFare } = require("../backend/pricing/fare");
+  for (const v of ["constructor", "__proto__", "toString", "hasOwnProperty", undefined, null, "x"]) {
+    const t = calcFare({ distanceKm: 10, vehicle: v }).total;
+    assert.ok(Number.isFinite(t) && t >= 15, "vehicle " + String(v) + " gave " + t);
+  }
+});
+
 test("launch hardening: completion, wallet PIN, delete account, fare floor", async () => {
   const be = loadRealBackend(path.join(__dirname, ".."));
   const call = (tok, method, url, body, extra = {}) => request(be.app, { method, url, body, headers: Object.assign(tok ? { authorization: "Bearer " + tok } : {}, extra), ip: "6.6.6." + (ip++ % 200 + 1) });

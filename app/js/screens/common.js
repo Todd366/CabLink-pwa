@@ -5,9 +5,12 @@ import { api } from "../api.js";
 
 export function openSheet(...kids) {
     const bg = h("div", { class: "sheet-bg", onClick: e => { if (e.target === bg) close(); } });
-    const close = () => bg.remove();
+    const onKey = e => { if (e.key === "Escape") close(); };
+    const close = () => { document.removeEventListener("keydown", onKey); bg.remove(); };
+    document.addEventListener("keydown", onKey);
     bg.append(h("div", { class: "sheet", role: "dialog", "aria-modal": "true" }, ...kids));
     document.body.append(bg);
+    setTimeout(() => { const f = bg.querySelector("input, select, textarea, button"); if (f) f.focus(); }, 0);
     return close;
 }
 
