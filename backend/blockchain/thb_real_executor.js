@@ -1,7 +1,7 @@
 
 require("dotenv").config();
 
-const {ethers}=require("ethers");
+const ethers = new Proxy({}, { get: (_t, k) => require("ethers").ethers[k] }); // loaded on first use: keeps cold starts fast
 const abi=require("./thb_abi.json");
 
 

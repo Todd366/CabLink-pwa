@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { ethers } = require('ethers');
+const ethers = new Proxy({}, { get: (_t, k) => require("ethers").ethers[k] }); // loaded on first use: keeps cold starts fast
 const driverWalletService = require('../services/driver_wallet_service');
 
 const USERS_FILE = path.join(__dirname, '..', 'data', 'users.json');
