@@ -69,15 +69,4 @@ async function boot() {
     if (store.token) enablePush({ ask: false });
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
 }
-const reportError = (message, source, line, col, err) => {
-    try {
-        const key = String(message).slice(0, 80);
-        const seen = (reportError.seen = reportError.seen || new Set());
-        if (seen.has(key) || seen.size >= 10) return;
-        seen.add(key);
-        fetch("/api/client-error", { method: "POST", keepalive: true, headers: { "content-type": "application/json" }, body: JSON.stringify({ message: String(message), source, line, col, stack: err && err.stack, page: location.hash }) }).catch(() => {});
-    } catch (e) { /* ignore */ }
-};
-window.addEventListener("error", e => reportError(e.message, e.filename, e.lineno, e.colno, e.error));
-window.addEventListener("unhandledrejection", e => reportError("unhandledrejection: " + ((e.reason && e.reason.message) || e.reason), "", 0, 0, e.reason));
 boot();

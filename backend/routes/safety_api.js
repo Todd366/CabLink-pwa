@@ -119,17 +119,4 @@ router.get("/admin/insights", requireAdmin, async (req, res) => {
     }
 });
 
-// Phones report crashes here so real-world failures on real devices are visible (never fails the app).
-router.post("/client-error", async (req, res) => {
-    try {
-        const limit = await rateLimiter.checkAndRecord({ key: "client-error:" + req.ip, maxAttempts: 30, windowMs: 15 * 60 * 1000 });
-        if (limit.allowed) {
-            const b = req.body || {};
-            const clip = (v, n) => String(v == null ? "" : v).slice(0, n);
-            events.recordEvent("CLIENT_ERROR", { meta: { message: clip(b.message, 300), source: clip(b.source, 200), line: Number(b.line) || 0, col: Number(b.col) || 0, stack: clip(b.stack, 800), page: clip(b.page, 120), v: clip(b.v, 20), ua: clip(req.headers["user-agent"], 160) } });
-        }
-    } catch (e) { /* a report must never fail */ }
-    res.status(204).end();
-});
-
 module.exports = router;
